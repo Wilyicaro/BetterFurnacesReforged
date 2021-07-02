@@ -1,0 +1,39 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "0 2",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "2": {
+      "item": "minecraft:iron_ingot"
+    },
+    "3": {
+      "tag": "forge:stained_glass"
+    },
+    "4": {
+      "item": "minecraft:bucket"
+    },
+    "5": {
+      "tag": "forge:stained_glass"
+    },
+    "6": {
+      "item": "minecraft:iron_ingot"
+    },
+    "7": {
+      "tag": "forge:stained_glass"
+    },
+    "8": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:fuelliquidupgrade",
+    "count": 1
+  }
+}

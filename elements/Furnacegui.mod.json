@@ -1,0 +1,362 @@
+{
+  "_fv": 18,
+  "_type": "gui",
+  "definition": {
+    "type": 1,
+    "width": 176,
+    "height": 166,
+    "inventoryOffsetX": 0,
+    "inventoryOffsetY": 0,
+    "renderBgLayer": true,
+    "doesPauseGame": false,
+    "components": [
+      {
+        "type": "inputslot",
+        "data": {
+          "inputLimit": {
+            "value": ""
+          },
+          "id": 0,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #0",
+          "x": 179,
+          "y": 54
+        }
+      },
+      {
+        "type": "inputslot",
+        "data": {
+          "inputLimit": {
+            "value": ""
+          },
+          "id": 1,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #1",
+          "x": 179,
+          "y": 90
+        }
+      },
+      {
+        "type": "outputslot",
+        "data": {
+          "id": 3,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "onTakenFromSlot": {
+            "name": "Xpearn"
+          },
+          "name": "Slot #3",
+          "x": 240,
+          "y": 71
+        }
+      },
+      {
+        "type": "inputslot",
+        "data": {
+          "inputLimit": {
+            "value": "CUSTOM:AdvancedOreprocessingUpgrade"
+          },
+          "id": 4,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #4",
+          "x": 133,
+          "y": 54
+        }
+      },
+      {
+        "type": "inputslot",
+        "data": {
+          "inputLimit": {
+            "value": "CUSTOM:AdvancedFuelefficiencyUpgrade"
+          },
+          "id": 5,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #5",
+          "x": 133,
+          "y": 72
+        }
+      },
+      {
+        "type": "inputslot",
+        "data": {
+          "inputLimit": {
+            "value": "CUSTOM:Oreprocessingupgrade"
+          },
+          "id": 6,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #6",
+          "x": 133,
+          "y": 90
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<BNBT:text:furnacename>",
+          "color": {
+            "value": -13421773,
+            "falpha": 0.0
+          },
+          "name": "<BNBT:text:furnacename>",
+          "x": 179,
+          "y": 43
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<BNBT:number:cookPorcent>%",
+          "color": {
+            "value": -10066330,
+            "falpha": 0.0
+          },
+          "displayCondition": {
+            "name": "Admupactive"
+          },
+          "name": "<BNBT:number:cookPorcent>%",
+          "x": 202,
+          "y": 75
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<BNBT:number:burnPorcent>%",
+          "color": {
+            "value": -3381760,
+            "falpha": 0.0
+          },
+          "displayCondition": {
+            "name": "Admupactive"
+          },
+          "name": "<BNBT:number:burnPorcent>%",
+          "x": 175,
+          "y": 75
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<fluidlevel>",
+          "color": {
+            "value": -3381760,
+            "falpha": 0.0
+          },
+          "displayCondition": {
+            "name": "Tankguicond"
+          },
+          "name": "<fluidlevel>",
+          "x": 212,
+          "y": 98
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar0.png",
+          "use1Xscale": false,
+          "name": "processbar0.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "burn0.png",
+          "use1Xscale": false,
+          "name": "burn0.png",
+          "x": 179,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "burn1.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Isburn1"
+          },
+          "name": "burn1.png",
+          "x": 179,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "burn2.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Isburn2"
+          },
+          "name": "burn2.png",
+          "x": 179,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "burn3.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Isburn3"
+          },
+          "name": "burn3.png",
+          "x": 179,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar1.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros1"
+          },
+          "name": "processbar1.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar2.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros2"
+          },
+          "name": "processbar2.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar3.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros3"
+          },
+          "name": "processbar3.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar4.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros4"
+          },
+          "name": "processbar4.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "lavatank.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Tankguicond"
+          },
+          "name": "lavatank.png",
+          "x": 199,
+          "y": 86
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar5.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros5"
+          },
+          "name": "processbar5.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar6.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros6"
+          },
+          "name": "processbar6.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar7.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros7"
+          },
+          "name": "processbar7.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar8.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros8"
+          },
+          "name": "processbar8.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar9.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros9"
+          },
+          "name": "processbar9.png",
+          "x": 206,
+          "y": 72
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "processbar10.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "Ispros10"
+          },
+          "name": "processbar10.png",
+          "x": 206,
+          "y": 72
+        }
+      }
+    ]
+  }
+}

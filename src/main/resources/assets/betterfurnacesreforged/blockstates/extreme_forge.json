@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "facing=south,lit=false": {
+      "model": "betterfurnacesreforged:block/extreme_forge"
+    },
+    "facing=north,lit=false": {
+      "model": "betterfurnacesreforged:block/extreme_forge"
+    },
+    "facing=east,lit=false": {
+      "model": "betterfurnacesreforged:block/extreme_forge",
+      "x": 90
+    },
+    "facing=west,lit=false": {
+      "model": "betterfurnacesreforged:block/extreme_forge",
+      "x": 90
+    },
+    "facing=up,lit=false": {
+      "model": "betterfurnacesreforged:block/extreme_forge",
+      "x": 90,
+      "y": 90
+    },
+    "facing=down,lit=false": {
+      "model": "betterfurnacesreforged:block/extreme_forge",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south,lit=true": {
+      "model": "betterfurnacesreforged:block/extreme_forge_on"
+    },
+    "facing=north,lit=true": {
+      "model": "betterfurnacesreforged:block/extreme_forge_on"
+    },
+    "facing=east,lit=true": {
+      "model": "betterfurnacesreforged:block/extreme_forge_on",
+      "x": 90
+    },
+    "facing=west,lit=true": {
+      "model": "betterfurnacesreforged:block/extreme_forge_on",
+      "x": 90
+    },
+    "facing=up,lit=true": {
+      "model": "betterfurnacesreforged:block/extreme_forge-on",
+      "x": 90,
+      "y": 90
+    },
+    "facing=down,lit=true": {
+      "model": "betterfurnacesreforged:block/extreme_forge_on",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

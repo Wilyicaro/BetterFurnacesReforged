@@ -1,0 +1,11 @@
+{
+  "_fv": 18,
+  "_type": "tab",
+  "definition": {
+    "name": "Better Furnaces Reforged",
+    "icon": {
+      "value": "CUSTOM:ExtremeFurnace"
+    },
+    "showSearch": false
+  }
+}

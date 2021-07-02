@@ -1,0 +1,46 @@
+{
+  "_fv": 18,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "recipeRetstackSize": 1,
+    "group": "",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": ""
+      },
+      {
+        "value": "Blocks.TNT"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "Blocks.DIAMOND_BLOCK"
+      },
+      {
+        "value": "CUSTOM:NetherhotConduterBlock"
+      },
+      {
+        "value": "Blocks.DIAMOND_BLOCK"
+      },
+      {
+        "value": "Items.MAGMA_CREAM"
+      },
+      {
+        "value": "CUSTOM:Diamondfurnace"
+      },
+      {
+        "value": "Items.MAGMA_CREAM"
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:NetherhotFurnace"
+    },
+    "name": "netherhotfurnacere",
+    "namespace": "mod"
+  }
+}

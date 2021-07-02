@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "betterfurnacesreforged:blocks/gray_top",
+    "up": "betterfurnacesreforged:blocks/gray_top",
+    "north": "betterfurnacesreforged:blocks/gray_frontactive",
+    "east": "betterfurnacesreforged:blocks/gray_side",
+    "south": "betterfurnacesreforged:blocks/gray_side",
+    "west": "betterfurnacesreforged:blocks/gray_side",
+    "particle": "betterfurnacesreforged:blocks/gray_top"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "mappings": {
+    "default": {
+      "map": {
+        "0": "extreme_forge_front",
+        "1": "extreme_forge_side"
+      },
+      "name": "default"
+    }
+  }
+}

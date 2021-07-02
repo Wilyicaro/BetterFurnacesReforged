@@ -1,0 +1,46 @@
+{
+  "_fv": 18,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "recipeRetstackSize": 1,
+    "group": "",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": "Items.DYE#15"
+      },
+      {
+        "value": "Items.DYE#0"
+      },
+      {
+        "value": "Items.DYE#3"
+      },
+      {
+        "value": "Items.DYE#1"
+      },
+      {
+        "value": "CUSTOM:GoldConduterBlock"
+      },
+      {
+        "value": "Items.DYE#11"
+      },
+      {
+        "value": "Items.DYE#2"
+      },
+      {
+        "value": "Items.DYE#4"
+      },
+      {
+        "value": "Items.DYE#9"
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:Colorupgrade"
+    },
+    "name": "color_upgradere",
+    "namespace": "mod"
+  }
+}

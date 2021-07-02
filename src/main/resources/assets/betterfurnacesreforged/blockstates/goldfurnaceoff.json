@@ -1,0 +1,304 @@
+{
+  "variants": {
+    "facing=north,lit=false,age=0": {
+      "model": "betterfurnacesreforged:block/goldfurnaceoff"
+    },
+    "facing=east,lit=false,age=0": {
+      "model": "betterfurnacesreforged:block/goldfurnaceoff",
+      "y": 90
+    },
+    "facing=south,lit=false,age=0": {
+      "model": "betterfurnacesreforged:block/goldfurnaceoff",
+      "y": 180
+    },
+    "facing=west,lit=false,age=0": {
+      "model": "betterfurnacesreforged:block/goldfurnaceoff",
+      "y": 270
+    },
+    "facing=north,lit=true,age=0": {
+      "model": "betterfurnacesreforged:block/goldfurnace_on"
+    },
+    "facing=east,lit=true,age=0": {
+      "model": "betterfurnacesreforged:block/goldfurnace_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=0": {
+      "model": "betterfurnacesreforged:block/goldfurnace_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=0": {
+      "model": "betterfurnacesreforged:block/goldfurnace_on",
+      "y": 270
+    },
+    "facing=north,lit=false,age=1": {
+      "model": "betterfurnacesreforged:block/furnace1"
+    },
+    "facing=east,lit=false,age=1": {
+      "model": "betterfurnacesreforged:block/furnace1",
+      "y": 90
+    },
+    "facing=south,lit=false,age=1": {
+      "model": "betterfurnacesreforged:block/furnace1",
+      "y": 180
+    },
+    "facing=west,lit=false,age=1": {
+      "model": "betterfurnacesreforged:block/furnace1",
+      "y": 270
+    },
+    "facing=north,lit=true,age=1": {
+      "model": "betterfurnacesreforged:block/furnace1_on"
+    },
+    "facing=east,lit=true,age=1": {
+      "model": "betterfurnacesreforged:block/furnace1_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=1": {
+      "model": "betterfurnacesreforged:block/furnace1_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=1": {
+      "model": "betterfurnacesreforged:block/furnace1_on",
+      "y": 270    
+    },
+    "facing=north,lit=false,age=2": {
+      "model": "betterfurnacesreforged:block/furnace2"
+    },
+    "facing=east,lit=false,age=2": {
+      "model": "betterfurnacesreforged:block/furnace2",
+      "y": 90
+    },
+    "facing=south,lit=false,age=2": {
+      "model": "betterfurnacesreforged:block/furnace2",
+      "y": 180
+    },
+    "facing=west,lit=false,age=2": {
+      "model": "betterfurnacesreforged:block/furnace2",
+      "y": 270
+    },
+    "facing=north,lit=true,age=2": {
+      "model": "betterfurnacesreforged:block/furnace2_on"
+    },
+    "facing=east,lit=true,age=2": {
+      "model": "betterfurnacesreforged:block/furnace2_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=2": {
+      "model": "betterfurnacesreforged:block/furnace2_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=2": {
+      "model": "betterfurnacesreforged:block/furnace2_on",
+      "y": 270
+    },
+    "facing=north,lit=false,age=3": {
+      "model": "betterfurnacesreforged:block/furnace3"
+    },
+    "facing=east,lit=false,age=3": {
+      "model": "betterfurnacesreforged:block/furnace3",
+      "y": 90
+    },
+    "facing=south,lit=false,age=3": {
+      "model": "betterfurnacesreforged:block/furnace3",
+      "y": 180
+    },
+    "facing=west,lit=false,age=3": {
+      "model": "betterfurnacesreforged:block/furnace3",
+      "y": 270
+    },
+    "facing=north,lit=true,age=3": {
+      "model": "betterfurnacesreforged:block/furnace3_on"
+    },
+    "facing=east,lit=true,age=3": {
+      "model": "betterfurnacesreforged:block/furnace3_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=3": {
+      "model": "betterfurnacesreforged:block/furnace3_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=3": {
+      "model": "betterfurnacesreforged:block/furnace3_on",
+      "y": 270
+    },
+    "facing=north,lit=false,age=4": {
+      "model": "betterfurnacesreforged:block/furnace4"
+    },
+    "facing=east,lit=false,age=4": {
+      "model": "betterfurnacesreforged:block/furnace4",
+      "y": 90
+    },
+    "facing=south,lit=false,age=4": {
+      "model": "betterfurnacesreforged:block/furnace4",
+      "y": 180
+    },
+    "facing=west,lit=false,age=4": {
+      "model": "betterfurnacesreforged:block/furnace4",
+      "y": 270
+    },
+    "facing=north,lit=true,age=4": {
+      "model": "betterfurnacesreforged:block/furnace4_on"
+    },
+    "facing=east,lit=true,age=4": {
+      "model": "betterfurnacesreforged:block/furnace4_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=4": {
+      "model": "betterfurnacesreforged:block/furnace4_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=4": {
+      "model": "betterfurnacesreforged:block/furnace4_on",
+      "y": 270
+    },
+    "facing=north,lit=false,age=5": {
+      "model": "betterfurnacesreforged:block/furnace5"
+    },
+    "facing=east,lit=false,age=5": {
+      "model": "betterfurnacesreforged:block/furnace5",
+      "y": 90
+    },
+    "facing=south,lit=false,age=5": {
+      "model": "betterfurnacesreforged:block/furnace5",
+      "y": 180
+    },
+    "facing=west,lit=false,age=5": {
+      "model": "betterfurnacesreforged:block/furnace5",
+      "y": 270
+    },
+    "facing=north,lit=true,age=5": {
+      "model": "betterfurnacesreforged:block/furnace5_on"
+    },
+    "facing=east,lit=true,age=5": {
+      "model": "betterfurnacesreforged:block/furnace5_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=5": {
+      "model": "betterfurnacesreforged:block/furnace5_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=5": {
+      "model": "betterfurnacesreforged:block/furnace5_on",
+      "y": 270
+    },
+    "facing=north,lit=false,age=6": {
+      "model": "betterfurnacesreforged:block/furnace6"
+    },
+    "facing=east,lit=false,age=6": {
+      "model": "betterfurnacesreforged:block/furnace6",
+      "y": 90
+    },
+    "facing=south,lit=false,age=6": {
+      "model": "betterfurnacesreforged:block/furnace6",
+      "y": 180
+    },
+    "facing=west,lit=false,age=6": {
+      "model": "betterfurnacesreforged:block/furnace6",
+      "y": 270
+    },
+    "facing=north,lit=true,age=6": {
+      "model": "betterfurnacesreforged:block/furnace6_on"
+    },
+    "facing=east,lit=true,age=6": {
+      "model": "betterfurnacesreforged:block/furnace6_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=6": {
+      "model": "betterfurnacesreforged:block/furnace6_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=6": {
+      "model": "betterfurnacesreforged:block/furnace6_on",
+      "y": 270
+    },
+    "facing=north,lit=false,age=7": {
+      "model": "betterfurnacesreforged:block/furnace7"
+    },
+    "facing=east,lit=false,age=7": {
+      "model": "betterfurnacesreforged:block/furnace7",
+      "y": 90
+    },
+    "facing=south,lit=false,age=7": {
+      "model": "betterfurnacesreforged:block/furnace7",
+      "y": 180
+    },
+    "facing=west,lit=false,age=7": {
+      "model": "betterfurnacesreforged:block/furnace7",
+      "y": 270
+    },
+    "facing=north,lit=true,age=7": {
+      "model": "betterfurnacesreforged:block/furnace7_on"
+    },
+    "facing=east,lit=true,age=7": {
+      "model": "betterfurnacesreforged:block/furnace7_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=7": {
+      "model": "betterfurnacesreforged:block/furnace7_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=7": {
+      "model": "betterfurnacesreforged:block/furnace7_on",
+      "y": 270
+    },
+    "facing=north,lit=false,age=8": {
+      "model": "betterfurnacesreforged:block/furnace8"
+    },
+    "facing=east,lit=false,age=8": {
+      "model": "betterfurnacesreforged:block/furnace8",
+      "y": 90
+    },
+    "facing=south,lit=false,age=8": {
+      "model": "betterfurnacesreforged:block/furnace8",
+      "y": 180
+    },
+    "facing=west,lit=false,age=8": {
+      "model": "betterfurnacesreforged:block/furnace8",
+      "y": 270
+    },
+    "facing=north,lit=true,age=8": {
+      "model": "betterfurnacesreforged:block/furnace8_on"
+    },
+    "facing=east,lit=true,age=8": {
+      "model": "betterfurnacesreforged:block/furnace8_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=8": {
+      "model": "betterfurnacesreforged:block/furnace8_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=8": {
+      "model": "betterfurnacesreforged:block/furnace8_on",
+      "y": 270
+    },
+    "facing=north,lit=false,age=9": {
+      "model": "betterfurnacesreforged:block/furnace9"
+    },
+    "facing=east,lit=false,age=9": {
+      "model": "betterfurnacesreforged:block/furnace9",
+      "y": 90
+    },
+    "facing=south,lit=false,age=9": {
+      "model": "betterfurnacesreforged:block/furnace9",
+      "y": 180
+    },
+    "facing=west,lit=false,age=9": {
+      "model": "betterfurnacesreforged:block/furnace9",
+      "y": 270
+    },
+    "facing=north,lit=true,age=9": {
+      "model": "betterfurnacesreforged:block/furnace9_on"
+    },
+    "facing=east,lit=true,age=9": {
+      "model": "betterfurnacesreforged:block/furnace9_on",
+      "y": 90
+    },
+    "facing=south,lit=true,age=9": {
+      "model": "betterfurnacesreforged:block/furnace9_on",
+      "y": 180
+    },
+    "facing=west,lit=true,age=9": {
+      "model": "betterfurnacesreforged:block/furnace9_on",
+      "y": 270
+    }
+  }
+}

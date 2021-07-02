@@ -1,0 +1,39 @@
+{
+  "_fv": 18,
+  "_type": "item",
+  "definition": {
+    "renderType": 0,
+    "texture": "up_color",
+    "customModelName": "Normal",
+    "name": "Color Upgrade",
+    "rarity": "COMMON",
+    "creativeTab": {
+      "value": "CUSTOM:BetterFurnacesReforged"
+    },
+    "stackSize": 1,
+    "enchantability": 0,
+    "useDuration": 0,
+    "toolType": 1.0,
+    "damageCount": 0,
+    "recipeRemainder": {
+      "value": ""
+    },
+    "destroyAnyBlock": false,
+    "immuneToFire": false,
+    "stayInGridWhenCrafting": false,
+    "damageOnCrafting": false,
+    "enableMeleeDamage": false,
+    "damageVsEntity": 0.0,
+    "specialInfo": [],
+    "hasGlow": false,
+    "guiBoundTo": "Colorupgradegui",
+    "inventorySize": 0,
+    "inventoryStackSize": 64,
+    "onRightClickedInAir": {
+      "name": "Opencolorupgrade"
+    },
+    "onItemInInventoryTick": {
+      "name": "ColorupgradeItemInInventoryTick"
+    }
+  }
+}

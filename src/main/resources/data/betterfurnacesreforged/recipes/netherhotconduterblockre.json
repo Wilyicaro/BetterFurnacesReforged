@@ -1,0 +1,42 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:redstone_block"
+    },
+    "1": {
+      "item": "minecraft:blaze_rod"
+    },
+    "2": {
+      "item": "minecraft:redstone_block"
+    },
+    "3": {
+      "item": "minecraft:blaze_rod"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:goldconduterblock"
+    },
+    "5": {
+      "item": "minecraft:blaze_rod"
+    },
+    "6": {
+      "item": "minecraft:redstone_block"
+    },
+    "7": {
+      "item": "minecraft:blaze_rod"
+    },
+    "8": {
+      "item": "minecraft:redstone_block"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:netherhotconduterblock",
+    "count": 1
+  }
+}

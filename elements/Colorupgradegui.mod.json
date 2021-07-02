@@ -1,0 +1,65 @@
+{
+  "_fv": 18,
+  "_type": "gui",
+  "definition": {
+    "type": 0,
+    "width": 176,
+    "height": 98,
+    "inventoryOffsetX": 0,
+    "inventoryOffsetY": 0,
+    "renderBgLayer": true,
+    "doesPauseGame": false,
+    "components": [
+      {
+        "type": "label",
+        "data": {
+          "text": "Color Upgrade",
+          "color": {
+            "value": -10066330,
+            "falpha": 0.0
+          },
+          "name": "Color Upgrade",
+          "x": 132,
+          "y": 75
+        }
+      },
+      {
+        "type": "button",
+        "data": {
+          "text": "Change",
+          "onClick": {
+            "name": "Coloruchange"
+          },
+          "width": 60,
+          "height": 20,
+          "name": "Change",
+          "x": 182,
+          "y": 138
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "Color:<ENBT:text:colort>",
+          "color": {
+            "value": -1,
+            "falpha": 0.0
+          },
+          "name": "Color:<ENBT:text:colort>",
+          "x": 174,
+          "y": 92
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "colors_option.png",
+          "use1Xscale": false,
+          "name": "colors_option.png",
+          "x": 141,
+          "y": 116
+        }
+      }
+    ]
+  }
+}

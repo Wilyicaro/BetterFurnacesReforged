@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "betterfurnacesreforged:blocks/nether_hot_conduter",
+    "up": "betterfurnacesreforged:blocks/nether_hot_conduter",
+    "north": "betterfurnacesreforged:blocks/netherhot_front",
+    "east": "betterfurnacesreforged:blocks/netherhot_side",
+    "south": "betterfurnacesreforged:blocks/netherhot_side",
+    "west": "betterfurnacesreforged:blocks/netherhot_side",
+    "particle": "betterfurnacesreforged:blocks/nether_hot_conduter"
+  }
+}

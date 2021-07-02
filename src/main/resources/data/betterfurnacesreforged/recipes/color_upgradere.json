@@ -1,0 +1,42 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:bone_meal"
+    },
+    "1": {
+      "item": "minecraft:ink_sac"
+    },
+    "2": {
+      "item": "minecraft:cocoa_beans"
+    },
+    "3": {
+      "item": "minecraft:red_dye"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:goldconduterblock"
+    },
+    "5": {
+      "item": "minecraft:yellow_dye"
+    },
+    "6": {
+      "item": "minecraft:green_dye"
+    },
+    "7": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "8": {
+      "item": "minecraft:pink_dye"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:colorupgrade",
+    "count": 1
+  }
+}

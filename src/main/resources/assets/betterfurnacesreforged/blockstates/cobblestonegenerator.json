@@ -1,0 +1,96 @@
+{
+  "variants": {
+    "facing=north,age=0": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator"
+    },
+    "facing=east,age=0": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator",
+      "y": 90
+    },
+    "facing=south,age=0": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator",
+      "y": 180
+    },
+    "facing=west,age=0": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator",
+      "y": 270
+    },
+    "facing=up,age=0": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator",
+      "x": 270
+    },
+    "facing=down,age=0": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator",
+      "x": 90
+    },
+    "facing=north,age=1": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator1"
+    },
+    "facing=east,age=1": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator1",
+      "y": 90
+    },
+    "facing=south,age=1": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator1",
+      "y": 180
+    },
+    "facing=west,age=1": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator1",
+      "y": 270
+    },
+    "facing=up,age=1": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator1",
+      "x": 270
+    },
+    "facing=down,age=1": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator1",
+      "x": 90
+    },
+    "facing=north,age=2": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator2"
+    },
+    "facing=east,age=2": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator2",
+      "y": 90
+    },
+    "facing=south,age=2": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator2",
+      "y": 180
+    },
+    "facing=west,age=2": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator2",
+      "y": 270
+    },
+    "facing=up,age=2": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator2",
+      "x": 270
+    },
+    "facing=down,age=2": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator2",
+      "x": 90
+    },
+    "facing=north,age=3": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator3"
+    },
+    "facing=east,age=3": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator3",
+      "y": 90
+    },
+    "facing=south,age=3": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator3",
+      "y": 180
+    },
+    "facing=west,age=3": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator3",
+      "y": 270
+    },
+    "facing=up,age=3": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator3",
+      "x": 270
+    },
+    "facing=down,age=3": {
+      "model": "betterfurnacesreforged:block/cobblestonegenerator3",
+      "x": 90
+    }
+  }
+}

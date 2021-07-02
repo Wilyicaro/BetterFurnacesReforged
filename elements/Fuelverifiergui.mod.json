@@ -1,0 +1,55 @@
+{
+  "_fv": 18,
+  "_type": "gui",
+  "definition": {
+    "type": 1,
+    "width": 176,
+    "height": 166,
+    "inventoryOffsetX": 0,
+    "inventoryOffsetY": 0,
+    "renderBgLayer": true,
+    "doesPauseGame": false,
+    "components": [
+      {
+        "type": "inputslot",
+        "data": {
+          "inputLimit": {
+            "value": ""
+          },
+          "id": 0,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #0",
+          "x": 204,
+          "y": 84
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<BNBT:number:fuelPower>",
+          "color": {
+            "value": -6710887,
+            "falpha": 0.0
+          },
+          "name": "<BNBT:number:fuelPower>",
+          "x": 204,
+          "y": 66
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "Fuel Power",
+          "color": {
+            "value": -13421773,
+            "falpha": 0.0
+          },
+          "name": "Fuel Power",
+          "x": 186,
+          "y": 48
+        }
+      }
+    ]
+  }
+}

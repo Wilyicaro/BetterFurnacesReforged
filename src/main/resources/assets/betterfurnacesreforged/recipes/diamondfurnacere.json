@@ -1,0 +1,46 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:stained_glass",
+      "data": 32767
+    },
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "minecraft:stained_glass",
+      "data": 32767
+    },
+    "3": {
+      "item": "minecraft:diamond"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:goldfurnaceoff"
+    },
+    "5": {
+      "item": "minecraft:diamond"
+    },
+    "6": {
+      "item": "minecraft:stained_glass",
+      "data": 32767
+    },
+    "7": {
+      "item": "minecraft:diamond"
+    },
+    "8": {
+      "item": "minecraft:stained_glass",
+      "data": 32767
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:diamondfurnace",
+    "count": 1
+  }
+}

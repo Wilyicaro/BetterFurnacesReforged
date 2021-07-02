@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "betterfurnacesreforged:blocks/gold_top",
+    "up": "betterfurnacesreforged:blocks/gold_top",
+    "north": "betterfurnacesreforged:blocks/gold_front",
+    "east": "betterfurnacesreforged:blocks/gold_side",
+    "south": "betterfurnacesreforged:blocks/gold_side",
+    "west": "betterfurnacesreforged:blocks/gold_side",
+    "particle": "betterfurnacesreforged:blocks/gold_top"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "betterfurnacesreforged:block/fuelverifierblock"
+    },
+    "facing=east": {
+      "model": "betterfurnacesreforged:block/fuelverifierblock",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "betterfurnacesreforged:block/fuelverifierblock",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "betterfurnacesreforged:block/fuelverifierblock",
+      "y": 270
+    }
+  }
+}

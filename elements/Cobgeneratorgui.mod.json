@@ -1,0 +1,89 @@
+{
+  "_fv": 18,
+  "_type": "gui",
+  "definition": {
+    "type": 1,
+    "width": 176,
+    "height": 166,
+    "inventoryOffsetX": 0,
+    "inventoryOffsetY": 0,
+    "renderBgLayer": true,
+    "doesPauseGame": false,
+    "components": [
+      {
+        "type": "inputslot",
+        "data": {
+          "inputLimit": {
+            "value": "Items.LAVA_BUCKET"
+          },
+          "color": {
+            "value": -3381760,
+            "falpha": 0.0
+          },
+          "id": 0,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #0",
+          "x": 170,
+          "y": 63
+        }
+      },
+      {
+        "type": "inputslot",
+        "data": {
+          "inputLimit": {
+            "value": "Items.WATER_BUCKET"
+          },
+          "color": {
+            "value": -13395457,
+            "falpha": 0.0
+          },
+          "id": 1,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #1",
+          "x": 224,
+          "y": 63
+        }
+      },
+      {
+        "type": "outputslot",
+        "data": {
+          "id": 2,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #2",
+          "x": 197,
+          "y": 81
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "Cobblestone Generator",
+          "color": {
+            "value": -12829636,
+            "falpha": 0.0
+          },
+          "name": "Cobblestone Generator",
+          "x": 161,
+          "y": 45
+        }
+      },
+      {
+        "type": "inputslot",
+        "data": {
+          "inputLimit": {
+            "value": "CUSTOM:AdvancedFuelefficiencyUpgrade"
+          },
+          "id": 3,
+          "disableStackInteraction": false,
+          "dropItemsWhenNotBound": true,
+          "name": "Slot #3",
+          "x": 134,
+          "y": 63
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "betterfurnacesreforged:blocks/gold_conduter_block",
+    "up": "betterfurnacesreforged:blocks/gold_conduter_block",
+    "north": "betterfurnacesreforged:blocks/gold_conduter_block",
+    "east": "betterfurnacesreforged:blocks/gold_conduter_block",
+    "south": "betterfurnacesreforged:blocks/gold_conduter_block",
+    "west": "betterfurnacesreforged:blocks/gold_conduter_block",
+    "particle": "betterfurnacesreforged:blocks/gold_conduter_block"
+  }
+}

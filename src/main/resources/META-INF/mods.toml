@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="betterfurnacesreforged"
+version="1.7.2b"
+displayName="BetterFurnaces Reforged"
+credits=" All credits go to the creator of the original mod, along with the textures and ideas used in the mod. Created using the tools of the Mcreator"
+displayURL="https://curseforge.com"
+logoFile="logo.png"
+authors="Wilyicaro"
+description='''
+This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, presenting only the main things used in the original mod
+'''
+
+[[dependencies.betterfurnacesreforged]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5]"
+    ordering="NONE"
+    side="BOTH"
+
+
+
+
