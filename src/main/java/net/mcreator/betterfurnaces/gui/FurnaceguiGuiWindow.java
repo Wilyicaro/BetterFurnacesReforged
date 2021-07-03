@@ -123,16 +123,44 @@ public class FurnaceguiGuiWindow extends ContainerScreen<FurnaceguiGui.GuiContai
 			this.blit(ms, this.guiLeft + 73, this.guiTop + 49, 0, 0, 20, 22, 20, 22);
 		}
 		}
-		if (burnanimation >= 10) {
+		if (burnanimation >= 1) {
 			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn1.png"));
 			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
 		}
-		if (burnanimation >= 31) {
+		if (burnanimation >= 11) {
 			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn2.png"));
 			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
 		}
-		if (burnanimation >= 66) {
+		if (burnanimation >= 21) {
 			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn3.png"));
+			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
+		}
+		if (burnanimation >= 31) {
+			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn4.png"));
+			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
+		}
+		if (burnanimation >= 41) {
+			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn5.png"));
+			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
+		}
+		if (burnanimation >= 51) {
+			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn6.png"));
+			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
+		}
+		if (burnanimation >= 61) {
+			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn7.png"));
+			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
+		}
+		if (burnanimation >= 71) {
+			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn8.png"));
+			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
+		}
+		if (burnanimation >= 81) {
+			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn9.png"));
+			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
+		}
+		if (burnanimation >= 91) {
+			Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("betterfurnacesreforged:textures/burn10.png"));
 			this.blit(ms, this.guiLeft + 53, this.guiTop + 35, 0, 0, 18, 18, 18, 18);
 		}
 		if (progressanimation >= 1) {

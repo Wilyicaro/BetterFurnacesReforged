@@ -819,6 +819,15 @@
       "locked_code": false,
       "ids": {},
       "registry_name": "energyupre"
+    },
+    {
+      "name": "JeiPlugin",
+      "type": "code",
+      "sortid": 82,
+      "compiles": true,
+      "locked_code": true,
+      "ids": {},
+      "registry_name": "jei_plugin"
     }
   ],
   "variable_elements": [],
@@ -962,7 +971,7 @@
   "workspaceSettings": {
     "modid": "betterfurnacesreforged",
     "modName": "BetterFurnaces Reforged",
-    "version": "1.7.2b",
+    "version": "1.7.3b",
     "description": "This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, presenting only the main things used in the original mod",
     "author": "Wilyicaro",
     "websiteURL": "https://curseforge.com",

@@ -3,10 +3,10 @@
     "modid": "betterfurnacesreforged",
     "name": "BetterFurnacesReforged",
     "description": "This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, presenting only the main things used in the original mod",
-    "version": "1.3.2",
+    "version": "1.7.3b",
     "credits": " All credits go to the creator of the original mod, along with the textures and ideas used in the mod. Created using the tools of the Mcreator",
     "logoFile": "assets/betterfurnacesreforged/textures/logo.png",
-    "mcversion": "1.12.2",
+    "mcversion": "1.16.5",
     "url": "https://mcreator.net",
     "updateUrl": "",
     "authorList": [
