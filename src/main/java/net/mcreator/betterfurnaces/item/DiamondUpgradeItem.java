@@ -16,7 +16,7 @@ public class DiamondUpgradeItem extends BetterfurnacesreforgedModElements.ModEle
 	@ObjectHolder("betterfurnacesreforged:diamond_upgrade")
 	public static final Item block = null;
 	public DiamondUpgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 19);
+		super(instance, 21);
 	}
 
 	@Override

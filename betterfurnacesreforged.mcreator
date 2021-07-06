@@ -15,7 +15,7 @@
     {
       "name": "Furnacegui",
       "type": "gui",
-      "sortid": 23,
+      "sortid": 24,
       "compiles": true,
       "locked_code": true,
       "ids": {
@@ -24,34 +24,6 @@
     },
     {
       "name": "IronfurnaceoffUpdateTick",
-      "type": "procedure",
-      "sortid": 24,
-      "compiles": true,
-      "locked_code": false,
-      "ids": {},
-      "metadata": {
-        "dependencies": [
-          {
-            "name": "x",
-            "type": "number"
-          },
-          {
-            "name": "y",
-            "type": "number"
-          },
-          {
-            "name": "z",
-            "type": "number"
-          },
-          {
-            "name": "world",
-            "type": "world"
-          }
-        ]
-      }
-    },
-    {
-      "name": "Fuelconfig",
       "type": "procedure",
       "sortid": 25,
       "compiles": true,
@@ -79,9 +51,37 @@
       }
     },
     {
+      "name": "Fuelconfig",
+      "type": "procedure",
+      "sortid": 26,
+      "compiles": true,
+      "locked_code": false,
+      "ids": {},
+      "metadata": {
+        "dependencies": [
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      }
+    },
+    {
       "name": "Fuelverifiergui",
       "type": "gui",
-      "sortid": 26,
+      "sortid": 27,
       "compiles": true,
       "locked_code": true,
       "ids": {
@@ -91,7 +91,7 @@
     {
       "name": "Fuelverifierblock",
       "type": "block",
-      "sortid": 6,
+      "sortid": 7,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -99,7 +99,7 @@
     {
       "name": "FuelverifierblockUpdateTick",
       "type": "procedure",
-      "sortid": 27,
+      "sortid": 28,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -127,7 +127,7 @@
     {
       "name": "Xpearn",
       "type": "procedure",
-      "sortid": 28,
+      "sortid": 29,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -167,7 +167,7 @@
     {
       "name": "IronConduterBlock",
       "type": "block",
-      "sortid": 8,
+      "sortid": 9,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -175,7 +175,7 @@
     {
       "name": "GoldConduterBlock",
       "type": "block",
-      "sortid": 9,
+      "sortid": 10,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -183,7 +183,7 @@
     {
       "name": "NetherhotConduterBlock",
       "type": "block",
-      "sortid": 10,
+      "sortid": 11,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -191,7 +191,7 @@
     {
       "name": "Ironconduterblockre",
       "type": "recipe",
-      "sortid": 29,
+      "sortid": 30,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -199,7 +199,7 @@
     {
       "name": "Goldconduterblockre",
       "type": "recipe",
-      "sortid": 30,
+      "sortid": 31,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -207,7 +207,7 @@
     {
       "name": "Netherhotconduterblockre",
       "type": "recipe",
-      "sortid": 31,
+      "sortid": 32,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -215,7 +215,7 @@
     {
       "name": "Ironfurnacere",
       "type": "recipe",
-      "sortid": 32,
+      "sortid": 33,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -223,7 +223,7 @@
     {
       "name": "Goldfurnacere",
       "type": "recipe",
-      "sortid": 33,
+      "sortid": 34,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -231,7 +231,7 @@
     {
       "name": "AdvancedOreprocessingUpgrade",
       "type": "item",
-      "sortid": 13,
+      "sortid": 14,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -239,7 +239,7 @@
     {
       "name": "AdvancedFuelefficiencyUpgrade",
       "type": "item",
-      "sortid": 14,
+      "sortid": 15,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -247,7 +247,7 @@
     {
       "name": "BetterFurnacesReforged",
       "type": "tab",
-      "sortid": 34,
+      "sortid": 35,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -279,7 +279,7 @@
     {
       "name": "Diamondfurnacere",
       "type": "recipe",
-      "sortid": 35,
+      "sortid": 36,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -287,7 +287,7 @@
     {
       "name": "NetherhotFurnacere",
       "type": "recipe",
-      "sortid": 36,
+      "sortid": 37,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -295,7 +295,7 @@
     {
       "name": "Extremefurnacere",
       "type": "recipe",
-      "sortid": 37,
+      "sortid": 38,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -303,7 +303,7 @@
     {
       "name": "Oreprocessingre",
       "type": "recipe",
-      "sortid": 38,
+      "sortid": 39,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -311,7 +311,7 @@
     {
       "name": "Fuelefficiencyre",
       "type": "recipe",
-      "sortid": 39,
+      "sortid": 40,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -319,7 +319,7 @@
     {
       "name": "AdvancedOreprocessingre",
       "type": "recipe",
-      "sortid": 40,
+      "sortid": 41,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -327,7 +327,7 @@
     {
       "name": "AdvancedFuelefficiencyre",
       "type": "recipe",
-      "sortid": 41,
+      "sortid": 42,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -335,7 +335,7 @@
     {
       "name": "Diamondfurnacere1",
       "type": "recipe",
-      "sortid": 42,
+      "sortid": 43,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -343,7 +343,7 @@
     {
       "name": "Ironconduterblockre1",
       "type": "recipe",
-      "sortid": 43,
+      "sortid": 44,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -351,7 +351,7 @@
     {
       "name": "Fuelverifierrecipe",
       "type": "recipe",
-      "sortid": 44,
+      "sortid": 45,
       "compiles": true,
       "locked_code": false,
       "ids": {}
@@ -359,7 +359,7 @@
     {
       "name": "Colorupgradegui",
       "type": "gui",
-      "sortid": 45,
+      "sortid": 46,
       "compiles": true,
       "locked_code": false,
       "ids": {
@@ -370,7 +370,7 @@
     {
       "name": "Colorupgrade",
       "type": "item",
-      "sortid": 15,
+      "sortid": 16,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -379,7 +379,7 @@
     {
       "name": "Opencolorupgrade",
       "type": "procedure",
-      "sortid": 46,
+      "sortid": 47,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -412,7 +412,7 @@
     {
       "name": "ColorupgradeItemInInventoryTick",
       "type": "procedure",
-      "sortid": 47,
+      "sortid": 48,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -433,7 +433,7 @@
     {
       "name": "Coloruchange",
       "type": "procedure",
-      "sortid": 48,
+      "sortid": 49,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -450,7 +450,7 @@
     {
       "name": "ColorUpgradere",
       "type": "recipe",
-      "sortid": 49,
+      "sortid": 50,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -459,7 +459,7 @@
     {
       "name": "Fuelliquidupgrade",
       "type": "item",
-      "sortid": 16,
+      "sortid": 17,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -468,7 +468,7 @@
     {
       "name": "Tankguicond",
       "type": "procedure",
-      "sortid": 50,
+      "sortid": 51,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -498,7 +498,7 @@
     {
       "name": "Admupactive",
       "type": "procedure",
-      "sortid": 57,
+      "sortid": 52,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -528,7 +528,7 @@
     {
       "name": "Admupgrade",
       "type": "item",
-      "sortid": 17,
+      "sortid": 18,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -537,7 +537,7 @@
     {
       "name": "Fuelliquidupgradere",
       "type": "recipe",
-      "sortid": 58,
+      "sortid": 53,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -546,7 +546,7 @@
     {
       "name": "Flure2",
       "type": "recipe",
-      "sortid": 59,
+      "sortid": 54,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -555,7 +555,7 @@
     {
       "name": "Admupgradere",
       "type": "recipe",
-      "sortid": 60,
+      "sortid": 55,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -564,7 +564,7 @@
     {
       "name": "Oreprocessingupgrade",
       "type": "item",
-      "sortid": 11,
+      "sortid": 12,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -573,7 +573,7 @@
     {
       "name": "GoldUpgrade",
       "type": "item",
-      "sortid": 18,
+      "sortid": 20,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -582,7 +582,7 @@
     {
       "name": "DiamondUpgrade",
       "type": "item",
-      "sortid": 19,
+      "sortid": 21,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -591,7 +591,7 @@
     {
       "name": "NetherhotUpgrade",
       "type": "item",
-      "sortid": 20,
+      "sortid": 22,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -600,7 +600,7 @@
     {
       "name": "ExtremeUpgrade",
       "type": "item",
-      "sortid": 21,
+      "sortid": 23,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -609,7 +609,7 @@
     {
       "name": "Goldupre",
       "type": "recipe",
-      "sortid": 68,
+      "sortid": 56,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -618,7 +618,7 @@
     {
       "name": "Diamondupre",
       "type": "recipe",
-      "sortid": 69,
+      "sortid": 57,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -627,7 +627,7 @@
     {
       "name": "Netherupre",
       "type": "recipe",
-      "sortid": 70,
+      "sortid": 58,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -636,7 +636,7 @@
     {
       "name": "Diamondupre2",
       "type": "recipe",
-      "sortid": 71,
+      "sortid": 59,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -645,7 +645,7 @@
     {
       "name": "Extremeupre",
       "type": "recipe",
-      "sortid": 72,
+      "sortid": 60,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -654,7 +654,7 @@
     {
       "name": "Cobblestonegenerator",
       "type": "block",
-      "sortid": 7,
+      "sortid": 8,
       "compiles": true,
       "locked_code": true,
       "ids": {},
@@ -663,7 +663,7 @@
     {
       "name": "Cobgeneratorgui",
       "type": "gui",
-      "sortid": 73,
+      "sortid": 61,
       "compiles": true,
       "locked_code": true,
       "ids": {},
@@ -672,7 +672,7 @@
     {
       "name": "Cobgeneratorpro",
       "type": "procedure",
-      "sortid": 74,
+      "sortid": 62,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -701,7 +701,7 @@
     {
       "name": "Cobgeneratorrecipe",
       "type": "recipe",
-      "sortid": 75,
+      "sortid": 63,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -710,7 +710,7 @@
     {
       "name": "Fuelefficiencyupgrade",
       "type": "item",
-      "sortid": 12,
+      "sortid": 13,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -719,7 +719,7 @@
     {
       "name": "ForgeGUI",
       "type": "gui",
-      "sortid": 76,
+      "sortid": 64,
       "compiles": true,
       "locked_code": true,
       "ids": {},
@@ -728,7 +728,7 @@
     {
       "name": "ExtremeForge",
       "type": "block",
-      "sortid": 22,
+      "sortid": 6,
       "compiles": true,
       "locked_code": true,
       "ids": {},
@@ -737,7 +737,7 @@
     {
       "name": "Updatetickforges",
       "type": "procedure",
-      "sortid": 77,
+      "sortid": 65,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -766,7 +766,7 @@
     {
       "name": "Energyupgrade",
       "type": "item",
-      "sortid": 78,
+      "sortid": 19,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -775,7 +775,7 @@
     {
       "name": "Energyguicond",
       "type": "procedure",
-      "sortid": 79,
+      "sortid": 66,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -805,7 +805,7 @@
     {
       "name": "ExtremeForgere",
       "type": "recipe",
-      "sortid": 80,
+      "sortid": 67,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -814,7 +814,7 @@
     {
       "name": "Energyupre",
       "type": "recipe",
-      "sortid": 81,
+      "sortid": 68,
       "compiles": true,
       "locked_code": false,
       "ids": {},
@@ -823,11 +823,56 @@
     {
       "name": "JeiPlugin",
       "type": "code",
-      "sortid": 82,
+      "sortid": 69,
       "compiles": true,
       "locked_code": true,
       "ids": {},
       "registry_name": "jei_plugin"
+    },
+    {
+      "name": "Overcooked",
+      "type": "achievement",
+      "sortid": 70,
+      "compiles": true,
+      "locked_code": false,
+      "ids": {},
+      "registry_name": "overcooked"
+    },
+    {
+      "name": "Dupeores",
+      "type": "achievement",
+      "sortid": 72,
+      "compiles": true,
+      "locked_code": false,
+      "ids": {},
+      "registry_name": "dupeores"
+    },
+    {
+      "name": "Thebestfurnace",
+      "type": "achievement",
+      "sortid": 73,
+      "compiles": true,
+      "locked_code": false,
+      "ids": {},
+      "registry_name": "thebestfurnace"
+    },
+    {
+      "name": "Forges",
+      "type": "achievement",
+      "sortid": 74,
+      "compiles": true,
+      "locked_code": false,
+      "ids": {},
+      "registry_name": "forges"
+    },
+    {
+      "name": "Useless",
+      "type": "achievement",
+      "sortid": 75,
+      "compiles": true,
+      "locked_code": false,
+      "ids": {},
+      "registry_name": "useless"
     }
   ],
   "variable_elements": [],
@@ -835,19 +880,25 @@
   "language_map": {
     "ru_ru": {
       "block.betterfurnacesreforged.diamondfurnace": "???????? ????",
-      "item.betterfurnacesreforged.admupgrade": "Info Upgrade",
       "block.betterfurnacesreforged.fuelverifierblock": "????????? ????????? ????????",
+      "item.betterfurnacesreforged.admupgrade": "Info Upgrade",
       "item.betterfurnacesreforged.advancedoreprocessingupgrade": "??????????: \"?????????? ????????? ????\"",
+      "advancements.dupeores.title": "Is this allowed?",
       "item.betterfurnacesreforged.fuelliquidupgrade": "Fuel Liquid Upgrade",
       "block.betterfurnacesreforged.ironconduterblock": "???????? ????????????? ????",
       "block.betterfurnacesreforged.goldfurnaceoff": "??????? ????",
       "item.betterfurnacesreforged.colorupgrade": "?????????? ?????",
+      "advancements.thebestfurnace.descr": "Craft a Extreme Furnace, the best furnace of the game",
       "item.betterfurnacesreforged.gold_upgrade": "Gold Upgrade",
       "block.betterfurnacesreforged.cobblestonegenerator": "Cobblestonegenerator",
       "item.betterfurnacesreforged.diamond_upgrade": "Diamond Upgrade",
       "item.betterfurnacesreforged.extreme_upgrade": "Extreme Upgrade",
       "block.betterfurnacesreforged.ironfurnace": "???????? ????",
+      "advancements.overcooked.title": "Overcooked",
       "block.betterfurnacesreforged.netherhotconduterblock": "????? ??????? ????????????? ????",
+      "advancements.dupeores.descr": "Craft a Ore Processing Upgrade to double your ores",
+      "advancements.useless.descr": " After all, this is not so useless",
+      "advancements.overcooked.descr": "Make your first Iron Furnace",
       "item.betterfurnacesreforged.oreprocessingupgrade": "Ore ProcessinguUpgrade",
       "itemGroup.tabbetterfurnacesreforged": "Better Furnaces Reforged",
       "item.betterfurnacesreforged.advancedfuelefficiencyupgrade": "??????????: \"?????????? ????????? ?????????????\"",
@@ -856,24 +907,34 @@
       "block.betterfurnacesreforged.extreme_forge": "Extreme Forge",
       "block.betterfurnacesreforged.goldconduterblock": "??????? ????????????? ????",
       "block.betterfurnacesreforged.netherhotfurnace": "????? ??????? ????",
+      "advancements.forges.title": "Better than Furnaces",
+      "advancements.forges.descr": "Make your first Extreme Forge",
+      "advancements.useless.title": "Useless",
       "block.betterfurnacesreforged.extremefurnace": "???????????? ????",
-      "item.betterfurnacesreforged.energyupgrade": "Fuel Liquid Upgrade"
+      "item.betterfurnacesreforged.energyupgrade": "Fuel Liquid Upgrade",
+      "advancements.thebestfurnace.title": "The Best Furnace"
     },
     "en_us": {
       "block.betterfurnacesreforged.diamondfurnace": "Diamond Furnace",
-      "block.betterfurnacesreforged.fuelverifierblock": "Fuel Power Verifier",
       "item.betterfurnacesreforged.admupgrade": "Info Upgrade",
+      "block.betterfurnacesreforged.fuelverifierblock": "Fuel Power Verifier",
       "item.betterfurnacesreforged.advancedoreprocessingupgrade": "Advanced Ore Processing Upgrade",
+      "advancements.dupeores.title": "Is this allowed?",
       "item.betterfurnacesreforged.fuelliquidupgrade": "Fuel Liquid Upgrade",
       "block.betterfurnacesreforged.ironconduterblock": "Iron Conduter Block",
       "block.betterfurnacesreforged.goldfurnaceoff": "Gold Furnace",
       "item.betterfurnacesreforged.colorupgrade": "Color Upgrade",
+      "advancements.thebestfurnace.descr": "Craft a Extreme Furnace, the best furnace in the Minecraft",
       "item.betterfurnacesreforged.gold_upgrade": "Gold Upgrade",
       "block.betterfurnacesreforged.cobblestonegenerator": "Cobblestone Generator",
       "item.betterfurnacesreforged.diamond_upgrade": "Diamond Upgrade",
       "item.betterfurnacesreforged.extreme_upgrade": "Extreme Upgrade",
       "block.betterfurnacesreforged.ironfurnace": "Iron Furnace",
+      "advancements.overcooked.title": "Overcooked",
       "block.betterfurnacesreforged.netherhotconduterblock": "Netherhot Conduter Block",
+      "advancements.dupeores.descr": "Craft a Ore Processing Upgrade to double your ores",
+      "advancements.useless.descr": " After all, this is not so useless",
+      "advancements.overcooked.descr": "Make your first Iron Furnace",
       "item.betterfurnacesreforged.oreprocessingupgrade": "Ore Processing Upgrade",
       "itemGroup.tabbetterfurnacesreforged": "Better Furnaces Reforged",
       "item.betterfurnacesreforged.advancedfuelefficiencyupgrade": "Advanced Fuel Efficiency Upgrade",
@@ -882,24 +943,34 @@
       "block.betterfurnacesreforged.extreme_forge": "Extreme Forge",
       "block.betterfurnacesreforged.goldconduterblock": "Gold Conduter Block",
       "block.betterfurnacesreforged.netherhotfurnace": "Netherhot Furnace",
+      "advancements.forges.title": "Better than Furnaces",
+      "advancements.forges.descr": "Make your first Extreme Forge",
+      "advancements.useless.title": "Useless",
       "block.betterfurnacesreforged.extremefurnace": "Extreme Furnace",
-      "item.betterfurnacesreforged.energyupgrade": "Energy Upgrade"
+      "item.betterfurnacesreforged.energyupgrade": "Energy Upgrade",
+      "advancements.thebestfurnace.title": "The Best Furnace"
     },
     "pt_br": {
       "block.betterfurnacesreforged.diamondfurnace": "Fornalha de Diamante",
-      "block.betterfurnacesreforged.fuelverifierblock": "Verificador do Poder de Combustível",
       "item.betterfurnacesreforged.admupgrade": "Melhoria de Informação",
+      "block.betterfurnacesreforged.fuelverifierblock": "Verificador do Poder de Combustível",
       "item.betterfurnacesreforged.advancedoreprocessingupgrade": "Melhoria do Processamento de Minérios Avançada",
+      "advancements.dupeores.title": "Isto não é trapacear?",
       "item.betterfurnacesreforged.fuelliquidupgrade": "Melhoria de Fluído",
       "block.betterfurnacesreforged.ironconduterblock": "Bloco Condutor de Ferro",
       "block.betterfurnacesreforged.goldfurnaceoff": "Fornalha de Ouro",
       "item.betterfurnacesreforged.colorupgrade": "Melhoria de Cor",
+      "advancements.thebestfurnace.descr": "Faça uma fornalha extrema, a melhor fornalha do jogo",
       "item.betterfurnacesreforged.gold_upgrade": "Melhoria de Ouro",
       "block.betterfurnacesreforged.cobblestonegenerator": "Gerador de Pedregulho",
       "item.betterfurnacesreforged.diamond_upgrade": "Melhoria de Diamante",
       "item.betterfurnacesreforged.extreme_upgrade": "Melhoria Extrema",
       "block.betterfurnacesreforged.ironfurnace": "Fornalha de Ferro",
+      "advancements.overcooked.title": "Overcooked",
       "block.betterfurnacesreforged.netherhotconduterblock": "Bloco Condutor do Calor do Nether",
+      "advancements.dupeores.descr": "Faça uma Melhoria do Processamento de Minérios avançada para duplicar seus minérios",
+      "advancements.useless.descr": "Afinal, isso não é tão inútil assim",
+      "advancements.overcooked.descr": "Faça sua primeira fornalha de ferro",
       "item.betterfurnacesreforged.oreprocessingupgrade": "Melhoria do Processamento de Minérios",
       "itemGroup.tabbetterfurnacesreforged": "Better Furnaces Reforged",
       "item.betterfurnacesreforged.advancedfuelefficiencyupgrade": "Melhoria Avançada da Eficiência do Combustível",
@@ -908,24 +979,34 @@
       "block.betterfurnacesreforged.extreme_forge": "Forja Extrema",
       "block.betterfurnacesreforged.goldconduterblock": "Bloco Condutor de Ouro",
       "block.betterfurnacesreforged.netherhotfurnace": "Fornalha do Nether",
+      "advancements.forges.title": "Melhor que Fornalhas",
+      "advancements.forges.descr": "Faça sua primeira forja extrema",
+      "advancements.useless.title": "Inútil",
       "block.betterfurnacesreforged.extremefurnace": "Fornalha Extrema",
-      "item.betterfurnacesreforged.energyupgrade": "Melhoria de Energia"
+      "item.betterfurnacesreforged.energyupgrade": "Melhoria de Energia",
+      "advancements.thebestfurnace.title": "A melhor fornalha"
     },
     "es_es": {
       "block.betterfurnacesreforged.diamondfurnace": "Horno de diamante",
-      "block.betterfurnacesreforged.fuelverifierblock": "Probador de energía de combustible",
       "item.betterfurnacesreforged.admupgrade": "Mejora de información",
+      "block.betterfurnacesreforged.fuelverifierblock": "Probador de energía de combustible",
       "item.betterfurnacesreforged.advancedoreprocessingupgrade": "Mejora avanzada de procesamiento de mineral",
+      "advancements.dupeores.title": "Is this allowed?",
       "item.betterfurnacesreforged.fuelliquidupgrade": "Mejora de líquido",
       "block.betterfurnacesreforged.ironconduterblock": "Bloque conductor de Hierro",
       "block.betterfurnacesreforged.goldfurnaceoff": "Horno de oro",
       "item.betterfurnacesreforged.colorupgrade": "Mejora de colores",
+      "advancements.thebestfurnace.descr": "Craft a Extreme Furnace, the best furnace of the game",
       "item.betterfurnacesreforged.gold_upgrade": "Mejora de oro",
       "block.betterfurnacesreforged.cobblestonegenerator": "Generador de rocas",
       "item.betterfurnacesreforged.diamond_upgrade": "Mejora de diamante",
       "item.betterfurnacesreforged.extreme_upgrade": "Mejora extrema",
       "block.betterfurnacesreforged.ironfurnace": "Horno de Hierro",
+      "advancements.overcooked.title": "Overcooked",
       "block.betterfurnacesreforged.netherhotconduterblock": "Bloque conductor de calor del inframundo",
+      "advancements.dupeores.descr": "Craft a Ore Processing Upgrade to double your ores",
+      "advancements.useless.descr": " After all, this is not so useless",
+      "advancements.overcooked.descr": "Make your first Iron Furnace",
       "item.betterfurnacesreforged.oreprocessingupgrade": "Mejora de procesamiento de mineral",
       "itemGroup.tabbetterfurnacesreforged": "Better Furnaces Reforged",
       "item.betterfurnacesreforged.advancedfuelefficiencyupgrade": "Mejora avanzada de potencia de combustible",
@@ -934,24 +1015,34 @@
       "block.betterfurnacesreforged.extreme_forge": "Forja Extrema",
       "block.betterfurnacesreforged.goldconduterblock": "Bloque conductor de Oro",
       "block.betterfurnacesreforged.netherhotfurnace": "Horno del inframundo",
+      "advancements.forges.title": "Better than Furnaces",
+      "advancements.forges.descr": "Make your first Extreme Forge",
+      "advancements.useless.title": "Useless",
       "block.betterfurnacesreforged.extremefurnace": "Horno extremo",
-      "item.betterfurnacesreforged.energyupgrade": "Mejora de Energía"
+      "item.betterfurnacesreforged.energyupgrade": "Mejora de Energía",
+      "advancements.thebestfurnace.title": "The Best Furnace"
     },
     "pt_pt": {
       "block.betterfurnacesreforged.diamondfurnace": "Fornalha de Diamante",
-      "block.betterfurnacesreforged.fuelverifierblock": "Verificador do Poder de Combustível",
       "item.betterfurnacesreforged.admupgrade": "Melhoria de Informação",
+      "block.betterfurnacesreforged.fuelverifierblock": "Verificador do Poder de Combustível",
       "item.betterfurnacesreforged.advancedoreprocessingupgrade": "Melhoria de Processamento de Minérios Avançada",
+      "advancements.dupeores.title": "Isso é permitido?",
       "item.betterfurnacesreforged.fuelliquidupgrade": "Melhoria de Fluído",
       "block.betterfurnacesreforged.ironconduterblock": "Bloco Condutor de Ferro",
       "block.betterfurnacesreforged.goldfurnaceoff": "Fornalha de Ouro",
       "item.betterfurnacesreforged.colorupgrade": "Melhoria de Cor",
+      "advancements.thebestfurnace.descr": "Faça uma fornalha extrema, a melhor fornalha do jogo",
       "item.betterfurnacesreforged.gold_upgrade": "Melhoria de Ouro",
       "block.betterfurnacesreforged.cobblestonegenerator": "Gerador de Pedregulho",
       "item.betterfurnacesreforged.diamond_upgrade": "Melhoria de Diamante",
       "item.betterfurnacesreforged.extreme_upgrade": "Melhoria Extrema",
       "block.betterfurnacesreforged.ironfurnace": "Fornalha de Ferro",
+      "advancements.overcooked.title": "Overcooked",
       "block.betterfurnacesreforged.netherhotconduterblock": "Bloco Condutor do Calor do Submundo",
+      "advancements.dupeores.descr": "Faça uma Melhoria do Processamento de Minérios avançada para duplicar seus minérios",
+      "advancements.useless.descr": "Afinal, isso não é tão inútil assim",
+      "advancements.overcooked.descr": "Faça sua primeira fornalha de ferro",
       "item.betterfurnacesreforged.oreprocessingupgrade": "Melhoria de Processamento de Minérios ",
       "itemGroup.tabbetterfurnacesreforged": "Better Furnaces Reforged",
       "item.betterfurnacesreforged.advancedfuelefficiencyupgrade": "Melhoria Avançada da Eficiência do Combustível",
@@ -960,8 +1051,12 @@
       "block.betterfurnacesreforged.extreme_forge": "Forja Extrema",
       "block.betterfurnacesreforged.goldconduterblock": "Bloco Condutor de Ouro",
       "block.betterfurnacesreforged.netherhotfurnace": "Fornalha do Submundo",
+      "advancements.forges.title": "Melhor que Fornalhas",
+      "advancements.forges.descr": "Faça sua primeira forja extrema",
+      "advancements.useless.title": "Inútil",
       "block.betterfurnacesreforged.extremefurnace": "Fornalha Extrema",
-      "item.betterfurnacesreforged.energyupgrade": "Melhoria de Energia"
+      "item.betterfurnacesreforged.energyupgrade": "Melhoria de Energia",
+      "advancements.thebestfurnace.title": "A melhor fornalha"
     }
   },
   "foldersRoot": {
@@ -971,7 +1066,7 @@
   "workspaceSettings": {
     "modid": "betterfurnacesreforged",
     "modName": "BetterFurnaces Reforged",
-    "version": "1.7.3b",
+    "version": "1.7.4a",
     "description": "This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, presenting only the main things used in the original mod",
     "author": "Wilyicaro",
     "websiteURL": "https://curseforge.com",

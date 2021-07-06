@@ -16,7 +16,7 @@ public class GoldUpgradeItem extends BetterfurnacesreforgedModElements.ModElemen
 	@ObjectHolder("betterfurnacesreforged:gold_upgrade")
 	public static final Item block = null;
 	public GoldUpgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 18);
+		super(instance, 20);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class EnergyupgradeItem extends BetterfurnacesreforgedModElements.ModElem
 	@ObjectHolder("betterfurnacesreforged:energyupgrade")
 	public static final Item block = null;
 	public EnergyupgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 78);
+		super(instance, 19);
 	}
 
 	@Override

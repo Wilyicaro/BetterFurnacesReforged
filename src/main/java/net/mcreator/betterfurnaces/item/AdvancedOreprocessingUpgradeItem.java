@@ -16,7 +16,7 @@ public class AdvancedOreprocessingUpgradeItem extends BetterfurnacesreforgedModE
 	@ObjectHolder("betterfurnacesreforged:advancedoreprocessingupgrade")
 	public static final Item block = null;
 	public AdvancedOreprocessingUpgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 13);
+		super(instance, 14);
 	}
 
 	@Override

@@ -85,7 +85,7 @@
     "particleSpawningRadious": 0.5,
     "particleAmount": 4,
     "hasInventory": true,
-    "guiBoundTo": "Fuelverifiergui",
+    "guiBoundTo": "Cobgeneratorgui",
     "openGUIOnRightClick": true,
     "inventorySize": 1,
     "inventoryStackSize": 1,
@@ -102,7 +102,7 @@
     "fluidCapacity": 4000,
     "fluidRestrictions": [],
     "onTickUpdate": {
-      "name": "FuelverifierblockUpdateTick"
+      "name": "Cobgeneratorpro"
     },
     "spawnWorldTypes": [],
     "restrictionBiomes": [],

@@ -32,7 +32,7 @@ import java.util.Map;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class FuelconfigProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public FuelconfigProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 25);
+		super(instance, 26);
 	}
 
 	public static void executeProcedure(Map<String, Object> dependencies) {

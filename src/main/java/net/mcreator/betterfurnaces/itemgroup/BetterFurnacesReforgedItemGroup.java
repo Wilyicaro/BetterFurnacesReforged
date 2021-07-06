@@ -13,7 +13,7 @@ import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class BetterFurnacesReforgedItemGroup extends BetterfurnacesreforgedModElements.ModElement {
 	public BetterFurnacesReforgedItemGroup(BetterfurnacesreforgedModElements instance) {
-		super(instance, 34);
+		super(instance, 35);
 	}
 
 	@Override

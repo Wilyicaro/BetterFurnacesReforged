@@ -56,7 +56,7 @@ public class ColorupgradeItem extends BetterfurnacesreforgedModElements.ModEleme
 	@ObjectHolder("betterfurnacesreforged:colorupgrade")
 	public static final Item block = null;
 	public ColorupgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 15);
+		super(instance, 16);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 

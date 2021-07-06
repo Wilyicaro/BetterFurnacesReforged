@@ -24,7 +24,7 @@ public class NetherhotConduterBlockBlock extends BetterfurnacesreforgedModElemen
 	@ObjectHolder("betterfurnacesreforged:netherhotconduterblock")
 	public static final Block block = null;
 	public NetherhotConduterBlockBlock(BetterfurnacesreforgedModElements instance) {
-		super(instance, 10);
+		super(instance, 11);
 	}
 
 	@Override

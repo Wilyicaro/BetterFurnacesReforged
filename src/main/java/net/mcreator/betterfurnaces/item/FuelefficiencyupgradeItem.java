@@ -16,7 +16,7 @@ public class FuelefficiencyupgradeItem extends BetterfurnacesreforgedModElements
 	@ObjectHolder("betterfurnacesreforged:fuelefficiencyupgrade")
 	public static final Item block = null;
 	public FuelefficiencyupgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 12);
+		super(instance, 13);
 	}
 
 	@Override

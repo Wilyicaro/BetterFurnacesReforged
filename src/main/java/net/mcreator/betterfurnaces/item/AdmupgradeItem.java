@@ -16,7 +16,7 @@ public class AdmupgradeItem extends BetterfurnacesreforgedModElements.ModElement
 	@ObjectHolder("betterfurnacesreforged:admupgrade")
 	public static final Item block = null;
 	public AdmupgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 17);
+		super(instance, 18);
 	}
 
 	@Override

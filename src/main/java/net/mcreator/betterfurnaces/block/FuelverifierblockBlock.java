@@ -54,9 +54,9 @@ import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Block;
 
-import net.mcreator.betterfurnaces.procedures.FuelverifierblockUpdateTickProcedure;
+import net.mcreator.betterfurnaces.procedures.CobgeneratorproProcedure;
 import net.mcreator.betterfurnaces.itemgroup.BetterFurnacesReforgedItemGroup;
-import net.mcreator.betterfurnaces.gui.FuelverifierguiGui;
+import net.mcreator.betterfurnaces.gui.CobgeneratorguiGui;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 
 import javax.annotation.Nullable;
@@ -77,7 +77,7 @@ public class FuelverifierblockBlock extends BetterfurnacesreforgedModElements.Mo
 	@ObjectHolder("betterfurnacesreforged:fuelverifierblock")
 	public static final TileEntityType<CustomTileEntity> tileEntityType = null;
 	public FuelverifierblockBlock(BetterfurnacesreforgedModElements instance) {
-		super(instance, 6);
+		super(instance, 7);
 		FMLJavaModLoadingContext.get().getModEventBus().register(new TileEntityRegisterHandler());
 	}
 
@@ -152,7 +152,7 @@ public class FuelverifierblockBlock extends BetterfurnacesreforgedModElements.Mo
 				$_dependencies.put("y", y);
 				$_dependencies.put("z", z);
 				$_dependencies.put("world", world);
-				FuelverifierblockUpdateTickProcedure.executeProcedure($_dependencies);
+				CobgeneratorproProcedure.executeProcedure($_dependencies);
 			}
 			world.getPendingBlockTicks().scheduleTick(new BlockPos(x, y, z), this, 1);
 		}
@@ -173,7 +173,7 @@ public class FuelverifierblockBlock extends BetterfurnacesreforgedModElements.Mo
 
 					@Override
 					public Container createMenu(int id, PlayerInventory inventory, PlayerEntity player) {
-						return new FuelverifierguiGui.GuiContainerMod(id, inventory,
+						return new CobgeneratorguiGui.GuiContainerMod(id, inventory,
 								new PacketBuffer(Unpooled.buffer()).writeBlockPos(new BlockPos(x, y, z)));
 					}
 				}, new BlockPos(x, y, z));
@@ -295,7 +295,7 @@ public class FuelverifierblockBlock extends BetterfurnacesreforgedModElements.Mo
 
 		@Override
 		public Container createMenu(int id, PlayerInventory player) {
-			return new FuelverifierguiGui.GuiContainerMod(id, player, new PacketBuffer(Unpooled.buffer()).writeBlockPos(this.getPos()));
+			return new CobgeneratorguiGui.GuiContainerMod(id, player, new PacketBuffer(Unpooled.buffer()).writeBlockPos(this.getPos()));
 		}
 
 		@Override

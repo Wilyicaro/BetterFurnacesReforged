@@ -67,14 +67,14 @@ public class FuelverifierguiGuiWindow extends ContainerScreen<FuelverifierguiGui
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
 		this.font.drawString(ms, "" + (new Object() {
-			public double getValue(BlockPos pos, String tag) {
+			public String getValue(BlockPos pos, String tag) {
 				TileEntity tileEntity = world.getTileEntity(pos);
 				if (tileEntity != null)
-					return tileEntity.getTileData().getDouble(tag);
-				return 0;
+					return tileEntity.getTileData().getString(tag);
+				return "";
 			}
-		}.getValue(new BlockPos((int) x, (int) y, (int) z), "fuelPower")) + "", 78, 29, -6710887);
-		this.font.drawString(ms, "Fuel Power", 60, 11, -13421773);
+		}.getValue(new BlockPos((int) x, (int) y, (int) z), "blockname")) + "", 53, 6, -13421773);
+
 	}
 
 	@Override

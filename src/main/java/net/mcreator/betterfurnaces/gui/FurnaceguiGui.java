@@ -91,7 +91,7 @@ public class FurnaceguiGui extends BetterfurnacesreforgedModElements.ModElement 
 			super(containerType, id);
 			this.entity = inv.player;
 			this.world = inv.player.world;
-			this.internal = new ItemStackHandler(7);
+			this.internal = new ItemStackHandler(6);
 			BlockPos pos = null;
 			if (extraData != null) {
 				pos = extraData.readBlockPos();
@@ -133,11 +133,11 @@ public class FurnaceguiGui extends BetterfurnacesreforgedModElements.ModElement 
 			}));
 			this.customSlots.put(1, this.addSlot(new SlotItemHandler(internal, 1, 54, 54) {
 			}));
-			this.customSlots.put(3, this.addSlot(new SlotItemHandler(internal, 3, 115, 35) {
+			this.customSlots.put(2, this.addSlot(new SlotItemHandler(internal, 2, 115, 35) {
 				@Override
 				public ItemStack onTake(PlayerEntity entity, ItemStack stack) {
 					ItemStack retval = super.onTake(entity, stack);
-					GuiContainerMod.this.slotChanged(3, 1, 0);
+					GuiContainerMod.this.slotChanged(2, 1, 0);
 					return retval;
 				}
 
@@ -146,19 +146,19 @@ public class FurnaceguiGui extends BetterfurnacesreforgedModElements.ModElement 
 					return false;
 				}
 			}));
-			this.customSlots.put(4, this.addSlot(new SlotItemHandler(internal, 4, 8, 18) {
+			this.customSlots.put(3, this.addSlot(new SlotItemHandler(internal, 3, 8, 18) {
 				@Override
 				public boolean isItemValid(ItemStack stack) {
 					return (new ItemStack(AdvancedOreprocessingUpgradeItem.block, (int) (1)).getItem() == stack.getItem() || new ItemStack(OreprocessingupgradeItem.block, (int) (1)).getItem() == stack.getItem());
 				}
 			}));
-			this.customSlots.put(5, this.addSlot(new SlotItemHandler(internal, 5, 8, 36) {
+			this.customSlots.put(4, this.addSlot(new SlotItemHandler(internal, 4, 8, 36) {
 				@Override
 				public boolean isItemValid(ItemStack stack) {
 					return (new ItemStack(AdvancedFuelefficiencyUpgradeItem.block, (int) (1)).getItem() == stack.getItem() || new ItemStack(FuelefficiencyupgradeItem.block, (int) (1)).getItem() == stack.getItem());
 				}
 			}));
-			this.customSlots.put(6, this.addSlot(new SlotItemHandler(internal, 6, 8, 54) {
+			this.customSlots.put(5, this.addSlot(new SlotItemHandler(internal, 5, 8, 54) {
 				@Override
 				public boolean isItemValid(ItemStack stack) {
 					return (new ItemStack(ColorupgradeItem.block, (int) (1)).getItem() == stack.getItem() || new ItemStack(AdmupgradeItem.block, (int) (1)).getItem() == stack.getItem() || new ItemStack(FuelliquidupgradeItem.block, (int) (1)).getItem() == stack.getItem() || new ItemStack(GoldUpgradeItem.block, (int) (1)).getItem() == stack.getItem() || new ItemStack(DiamondUpgradeItem.block, (int) (1)).getItem() == stack.getItem() || new ItemStack(NetherhotUpgradeItem.block, (int) (1)).getItem() == stack.getItem() || new ItemStack(ExtremeUpgradeItem.block, (int) (1)).getItem() == stack.getItem());
@@ -418,7 +418,7 @@ public class FurnaceguiGui extends BetterfurnacesreforgedModElements.ModElement 
 		// security measure to prevent arbitrary chunk generation
 		if (!world.isBlockLoaded(new BlockPos(x, y, z)))
 			return;
-		if (slotID == 3 && changeType == 1) {
+		if (slotID == 2 && changeType == 1) {
 			{
 				Map<String, Object> $_dependencies = new HashMap<>();
 				$_dependencies.put("entity", entity);

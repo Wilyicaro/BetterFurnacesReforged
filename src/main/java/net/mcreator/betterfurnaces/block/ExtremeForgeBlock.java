@@ -420,8 +420,30 @@ public class ExtremeForgeBlock extends BetterfurnacesreforgedModElements.ModElem
 		}
 
 		@Override
-		public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
-			return this.isItemValidForSlot(index, stack);
+		public boolean canInsertItem(int index, ItemStack stack, Direction direction) {
+			if (index == 9)
+				return false;
+			if (index == 10)
+				return false;
+			if (index == 11)
+				return false;
+			if (index == 12)
+				return false;
+			if (index == 13)
+				return false;
+			if (index == 14)
+				return false;
+			if (index == 15)
+				return false;
+			if (index == 3)
+				return false;
+			if (index == 5)
+				return false;
+			if (index == 8)
+				return false;
+			if (index == 1)
+				return false;
+			return true;
 		}
 
 		@Override

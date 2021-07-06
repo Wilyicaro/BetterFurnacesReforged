@@ -16,7 +16,7 @@ public class ExtremeUpgradeItem extends BetterfurnacesreforgedModElements.ModEle
 	@ObjectHolder("betterfurnacesreforged:extreme_upgrade")
 	public static final Item block = null;
 	public ExtremeUpgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 21);
+		super(instance, 23);
 	}
 
 	@Override

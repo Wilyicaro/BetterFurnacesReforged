@@ -12,7 +12,7 @@ import java.util.Map;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class EnergyguicondProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public EnergyguicondProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 79);
+		super(instance, 66);
 	}
 
 	public static boolean executeProcedure(Map<String, Object> dependencies) {

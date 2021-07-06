@@ -17,7 +17,7 @@ import java.util.Map;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class AdmupactiveProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public AdmupactiveProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 57);
+		super(instance, 52);
 	}
 
 	public static boolean executeProcedure(Map<String, Object> dependencies) {
@@ -46,7 +46,7 @@ public class AdmupactiveProcedure extends BetterfurnacesreforgedModElements.ModE
 		double z = dependencies.get("z") instanceof Integer ? (int) dependencies.get("z") : (double) dependencies.get("z");
 		IWorld world = (IWorld) dependencies.get("world");
 		double furnacetm = 0;
-		return ((new ItemStack(AdmupgradeItem.block, (int) (1)).getItem() == (new Object() {
+		return (new ItemStack(AdmupgradeItem.block, (int) (1)).getItem() == (new Object() {
 			public ItemStack getItemStack(BlockPos pos, int sltid) {
 				AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
 				TileEntity _ent = world.getTileEntity(pos);
@@ -57,30 +57,6 @@ public class AdmupactiveProcedure extends BetterfurnacesreforgedModElements.ModE
 				}
 				return _retval.get();
 			}
-		}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem())
-				|| ((new ItemStack(AdmupgradeItem.block, (int) (1)).getItem() == (new Object() {
-					public ItemStack getItemStack(BlockPos pos, int sltid) {
-						AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
-						TileEntity _ent = world.getTileEntity(pos);
-						if (_ent != null) {
-							_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
-								_retval.set(capability.getStackInSlot(sltid).copy());
-							});
-						}
-						return _retval.get();
-					}
-				}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())
-						|| (new ItemStack(AdmupgradeItem.block, (int) (1)).getItem() == (new Object() {
-							public ItemStack getItemStack(BlockPos pos, int sltid) {
-								AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
-								TileEntity _ent = world.getTileEntity(pos);
-								if (_ent != null) {
-									_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
-										_retval.set(capability.getStackInSlot(sltid).copy());
-									});
-								}
-								return _retval.get();
-							}
-						}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getItem())));
+		}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem());
 	}
 }

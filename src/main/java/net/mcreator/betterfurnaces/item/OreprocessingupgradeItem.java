@@ -16,7 +16,7 @@ public class OreprocessingupgradeItem extends BetterfurnacesreforgedModElements.
 	@ObjectHolder("betterfurnacesreforged:oreprocessingupgrade")
 	public static final Item block = null;
 	public OreprocessingupgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 11);
+		super(instance, 12);
 	}
 
 	@Override

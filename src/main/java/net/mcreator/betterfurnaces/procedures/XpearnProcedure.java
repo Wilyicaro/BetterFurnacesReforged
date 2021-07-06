@@ -16,7 +16,7 @@ import java.util.Map;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class XpearnProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public XpearnProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 28);
+		super(instance, 29);
 	}
 
 	public static void executeProcedure(Map<String, Object> dependencies) {

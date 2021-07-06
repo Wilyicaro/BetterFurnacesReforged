@@ -16,7 +16,7 @@ public class NetherhotUpgradeItem extends BetterfurnacesreforgedModElements.ModE
 	@ObjectHolder("betterfurnacesreforged:netherhot_upgrade")
 	public static final Item block = null;
 	public NetherhotUpgradeItem(BetterfurnacesreforgedModElements instance) {
-		super(instance, 20);
+		super(instance, 22);
 	}
 
 	@Override

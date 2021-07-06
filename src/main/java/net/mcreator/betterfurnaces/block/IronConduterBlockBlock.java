@@ -24,7 +24,7 @@ public class IronConduterBlockBlock extends BetterfurnacesreforgedModElements.Mo
 	@ObjectHolder("betterfurnacesreforged:ironconduterblock")
 	public static final Block block = null;
 	public IronConduterBlockBlock(BetterfurnacesreforgedModElements instance) {
-		super(instance, 8);
+		super(instance, 9);
 	}
 
 	@Override

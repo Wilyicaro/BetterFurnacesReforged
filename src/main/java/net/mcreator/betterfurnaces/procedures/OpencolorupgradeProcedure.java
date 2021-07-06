@@ -25,7 +25,7 @@ import io.netty.buffer.Unpooled;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class OpencolorupgradeProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public OpencolorupgradeProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 46);
+		super(instance, 47);
 	}
 
 	public static void executeProcedure(Map<String, Object> dependencies) {

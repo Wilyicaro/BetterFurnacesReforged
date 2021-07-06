@@ -42,7 +42,7 @@ import java.util.HashMap;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class UpdatetickforgesProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public UpdatetickforgesProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 77);
+		super(instance, 65);
 	}
 
 	public static void executeProcedure(Map<String, Object> dependencies) {

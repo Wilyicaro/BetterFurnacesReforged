@@ -39,6 +39,7 @@ import net.mcreator.betterfurnaces.item.AdvancedFuelefficiencyUpgradeItem;
 import net.mcreator.betterfurnaces.block.NetherhotFurnaceBlock;
 import net.mcreator.betterfurnaces.block.IronfurnaceoffBlock;
 import net.mcreator.betterfurnaces.block.GoldfurnaceoffBlock;
+import net.mcreator.betterfurnaces.block.FuelverifierblockBlock;
 import net.mcreator.betterfurnaces.block.ExtremeFurnaceBlock;
 import net.mcreator.betterfurnaces.block.DiamondfurnaceBlock;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
@@ -53,7 +54,7 @@ import java.util.HashMap;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public IronfurnaceoffUpdateTickProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 24);
+		super(instance, 25);
 	}
 
 	public static void executeProcedure(Map<String, Object> dependencies) {
@@ -224,7 +225,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 								}
 								return _retval.get();
 							}
-						}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (3))) < 64) && ((((world instanceof World
+						}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (2))) < 64) && ((((world instanceof World
 								&& ((World) world).getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory((new Object() {
 									public ItemStack getItemStack(BlockPos pos, int sltid) {
 										AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -261,7 +262,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 												}
 												return _retval.get();
 											}
-										}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem())
+										}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (2))).getItem())
 								|| ((new Object() {
 									public ItemStack getItemStack(BlockPos pos, int sltid) {
 										AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -273,7 +274,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 										}
 										return _retval.get();
 									}
-								}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem() == new ItemStack(Blocks.AIR, (int) (1))
+								}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (2))).getItem() == new ItemStack(Blocks.AIR, (int) (1))
 										.getItem()))))))) {
 			if (!world.isRemote()) {
 				BlockPos _bp = new BlockPos((int) x, (int) y, (int) z);
@@ -363,7 +364,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 							}
 							return _retval.get();
 						}
-					}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (3))) < 64) && ((((world instanceof World
+					}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (2))) < 64) && ((((world instanceof World
 							&& ((World) world).getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory((new Object() {
 								public ItemStack getItemStack(BlockPos pos, int sltid) {
 									AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -400,7 +401,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 											}
 											return _retval.get();
 										}
-									}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem())
+									}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (2))).getItem())
 							|| ((new Object() {
 								public ItemStack getItemStack(BlockPos pos, int sltid) {
 									AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -412,7 +413,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 									}
 									return _retval.get();
 								}
-							}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem() == new ItemStack(Blocks.AIR, (int) (1))
+							}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (2))).getItem() == new ItemStack(Blocks.AIR, (int) (1))
 									.getItem()))))))) {
 				if (((new Object() {
 					public boolean getValue(IWorld world, BlockPos pos, String tag) {
@@ -503,11 +504,11 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 						}
 						return _retval.get();
 					}
-				}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())) {
+				}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem())) {
 					{
 						TileEntity _ent = world.getTileEntity(new BlockPos((int) x, (int) y, (int) z));
 						if (_ent != null) {
-							final int _sltid = (int) (5);
+							final int _sltid = (int) (4);
 							final int _amount = (int) 1;
 							_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
 								if (capability instanceof IItemHandlerModifiable) {
@@ -617,7 +618,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 						}
 						return _retval.get();
 					}
-				}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (3))) <= 63) && (((world instanceof World
+				}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (2))) <= 63) && (((world instanceof World
 						&& ((World) world).getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory((new Object() {
 							public ItemStack getItemStack(BlockPos pos, int sltid) {
 								AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -653,7 +654,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 										}
 										return _retval.get();
 									}
-								}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem()))
+								}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (2))).getItem()))
 						|| ((new Object() {
 							public ItemStack getItemStack(BlockPos pos, int sltid) {
 								AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -665,7 +666,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 								}
 								return _retval.get();
 							}
-						}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem() == new ItemStack(Blocks.AIR, (int) (1))
+						}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (2))).getItem() == new ItemStack(Blocks.AIR, (int) (1))
 								.getItem())))) {
 					if (!world.isRemote()) {
 						BlockPos _bp = new BlockPos((int) x, (int) y, (int) z);
@@ -687,7 +688,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 							}
 							return _retval.get();
 						}
-					}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem())
+					}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem())
 							|| (new ItemStack(AdvancedOreprocessingUpgradeItem.block, (int) (1)).getItem() == (new Object() {
 								public ItemStack getItemStack(BlockPos pos, int sltid) {
 									AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -699,7 +700,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 									}
 									return _retval.get();
 								}
-							}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem())) && (ItemTags.getCollection()
+							}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem())) && (ItemTags.getCollection()
 									.getTagByID(new ResourceLocation(("forge:ores").toLowerCase(java.util.Locale.ENGLISH))).contains((new Object() {
 										public ItemStack getItemStack(BlockPos pos, int sltid) {
 											AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -715,7 +716,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 						{
 							TileEntity _ent = world.getTileEntity(new BlockPos((int) x, (int) y, (int) z));
 							if (_ent != null) {
-								final int _sltid = (int) (3);
+								final int _sltid = (int) (2);
 								final ItemStack _setstack = ((world instanceof World
 										&& ((World) world).getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory((new Object() {
 											public ItemStack getItemStack(BlockPos pos, int sltid) {
@@ -755,7 +756,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 										}
 										return _retval.get();
 									}
-								}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (3))) + 2));
+								}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (2))) + 2));
 								_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
 									if (capability instanceof IItemHandlerModifiable) {
 										((IItemHandlerModifiable) capability).setStackInSlot(_sltid, _setstack);
@@ -774,11 +775,11 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 								}
 								return _retval.get();
 							}
-						}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem())) {
+						}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem())) {
 							{
 								TileEntity _ent = world.getTileEntity(new BlockPos((int) x, (int) y, (int) z));
 								if (_ent != null) {
-									final int _sltid = (int) (4);
+									final int _sltid = (int) (3);
 									final int _amount = (int) 1;
 									_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
 										if (capability instanceof IItemHandlerModifiable) {
@@ -797,7 +798,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 						{
 							TileEntity _ent = world.getTileEntity(new BlockPos((int) x, (int) y, (int) z));
 							if (_ent != null) {
-								final int _sltid = (int) (3);
+								final int _sltid = (int) (2);
 								final ItemStack _setstack = ((world instanceof World
 										&& ((World) world).getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory((new Object() {
 											public ItemStack getItemStack(BlockPos pos, int sltid) {
@@ -837,7 +838,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 										}
 										return _retval.get();
 									}
-								}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (3))) + 1));
+								}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (2))) + 1));
 								_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
 									if (capability instanceof IItemHandlerModifiable) {
 										((IItemHandlerModifiable) capability).setStackInSlot(_sltid, _setstack);
@@ -877,7 +878,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 						TileEntity _tileEntity = world.getTileEntity(_bp);
 						BlockState _bs = world.getBlockState(_bp);
 						if (_tileEntity != null)
-							_tileEntity.getTileData().putDouble("xpAmount", (5 + (new Object() {
+							_tileEntity.getTileData().putDouble("xpAmount", (2 + (new Object() {
 								public double getValue(IWorld world, BlockPos pos, String tag) {
 									TileEntity tileEntity = world.getTileEntity(pos);
 									if (tileEntity != null)
@@ -908,7 +909,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (3))) < 64)
+			}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (2))) < 64)
 					&& (((world instanceof World) ? ((World) world).getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory((new Object() {
 						public ItemStack getItemStack(BlockPos pos, int sltid) {
 							AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -931,7 +932,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 							}
 							return _retval.get();
 						}
-					}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (3))) <= 63) && (((world instanceof World
+					}.getAmount(world, new BlockPos((int) x, (int) y, (int) z), (int) (2))) <= 63) && (((world instanceof World
 							&& ((World) world).getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory((new Object() {
 								public ItemStack getItemStack(BlockPos pos, int sltid) {
 									AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -968,7 +969,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 											}
 											return _retval.get();
 										}
-									}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem()))
+									}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (2))).getItem()))
 							|| ((new Object() {
 								public ItemStack getItemStack(BlockPos pos, int sltid) {
 									AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -980,7 +981,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 									}
 									return _retval.get();
 								}
-							}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (3))).getItem() == new ItemStack(Blocks.AIR, (int) (1))
+							}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (2))).getItem() == new ItemStack(Blocks.AIR, (int) (1))
 									.getItem())))))) {
 				if (!world.isRemote()) {
 					BlockPos _bp = new BlockPos((int) x, (int) y, (int) z);
@@ -1085,7 +1086,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem())
 					|| (new ItemStack(AdvancedFuelefficiencyUpgradeItem.block, (int) (1)).getItem() == (new Object() {
 						public ItemStack getItemStack(BlockPos pos, int sltid) {
 							AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -1097,7 +1098,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 							}
 							return _retval.get();
 						}
-					}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem()))) {
+					}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem()))) {
 				if (!world.isRemote()) {
 					BlockPos _bp = new BlockPos((int) x, (int) y, (int) z);
 					TileEntity _tileEntity = world.getTileEntity(_bp);
@@ -1131,11 +1132,11 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getItem())) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())) {
 				{
 					TileEntity _ent = world.getTileEntity(new BlockPos((int) x, (int) y, (int) z));
 					if (_ent != null) {
-						final int _sltid = (int) (4);
+						final int _sltid = (int) (5);
 						final int _amount = (int) 1;
 						_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
 							if (capability instanceof IItemHandlerModifiable) {
@@ -1189,11 +1190,11 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getItem())) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())) {
 				{
 					TileEntity _ent = world.getTileEntity(new BlockPos((int) x, (int) y, (int) z));
 					if (_ent != null) {
-						final int _sltid = (int) (4);
+						final int _sltid = (int) (5);
 						final int _amount = (int) 1;
 						_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
 							if (capability instanceof IItemHandlerModifiable) {
@@ -1218,11 +1219,11 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getItem())) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())) {
 				{
 					TileEntity _ent = world.getTileEntity(new BlockPos((int) x, (int) y, (int) z));
 					if (_ent != null) {
-						final int _sltid = (int) (4);
+						final int _sltid = (int) (5);
 						final int _amount = (int) 1;
 						_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
 							if (capability instanceof IItemHandlerModifiable) {
@@ -1276,11 +1277,11 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getItem())) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())) {
 				{
 					TileEntity _ent = world.getTileEntity(new BlockPos((int) x, (int) y, (int) z));
 					if (_ent != null) {
-						final int _sltid = (int) (4);
+						final int _sltid = (int) (5);
 						final int _amount = (int) 1;
 						_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
 							if (capability instanceof IItemHandlerModifiable) {
@@ -1322,7 +1323,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 				}
 			}
 		}
-		if (((new ItemStack(FuelliquidupgradeItem.block, (int) (1)).getItem() == (new Object() {
+		if ((new ItemStack(FuelliquidupgradeItem.block, (int) (1)).getItem() == (new Object() {
 			public ItemStack getItemStack(BlockPos pos, int sltid) {
 				AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
 				TileEntity _ent = world.getTileEntity(pos);
@@ -1333,31 +1334,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 				}
 				return _retval.get();
 			}
-		}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem())
-				|| ((new ItemStack(FuelliquidupgradeItem.block, (int) (1)).getItem() == (new Object() {
-					public ItemStack getItemStack(BlockPos pos, int sltid) {
-						AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
-						TileEntity _ent = world.getTileEntity(pos);
-						if (_ent != null) {
-							_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
-								_retval.set(capability.getStackInSlot(sltid).copy());
-							});
-						}
-						return _retval.get();
-					}
-				}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())
-						|| (new ItemStack(FuelliquidupgradeItem.block, (int) (1)).getItem() == (new Object() {
-							public ItemStack getItemStack(BlockPos pos, int sltid) {
-								AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
-								TileEntity _ent = world.getTileEntity(pos);
-								if (_ent != null) {
-									_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
-										_retval.set(capability.getStackInSlot(sltid).copy());
-									});
-								}
-								return _retval.get();
-							}
-						}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getItem())))) {
+		}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())) {
 			if (!world.isRemote()) {
 				BlockPos _bp = new BlockPos((int) x, (int) y, (int) z);
 				TileEntity _tileEntity = world.getTileEntity(_bp);
@@ -1436,7 +1413,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 							.ifPresent(capability -> capability.fill(new FluidStack(Fluids.LAVA, _amount), IFluidHandler.FluidAction.EXECUTE));
 			}
 		}
-		if (((new ItemStack(ColorupgradeItem.block, (int) (1)).getItem() == (new Object() {
+		if ((new ItemStack(ColorupgradeItem.block, (int) (1)).getItem() == (new Object() {
 			public ItemStack getItemStack(BlockPos pos, int sltid) {
 				AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
 				TileEntity _ent = world.getTileEntity(pos);
@@ -1447,31 +1424,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 				}
 				return _retval.get();
 			}
-		}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem())
-				|| ((new ItemStack(ColorupgradeItem.block, (int) (1)).getItem() == (new Object() {
-					public ItemStack getItemStack(BlockPos pos, int sltid) {
-						AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
-						TileEntity _ent = world.getTileEntity(pos);
-						if (_ent != null) {
-							_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
-								_retval.set(capability.getStackInSlot(sltid).copy());
-							});
-						}
-						return _retval.get();
-					}
-				}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())
-						|| (new ItemStack(ColorupgradeItem.block, (int) (1)).getItem() == (new Object() {
-							public ItemStack getItemStack(BlockPos pos, int sltid) {
-								AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
-								TileEntity _ent = world.getTileEntity(pos);
-								if (_ent != null) {
-									_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
-										_retval.set(capability.getStackInSlot(sltid).copy());
-									});
-								}
-								return _retval.get();
-							}
-						}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getItem())))) {
+		}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())) {
 			if ((((new Object() {
 				public ItemStack getItemStack(BlockPos pos, int sltid) {
 					AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -1483,7 +1436,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getOrCreateTag().getDouble("color")) == 1)) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getOrCreateTag().getDouble("color")) == 1)) {
 				try {
 					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
 					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
@@ -1501,7 +1454,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getOrCreateTag().getDouble("color")) == 2)) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getOrCreateTag().getDouble("color")) == 2)) {
 				try {
 					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
 					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
@@ -1519,7 +1472,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getOrCreateTag().getDouble("color")) == 3)) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getOrCreateTag().getDouble("color")) == 3)) {
 				try {
 					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
 					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
@@ -1537,7 +1490,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getOrCreateTag().getDouble("color")) == 4)) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getOrCreateTag().getDouble("color")) == 4)) {
 				try {
 					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
 					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
@@ -1555,7 +1508,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getOrCreateTag().getDouble("color")) == 5)) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getOrCreateTag().getDouble("color")) == 5)) {
 				try {
 					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
 					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
@@ -1573,7 +1526,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getOrCreateTag().getDouble("color")) == 6)) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getOrCreateTag().getDouble("color")) == 6)) {
 				try {
 					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
 					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
@@ -1591,7 +1544,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getOrCreateTag().getDouble("color")) == 7)) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getOrCreateTag().getDouble("color")) == 7)) {
 				try {
 					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
 					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
@@ -1609,7 +1562,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getOrCreateTag().getDouble("color")) == 8)) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getOrCreateTag().getDouble("color")) == 8)) {
 				try {
 					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
 					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
@@ -1628,7 +1581,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getOrCreateTag().getDouble("color")) == 9)) {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getOrCreateTag().getDouble("color")) == 9)) {
 				try {
 					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
 					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
@@ -1637,7 +1590,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 				}
 			}
 		} else {
-			if ((((!(new ItemStack(ColorupgradeItem.block, (int) (1)).getItem() == (new Object() {
+			if (((!(new ItemStack(ColorupgradeItem.block, (int) (1)).getItem() == (new Object() {
 				public ItemStack getItemStack(BlockPos pos, int sltid) {
 					AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
 					TileEntity _ent = world.getTileEntity(pos);
@@ -1648,8 +1601,54 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					}
 					return _retval.get();
 				}
-			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (4))).getItem()))
-					&& ((!(new ItemStack(ColorupgradeItem.block, (int) (1)).getItem() == (new Object() {
+			}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem())) && (((new Object() {
+				public int getValue(BlockPos pos) {
+					try {
+						BlockState _state = world.getBlockState(pos);
+						IntegerProperty property = (IntegerProperty) _state.getBlock().getStateContainer().getProperty("age");
+						return _state.get(property);
+					} catch (Exception e) {
+						return -1;
+					}
+				}
+			}.getValue(new BlockPos((int) x, (int) y, (int) z))) > 0) && ((new Object() {
+				public int getValue(BlockPos pos) {
+					try {
+						BlockState _state = world.getBlockState(pos);
+						IntegerProperty property = (IntegerProperty) _state.getBlock().getStateContainer().getProperty("age");
+						return _state.get(property);
+					} catch (Exception e) {
+						return -1;
+					}
+				}
+			}.getValue(new BlockPos((int) x, (int) y, (int) z))) < 10)))) {
+				try {
+					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
+					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
+							_state.with((IntegerProperty) _state.getBlock().getStateContainer().getProperty("age"), 0), 3);
+				} catch (Exception e) {
+				}
+			}
+		}
+		if ((((world.getBlockState(new BlockPos((int) x, (int) y, (int) z))).getBlock() == FuelverifierblockBlock.block.getDefaultState().getBlock())
+				&& ((ForgeHooks.getBurnTime(((new Object() {
+					public ItemStack getItemStack(BlockPos pos, int sltid) {
+						AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
+						TileEntity _ent = world.getTileEntity(pos);
+						if (_ent != null) {
+							_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
+								_retval.set(capability.getStackInSlot(sltid).copy());
+							});
+						}
+						return _retval.get();
+					}
+				}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (0))).copy()))) > 0))) {
+			if (!world.isRemote()) {
+				BlockPos _bp = new BlockPos((int) x, (int) y, (int) z);
+				TileEntity _tileEntity = world.getTileEntity(_bp);
+				BlockState _bs = world.getBlockState(_bp);
+				if (_tileEntity != null)
+					_tileEntity.getTileData().putDouble("fuelPower", ((ForgeHooks.getBurnTime(((new Object() {
 						public ItemStack getItemStack(BlockPos pos, int sltid) {
 							AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
 							TileEntity _ent = world.getTileEntity(pos);
@@ -1660,46 +1659,19 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 							}
 							return _retval.get();
 						}
-					}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (5))).getItem()))
-							&& (!(new ItemStack(ColorupgradeItem.block, (int) (1)).getItem() == (new Object() {
-								public ItemStack getItemStack(BlockPos pos, int sltid) {
-									AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
-									TileEntity _ent = world.getTileEntity(pos);
-									if (_ent != null) {
-										_ent.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(capability -> {
-											_retval.set(capability.getStackInSlot(sltid).copy());
-										});
-									}
-									return _retval.get();
-								}
-							}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (6))).getItem()))))
-					&& (((new Object() {
-						public int getValue(BlockPos pos) {
-							try {
-								BlockState _state = world.getBlockState(pos);
-								IntegerProperty property = (IntegerProperty) _state.getBlock().getStateContainer().getProperty("age");
-								return _state.get(property);
-							} catch (Exception e) {
-								return -1;
-							}
-						}
-					}.getValue(new BlockPos((int) x, (int) y, (int) z))) > 0) && ((new Object() {
-						public int getValue(BlockPos pos) {
-							try {
-								BlockState _state = world.getBlockState(pos);
-								IntegerProperty property = (IntegerProperty) _state.getBlock().getStateContainer().getProperty("age");
-								return _state.get(property);
-							} catch (Exception e) {
-								return -1;
-							}
-						}
-					}.getValue(new BlockPos((int) x, (int) y, (int) z))) < 10)))) {
-				try {
-					BlockState _state = world.getBlockState(new BlockPos((int) x, (int) y, (int) z));
-					world.setBlockState(new BlockPos((int) x, (int) y, (int) z),
-							_state.with((IntegerProperty) _state.getBlock().getStateContainer().getProperty("age"), 0), 3);
-				} catch (Exception e) {
-				}
+					}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (0))).copy()))) / 200));
+				if (world instanceof World)
+					((World) world).notifyBlockUpdate(_bp, _bs, _bs, 3);
+			}
+		} else {
+			if (!world.isRemote()) {
+				BlockPos _bp = new BlockPos((int) x, (int) y, (int) z);
+				TileEntity _tileEntity = world.getTileEntity(_bp);
+				BlockState _bs = world.getBlockState(_bp);
+				if (_tileEntity != null)
+					_tileEntity.getTileData().putDouble("fuelPower", 0);
+				if (world instanceof World)
+					((World) world).notifyBlockUpdate(_bp, _bs, _bs, 3);
 			}
 		}
 	}

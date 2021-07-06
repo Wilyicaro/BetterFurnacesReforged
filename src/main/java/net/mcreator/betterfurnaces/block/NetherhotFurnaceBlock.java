@@ -276,7 +276,7 @@ public class NetherhotFurnaceBlock extends BetterfurnacesreforgedModElements.Mod
 	}
 
 	public static class CustomTileEntity extends LockableLootTileEntity implements ISidedInventory {
-		private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(7, ItemStack.EMPTY);
+		private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(6, ItemStack.EMPTY);
 		protected CustomTileEntity() {
 			super(tileEntityType);
 		}
@@ -377,7 +377,9 @@ public class NetherhotFurnaceBlock extends BetterfurnacesreforgedModElements.Mod
 				return false;
 			if (index == 5)
 				return false;
-			if (index == 6)
+			if (index == 3)
+				return false;
+			if (index == 2)
 				return false;
 			return true;
 		}
@@ -388,7 +390,7 @@ public class NetherhotFurnaceBlock extends BetterfurnacesreforgedModElements.Mod
 				return false;
 			if (index == 5)
 				return false;
-			if (index == 6)
+			if (index == 3)
 				return false;
 			if (index == 0)
 				return false;

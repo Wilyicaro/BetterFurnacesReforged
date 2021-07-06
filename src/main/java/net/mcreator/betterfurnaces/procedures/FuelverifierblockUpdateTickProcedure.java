@@ -19,7 +19,7 @@ import java.util.Map;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class FuelverifierblockUpdateTickProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public FuelverifierblockUpdateTickProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 27);
+		super(instance, 28);
 	}
 
 	public static void executeProcedure(Map<String, Object> dependencies) {

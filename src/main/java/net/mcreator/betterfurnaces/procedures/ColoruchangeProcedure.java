@@ -12,7 +12,7 @@ import java.util.Map;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class ColoruchangeProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public ColoruchangeProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 48);
+		super(instance, 49);
 	}
 
 	public static void executeProcedure(Map<String, Object> dependencies) {

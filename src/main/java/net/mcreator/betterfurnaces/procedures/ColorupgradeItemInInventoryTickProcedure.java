@@ -11,7 +11,7 @@ import java.util.Map;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class ColorupgradeItemInInventoryTickProcedure extends BetterfurnacesreforgedModElements.ModElement {
 	public ColorupgradeItemInInventoryTickProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 47);
+		super(instance, 48);
 	}
 
 	public static void executeProcedure(Map<String, Object> dependencies) {
