@@ -4,17 +4,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Entity;
 
-import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
 import java.util.Map;
 
-@BetterfurnacesreforgedModElements.ModElement.Tag
-public class ColoruchangeProcedure extends BetterfurnacesreforgedModElements.ModElement {
-	public ColoruchangeProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 49);
-	}
-
+public class ColoruchangeProcedure {
 	public static void executeProcedure(Map<String, Object> dependencies) {
 		if (dependencies.get("entity") == null) {
 			if (!dependencies.containsKey("entity"))

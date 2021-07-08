@@ -22,19 +22,13 @@ import net.mcreator.betterfurnaces.block.GoldfurnaceoffBlock;
 import net.mcreator.betterfurnaces.block.ExtremeFurnaceBlock;
 import net.mcreator.betterfurnaces.block.ExtremeForgeBlock;
 import net.mcreator.betterfurnaces.block.DiamondfurnaceBlock;
-import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Map;
 
-@BetterfurnacesreforgedModElements.ModElement.Tag
-public class FuelconfigProcedure extends BetterfurnacesreforgedModElements.ModElement {
-	public FuelconfigProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 26);
-	}
-
+public class FuelconfigProcedure {
 	public static void executeProcedure(Map<String, Object> dependencies) {
 		if (dependencies.get("x") == null) {
 			if (!dependencies.containsKey("x"))

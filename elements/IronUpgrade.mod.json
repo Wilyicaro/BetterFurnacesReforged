@@ -3,9 +3,9 @@
   "_type": "item",
   "definition": {
     "renderType": 0,
-    "texture": "up_diamond",
+    "texture": "up_iron",
     "customModelName": "Normal",
-    "name": "Diamond Upgrade",
+    "name": "Iron Upgrade",
     "rarity": "COMMON",
     "creativeTab": {
       "value": "CUSTOM:BetterFurnacesReforged"
@@ -28,6 +28,9 @@
     "hasGlow": false,
     "guiBoundTo": "<NONE>",
     "inventorySize": 9,
-    "inventoryStackSize": 64
+    "inventoryStackSize": 64,
+    "onRightClickedOnBlock": {
+      "name": "Upcobtoiron"
+    }
   }
 }

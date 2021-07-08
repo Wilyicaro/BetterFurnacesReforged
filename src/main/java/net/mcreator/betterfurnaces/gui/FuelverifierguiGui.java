@@ -40,7 +40,7 @@ public class FuelverifierguiGui extends BetterfurnacesreforgedModElements.ModEle
 	public static HashMap guistate = new HashMap();
 	private static ContainerType<GuiContainerMod> containerType = null;
 	public FuelverifierguiGui(BetterfurnacesreforgedModElements instance) {
-		super(instance, 19);
+		super(instance, 27);
 		elements.addNetworkMessage(ButtonPressedMessage.class, ButtonPressedMessage::buffer, ButtonPressedMessage::new,
 				ButtonPressedMessage::handler);
 		elements.addNetworkMessage(GUISlotChangedMessage.class, GUISlotChangedMessage::buffer, GUISlotChangedMessage::new,

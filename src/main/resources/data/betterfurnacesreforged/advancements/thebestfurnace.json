@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "betterfurnacesreforged:extremefurnace"
+      "item": "betterfurnacesreforged:extreme_furnace"
     },
     "title": {
       "translate": "advancements.thebestfurnace.title"
@@ -20,7 +20,7 @@
       "conditions": {
         "items": [
           {
-            "item": "betterfurnacesreforged:extremefurnace",
+            "item": "betterfurnacesreforged:extreme_furnace",
             "count": {
               "min": 0,
               "max": 1

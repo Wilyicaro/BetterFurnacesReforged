@@ -8,13 +8,13 @@
   ],
   "key": {
     "0": {
-      "tag": "forge:stained_glass"
+      "tag": "forge:glass"
     },
     "1": {
       "item": "minecraft:diamond"
     },
     "2": {
-      "tag": "forge:stained_glass"
+      "tag": "forge:glass"
     },
     "3": {
       "item": "minecraft:diamond"
@@ -26,13 +26,13 @@
       "item": "minecraft:diamond"
     },
     "6": {
-      "tag": "forge:stained_glass"
+      "tag": "forge:glass"
     },
     "7": {
       "item": "minecraft:diamond"
     },
     "8": {
-      "tag": "forge:stained_glass"
+      "tag": "forge:glass"
     }
   },
   "result": {

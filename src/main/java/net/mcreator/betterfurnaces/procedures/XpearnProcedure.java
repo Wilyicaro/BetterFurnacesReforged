@@ -8,17 +8,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.block.BlockState;
 
-import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
 import java.util.Map;
 
-@BetterfurnacesreforgedModElements.ModElement.Tag
-public class XpearnProcedure extends BetterfurnacesreforgedModElements.ModElement {
-	public XpearnProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 29);
-	}
-
+public class XpearnProcedure {
 	public static void executeProcedure(Map<String, Object> dependencies) {
 		if (dependencies.get("entity") == null) {
 			if (!dependencies.containsKey("entity"))

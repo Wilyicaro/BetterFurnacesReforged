@@ -25,7 +25,7 @@ public class OreprocessingupgradeItem extends BetterfurnacesreforgedModElements.
 	}
 	public static class ItemCustom extends Item {
 		public ItemCustom() {
-			super(new Item.Properties().group(BetterFurnacesReforgedItemGroup.tab).maxDamage(500).rarity(Rarity.COMMON));
+			super(new Item.Properties().group(BetterFurnacesReforgedItemGroup.tab).maxDamage(128).rarity(Rarity.COMMON));
 			setRegistryName("oreprocessingupgrade");
 		}
 

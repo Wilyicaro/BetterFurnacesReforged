@@ -30,7 +30,7 @@
 	</classpathentry>
 	<classpathentry kind="output" path="bin/default"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
-	<classpathentry sourcepath="C:/Users/Icaro/.mcreator/gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.5-36.1.0_mapped_snapshot_20201028-1.16.3/forge-1.16.5-36.1.0_mapped_snapshot_20201028-1.16.3-sources.jar" kind="lib" path="C:/Users/Icaro/.mcreator/gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.5-36.1.0_mapped_snapshot_20201028-1.16.3/forge-1.16.5-36.1.0_mapped_snapshot_20201028-1.16.3-recomp.jar">
+	<classpathentry sourcepath="C:/Users/Icaro/.mcreator/gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.5-36.1.0_mapped_snapshot_20201028-1.16.3/forge-1.16.5-36.1.0_mapped_snapshot_20201028-1.16.3-sources.jar" kind="lib" path="C:/Users/Icaro/.mcreator/gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.5-36.1.0_mapped_snapshot_20201028-1.16.3/forge-1.16.5-36.1.0_mapped_snapshot_20201028-1.16.3.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
@@ -180,7 +180,7 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Icaro/.mcreator/gradle/caches/modules-2/files-2.1/com.mojang/patchy/1.1/5e398295fbcb8fb590e3e3bddace13f659792e50/patchy-1.1-sources.jar" kind="lib" path="C:/Users/Icaro/.mcreator/gradle/caches/modules-2/files-2.1/com.mojang/patchy/1.1/aef610b34a1be37fa851825f12372b78424d8903/patchy-1.1.jar">
+	<classpathentry kind="lib" path="C:/Users/Icaro/.mcreator/gradle/caches/modules-2/files-2.1/com.mojang/patchy/1.2.3/e3107ca512d704a434076a153a6e1149e3787275/patchy-1.2.3.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>

@@ -15,19 +15,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
 
 import net.mcreator.betterfurnaces.gui.ColorupgradeguiGui;
-import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
 import java.util.Map;
 
 import io.netty.buffer.Unpooled;
 
-@BetterfurnacesreforgedModElements.ModElement.Tag
-public class OpencolorupgradeProcedure extends BetterfurnacesreforgedModElements.ModElement {
-	public OpencolorupgradeProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 47);
-	}
-
+public class OpencolorupgradeProcedure {
 	public static void executeProcedure(Map<String, Object> dependencies) {
 		if (dependencies.get("entity") == null) {
 			if (!dependencies.containsKey("entity"))

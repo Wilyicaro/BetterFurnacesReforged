@@ -1,8 +1,6 @@
 
 package net.mcreator.betterfurnaces.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
 
@@ -16,6 +14,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.Minecraft;
 
+import java.util.HashMap;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 @OnlyIn(Dist.CLIENT)
@@ -23,6 +24,7 @@ public class FuelverifierguiGuiWindow extends ContainerScreen<FuelverifierguiGui
 	private World world;
 	private int x, y, z;
 	private PlayerEntity entity;
+	private final static HashMap guistate = FuelverifierguiGui.guistate;
 	public FuelverifierguiGuiWindow(FuelverifierguiGui.GuiContainerMod container, PlayerInventory inventory, ITextComponent text) {
 		super(container, inventory, text);
 		this.world = container.world;
@@ -42,12 +44,15 @@ public class FuelverifierguiGuiWindow extends ContainerScreen<FuelverifierguiGui
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float par1, int par2, int par3) {
-		GL11.glColor4f(1, 1, 1, 1);
+	protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int gx, int gy) {
+		RenderSystem.color4f(1, 1, 1, 1);
+		RenderSystem.enableBlend();
+		RenderSystem.defaultBlendFunc();
 		Minecraft.getInstance().getTextureManager().bindTexture(texture);
 		int k = (this.width - this.xSize) / 2;
 		int l = (this.height - this.ySize) / 2;
 		this.blit(ms, k, l, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
+		RenderSystem.disableBlend();
 	}
 
 	@Override
@@ -67,6 +72,14 @@ public class FuelverifierguiGuiWindow extends ContainerScreen<FuelverifierguiGui
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
 		this.font.drawString(ms, "" + (new Object() {
+			public double getValue(BlockPos pos, String tag) {
+				TileEntity tileEntity = world.getTileEntity(pos);
+				if (tileEntity != null)
+					return tileEntity.getTileData().getDouble(tag);
+				return 0;
+			}
+		}.getValue(new BlockPos((int) x, (int) y, (int) z), "fuelPower")) + "", 78, 29, -6710887);
+		this.font.drawString(ms, "" + (new Object() {
 			public String getValue(BlockPos pos, String tag) {
 				TileEntity tileEntity = world.getTileEntity(pos);
 				if (tileEntity != null)
@@ -74,7 +87,6 @@ public class FuelverifierguiGuiWindow extends ContainerScreen<FuelverifierguiGui
 				return "";
 			}
 		}.getValue(new BlockPos((int) x, (int) y, (int) z), "blockname")) + "", 53, 6, -13421773);
-
 	}
 
 	@Override

@@ -30,7 +30,6 @@ import net.mcreator.betterfurnaces.item.EnergyupgradeItem;
 import net.mcreator.betterfurnaces.item.AdvancedOreprocessingUpgradeItem;
 import net.mcreator.betterfurnaces.item.AdvancedFuelefficiencyUpgradeItem;
 import net.mcreator.betterfurnaces.block.ExtremeForgeBlock;
-import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -39,12 +38,7 @@ import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
 
-@BetterfurnacesreforgedModElements.ModElement.Tag
-public class UpdatetickforgesProcedure extends BetterfurnacesreforgedModElements.ModElement {
-	public UpdatetickforgesProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 65);
-	}
-
+public class UpdatetickforgesProcedure {
 	public static void executeProcedure(Map<String, Object> dependencies) {
 		if (dependencies.get("x") == null) {
 			if (!dependencies.containsKey("x"))
@@ -89,7 +83,7 @@ public class UpdatetickforgesProcedure extends BetterfurnacesreforgedModElements
 					((World) world).notifyBlockUpdate(_bp, _bs, _bs, 3);
 			}
 		}
-		if (((furnacetm) <= 0)) {
+		if ((furnacetm <= 0)) {
 			if (((world.getBlockState(new BlockPos((int) x, (int) y, (int) z))).getBlock() == ExtremeForgeBlock.block.getDefaultState().getBlock())) {
 				furnacetm = (double) 0.02;
 			}
@@ -761,7 +755,7 @@ public class UpdatetickforgesProcedure extends BetterfurnacesreforgedModElements
 						TileEntity _tileEntity = world.getTileEntity(_bp);
 						BlockState _bs = world.getBlockState(_bp);
 						if (_tileEntity != null)
-							_tileEntity.getTileData().putDouble("actualFuel", ((200 * (furnacetm)) * (new Object() {
+							_tileEntity.getTileData().putDouble("actualFuel", ((200 * furnacetm) * (new Object() {
 								public double getValue(IWorld world, BlockPos pos, String tag) {
 									TileEntity tileEntity = world.getTileEntity(pos);
 									if (tileEntity != null)
@@ -944,7 +938,7 @@ public class UpdatetickforgesProcedure extends BetterfurnacesreforgedModElements
 						return tileEntity.getTileData().getDouble(tag);
 					return -1;
 				}
-			}.getValue(world, new BlockPos((int) x, (int) y, (int) z), "cookTime")) >= (200 * (furnacetm)))) {
+			}.getValue(world, new BlockPos((int) x, (int) y, (int) z), "cookTime")) >= (200 * furnacetm))) {
 				if (((((world instanceof World) ? ((World) world).getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory((new Object() {
 					public ItemStack getItemStack(BlockPos pos, int sltid) {
 						AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -2290,7 +2284,7 @@ public class UpdatetickforgesProcedure extends BetterfurnacesreforgedModElements
 								return tileEntity.getTileData().getDouble(tag);
 							return -1;
 						}
-					}.getValue(world, new BlockPos((int) x, (int) y, (int) z), "cookTime")) / (furnacetm)) / 2)));
+					}.getValue(world, new BlockPos((int) x, (int) y, (int) z), "cookTime")) / furnacetm) / 2)));
 				if (world instanceof World)
 					((World) world).notifyBlockUpdate(_bp, _bs, _bs, 3);
 			}

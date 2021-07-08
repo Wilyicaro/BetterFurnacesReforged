@@ -20,7 +20,7 @@
       "item": "minecraft:end_crystal"
     },
     "4": {
-      "item": "betterfurnacesreforged:netherhotfurnace"
+      "item": "betterfurnacesreforged:netherhot_furnace"
     },
     "5": {
       "item": "minecraft:end_crystal"
@@ -36,7 +36,7 @@
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:extremefurnace",
+    "item": "betterfurnacesreforged:extreme_furnace",
     "count": 1
   }
 }

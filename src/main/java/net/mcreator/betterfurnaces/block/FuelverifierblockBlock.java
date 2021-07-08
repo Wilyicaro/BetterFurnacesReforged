@@ -56,7 +56,7 @@ import net.minecraft.block.Block;
 
 import net.mcreator.betterfurnaces.procedures.CobgeneratorproProcedure;
 import net.mcreator.betterfurnaces.itemgroup.BetterFurnacesReforgedItemGroup;
-import net.mcreator.betterfurnaces.gui.CobgeneratorguiGui;
+import net.mcreator.betterfurnaces.gui.FuelverifierguiGui;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 
 import javax.annotation.Nullable;
@@ -173,7 +173,7 @@ public class FuelverifierblockBlock extends BetterfurnacesreforgedModElements.Mo
 
 					@Override
 					public Container createMenu(int id, PlayerInventory inventory, PlayerEntity player) {
-						return new CobgeneratorguiGui.GuiContainerMod(id, inventory,
+						return new FuelverifierguiGui.GuiContainerMod(id, inventory,
 								new PacketBuffer(Unpooled.buffer()).writeBlockPos(new BlockPos(x, y, z)));
 					}
 				}, new BlockPos(x, y, z));
@@ -295,7 +295,7 @@ public class FuelverifierblockBlock extends BetterfurnacesreforgedModElements.Mo
 
 		@Override
 		public Container createMenu(int id, PlayerInventory player) {
-			return new CobgeneratorguiGui.GuiContainerMod(id, player, new PacketBuffer(Unpooled.buffer()).writeBlockPos(this.getPos()));
+			return new FuelverifierguiGui.GuiContainerMod(id, player, new PacketBuffer(Unpooled.buffer()).writeBlockPos(this.getPos()));
 		}
 
 		@Override

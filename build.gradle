@@ -1,4 +1,5 @@
 buildscript {
+
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
@@ -7,8 +8,8 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
     }
 }
-	repositories {
-  		maven {
+repositories {
+  maven {
     // location of the maven that hosts JEI files
     name = "Progwml6 maven"
     url = "https://dvs1.progwml6.com/files/maven/"
@@ -26,7 +27,7 @@ version = '1.0'
 group = 'com.yourname.modid'
 archivesBaseName = 'modid'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
     mappings channel: 'snapshot', version: '20201028-1.16.3'
@@ -64,6 +65,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.0'
     compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.6.4.90:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.6.4.90")
+    
 }
 
 apply from: 'mcreator.gradle'

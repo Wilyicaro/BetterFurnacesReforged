@@ -4,17 +4,11 @@ import net.minecraft.world.IWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.tileentity.TileEntity;
 
-import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
 import java.util.Map;
 
-@BetterfurnacesreforgedModElements.ModElement.Tag
-public class TankguicondProcedure extends BetterfurnacesreforgedModElements.ModElement {
-	public TankguicondProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 51);
-	}
-
+public class TankguicondProcedure {
 	public static boolean executeProcedure(Map<String, Object> dependencies) {
 		if (dependencies.get("x") == null) {
 			if (!dependencies.containsKey("x"))

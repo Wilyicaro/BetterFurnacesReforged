@@ -16,6 +16,8 @@ import net.minecraft.client.Minecraft;
 
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
+import java.util.HashMap;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
@@ -24,6 +26,7 @@ public class ColorupgradeguiGuiWindow extends ContainerScreen<ColorupgradeguiGui
 	private World world;
 	private int x, y, z;
 	private PlayerEntity entity;
+	private final static HashMap guistate = ColorupgradeguiGui.guistate;
 	public ColorupgradeguiGuiWindow(ColorupgradeguiGui.GuiContainerMod container, PlayerInventory inventory, ITextComponent text) {
 		super(container, inventory, text);
 		this.world = container.world;

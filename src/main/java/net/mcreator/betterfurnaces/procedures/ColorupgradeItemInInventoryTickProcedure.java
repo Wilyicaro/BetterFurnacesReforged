@@ -3,17 +3,11 @@ package net.mcreator.betterfurnaces.procedures;
 import net.minecraft.item.ItemStack;
 import net.minecraft.entity.Entity;
 
-import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
 import java.util.Map;
 
-@BetterfurnacesreforgedModElements.ModElement.Tag
-public class ColorupgradeItemInInventoryTickProcedure extends BetterfurnacesreforgedModElements.ModElement {
-	public ColorupgradeItemInInventoryTickProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 48);
-	}
-
+public class ColorupgradeItemInInventoryTickProcedure {
 	public static void executeProcedure(Map<String, Object> dependencies) {
 		if (dependencies.get("entity") == null) {
 			if (!dependencies.containsKey("entity"))

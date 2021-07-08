@@ -42,7 +42,6 @@ import net.mcreator.betterfurnaces.block.GoldfurnaceoffBlock;
 import net.mcreator.betterfurnaces.block.FuelverifierblockBlock;
 import net.mcreator.betterfurnaces.block.ExtremeFurnaceBlock;
 import net.mcreator.betterfurnaces.block.DiamondfurnaceBlock;
-import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -51,12 +50,7 @@ import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
 
-@BetterfurnacesreforgedModElements.ModElement.Tag
-public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedModElements.ModElement {
-	public IronfurnaceoffUpdateTickProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 25);
-	}
-
+public class IronfurnaceoffUpdateTickProcedure {
 	public static void executeProcedure(Map<String, Object> dependencies) {
 		if (dependencies.get("x") == null) {
 			if (!dependencies.containsKey("x"))
@@ -101,7 +95,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 					((World) world).notifyBlockUpdate(_bp, _bs, _bs, 3);
 			}
 		}
-		if (((furnacetm) <= 0)) {
+		if ((furnacetm <= 0)) {
 			if (((world.getBlockState(new BlockPos((int) x, (int) y, (int) z))).getBlock() == IronfurnaceoffBlock.block.getDefaultState()
 					.getBlock())) {
 				furnacetm = (double) 0.75;
@@ -439,7 +433,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 									}
 									return _retval.get();
 								}
-							}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (1))))) * (furnacetm)) * (new Object() {
+							}.getItemStack(new BlockPos((int) x, (int) y, (int) z), (int) (1))))) * furnacetm) * (new Object() {
 								public double getValue(IWorld world, BlockPos pos, String tag) {
 									TileEntity tileEntity = world.getTileEntity(pos);
 									if (tileEntity != null)
@@ -473,7 +467,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 						TileEntity _tileEntity = world.getTileEntity(_bp);
 						BlockState _bs = world.getBlockState(_bp);
 						if (_tileEntity != null)
-							_tileEntity.getTileData().putDouble("actualFuel", ((200 * (furnacetm)) * (new Object() {
+							_tileEntity.getTileData().putDouble("actualFuel", ((200 * furnacetm) * (new Object() {
 								public double getValue(IWorld world, BlockPos pos, String tag) {
 									TileEntity tileEntity = world.getTileEntity(pos);
 									if (tileEntity != null)
@@ -595,7 +589,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 						return tileEntity.getTileData().getDouble(tag);
 					return -1;
 				}
-			}.getValue(world, new BlockPos((int) x, (int) y, (int) z), "cookTime")) >= (200 * (furnacetm)))) {
+			}.getValue(world, new BlockPos((int) x, (int) y, (int) z), "cookTime")) >= (200 * furnacetm))) {
 				if ((((world instanceof World) ? ((World) world).getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory((new Object() {
 					public ItemStack getItemStack(BlockPos pos, int sltid) {
 						AtomicReference<ItemStack> _retval = new AtomicReference<>(ItemStack.EMPTY);
@@ -1048,7 +1042,7 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 								return tileEntity.getTileData().getDouble(tag);
 							return -1;
 						}
-					}.getValue(world, new BlockPos((int) x, (int) y, (int) z), "cookTime")) / (furnacetm)) / 2)));
+					}.getValue(world, new BlockPos((int) x, (int) y, (int) z), "cookTime")) / furnacetm) / 2)));
 				if (world instanceof World)
 					((World) world).notifyBlockUpdate(_bp, _bs, _bs, 3);
 			}
@@ -1176,6 +1170,15 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 						}
 					}
 				}
+				if (world instanceof World && !world.isRemote()) {
+					((World) world).playSound(null, new BlockPos((int) x, (int) y, (int) z),
+							(net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.anvil.place")),
+							SoundCategory.NEUTRAL, (float) 1, (float) 1);
+				} else {
+					((World) world).playSound(x, y, z,
+							(net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.anvil.place")),
+							SoundCategory.NEUTRAL, (float) 1, (float) 1, false);
+				}
 			}
 		}
 		if (((world.getBlockState(new BlockPos((int) x, (int) y, (int) z))).getBlock() == GoldfurnaceoffBlock.block.getDefaultState().getBlock())) {
@@ -1204,6 +1207,44 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 							}
 						});
 					}
+				}
+				{
+					BlockPos _bp = new BlockPos((int) x, (int) y, (int) z);
+					BlockState _bs = DiamondfurnaceBlock.block.getDefaultState();
+					BlockState _bso = world.getBlockState(_bp);
+					for (Map.Entry<Property<?>, Comparable<?>> entry : _bso.getValues().entrySet()) {
+						Property _property = _bs.getBlock().getStateContainer().getProperty(entry.getKey().getName());
+						if (_property != null && _bs.get(_property) != null)
+							try {
+								_bs = _bs.with(_property, (Comparable) entry.getValue());
+							} catch (Exception e) {
+							}
+					}
+					TileEntity _te = world.getTileEntity(_bp);
+					CompoundNBT _bnbt = null;
+					if (_te != null) {
+						_bnbt = _te.write(new CompoundNBT());
+						_te.remove();
+					}
+					world.setBlockState(_bp, _bs, 3);
+					if (_bnbt != null) {
+						_te = world.getTileEntity(_bp);
+						if (_te != null) {
+							try {
+								_te.read(_bso, _bnbt);
+							} catch (Exception ignored) {
+							}
+						}
+					}
+				}
+				if (world instanceof World && !world.isRemote()) {
+					((World) world).playSound(null, new BlockPos((int) x, (int) y, (int) z),
+							(net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.anvil.place")),
+							SoundCategory.NEUTRAL, (float) 1, (float) 1);
+				} else {
+					((World) world).playSound(x, y, z,
+							(net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.anvil.place")),
+							SoundCategory.NEUTRAL, (float) 1, (float) 1, false);
 				}
 			}
 		}
@@ -1263,6 +1304,15 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 						}
 					}
 				}
+				if (world instanceof World && !world.isRemote()) {
+					((World) world).playSound(null, new BlockPos((int) x, (int) y, (int) z),
+							(net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.anvil.place")),
+							SoundCategory.NEUTRAL, (float) 1, (float) 1);
+				} else {
+					((World) world).playSound(x, y, z,
+							(net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.anvil.place")),
+							SoundCategory.NEUTRAL, (float) 1, (float) 1, false);
+				}
 			}
 		}
 		if (((world.getBlockState(new BlockPos((int) x, (int) y, (int) z))).getBlock() == NetherhotFurnaceBlock.block.getDefaultState().getBlock())) {
@@ -1320,6 +1370,15 @@ public class IronfurnaceoffUpdateTickProcedure extends BetterfurnacesreforgedMod
 							}
 						}
 					}
+				}
+				if (world instanceof World && !world.isRemote()) {
+					((World) world).playSound(null, new BlockPos((int) x, (int) y, (int) z),
+							(net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.anvil.place")),
+							SoundCategory.NEUTRAL, (float) 1, (float) 1);
+				} else {
+					((World) world).playSound(x, y, z,
+							(net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.anvil.place")),
+							SoundCategory.NEUTRAL, (float) 1, (float) 1, false);
 				}
 			}
 		}

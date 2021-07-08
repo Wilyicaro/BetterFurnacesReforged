@@ -8,18 +8,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.item.ItemStack;
 
 import net.mcreator.betterfurnaces.item.AdmupgradeItem;
-import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 import net.mcreator.betterfurnaces.BetterfurnacesreforgedMod;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.Map;
 
-@BetterfurnacesreforgedModElements.ModElement.Tag
-public class AdmupactiveProcedure extends BetterfurnacesreforgedModElements.ModElement {
-	public AdmupactiveProcedure(BetterfurnacesreforgedModElements instance) {
-		super(instance, 52);
-	}
-
+public class AdmupactiveProcedure {
 	public static boolean executeProcedure(Map<String, Object> dependencies) {
 		if (dependencies.get("x") == null) {
 			if (!dependencies.containsKey("x"))

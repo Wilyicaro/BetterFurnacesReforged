@@ -13,12 +13,12 @@ import net.mcreator.betterfurnaces.BetterfurnacesreforgedModElements;
 @BetterfurnacesreforgedModElements.ModElement.Tag
 public class BetterFurnacesReforgedItemGroup extends BetterfurnacesreforgedModElements.ModElement {
 	public BetterFurnacesReforgedItemGroup(BetterfurnacesreforgedModElements instance) {
-		super(instance, 35);
+		super(instance, 34);
 	}
 
 	@Override
 	public void initElements() {
-		tab = new ItemGroup("tabbetterfurnacesreforged") {
+		tab = new ItemGroup("tabbetter_furnaces_reforged") {
 			@OnlyIn(Dist.CLIENT)
 			@Override
 			public ItemStack createIcon() {
