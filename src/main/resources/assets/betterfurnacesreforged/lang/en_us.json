@@ -1,7 +1,7 @@
 {
   "block.betterfurnacesreforged.diamondfurnace": "Diamond Furnace",
-  "item.betterfurnacesreforged.admupgrade": "Info Upgrade",
   "block.betterfurnacesreforged.fuelverifierblock": "Fuel Power Verifier",
+  "item.betterfurnacesreforged.admupgrade": "Info Upgrade",
   "item.betterfurnacesreforged.advancedoreprocessingupgrade": "Advanced Ore Processing Upgrade",
   "itemGroup.tabbetter_furnaces_reforged": "Better Furnaces Reforged",
   "advancements.dupeores.title": "Is this allowed?",

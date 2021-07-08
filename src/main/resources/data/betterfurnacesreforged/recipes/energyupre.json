@@ -11,7 +11,7 @@
       "item": "minecraft:gold_ingot"
     },
     "1": {
-      "item": "forge:glass"
+      "tag": "forge:glass"
     },
     "2": {
       "item": "minecraft:gold_ingot"
@@ -29,7 +29,7 @@
       "item": "minecraft:gold_ingot"
     },
     "7": {
-      "item": "forge:glass"
+      "tag": "forge:glass"
     },
     "8": {
       "item": "minecraft:gold_ingot"
