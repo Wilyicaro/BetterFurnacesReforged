@@ -1,0 +1,28 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "betterfurnacesreforged:extreme_forge"
+    },
+  "variants": {
+    "burning": {
+      "true": {
+        "model": "betterfurnacesreforged:extreme_forge_on"
+      },
+    "false": {
+      "model": "betterfurnacesreforged:extreme_forge"
+    }
+  },
+    "facing": {
+      "north": {},
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      }
+    }
+  }
+}

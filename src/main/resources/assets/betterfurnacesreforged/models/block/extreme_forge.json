@@ -1,0 +1,9 @@
+{
+  "parent": "betterfurnacesreforged:custom/extremeforgemodel",
+  "textures": {
+    "all": "betterfurnacesreforged:blocks/extreme_forge_front",
+    "particle": "betterfurnacesreforged:blocks/extreme_forge_front",
+    "0": "betterfurnacesreforged:blocks/extreme_forge_front",
+    "1": "betterfurnacesreforged:blocks/extreme_forge_side"
+  }
+}

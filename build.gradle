@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+
+version = "1.12.2-1.3"
+group= "wily.betterfurnacesreforged"
+archivesBaseName = "BetterFurnacesReforged"
+
+sourceCompatibility = targetCompatibility = "1.8"
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
+minecraft {
+    version = "1.12.2-14.23.5.2816"
+    runDir = "run"
+    mappings = "stable_39"
+    makeObfSourceJar = false
+}
+
+repositories {
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+        maven {
+            url "https://maven.tehnut.info"
+        }
+}
+
+
+dependencies {
+    deobfCompile "mezz.jei:jei_1.12.2:4.15.0.289"
+    deobfCompile "mcp.mobius.waila:Hwyla:1.8.+"
+}
+
+processResources
+        {
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
+                expand 'version': project.version, 'mcversion': project.minecraft.version
+            }
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }

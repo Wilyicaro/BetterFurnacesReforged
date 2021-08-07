@@ -1,0 +1,22 @@
+{
+   "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "HGH",
+    "GFG",
+	"HGH"
+  ],
+  "key": {
+    "G": {
+		"item": "minecraft:diamond"
+    },
+	"H": {
+		"item": "minecraft:glass"
+	},
+	"F": {
+		"item": "betterfurnacesreforged:gold_furnace"
+	}
+  },
+  "result": {
+    "item": "betterfurnacesreforged:diamond_furnace"
+  }
+}

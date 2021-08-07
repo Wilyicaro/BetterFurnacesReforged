@@ -1,0 +1,42 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"colored": {
+			"true": {
+				"model": "betterfurnacesreforged:color_orientable",
+				"textures": {
+					"top": "betterfurnacesreforged:blocks/colored_top",
+					"side": "betterfurnacesreforged:blocks/colored_side",
+					"front": "betterfurnacesreforged:blocks/colored_front"
+				}
+
+			},
+			"false": {
+				"model": "betterfurnacesreforged:bforientable",
+				"textures": {
+					"top": "betterfurnacesreforged:blocks/iron_top",
+					"side": "betterfurnacesreforged:blocks/iron_side",
+					"front": "betterfurnacesreforged:blocks/iron_front"
+				}
+			}
+		},
+		"burning": {
+			"true": {
+				"textures": {
+					"overlay": "betterfurnacesreforged:blocks/frontactive"
+				}
+			},
+			"false": {
+				"textures": {
+					"overlay": "betterfurnacesreforged:blocks/front"
+				}
+			}
+		},
+		"facing": {
+			"north":{},
+			"east":{"y":90},
+			"south":{"y":180},
+			"west":{"y":270}
+		}
+	}
+}

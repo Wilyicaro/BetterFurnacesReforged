@@ -1,0 +1,53 @@
+tile.betterfurnacesreforged.iron_conductor_block.name=Iron Conductor Block
+tile.betterfurnacesreforged.gold_conductor_block.name=Gold Conductor Block
+tile.betterfurnacesreforged.netherhot_conductor_block.name=Netherhot Conductor Block
+tile.betterfurnacesreforged.iron_furnace.name=Iron Furnace
+tile.betterfurnacesreforged.gold_furnace.name=Gold Furnace
+tile.betterfurnacesreforged.diamond_furnace.name=Diamond Furnace
+tile.betterfurnacesreforged.netherhot_furnace.name=Netherhot Furnace
+tile.betterfurnacesreforged.extreme_furnace.name=Extreme Furnace
+tile.betterfurnacesreforged.extreme_forge.name=Extreme Forge
+
+item.betterfurnacesreforged.ore_processing_upgrade.name=Ore Processing Upgrade
+item.betterfurnacesreforged.advanced_ore_processing_upgrade.name=Advanced Ore Processing Upgrade
+item.betterfurnacesreforged.liquid_fuel_upgrade.name=Liquid Fuel Upgrade
+item.betterfurnacesreforged.fuel_efficiency_upgrade.name=Fuel Efficiency Upgrade
+item.betterfurnacesreforged.advanced_fuel_efficiency_upgrade.name=Advanced Fuel Efficiency Upgrade
+item.betterfurnacesreforged.energy_upgrade.name=Energy Upgrade
+item.betterfurnacesreforged.color_upgrade.name=Color Upgrade
+
+item.betterfurnacesreforged.iron_upgrade.name=Iron Upgrade
+item.betterfurnacesreforged.gold_upgrade.name=Gold Upgrade
+item.betterfurnacesreforged.diamond_upgrade.name=Diamond Upgrade
+item.betterfurnacesreforged.netherhot_upgrade.name=Netherhot Upgrade
+item.betterfurnacesreforged.extreme_upgrade.name=Extreme Upgrade
+
+itemGroup.betterfurnacesreforged=BetterFurnaces Reforged
+
+info.betterfurnacesreforged.morefast=%s times faster than the vanilla furnace
+info.betterfurnacesreforged.forgemorefast=%s times x 3 slots faster than the vanilla furnace
+info.betterfurnacesreforged.efficiency=Doubles fuel efficiency
+info.betterfurnacesreforged.wip=Work in progress.
+info.betterfurnacesreforged.energy=Uses FE instead of solid fuel in Extreme Forge
+info.betterfurnacesreforged.color=Change the color of the furnace
+info.betterfurnacesreforged.ores=Enables the processing of ores
+info.betterfurnacesreforged.kit=Upgrades %s into %s
+info.betterfurnacesreforged.fluid=Uses liquid fuel instead of solid fuel.
+
+gui.betterfurnacesreforged.fluid=%s: %s mB
+gui.betterfurnacesreforged.energy=%s kFE/32 kFE
+gui.betterfurnacesreforged.done=Done
+gui.betterfurnacesreforged.color.red=Red:
+gui.betterfurnacesreforged.color.green=Green:
+gui.betterfurnacesreforged.color.blue=Blue:
+
+advancements.betterfurnacesreforged.dupeores.title=Is this allowed?
+advancements.betterfurnacesreforged.dupeores.descr=Craft a Ore Processing Upgrade to double your ores
+advancements.betterfurnacesreforged.forges.title=Better than Furnaces
+advancements.betterfurnacesreforged.forges.descr=Make your first Extreme Forge
+advancements.betterfurnaces.overcooked.title=Overcooked
+advancements.betterfurnaces.overcooked.descr=Make your first Iron Furnace
+advancements.betterfurnacesreforged.thebestfurnace.title=The Best Furnace
+advancements.betterfurnacesreforged.thebestfurnace.descr=Craft a Extreme Furnace, the best furnace in the Minecraft
+advancements.betterfurnacesreforged.colortime.title=Time to Color!
+advancements.betterfurnacesreforged.colortime.descr=Craft a Color Upgrade to color your furnaces

@@ -1,0 +1,36 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "345",
+    "678"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:tnt"
+    },
+    "3": {
+      "item": "minecraft:diamond_block"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "5": {
+      "item": "minecraft:diamond_block"
+    },
+    "6": {
+      "item": "minecraft:magma_cream"
+    },
+    "7": {
+      "item": "betterfurnacesreforged:diamond_furnace"
+    },
+    "8": {
+      "item": "minecraft:magma_cream"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:netherhot_furnace",
+    "count": 1
+  }
+}

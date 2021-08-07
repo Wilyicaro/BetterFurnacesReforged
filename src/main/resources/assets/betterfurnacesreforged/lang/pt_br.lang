@@ -1,0 +1,53 @@
+tile.betterfurnacesreforged.iron_conductor_block.name=Bloco condutor de ferro
+tile.betterfurnacesreforged.gold_conductor_block.name=Bloco condutor de ouro
+tile.betterfurnacesreforged.netherhot_conductor_block.name=Bloco condutor do nether
+tile.betterfurnacesreforged.iron_furnace.name=Fornalha de ferro
+tile.betterfurnacesreforged.gold_furnace.name=Fornalha de ouro
+tile.betterfurnacesreforged.diamond_furnace.name=Fornalha de diamante
+tile.betterfurnacesreforged.netherhot_furnace.name=Fornalha do nether
+tile.betterfurnacesreforged.extreme_furnace.name=Fornalha extrema
+tile.betterfurnacesreforged.extreme_forge.name=Forja extrema
+
+item.betterfurnacesreforged.ore_processing_upgrade.name=Melhoria do processamento
+item.betterfurnacesreforged.advanced_ore_processing_upgrade.name=Melhoria do processamento avançada
+item.betterfurnacesreforged.liquid_fuel_upgrade.name=Melhoria de combustível líquido
+item.betterfurnacesreforged.fuel_efficiency_upgrade.name=Melhoria de combustível
+item.betterfurnacesreforged.advanced_fuel_efficiency_upgrade.name=Melhoria de combustível avançada
+item.betterfurnacesreforged.energy_upgrade.name=Melhoria de energia
+item.betterfurnacesreforged.color_upgrade.name=Melhoria de coloração
+
+item.betterfurnacesreforged.iron_upgrade.name=Melhoria de ferro
+item.betterfurnacesreforged.gold_upgrade.name=Melhoria de ouro
+item.betterfurnacesreforged.diamond_upgrade.name=Melhoria de diamante
+item.betterfurnacesreforged.netherhot_upgrade.name=Melhoria do nether
+item.betterfurnacesreforged.extreme_upgrade.name=Melhoria extrema
+
+itemGroup.betterfurnacesreforged=BetterFurnaces Reforged
+
+info.betterfurnacesreforged.morefast=%s vezes mais rápido que a fornalha vanilla
+info.betterfurnacesreforged.forgemorefast=%s vezes x 3 slots mais rápido que a fornalha vanilla
+info.betterfurnacesreforged.efficiency=Dobra a eficiência do combustível
+info.betterfurnacesreforged.wip=Em progresso
+info.betterfurnacesreforged.energy=Usa energia como combustível
+info.betterfurnacesreforged.color=Muda a cor da fornalha
+info.betterfurnacesreforged.ores=Dobra o resultado de cada minério processado
+info.betterfurnacesreforged.kit=Melhora o tier de %s para %s
+info.betterfurnacesreforged.fluid=Usa líquidos combustíveis como combustível
+
+gui.betterfurnacesreforged.fluid=%s: %s mB
+gui.betterfurnacesreforged.energy=%s kFE/32 kFE
+gui.betterfurnacesreforged.done=Concluído
+gui.betterfurnacesreforged.color.red=Vermelho:
+gui.betterfurnacesreforged.color.green=Verde:
+gui.betterfurnacesreforged.color.blue=Azul:
+
+advancements.betterfurnacesreforged.dupeores.title=Isto não é trapacear?
+advancements.betterfurnacesreforged.dupeores.descr=Faça uma Melhoria do Processamento de Minérios avançada para duplicar seus minérios
+advancements.betterfurnacesreforged.forges.title=Melhor que Fornalhas
+advancements.betterfurnacesreforged.forges.descr=Faça sua primeira forja extrema
+advancements.betterfurnaces.overcooked.title=Overcooked
+advancements.betterfurnaces.overcooked.descr=Faça sua primeira fornalha de ferro
+advancements.betterfurnacesreforged.thebestfurnace.title=Faça uma fornalha extrema, a melhor fornalha do jogo
+advancements.betterfurnacesreforged.thebestfurnace.descr=A melhor fornalha
+advancements.betterfurnacesreforged.colortime.title=Time to Color!
+advancements.betterfurnacesreforged.colortime.descr=Craft a Color Upgrade to color your furnaces

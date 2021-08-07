@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "betterfurnacesreforged",
+  "pattern": [
+    "AAA",
+    "A4A",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:stone",
+      "data": 0
+    },
+    "4": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:ore_processing_upgrade",
+    "count": 1
+  }
+}

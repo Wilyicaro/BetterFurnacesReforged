@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "betterfurnacesreforged:blocks/extreme_top",
+    "front": "betterfurnacesreforged:blocks/extreme_front",
+    "side": "betterfurnacesreforged:blocks/extreme_side"
+  }
+}

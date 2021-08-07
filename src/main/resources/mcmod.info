@@ -1,0 +1,14 @@
+[
+{
+  "modid": "betterfurnacesreforged",
+  "name": "BetterFurnaces Reforged",
+  "description": "This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, presenting only the main things used in the original mod",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "credits": "TheCazadorSniper, Shadows_of_Fire, TheFrogMC",
+  "logoFile": "logo.png",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/better-furnaces-reforged/",
+  "updateUrl": "",
+  "authorList": ["Wilyicaro"]
+}
+]

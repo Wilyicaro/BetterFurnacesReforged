@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "betterfurnacesreforged:blocks/diamond_top",
+    "front": "betterfurnacesreforged:blocks/diamond_front",
+    "side": "betterfurnacesreforged:blocks/diamond_side"
+  }
+}

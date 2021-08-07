@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "betterfurnacesreforged:fuel_power_verifier"
+    },
+    "title": {
+      "translate": "advancements.betterfurnacesreforged.useless.title"
+    },
+    "description": {
+      "translate": "advancements.betterfurnacesreforged.useless.descr"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "overcooked": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "betterfurnacesreforged:iron_furnace",
+            "count": {
+              "min": 0,
+              "max": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 1
+  },
+  "parent": "betterfurnacesreforged:overcooked"
+}
