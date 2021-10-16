@@ -1,0 +1,13 @@
+{
+  "block.ultimatefurnaces_bfr.copper_furnace": "Horno de Cobre",
+  "block.ultimatefurnaces_bfr.ultimate_furnace": "Horno Ultimate",
+  "block.ultimatefurnaces_bfr.copper_forge": "Forja de Cobre",
+  "block.ultimatefurnaces_bfr.iron_forge": "Forja de Hierro",
+  "block.ultimatefurnaces_bfr.gold_forge": "Forja de Oro",
+  "block.ultimatefurnaces_bfr.diamond_forge": "Forja de Diamante",
+  "block.ultimatefurnaces_bfr.netherhot_forge": "Forja del inframundo",
+  "block.ultimatefurnaces_bfr.ultimate_forge": "Forja Ultimate",
+  "item.ultimatefurnaces_bfr.copper_upgrade": "Mejora de Cobre",
+  "item.ultimatefurnaces_bfr.iron_upgrade": "Melhoria de Hierro",
+  "item.ultimatefurnaces_bfr.ultimate_upgrade": "Mejora Ultimate"
+}

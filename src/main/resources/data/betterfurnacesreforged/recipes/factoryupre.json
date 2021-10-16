@@ -1,0 +1,27 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "141",
+    "131"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    },
+    "4": {
+      "tag": "forge:glass"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:factory_upgrade",
+    "count": 1
+  }
+}

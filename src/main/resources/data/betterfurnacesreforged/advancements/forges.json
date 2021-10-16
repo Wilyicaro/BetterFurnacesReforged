@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "betterfurnacesreforged:extreme_forge"
+    },
+    "title": {
+      "translate": "advancements.forges.title"
+    },
+    "description": {
+      "translate": "advancements.forges.descr"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "forges": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "betterfurnacesreforged:extreme_forge",
+            "count": {
+              "min": 0,
+              "max": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 1
+  },
+  "parent": "betterfurnacesreforged:thebestfurnace"
+}

@@ -1,0 +1,12 @@
+{
+  "block.ultimatefurnaces_bfr.copper_furnace": "Fornalha de Cobre",
+  "block.ultimatefurnaces_bfr.ultimate_furnace": "Fornalha Ultimate",
+  "block.ultimatefurnaces_bfr.copper_forge": "Forja de Cobre",
+  "block.ultimatefurnaces_bfr.iron_forge": "Forja de Ferro",
+  "block.ultimatefurnaces_bfr.gold_forge": "Forja de Ouro",
+  "block.ultimatefurnaces_bfr.diamond_forge": "Forja de Diamante",
+  "block.ultimatefurnaces_bfr.netherhot_forge": "Forja do Submundo",
+  "block.ultimatefurnaces_bfr.ultimate_forge": "Forja Ultimate",
+  "item.ultimatefurnaces_bfr.copper_upgrade": "Melhoria de Cobre",
+  "item.ultimatefurnaces_bfr.ultimate_upgrade": "Melhoria Ultimate"
+}

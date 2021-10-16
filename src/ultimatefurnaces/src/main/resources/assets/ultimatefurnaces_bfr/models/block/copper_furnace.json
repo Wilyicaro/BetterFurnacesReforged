@@ -1,0 +1,9 @@
+{
+  "parent": "betterfurnacesreforged:block/bforientable",
+  "textures": {
+    "top": "ultimatefurnaces_bfr:blocks/copper_top",
+    "side": "ultimatefurnaces_bfr:blocks/copper_side",
+    "front": "ultimatefurnaces_bfr:blocks/copper_front",
+    "overlay": "betterfurnacesreforged:blocks/front"
+  }
+}

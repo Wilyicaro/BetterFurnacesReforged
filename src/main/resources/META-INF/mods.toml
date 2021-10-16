@@ -1,0 +1,44 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="GNU"
+
+[[mods]]
+modId="betterfurnacesreforged"
+version="1.4.5"
+displayName="BetterFurnaces Reforged"
+credits=" TheFrogMC(Original mod creator) and Qelifern (Iron Furnaces creator)"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/better-furnaces-reforged/"
+logoFile="logo.png"
+authors="Wilyicaro"
+description='''
+This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, presenting only the main things used in the original mod
+'''
+
+[[dependencies.betterfurnacesreforged]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5]"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.betterfurnacesreforged]]
+        modId="pmmo"
+        mandatory=false
+        versionRange="[1.16.5-3,)"
+        ordering="NONE"
+        side="BOTH"
+[[dependencies.betterfurnacesreforged]]
+   modId="jei"
+   mandatory=false
+   versionRange="[7,)"
+   ordering="NONE"
+   side="BOTH"
+[[dependencies.betterfurnacesreforged]]
+   modId="ftbguilibrary"
+   mandatory=false
+   versionRange="[1,)"
+   ordering="NONE"
+   side="BOTH"
+
+
+
+

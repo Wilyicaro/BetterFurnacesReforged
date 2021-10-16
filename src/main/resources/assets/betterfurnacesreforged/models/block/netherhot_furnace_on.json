@@ -1,0 +1,9 @@
+{
+  "parent": "betterfurnacesreforged:block/bforientable",
+  "textures": {
+    "top": "betterfurnacesreforged:blocks/netherhot_top",
+    "side": "betterfurnacesreforged:blocks/netherhot_side",
+    "front": "betterfurnacesreforged:blocks/netherhot_front",
+    "overlay": "betterfurnacesreforged:blocks/frontactive"
+  }
+}
