@@ -70,7 +70,7 @@ public class ContainerBF extends Container {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		if (player != null) BetterFurnacesReforged.NETWORK.sendTo(new MessageSync(te, null), player);
+		if (player != null) BetterFurnacesReforged.NETWORK.sendTo(new MessageSync(te), player);
 	}
 
 

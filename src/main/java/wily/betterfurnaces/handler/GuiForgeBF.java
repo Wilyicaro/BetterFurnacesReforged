@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.inventory.FContainerBF;
 import wily.betterfurnaces.tile.TileEntityForge;
@@ -29,7 +28,6 @@ public class GuiForgeBF extends GuiContainer {
 		super.initGui();
 		this.guiLeft = (this.width - this.xSize) / 2;
 		this.guiTop = (this.height - this.ySize) / 2;
-		Keyboard.enableRepeatEvents(true);
 		this.buttonList.clear();
 	}
 

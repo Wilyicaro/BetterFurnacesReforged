@@ -22,15 +22,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class MessageSync implements IMessage {
 
     protected TileEntityIronFurnace te;
-    protected TileEntityForge tf;
     protected int[] fromNet = new int[4];
     protected FluidStack stack;
 
     public MessageSync() {
     };
-    public MessageSync(TileEntityIronFurnace te, TileEntityForge tf) {
+    public MessageSync(TileEntityIronFurnace te) {
         this.te = te;
-        this.tf = tf;
     };
 
 
@@ -46,12 +44,7 @@ public class MessageSync implements IMessage {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        if (this.te == null) {
-            tf.writeContainerSync(buf);
-        }
-        if (this.tf == null) {
             te.writeContainerSync(buf);
-        }
     }
     public static class Handler implements IMessageHandler<MessageSync, IMessage> {
 
@@ -60,11 +53,6 @@ public class MessageSync implements IMessage {
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiBF) {
                     Minecraft.getMinecraft().addScheduledTask(() -> {
                     ((GuiBF) Minecraft.getMinecraft().currentScreen).getTE().readContainerSync(message.fromNet, message.stack);
-                    });
-                }
-                if (Minecraft.getMinecraft().currentScreen instanceof GuiForgeBF) {
-                    Minecraft.getMinecraft().addScheduledTask(() -> {
-                    ((GuiForgeBF) Minecraft.getMinecraft().currentScreen).getTE().readContainerSync(message.fromNet, message.stack);
                     });
                 }
             return null;

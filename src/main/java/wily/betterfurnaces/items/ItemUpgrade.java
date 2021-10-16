@@ -42,10 +42,4 @@ public class ItemUpgrade extends Item {
 	}
 
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		if (tooltipKey != null) tooltip.add(I18n.format(tooltipKey));
-	}
-
 }

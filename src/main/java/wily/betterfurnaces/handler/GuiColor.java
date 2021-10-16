@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
+import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -35,6 +36,7 @@ public class GuiColor extends GuiScreen {
 
     @Override
     public void initGui() {
+        super.initGui();
         ItemStack itemStack = this.mc.player.getHeldItem(EnumHand.MAIN_HAND);
         NBTTagCompound nbt;
         if (itemStack.hasTagCompound()) {
@@ -42,7 +44,6 @@ public class GuiColor extends GuiScreen {
         } else {
             nbt = new NBTTagCompound();
         }
-        super.initGui();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
         Keyboard.enableRepeatEvents(true);
@@ -64,19 +65,29 @@ public class GuiColor extends GuiScreen {
         String s = new ItemStack(ModObjects.COLOR_UPGRADE).getDisplayName();
         this.mc.getTextureManager().bindTexture(TEXTURE);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        this.drawTexturedModalRect(this.guiLeft + 154, this.guiTop + 6, 176, 62, 16, 16);
-
+        itemRender.renderItemIntoGUI(new ItemStack(ModObjects.COLOR_UPGRADE), this.guiLeft + 154, this.guiTop + 6);
 
         this.fontRenderer.drawString(s, width / 2 - this.fontRenderer.getStringWidth(s) / 2, this.guiTop + 8, 4210752);
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        Color myColour = new Color(red.getValueInt(), green.getValueInt(), blue.getValueInt());
-        this.drawRect(this.guiLeft + 156, this.guiTop + 8, this.guiLeft + 168, this.guiTop + 20, myColour.getRGB());
+        GL11.glScalef(4,4,4);
+        RenderHelper.enableGUIStandardItemLighting();
+        ItemStack stack = new ItemStack(ModObjects.COLOR_FURNACE);
+        NBTTagCompound nbt;
+        if (stack.hasTagCompound()) {
+            nbt = stack.getTagCompound();
+        } else {
+            nbt = new NBTTagCompound();
+        }
+        nbt.setInteger("red", red.getValueInt());
+        nbt.setInteger("green", green.getValueInt());
+        nbt.setInteger("blue", blue.getValueInt());
+        stack.setTagCompound(nbt);
+        this.itemRender.renderItemIntoGUI(stack, (width / 2 - 32)/4, (this.guiTop - 70)/4);
+    }
 
-        GlStateManager.color(red.getValueInt(), green.getValueInt(), blue.getValueInt(), 1.0F);
-        GlStateManager.disableLighting();
-        this.mc.getTextureManager().bindTexture(TEXTURE);
-        this.drawTexturedModalRect((width / 2 - 32), (this.guiTop - 70), 176, 0, 56, 62);
+    public int hex() {
+        return ((red.getValueInt()&0x0ff)<<16)|((green.getValueInt()&0x0ff)<<8)|(blue.getValueInt()&0x0ff);
     }
 
     @Override

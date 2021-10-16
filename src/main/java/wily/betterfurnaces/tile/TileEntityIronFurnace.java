@@ -6,6 +6,8 @@ import java.util.Random;
 
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
 import wily.betterfurnaces.inventory.SlotFurnaceFuel;
@@ -64,7 +66,6 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 			return slot > 2 ? SlotUpgrade.isStackValid(stack) : true;
 		};
 	};
-	private int red = 0, green = 0, blue = 0;
 
 	private final RangedWrapper TOP = new RangedWrapper(inv, SLOT_INPUT, SLOT_INPUT + 1);
 	private final RangedWrapper SIDES = new RangedWrapper(inv, SLOT_FUEL, SLOT_FUEL + 1);
@@ -88,12 +89,10 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 	@ItemStackHolder(value = "minecraft:sponge", meta = 1)
 	public static final ItemStack WET_SPONGE = ItemStack.EMPTY;
 
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		this.red = tag.getInteger("red");
-		this.green = tag.getInteger("green");
-		this.blue = tag.getInteger("blue");
 		inv.deserializeNBT(tag.getCompoundTag("inv"));
 		energy.setEnergy(tag.getInteger("energy"));
 		burnTime = tag.getInteger("burn_time");
@@ -112,9 +111,6 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 		compound.setInteger("current_cook_time", currentCookTime);
 		compound.setInteger("default_cook", getDefaultCookTime());
 		compound.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
-		compound.setInteger("red", this.red);
-		compound.setInteger("green", this.green);
-		compound.setInteger("blue", this.blue);
 		return compound;
 	}
 
@@ -148,34 +144,23 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 			buf.writeInt(fluid.amount);
 		}
 	}
-	public void setRgb(int red, int green, int blue) {
-		this.red = red;
-		this.green = green;
-		this.blue = blue;
-	}
-
-	public int[] rgb() {
-		return new int[] {this.red, this.green, this.blue};
-	}
-
 	public int hex() {
-		return ((red&0x0ff)<<16)|((green&0x0ff)<<8)|(blue&0x0ff);
+		NBTTagCompound nbt = getInventory().getStackInSlot(5).getTagCompound();
+
+		return ((nbt.getInteger("red")&0x0ff)<<16)|((nbt.getInteger("green")&0x0ff)<<8)|(nbt.getInteger("blue")&0x0ff);
 	}
+
 	/**
 	 * Main logic method for Iron Furnaces.  Does all the furnace things.
 	 */
 	@Override
 	public final void update() {
-
 		if (world.isRemote) return;
 		if (hasUpgrade(Upgrades.COLOR)){
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockIronFurnace.COLORED, true));
-			setRgb(inv.getStackInSlot(5).getTagCompound().getInteger("red"),inv.getStackInSlot(5).getTagCompound().getInteger("green"),inv.getStackInSlot(5).getTagCompound().getInteger("blue"));
 		}else world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockIronFurnace.COLORED, false));
-
 		ItemStack fuel = ItemStack.EMPTY;
 		boolean canSmelt = canSmelt();
-
 		if (!this.isBurning() && (isAltFuel() || !(fuel = inv.getStackInSlot(SLOT_FUEL)).isEmpty())) {
 			if (canSmelt) burnFuel(fuel, false);
 		}
@@ -253,7 +238,7 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 					break;
 				}
 			}
-			if (!matched && hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING)) {
+			if (!matched && (hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING))) {
 				ItemStack stack = OreProcessingRegistry.getSmeltingResult(input);
 				if (stack.isEmpty()) {
 					recipeKey = ItemStack.EMPTY;
@@ -275,7 +260,7 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 		}
 
 		ItemStack check = recipeOutput;
-		if (hasOreResult && (hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING))){
+		if (hasOreResult && ((hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING)))){
 			check = check.copy();
 			check.grow(check.getCount());
 		}

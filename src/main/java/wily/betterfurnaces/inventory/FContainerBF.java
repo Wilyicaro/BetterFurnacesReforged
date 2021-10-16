@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.net.MessageSync;
+import wily.betterfurnaces.net.MessageSyncTF;
 import wily.betterfurnaces.tile.TileEntityForge;
 
 import javax.annotation.Nullable;
@@ -83,7 +84,7 @@ public class FContainerBF extends Container {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		if (player != null) BetterFurnacesReforged.NETWORK.sendTo(new MessageSync(null, tf), player);
+		if (player != null) BetterFurnacesReforged.NETWORK.sendTo(new MessageSyncTF(tf), player);
 	}
 
 	@Override

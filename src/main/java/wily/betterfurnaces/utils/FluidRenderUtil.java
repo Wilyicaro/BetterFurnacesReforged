@@ -1,4 +1,4 @@
-package wily.betterfurnaces.utils;
+                        package wily.betterfurnaces.utils;
 
 import org.lwjgl.opengl.GL11;
 

@@ -72,9 +72,9 @@ public class TileEntityForge extends TileEntity implements ITickable {
 			return slot > 7 ? SlotUpgrade.isStackValid(stack) : true;
 		};
 	};
-	private final RangedWrapper TOP = new RangedWrapper(inv, SLOT_INPUT, SLOT_INPUT + 2);
-	private final RangedWrapper SIDES = new RangedWrapper(inv, SLOT_FILL, SLOT_FILL + 1);
-	private final RangedWrapper BOTTOM = new RangedWrapper(inv, SLOT_OUTPUT, SLOT_OUTPUT + 6);
+	private final RangedWrapper TOP = new RangedWrapper(inv, SLOT_INPUT, SLOT_INPUT2, SLOT_INPUT3 );
+	private final RangedWrapper SIDES = new RangedWrapper(inv, SLOT_FILL);
+	private final RangedWrapper BOTTOM = new RangedWrapper(inv, SLOT_OUTPUT, SLOT_OUTPUT2, SLOT_OUTPUT3);
 
 	//Main TE Fields.
 	protected MutableEnergyStorage energy = new MutableEnergyStorage(MAX_ENERGY_STORED, MAX_FE_TRANSFER, getEnergyUse());
@@ -156,6 +156,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 	/**
 	 * Main logic method for Iron Furnaces.  Does all the furnace things.
 	 */
+
 	@Override
 	public final void update() {
 		if (world.isRemote) return;
@@ -271,7 +272,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 					break;
 				}
 			}
-			if (!matched && hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING)) {
+			if (!matched && (hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING))) {
 				ItemStack stack = OreProcessingRegistry.getSmeltingResult(input);
 				if (stack.isEmpty()) {
 					recipeKey = ItemStack.EMPTY;
@@ -293,7 +294,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 		}
 
 		ItemStack check = recipeOutput;
-		if (hasOreResult && (hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING))){
+		if (hasOreResult && ((hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING)))){
 			check = check.copy();
 			check.grow(check.getCount());
 		}
@@ -316,7 +317,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 					break;
 				}
 			}
-			if (!matched && hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING)) {
+			if (!matched && (hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING))) {
 				ItemStack stack = OreProcessingRegistry.getSmeltingResult(input2);
 				if (stack.isEmpty()) {
 					recipeKey2 = ItemStack.EMPTY;
@@ -361,7 +362,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 					break;
 				}
 			}
-			if (!matched && hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING)) {
+			if (!matched && (hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING))) {
 				ItemStack stack = OreProcessingRegistry.getSmeltingResult(input3);
 				if (stack.isEmpty()) {
 					recipeKey3 = ItemStack.EMPTY;
@@ -383,7 +384,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 		}
 
 		ItemStack check = recipeOutput3;
-		if (hasOreResult && (hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING))){
+		if (hasOreResult && ((hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING)))){
 			check = check.copy();
 			check.grow(check.getCount());
 		}
