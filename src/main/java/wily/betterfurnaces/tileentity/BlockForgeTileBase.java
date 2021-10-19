@@ -972,9 +972,9 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
         } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 1) {
             return false;
         } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 2) {
-            return index == 2;
+            return (index == 4 || index == 5 || index == 6);
         } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 3) {
-            return index == 2;
+            return (index == 4 || index == 5 || index == 6);
         } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && stack.getItem() != Items.BUCKET) {
             return false;
         } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && stack.getItem() == Items.BUCKET) {
@@ -985,26 +985,10 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
 
     @Override
     public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        if (index == OUTPUT || index == 3) {
+        if (index == OUTPUT || index == OUTPUT1 || index == OUTPUT2 || index > 6) {
             return false;
         }
-        if (index == INPUT) {
-            if (stack.isEmpty()) {
-                return false;
-            }
-
-            return hasRecipe(stack);
-
-        }
-        if (index == INPUT1) {
-            if (stack.isEmpty()) {
-                return false;
-            }
-
-            return hasRecipe(stack);
-
-        }
-        if (index == INPUT2) {
+        if (index == INPUT || index == INPUT1 || index == INPUT2) {
             if (stack.isEmpty()) {
                 return false;
             }
