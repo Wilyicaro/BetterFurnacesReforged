@@ -15,6 +15,7 @@ public class GuiForgeBF extends GuiContainer {
 	protected int xSize = 176;
 	protected int ySize = 206;
 	private static final ResourceLocation TEXTURE = new ResourceLocation(BetterFurnacesReforged.MODID, "textures/gui/container/forge_gui.png");
+	private static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MODID, "textures/gui/container/widgets.png");
 	private final InventoryPlayer playerInventory;
 	private final TileEntityForge tf;
 
@@ -56,14 +57,16 @@ public class GuiForgeBF extends GuiContainer {
 		int l = this.getCookProgressScaled(24);
 		this.drawTexturedModalRect(this.guiLeft + 80, this.guiTop + 80, 176, 14, l + 1, 16);
 		if (tf.hasUpgrade(Upgrades.ELECTRIC_FUEL)) {
+			this.mc.getTextureManager().bindTexture(WIDGETS);
 			int k = this.getEnergyStoredScaled(34);
-			this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 62, 176, 93, 16, 34);
-			this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 62, 176, 127, 16, 34 - k);
+			this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 62, 240, 0, 16, 34);
+			this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 62, 240, 34, 16, 34 - k);
 		}
 		if (tf.hasUpgrade(Upgrades.LIQUID_FUEL)){
-			this.drawTexturedModalRect(this.guiLeft + 26, this.guiTop + 98, 176, 69, 20, 22);
+			this.mc.getTextureManager().bindTexture(WIDGETS);
+			this.drawTexturedModalRect(this.guiLeft + 26, this.guiTop + 98, 192, 38, 20, 22);
 			this.zLevel++;
-		this.drawTexturedModalRect(this.guiLeft + 26, this.guiTop + 98, 176, 47, 20, 22);
+		this.drawTexturedModalRect(this.guiLeft + 26, this.guiTop + 98, 192, 16, 20, 22);
 		this.zLevel--;
 
 		int am = getFluidStoredScaled(21);

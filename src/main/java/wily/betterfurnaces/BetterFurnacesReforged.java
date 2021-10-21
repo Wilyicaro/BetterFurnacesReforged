@@ -70,7 +70,7 @@ public class BetterFurnacesReforged {
 	public static final CreativeTabs BF_TAB = new CreativeTabs(MODID) {
 
 		@Override
-		public ItemStack createIcon() {
+		public ItemStack getTabIconItem() {
 			return new ItemStack(ModObjects.EXTREME_FURNACE);
 		}
 	};

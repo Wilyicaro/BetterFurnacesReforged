@@ -34,7 +34,7 @@ public class FContainerBF extends Container {
 		this.addSlotToContainer(new SlotFurnaceHeater(tf.getInventory(), 3, 8, 100){
 		@Override
 		public boolean isItemValid (ItemStack stack) {
-			return ((FluidUtil.getFluidContained(stack) != null && TileEntityForge.getFluidBurnTime(FluidUtil.getFluidContained(stack)) > 0));
+			return ((FluidUtil.getFluidContained(stack) != null && TileEntityForge.getFluidBurnTime(FluidUtil.getFluidContained(stack)) > 0) || TileEntityFurnace.isItemFuel(stack));
 		}
 			});
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 4, 108, 80));
@@ -104,7 +104,7 @@ public class FContainerBF extends Container {
 
 			if (index >= SLOTS_INVENTORY && index <= SLOTS_HOTBAR + 9) {
 				if (TileEntityFurnace.isItemFuel(stack)) {
-					int s = TileEntityForge.SLOT_FILL;
+					int s = TileEntityForge.SLOT_FUEL;
 					if (!mergeItemStack(stack, s, s + 1, false)) { return ItemStack.EMPTY; }
 				}
 				if (!mergeItemStack(stack, SLOTS_TE, SLOTS_TE + SLOTS_TE_SIZE, false)) { return ItemStack.EMPTY; }

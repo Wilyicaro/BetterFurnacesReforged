@@ -5,7 +5,9 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.*;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockForge;
@@ -43,7 +45,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 	public static final int SLOT_INPUT = 0;
 	public static final int SLOT_INPUT2 = 1;
 	public static final int SLOT_INPUT3 = 2;
-	public static final int SLOT_FILL = 3;
+	public static final int SLOT_FUEL = 3;
 	public static final int SLOT_OUTPUT = 4;
 	public static final int SLOT_OUTPUT2 = 5;
 	public static final int SLOT_OUTPUT3 = 6;
@@ -62,20 +64,19 @@ public class TileEntityForge extends TileEntity implements ITickable {
 			if (slot == SLOT_INPUT) return SlotFurnaceInput.isStackValid(stack);
 			if (slot == SLOT_INPUT2) return SlotFurnaceInput.isStackValid(stack);
 			if (slot == SLOT_INPUT3) return SlotFurnaceInput.isStackValid(stack);
-			if ((slot == SLOT_FILL) && FluidUtil.getFluidContained(stack) == null && getFluidBurnTime(FluidUtil.getFluidContained(stack)) > 0){
+			if ((slot == SLOT_FUEL) && (getFluidBurnTime(FluidUtil.getFluidContained(stack)) > 0 ) || getItemBurnTime(stack) > 0){
 				if (FluidUtil.getFluidContained(stack) == tank.getFluid()){
 					return true;
 				}else if (tank.getFluidAmount() == 0){
 					return true;
 				}
 			}
-			return slot > 7 ? SlotUpgrade.isStackValid(stack) : true;
+			return slot > 6 ? SlotUpgrade.isStackValid(stack) : true;
 		};
 	};
-	private final RangedWrapper TOP = new RangedWrapper(inv, SLOT_INPUT, SLOT_INPUT2, SLOT_INPUT3 );
-	private final RangedWrapper SIDES = new RangedWrapper(inv, SLOT_FILL);
-	private final RangedWrapper BOTTOM = new RangedWrapper(inv, SLOT_OUTPUT, SLOT_OUTPUT2, SLOT_OUTPUT3);
-
+	private final RangedWrapper TOP = new RangedWrapper(inv, SLOT_INPUT, SLOT_INPUT3 + 1 );
+	private final RangedWrapper SIDES = new RangedWrapper(inv, SLOT_FUEL, SLOT_FUEL + 1);
+	private final RangedWrapper BOTTOM = new RangedWrapper(inv, SLOT_OUTPUT, SLOT_OUTPUT3 + 1);
 	//Main TE Fields.
 	protected MutableEnergyStorage energy = new MutableEnergyStorage(MAX_ENERGY_STORED, MAX_FE_TRANSFER, getEnergyUse());
 	protected FluidTank tank = new FluidTank(8000) {
@@ -161,13 +162,13 @@ public class TileEntityForge extends TileEntity implements ITickable {
 	public final void update() {
 		if (world.isRemote) return;
 			ItemStackHandler inv = getInventory();
-			ItemStack filler = inv.getStackInSlot(SLOT_FILL);
+			ItemStack filler = inv.getStackInSlot(SLOT_FUEL);
 			FluidStack fluid = FluidUtil.getFluidContained(filler);
 			if (isFluid() && fluid != null && TileEntityForge.getFluidBurnTime(fluid) > 0) {
 				FluidActionResult fill = FluidUtil.tryEmptyContainer(filler, FluidUtil.getFluidHandler(world, pos, null), 1000, null, true);
 				if (fill.isSuccess()) {
 					world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY_LAVA, SoundCategory.PLAYERS, 0.6F, 0.8F);
-					inv.setStackInSlot(SLOT_FILL, fill.result);
+					inv.setStackInSlot(SLOT_FUEL, fill.result);
 				}
 			}
 
@@ -247,6 +248,13 @@ public class TileEntityForge extends TileEntity implements ITickable {
 		} else if (isFluid() && tank.getFluid() != null) {
 			fuelLength = burnTime = getFluidBurnTime(tank.getFluid());
 			if (this.isBurning()) tank.getFluid().amount--;
+		}else {
+			fuelLength = burnTime = getItemBurnTime(fuel) * getDefaultCookTime() / 200;
+			if (this.isBurning()) {
+				Item item = fuel.getItem();
+				fuel.shrink(1);
+				if (fuel.isEmpty()) inv.setStackInSlot(SLOT_FUEL, item.getContainerItem(fuel));
+			}
 		}
 
 		if (isBurning() && !burnedThisTick) world.setBlockState(pos, getLitState());

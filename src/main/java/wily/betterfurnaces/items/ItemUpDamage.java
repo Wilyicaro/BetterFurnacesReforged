@@ -18,7 +18,7 @@ public class ItemUpDamage extends Item {
 
     public ItemUpDamage(String name, String tooltipKey) {
         this.setMaxDamage(128);
-        this.setTranslationKey(BetterFurnacesReforged.MODID + "." + name);
+        this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
         this.setRegistryName(new ResourceLocation(BetterFurnacesReforged.MODID, name));
         this.setMaxStackSize(1);
         this.setCreativeTab(BetterFurnacesReforged.BF_TAB);

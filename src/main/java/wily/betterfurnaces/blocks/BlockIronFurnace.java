@@ -51,7 +51,7 @@ public class BlockIronFurnace extends Block {
 	 */
 	public BlockIronFurnace(String name, double moreFast, Supplier<TileEntity> teFunc) {
 		super(Material.IRON);
-		this.setTranslationKey(BetterFurnacesReforged.MODID + "." + name);
+		this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
 		this.setRegistryName(BetterFurnacesReforged.MODID, name);
 		this.setCreativeTab(BetterFurnacesReforged.BF_TAB);
 		this.setHardness(2.0F);
@@ -67,8 +67,9 @@ public class BlockIronFurnace extends Block {
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return state.getValue(BURNING) ? 14 : 0;
 	}
-	@Override
-	public BlockRenderLayer getRenderLayer() {
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer()
+	{
 		return BlockRenderLayer.CUTOUT;
 	}
 

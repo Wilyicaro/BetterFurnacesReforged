@@ -1,0 +1,28 @@
+{
+  "parent": "betterfurnacesreforged:block/color_orientable",
+  "textures": {
+    "top": "betterfurnacesreforged:blocks/colored_top",
+    "front": "betterfurnacesreforged:blocks/colored_front",
+    "side": "betterfurnacesreforged:blocks/colored_side",
+    "overlay": "betterfurnacesreforged:blocks/front"
+  },
+  "display": {
+    "thirdperson": {
+      "rotation": [
+        10,
+        -45,
+        170
+      ],
+      "translation": [
+        0,
+        1.5,
+        -2.75
+      ],
+      "scale": [
+        0.375,
+        0.375,
+        0.375
+      ]
+    }
+  }
+}

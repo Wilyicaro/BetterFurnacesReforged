@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://files.minecraftforge.net/maven" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "1.12.2-1.4"
+version = "${mc_version}-${mod_version}"
 group= "wily.betterfurnacesreforged"
 archivesBaseName = "BetterFurnacesReforged"
 
@@ -20,9 +20,9 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2816"
+    version = "${mc_version}-${forge_version}"
     runDir = "run"
-    mappings = "stable_39"
+    mappings = "${mappings_channel}"
     makeObfSourceJar = false
 }
 
@@ -44,7 +44,8 @@ repositories {
 
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.15.0.289"
+    deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
+    runtime "mezz.jei:jei_${mc_version}:${jei_version}"
     deobfCompile "mcp.mobius.waila:Hwyla:1.8.+"
 }
 

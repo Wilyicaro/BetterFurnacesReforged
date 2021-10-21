@@ -29,7 +29,7 @@ public class ItemKit extends Item {
 	final BlockIronFurnace next;
 
 	public ItemKit(String name, BlockIronFurnace prev, BlockIronFurnace next) {
-		this.setTranslationKey(BetterFurnacesReforged.MODID + "." + name);
+		this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
 		this.setRegistryName(new ResourceLocation(BetterFurnacesReforged.MODID, name));
 		this.setMaxStackSize(1);
 		this.setCreativeTab(BetterFurnacesReforged.BF_TAB);

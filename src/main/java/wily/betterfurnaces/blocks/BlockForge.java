@@ -49,7 +49,7 @@ public class BlockForge extends Block {
 	 */
 	public BlockForge(String name, int moreFast, Supplier<TileEntity> teFunc) {
 		super(Material.IRON);
-		this.setTranslationKey(BetterFurnacesReforged.MODID + "." + name);
+		this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
 		this.setRegistryName(BetterFurnacesReforged.MODID, name);
 		this.setCreativeTab(BetterFurnacesReforged.BF_TAB);
 		this.setHardness(2.0F);
@@ -96,7 +96,11 @@ public class BlockForge extends Block {
 	public int getMetaFromState(IBlockState state) {
 		return (state.getValue(BURNING) ? 1 : 0) | (state.getValue(FACING).getHorizontalIndex() << 2);
 	}
-
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.CUTOUT;
+	}
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());

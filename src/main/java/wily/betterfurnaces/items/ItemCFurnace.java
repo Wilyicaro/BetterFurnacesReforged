@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ItemCFurnace extends Item {
     public ItemCFurnace(String name) {
-        this.setTranslationKey(BetterFurnacesReforged.MODID + "." + name);
+        this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
         this.setRegistryName(new ResourceLocation(BetterFurnacesReforged.MODID, name));
         this.setMaxStackSize(1);
     }

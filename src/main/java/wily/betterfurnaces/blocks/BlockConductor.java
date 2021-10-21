@@ -12,7 +12,7 @@ public class BlockConductor extends Block {
 
     public BlockConductor(String name) {
         super(Material.IRON);
-        this.setTranslationKey(BetterFurnacesReforged.MODID + "." + name);
+        this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
         this.setRegistryName(BetterFurnacesReforged.MODID, name);
         this.setCreativeTab(BetterFurnacesReforged.BF_TAB);
         this.setHardness(10.0F);

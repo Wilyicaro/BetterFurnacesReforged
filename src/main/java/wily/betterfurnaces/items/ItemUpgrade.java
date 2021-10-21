@@ -2,7 +2,11 @@ package wily.betterfurnaces.items;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -22,7 +26,7 @@ public class ItemUpgrade extends Item {
 	final String tooltipKey;
 
 	public ItemUpgrade(String name, String tooltipKey) {
-		this.setTranslationKey(BetterFurnacesReforged.MODID + "." + name);
+		this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
 		this.setRegistryName(new ResourceLocation(BetterFurnacesReforged.MODID, name));
 		this.setMaxStackSize(1);
 		this.setCreativeTab(BetterFurnacesReforged.BF_TAB);
@@ -39,6 +43,33 @@ public class ItemUpgrade extends Item {
 			(entity).openGui(BetterFurnacesReforged.INSTANCE, GuiColor.GUIID, world, x, y, z);
 		}
 			return ar;
+	}
+
+	public void onUpdate(ItemStack stack, World world, Entity player, int slot, boolean selected) {
+		super.onUpdate(stack, world, player, slot, selected);
+		ItemStack itemStack = stack;
+		NBTTagCompound nbt;
+		if (itemStack.hasTagCompound()) {
+			nbt = itemStack.getTagCompound();
+		} else {
+			nbt = new NBTTagCompound();
+		}
+		nbt.getInteger("red");
+		if ((Minecraft.getMinecraft().currentScreen) instanceof GuiColor && player instanceof EntityPlayer && ((EntityPlayer) player).getHeldItemMainhand() == stack) {
+			int red = ((GuiColor) Minecraft.getMinecraft().currentScreen).red.getValueInt();
+			int green = ((GuiColor) Minecraft.getMinecraft().currentScreen).green.getValueInt();
+			int blue = ((GuiColor) Minecraft.getMinecraft().currentScreen).blue.getValueInt();
+			if (red != nbt.getInteger("red")) {
+				nbt.setInteger("red", red);
+			}
+			if (red != nbt.getInteger("green")) {
+				nbt.setInteger("green", green);
+			}
+			if (red != nbt.getInteger("blue")) {
+				nbt.setInteger("blue", blue);
+			}
+			itemStack.setTagCompound(nbt);
+		}
 	}
 
 
