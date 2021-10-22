@@ -1,12 +1,10 @@
 package wily.betterfurnaces.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,11 +12,7 @@ public class BlockConductorBase extends Block {
 
 
     public BlockConductorBase(Properties properties) {
-        super(properties);
-    }
-    @Override
-    public int getHarvestLevel(BlockState state) {
-        return 2;
+        super(properties.destroyTime(3f));
     }
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
@@ -27,10 +21,4 @@ public class BlockConductorBase extends Block {
             return dropsOriginal;
         return Collections.singletonList(new ItemStack(this, 1));
     }
-    @Nullable
-    @Override
-    public ToolType getHarvestTool(BlockState state) {
-        return ToolType.PICKAXE;
-    }
-
 }

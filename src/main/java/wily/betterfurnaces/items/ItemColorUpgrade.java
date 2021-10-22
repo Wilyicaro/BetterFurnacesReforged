@@ -1,25 +1,26 @@
 package wily.betterfurnaces.items;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.container.ItemUpgradeContainerBase;
 import wily.betterfurnaces.gui.ItemColorScreen;
@@ -36,60 +37,61 @@ public class ItemColorUpgrade extends ItemUpgradeMisc {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(TextFormatting.GOLD).withItalic(true)));
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.color").setStyle(Style.EMPTY.applyFormat((TextFormatting.GRAY))));
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
+        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.color").setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
     }
 
-    public ActionResult<ItemStack> use(World world, PlayerEntity entity, Hand hand) {
-        ActionResult<ItemStack> ar = super.use(world, entity, hand);
+    public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
+        InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
         double x = entity.getX();
         double y = entity.getY();
         double z = entity.getZ();
-        if (entity instanceof ServerPlayerEntity) {
-            ItemStack stack = entity.getItemInHand(Hand.MAIN_HAND);
-            INamedContainerProvider ContainerProviderColorUpgrade = new ContainerProviderColorUpgrade(this, stack);
-            NetworkHooks.openGui((ServerPlayerEntity) entity, ContainerProviderColorUpgrade, buf -> {
+        if (entity instanceof ServerPlayer) {
+            ItemStack stack = entity.getItemInHand(InteractionHand.MAIN_HAND);
+            MenuProvider ContainerProviderColorUpgrade = new ContainerProviderColorUpgrade(this, stack);
+            NetworkHooks.openGui((ServerPlayer) entity, ContainerProviderColorUpgrade, buf -> {
                 buf.writeBlockPos(new BlockPos(x, y, z));
-                buf.writeByte(hand == Hand.MAIN_HAND ? 0 : 1);
+                buf.writeByte(hand == InteractionHand.MAIN_HAND ? 0 : 1);
             });
         }
         return ar;
     }
-    public void inventoryTick(ItemStack stack, World world, Entity player, int slot, boolean selected) {
+    public void inventoryTick(ItemStack stack, Level world, Entity player, int slot, boolean selected) {
         super.inventoryTick(stack, world, player, slot, selected);
         ItemStack itemStack = stack;
-        CompoundNBT nbt;
+        CompoundTag nbt;
         nbt = itemStack.getOrCreateTag();
         nbt.getInt("red");
-        if ((Minecraft.getInstance().screen) instanceof ItemColorScreen && player instanceof PlayerEntity && ((PlayerEntity) player).getMainHandItem() == stack) {
-            int red = ((ItemColorScreen) Minecraft.getInstance().screen).red.getValueInt();
-            int green = ((ItemColorScreen) Minecraft.getInstance().screen).green.getValueInt();
-            int blue = ((ItemColorScreen) Minecraft.getInstance().screen).blue.getValueInt();
-            if (red != nbt.getInt("red")) {
+        if ((Minecraft.getInstance().screen) instanceof ItemColorScreen && player instanceof Player && ((Player) player).getMainHandItem() == stack) {
+            ItemColorScreen color =  (ItemColorScreen) Minecraft.getInstance().screen;
+            int red = color.red.getValueInt();
+            int green = color.green.getValueInt();
+            int blue = color.blue.getValueInt();
+            if (red != nbt.getInt("red") && color.red != null) {
                 nbt.putInt("red", red);
             }
-            if (red != nbt.getInt("green")) {
+            if (red != nbt.getInt("green") && color.green != null) {
                 nbt.putInt("green", green);
             }
-            if (red != nbt.getInt("blue")) {
+            if (red != nbt.getInt("blue") && color.blue != null) {
                 nbt.putInt("blue", blue);
             }
             itemStack.setTag(nbt);
         }
     }
-    private static class ContainerProviderColorUpgrade implements INamedContainerProvider {
+    private static class ContainerProviderColorUpgrade implements MenuProvider {
         public ContainerProviderColorUpgrade(ItemColorUpgrade item, ItemStack stack) {
             this.itemStackColorUpgrade = stack;
         }
 
         @Override
-        public ITextComponent getDisplayName() {
-            return new TranslationTextComponent("item.betterfurnacesreforged.color_upgrade");
+        public Component getDisplayName() {
+            return new TranslatableComponent("item.betterfurnacesreforged.color_upgrade");
         }
 
         @Override
-        public ContainerColorUpgrade createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+        public ContainerColorUpgrade createMenu(int windowID, Inventory playerInventory, Player playerEntity) {
             ContainerColorUpgrade newContainerServerSide =
                     new ContainerColorUpgrade(windowID, playerInventory,
                             itemStackColorUpgrade);
@@ -102,7 +104,7 @@ public class ItemColorUpgrade extends ItemUpgradeMisc {
 
         public final ItemStack itemStackBeingHeld;
 
-        public ContainerColorUpgrade(int windowId, PlayerInventory playerInv,
+        public ContainerColorUpgrade(int windowId, Inventory playerInv,
                                      ItemStack itemStackBeingHeld) {
             super(Registration.COLOR_UPGRADE_CONTAINER.get(), windowId, playerInv, itemStackBeingHeld);
             this.itemStackBeingHeld = itemStackBeingHeld;

@@ -1,15 +1,15 @@
 package wily.betterfurnaces.container;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
 
 public class SlotInput extends Slot {
     private BlockFurnaceTileBase te;
     private BlockForgeTileBase tf;
-    public SlotInput(IInventory te, int index, int x, int y) {
+    public SlotInput(Container te, int index, int x, int y) {
         super(te, index, x, y);
         if (te instanceof BlockFurnaceTileBase) {
             this.te = (BlockFurnaceTileBase) te;

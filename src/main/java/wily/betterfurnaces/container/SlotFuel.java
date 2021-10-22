@@ -1,14 +1,14 @@
 package wily.betterfurnaces.container;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
 
 public class SlotFuel extends Slot {
 
-    public SlotFuel(IInventory te, int index, int x, int y) {
+    public SlotFuel(Container te, int index, int x, int y) {
         super(te, index, x, y);
     }
 

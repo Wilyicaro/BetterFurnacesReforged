@@ -1,20 +1,16 @@
 package wily.betterfurnaces.container;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.AbstractCookingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -32,21 +28,21 @@ import wily.betterfurnaces.items.ItemUpgradeMisc;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 
 
-public abstract class BlockForgeContainerBase extends Container {
+public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
 
     protected BlockForgeTileBase te;
-    protected IIntArray fields;
-    protected PlayerEntity playerEntity;
+    protected ContainerData fields;
+    protected Player playerEntity;
     protected IItemHandler playerInventory;
-    protected final World world;
+    protected final Level world;
     public static final int[] UPMIS = { 11, 12, 13};
-    private IRecipeType<? extends AbstractCookingRecipe> recipeType;
+    private RecipeType<? extends AbstractCookingRecipe> recipeType;
 
-    public BlockForgeContainerBase(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
-        this(containerType, windowId, world, pos, playerInventory, player, new IntArray(5));
+    public BlockForgeContainerBase(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
+        this(containerType, windowId, world, pos, playerInventory, player, new SimpleContainerData(5));
     }
 
-    public BlockForgeContainerBase(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
+    public BlockForgeContainerBase(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(containerType, windowId);
         this.te = (BlockForgeTileBase) world.getBlockEntity(pos);
         this.recipeType = te.recipeType;
@@ -122,19 +118,19 @@ public abstract class BlockForgeContainerBase extends Container {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public ITextComponent getTooltip(int index) {
+    public Component getTooltip(int index) {
         switch (te.furnaceSettings.get(index))
         {
             case 1:
-                return new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input");
             case 2:
-                return new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_output");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_output");
             case 3:
-                return new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input_output");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input_output");
             case 4:
-                return new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_fuel");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_fuel");
             default:
-                return new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_none");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_none");
         }
     }
 
@@ -244,7 +240,7 @@ public abstract class BlockForgeContainerBase extends Container {
 
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = (Slot) this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -311,9 +307,9 @@ public abstract class BlockForgeContainerBase extends Container {
     protected boolean hasRecipe(ItemStack stack) {
         ItemStack upgrade = this.getItems().get(3);
 
-            if (this.recipeType != IRecipeType.SMELTING) {
-                this.recipeType = IRecipeType.SMELTING;
+            if (this.recipeType != RecipeType.SMELTING) {
+                this.recipeType = RecipeType.SMELTING;
             }
-        return this.world.getRecipeManager().getRecipeFor((IRecipeType)this.recipeType, new Inventory(stack), this.world).isPresent();
+        return this.world.getRecipeManager().getRecipeFor((RecipeType)this.recipeType, new SimpleContainer(stack), this.world).isPresent();
     }
 }

@@ -1,18 +1,18 @@
 package wily.betterfurnaces.container;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 
-public abstract class ItemUpgradeContainerBase extends Container{
+public abstract class ItemUpgradeContainerBase extends AbstractContainerMenu{
 
     public final ItemStack itemStackBeingHeld;
-    public PlayerInventory playerInv;
+    public Inventory playerInv;
 
-    public ItemUpgradeContainerBase(ContainerType<?> containerType, int windowId, PlayerInventory playerInv, ItemStack itemStackBeingHeld) {
+    public ItemUpgradeContainerBase(MenuType<?> containerType, int windowId, Inventory playerInv, ItemStack itemStackBeingHeld) {
         super(containerType, windowId);
         this.itemStackBeingHeld = itemStackBeingHeld;
         this.playerInv = playerInv;
@@ -20,9 +20,9 @@ public abstract class ItemUpgradeContainerBase extends Container{
 
 
     @Override
-        public boolean stillValid(PlayerEntity player) {
+        public boolean stillValid(Player player) {
             ItemStack main = player.getMainHandItem();
-            ItemStack off = player.getItemInHand(Hand.OFF_HAND);
+            ItemStack off = player.getItemInHand(InteractionHand.OFF_HAND);
             return (!main.isEmpty() && main == itemStackBeingHeld) ||
                     (!off.isEmpty() && off == itemStackBeingHeld);
         }

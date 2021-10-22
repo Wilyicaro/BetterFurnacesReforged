@@ -1,18 +1,22 @@
 package wily.betterfurnaces.blocks;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.tileentity.BlockDiamondFurnaceTile;
 import wily.betterfurnaces.tileentity.BlockExtremeForgeTile;
+import wily.betterfurnaces.tileentity.BlockExtremeFurnaceTile;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 
 import javax.annotation.Nullable;
@@ -27,7 +31,7 @@ public class BlockExtremeForge extends BlockForgeBase {
     }
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(BlockState state, World world, BlockPos pos, Random rand) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random rand) {
         if (state.getValue(BlockStateProperties.LIT)) {
             if (world.getBlockEntity(pos) == null)
             {
@@ -45,7 +49,7 @@ public class BlockExtremeForge extends BlockForgeBase {
                 double d2 = (double) pos.getZ() + 0.5D;
                 double d4 = rand.nextDouble() * 0.6D - 0.3D;
                 if (rand.nextDouble() < 0.1D) {
-                    world.playLocalSound(d0, pos.getY(), d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                    world.playLocalSound(d0, pos.getY(), d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
                 }
                 world.addParticle(ParticleTypes.SMOKE, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
                 world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
@@ -70,14 +74,15 @@ public class BlockExtremeForge extends BlockForgeBase {
             }
         }
     }
+    @Nullable
     @Override
-    public int getHarvestLevel(BlockState state) {
-        return 4;
+    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+        return new BlockExtremeForgeTile(p_153215_, p_153216_);
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new BlockExtremeForgeTile();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createFurnaceTicker(level, type, Registration.EXTREME_FORGE_TILE.get());
     }
 }

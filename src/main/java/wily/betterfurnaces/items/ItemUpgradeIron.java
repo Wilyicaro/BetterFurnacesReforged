@@ -1,6 +1,6 @@
 package wily.betterfurnaces.items;
 
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Blocks;
 import wily.betterfurnaces.init.Registration;
 
 public class ItemUpgradeIron extends ItemUpgradeTier {

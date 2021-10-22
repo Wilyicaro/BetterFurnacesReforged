@@ -1,20 +1,32 @@
 {
-  "parent": "block/cube",
-  "elements":[
-    {   "from": [ 0, 0, 0 ],
-      "to": [ 16, 16, 16 ],
-      "faces": {
-        "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#top", "cullface": "down", "tintindex": 0 },
-        "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#top",    "cullface": "up", "tintindex": 0 },
-        "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#front",   "cullface": "north", "tintindex": 0 },
-        "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#side",   "cullface": "south", "tintindex": 0 },
-        "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side",   "cullface": "west", "tintindex": 0 },
-        "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side",   "cullface": "east", "tintindex": 0 }
-      }}
-      ],
+  "parent": "betterfurnacesreforged:block/color_orientable",
   "textures": {
     "top": "betterfurnacesreforged:blocks/colored_top",
     "front": "betterfurnacesreforged:blocks/colored_front",
-    "side": "betterfurnacesreforged:blocks/colored_side"
+    "side": "betterfurnacesreforged:blocks/colored_side",
+    "overlay": "betterfurnacesreforged:blocks/front"
+  },
+  "display": {
+    "thirdperson": {
+      "rotation": [
+        10,
+        -45,
+        170
+      ],
+      "translation": [
+        0,
+        1.5,
+        -2.75
+      ],
+      "scale": [
+        0.345,
+        0.345,
+        0.345
+      ]
+    },
+    "gui": {
+      "rotation": [30, 225, 0],
+      "scale": [2.5, 2.5, 2.5]
+    }
   }
 }

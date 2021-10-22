@@ -1,20 +1,20 @@
 package wily.betterfurnaces.container;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
 
 public class SlotOutput extends Slot {
 
-    private final PlayerEntity player;
+    private final Player player;
     private int removeCount;
     private BlockFurnaceTileBase te;
     private BlockForgeTileBase tf;
 
-    public SlotOutput(PlayerEntity player, IInventory te, int slotIndex, int xPosition, int yPosition) {
+    public SlotOutput(Player player, Container te, int slotIndex, int xPosition, int yPosition) {
         super(te, slotIndex, xPosition, yPosition);
         this.player = player;
         if (te instanceof BlockFurnaceTileBase) {
@@ -32,10 +32,9 @@ public class SlotOutput extends Slot {
     }
 
 
-    public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
-        this.onCrafting(stack);
+    public void onTake(Player thePlayer, ItemStack stack) {
+        this.checkTakeAchievements(stack);
         super.onTake(thePlayer, stack);
-        return stack;
     }
 
     /**
@@ -58,7 +57,7 @@ public class SlotOutput extends Slot {
         }
 
         this.removeCount = 0;
-        net.minecraftforge.fml.hooks.BasicEventHooks.firePlayerSmeltedEvent(this.player, stack);
+        net.minecraftforge.fmllegacy.hooks.BasicEventHooks.firePlayerSmeltedEvent(this.player, stack);
     }
 
     /**

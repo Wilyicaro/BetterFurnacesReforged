@@ -1,6 +1,6 @@
 package wily.betterfurnaces.items;
 
-import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 
 import java.util.function.Predicate;
 

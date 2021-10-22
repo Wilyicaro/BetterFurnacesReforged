@@ -1,7 +1,7 @@
 package wily.betterfurnaces.gui;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import wily.betterfurnaces.container.BlockIronFurnaceContainer;
@@ -10,7 +10,7 @@ import wily.betterfurnaces.container.BlockIronFurnaceContainer;
 public class BlockIronFurnaceScreen extends BlockFurnaceScreenBase<BlockIronFurnaceContainer> {
 
 
-    public BlockIronFurnaceScreen(BlockIronFurnaceContainer container, PlayerInventory inv, ITextComponent name) {
+    public BlockIronFurnaceScreen(BlockIronFurnaceContainer container, Inventory inv, Component name) {
         super(container, inv, name);
     }
 }

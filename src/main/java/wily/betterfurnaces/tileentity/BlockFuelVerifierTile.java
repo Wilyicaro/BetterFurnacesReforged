@@ -1,20 +1,20 @@
 package wily.betterfurnaces.tileentity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class BlockFuelVerifierTile extends TileEntityInventory implements ITickableTileEntity {
+public class BlockFuelVerifierTile extends TileEntityInventory {
 
     @Override
     public int[] IgetSlotsForFace(Direction side) {
@@ -42,15 +42,15 @@ public class BlockFuelVerifierTile extends TileEntityInventory implements ITicka
     }
 
     public static class BlockFuelVerifierTileContainer extends wily.betterfurnaces.container.BlockFuelVerifierContainer {
-            public BlockFuelVerifierTileContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
+            public BlockFuelVerifierTileContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
             super(Registration.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player);
         }
 
-    public BlockFuelVerifierTileContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
+    public BlockFuelVerifierTileContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
             super(Registration.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
         }
     }
-    public final IIntArray fields = new IIntArray() {
+    public final ContainerData fields = new ContainerData() {
         public int get(int index) {
             if (index == 0)
             return BlockFuelVerifierTile.this.burnTime;
@@ -67,7 +67,7 @@ public class BlockFuelVerifierTile extends TileEntityInventory implements ITicka
         }
     };
     @Override
-    public Container IcreateMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new BlockFuelVerifierTileContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
     public final int[] provides = new int[Direction.values().length];
@@ -79,37 +79,36 @@ public class BlockFuelVerifierTile extends TileEntityInventory implements ITicka
     private int burnTime;
 
     public static class BlockFuelVerifierTileDefinition extends BlockFuelVerifierTile {
-        public BlockFuelVerifierTileDefinition() {
-            super(Registration.FUEL_VERIFIER_TILE.get());
+        public BlockFuelVerifierTileDefinition(BlockPos pos, BlockState state) {
+            super(Registration.FUEL_VERIFIER_TILE.get(), pos, state);
         }
 
     }
-    public BlockFuelVerifierTile(TileEntityType<?> tileentitytypeIn) {
-        super(tileentitytypeIn, 1);
+    public BlockFuelVerifierTile(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state) {
+        super(tileentitytypeIn, pos, state, 1);
 
     }
 
-    @Override
-    public void tick() {
-        ItemStack fuel = this.getItem(0);
-        if (!this.level.isClientSide) {
+    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, BlockFuelVerifierTile e) {
+        ItemStack fuel = e.getItem(0);
+        if (!e.level.isClientSide) {
             if (!(fuel.isEmpty()))
-            this.burnTime = getBurnTime(fuel);
-            else burnTime = 0;
+            e.burnTime = getBurnTime(fuel);
+            else e.burnTime = 0;
         }
 
     }
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
-        ItemStackHelper.loadAllItems(tag, this.inventory);
+    public void load(CompoundTag tag) {
+        ContainerHelper.loadAllItems(tag, this.inventory);
         this.burnTime = tag.getInt("BurnTime");
-        super.load(state, tag);
+        super.load(tag);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         super.save(tag);
-        ItemStackHelper.saveAllItems(tag, this.inventory);
+        ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("BurnTime", this.burnTime);
         return tag;
     }
@@ -119,8 +118,8 @@ public class BlockFuelVerifierTile extends TileEntityInventory implements ITicka
             return 0;
         } else {
             Item item = stack.getItem();
-            int ret = stack.getBurnTime();
-            return net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack, ret == -1 ? AbstractFurnaceTileEntity.getFuel().getOrDefault(item, 0) : ret);
+            int ret = stack.getBurnTime(RecipeType.SMELTING);
+            return net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack, ret == -1 ? AbstractFurnaceBlockEntity.getFuel().getOrDefault(item, 0) : ret, RecipeType.SMELTING);
         }
     }
 

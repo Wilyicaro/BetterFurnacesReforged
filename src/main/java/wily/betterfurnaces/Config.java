@@ -2,13 +2,13 @@ package wily.betterfurnaces;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import javax.annotation.Nullable;
@@ -205,12 +205,12 @@ public class Config {
     }
 
     @SubscribeEvent
-    public static void onLoad(final ModConfig.Loading configEvent) {
+    public static void onLoad(final ModConfigEvent.Loading configEvent) {
 
     }
 
     @SubscribeEvent
-    public static void onReload(final ModConfig.Reloading configEvent) {
+    public static void onReload(final ModConfigEvent.Reloading configEvent) {
 
     }
 
@@ -222,7 +222,7 @@ public class Config {
     }
 
     @Nullable
-    public static PlayerEntity getPlayer(IWorld world)
+    public static Player getPlayer(LevelAccessor world)
     {
         if (world == null)
         {

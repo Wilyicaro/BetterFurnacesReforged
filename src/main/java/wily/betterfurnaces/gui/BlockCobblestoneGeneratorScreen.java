@@ -1,56 +1,50 @@
 package wily.betterfurnaces.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.block.Blocks;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer;
-import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketCobButton;
-import wily.betterfurnaces.network.PacketForgeShowSettingsButton;
 import wily.betterfurnaces.util.FluidRenderUtil;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestoneGeneratorContainer> extends ContainerScreen<T> {
+public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestoneGeneratorContainer> extends AbstractContainerScreen<T> {
 
     public ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/cobblestone_generator_gui.png");
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
-    PlayerInventory playerInv;
-    ITextComponent name;
+    Inventory playerInv;
+    Component name;
     private int buttonstate = 1;
 
     public boolean add_button;
     public boolean sub_button;
 
-    public BlockCobblestoneGeneratorScreen(T t, PlayerInventory inv, ITextComponent name) {
+    public BlockCobblestoneGeneratorScreen(T t, Inventory inv, Component name) {
         super(t, inv, name);
         playerInv = inv;
         this.name = name;
     }
     public static class BlockCobblestoneGeneratorScreenDefinition extends  BlockCobblestoneGeneratorScreen<BlockCobblestoneGeneratorContainer>{
-        public BlockCobblestoneGeneratorScreenDefinition(BlockCobblestoneGeneratorContainer container, PlayerInventory inv, ITextComponent name) {
+        public BlockCobblestoneGeneratorScreenDefinition(BlockCobblestoneGeneratorContainer container, Inventory inv, Component name) {
             super(container, inv, name);
         }
     }
 
     @Override
-    public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrix);
         super.render(matrix, mouseX, mouseY, partialTicks);
         this.renderTooltip(matrix, mouseX, mouseY);
@@ -63,8 +57,8 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
 
 
     @Override
-    protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY) {
-        ITextComponent invname = this.playerInv.getDisplayName();
+    protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
+        Component invname = this.playerInv.getDisplayName();
         int actualMouseX = mouseX - ((this.width - this.getXSize()) / 2);
         int actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
         this.minecraft.font.draw(matrix, this.playerInv.getDisplayName(), 7, this.getYSize() - 93, 4210752);
@@ -72,8 +66,8 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
         addTooltips(matrix, actualMouseX, actualMouseY);
     }
 
-    private void addTooltips(MatrixStack matrix, int mouseX, int mouseY) {
-        if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 49) {
+    private void addTooltips(PoseStack matrix, int mouseX, int mouseY) {
+        if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
             if (buttonstate == 1) {
                 this.renderTooltip(matrix, Blocks.COBBLESTONE.getName(), mouseX, mouseY);
             } else if (buttonstate == 2) {
@@ -87,15 +81,15 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
     }
 
     @Override
-    protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
         double actualMouseX = mouseX - getGuiLeft();
         double actualMouseY = mouseY - getGuiTop();
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(GUI);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, GUI);
         int relX = (this.width - this.getXSize()) / 2;
         int relY = (this.height - this.getYSize()) / 2;
         this.blit(matrix, relX, relY, 0, 0, this.getXSize(), this.getYSize());
-        this.minecraft.getTextureManager().bind(WIDGETS);
+        RenderSystem.setShaderTexture(0, WIDGETS);
         if (buttonstate == 1)
             this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 42, 0, 14, 14);
         if (buttonstate == 2)
@@ -122,12 +116,12 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
             FluidStack water = new FluidStack(Fluids.WATER, 1000);
             FluidRenderUtil.renderTiledFluid(matrix, this, 58, 44, 17, 12, lava, false);
             FluidRenderUtil.renderTiledFluid(matrix, this, 101, 44, 17, 12, water, true);
-            Minecraft.getInstance().getTextureManager().bind(GUI);
+            RenderSystem.setShaderTexture(0, GUI);
             this.blit(matrix, getGuiLeft() + 58, getGuiTop() + 44, 176, 24, i + 1, 12);
             this.blit(matrix, getGuiLeft() + 117 - i, getGuiTop() + 44, 192 - i, 36, 17, 12);
 
         }
-        Minecraft.getInstance().getTextureManager().bind(GUI);
+        RenderSystem.setShaderTexture(0, GUI);
         this.blit(matrix, getGuiLeft() + 58, getGuiTop() + 44, 176, 0, 17, 12);
         this.blit(matrix, getGuiLeft() + 101, getGuiTop() + 44, 176, 12, 17, 12);
         if (buttonstate != getMenu().getButtonstate())
@@ -140,7 +134,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         double actualMouseX = mouseX - getGuiLeft();
         double actualMouseY = mouseY - getGuiTop();
-        if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 49) {
+        if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39) {
             if (buttonstate == 1) {
                 buttonstate = 2;
             } else if (buttonstate == 2) {
@@ -150,7 +144,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
             } else if (buttonstate == 4) {
                 buttonstate = 1;
             }
-            Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
             Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos(), buttonstate));
         }
 

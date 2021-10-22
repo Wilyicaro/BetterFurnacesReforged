@@ -1,13 +1,13 @@
 package wily.betterfurnaces.init;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemColorsHandler implements IItemColor {
-    public static final IItemColor COLOR = new ItemColorsHandler();
+public class ItemColorsHandler implements ItemColor {
+    public static final ItemColor COLOR = new ItemColorsHandler();
 
     @SubscribeEvent
     public static void registerItemColors() {
@@ -18,7 +18,7 @@ public class ItemColorsHandler implements IItemColor {
 
     @Override
     public int getColor(ItemStack stack, int i) {
-        CompoundNBT nbt = stack.getTag();
+        CompoundTag nbt = stack.getTag();
             if ((stack.getTag() != null) &&(stack.getItem() == Registration.COLOR_FURNACE.get() || stack.getItem() == Registration.COLOR_FORGE.get())) {
                 return ((nbt.getInt("red") & 0x0ff) << 16) | ((nbt.getInt("green") & 0x0ff) << 8) | (nbt.getInt("blue") & 0x0ff);
             }else {

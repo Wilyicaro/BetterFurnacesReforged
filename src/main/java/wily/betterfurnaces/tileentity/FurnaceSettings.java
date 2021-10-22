@@ -1,6 +1,6 @@
 package wily.betterfurnaces.tileentity;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 
@@ -104,14 +104,14 @@ public class FurnaceSettings {
         return settings.length + autoIO.length + redstoneSettings.length;
     }
 
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         this.settings = tag.getIntArray("Settings");
         this.autoIO = tag.getIntArray("AutoIO");
         this.redstoneSettings = tag.getIntArray("Redstone");
         onChanged();
     }
 
-    public void write(CompoundNBT tag) {
+    public void write(CompoundTag tag) {
         tag.putIntArray("Settings", settings);
         tag.putIntArray("AutoIO", autoIO);
         tag.putIntArray("Redstone", redstoneSettings);

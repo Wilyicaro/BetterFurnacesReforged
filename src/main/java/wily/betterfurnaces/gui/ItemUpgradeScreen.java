@@ -1,12 +1,12 @@
 package wily.betterfurnaces.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -14,8 +14,8 @@ import wily.betterfurnaces.container.ItemUpgradeContainerBase;
 import wily.betterfurnaces.items.ItemColorUpgrade;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class ItemUpgradeScreen<T extends ItemUpgradeContainerBase> extends ContainerScreen<T> {
-    private ITextComponent name;
+public abstract class ItemUpgradeScreen<T extends ItemUpgradeContainerBase> extends AbstractContainerScreen<T> {
+    private Component name;
     @Override
     public int getXSize() {
         return 176;
@@ -34,20 +34,20 @@ public abstract class ItemUpgradeScreen<T extends ItemUpgradeContainerBase> exte
 
     public ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/upgrades_gui.png");
 
-    public ItemUpgradeScreen(T t, PlayerInventory inv, ITextComponent name) {
+    public ItemUpgradeScreen(T t, Inventory inv, Component name) {
 
         super(t, inv, name);
         this.name = name;
     }
 
     @Override
-    public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrix);
         super.render(matrix, mouseX, mouseY, partialTicks);
         renderColorFurnace(matrix, partialTicks, mouseX, mouseY);
     }
     @Override
-    protected void renderLabels(MatrixStack matrix, int mouseX, int mouseY) {
+    protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
         int actualMouseX = mouseX - ((this.width - this.getXSize()) / 2);
         int actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
     }
@@ -56,17 +56,17 @@ public abstract class ItemUpgradeScreen<T extends ItemUpgradeContainerBase> exte
         super.init();
     }
     @Override
-    protected void renderBg(MatrixStack matrix, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
         ItemStack stack = ((ItemColorUpgrade.ContainerColorUpgrade) this.getMenu()).itemStackBeingHeld;
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(GUI);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, GUI);
         int relX = (this.width - this.getXSize()) / 2;
         int relY = (this.height - this.getYSize()) / 2;
         this.blit(matrix, relX, relY, 0, 0, this.getXSize(), this.getYSize());
         itemRenderer.renderGuiItem(stack, this.getGuiLeft() + 154, this.getGuiTop() + 6);
         this.font.draw(matrix, name, width / 2 - this.font.width(name) / 2, this.getGuiTop() + 8, 4210752);
     }
-    protected void renderColorFurnace(MatrixStack matrix, float partialTicks, int mouseX, int mouseY) {
+    protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
     }
 
 }

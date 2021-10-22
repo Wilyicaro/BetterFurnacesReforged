@@ -1,8 +1,8 @@
 package wily.betterfurnaces.container;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.items.ItemUpgradeMisc;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
@@ -12,7 +12,7 @@ public class SlotUpgrade extends Slot {
     private BlockFurnaceTileBase te;
     private BlockForgeTileBase tf;
 
-    public SlotUpgrade(IInventory te, int slotIndex, int xPosition, int yPosition) {
+    public SlotUpgrade(Container te, int slotIndex, int xPosition, int yPosition) {
         super(te, slotIndex, xPosition, yPosition);
         if (te instanceof BlockFurnaceTileBase) {
             this.te = (BlockFurnaceTileBase) te;

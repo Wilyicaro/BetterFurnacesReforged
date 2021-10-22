@@ -1,24 +1,21 @@
 package wily.betterfurnaces.tileentity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -26,13 +23,12 @@ import wily.betterfurnaces.blocks.BlockCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemFuelEfficiency;
 import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.items.ItemUpgradeMisc;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class BlockCobblestoneGeneratorTile extends TileEntityInventory implements ITickableTileEntity {
+public class BlockCobblestoneGeneratorTile extends TileEntityInventory{
 
     @Override
     public int[] IgetSlotsForFace(Direction side) {
@@ -50,15 +46,15 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
     }
 
     public static class BlockCobblestoneGeneratorContainer extends wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer {
-            public BlockCobblestoneGeneratorContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
+            public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
             super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player);
         }
 
-    public BlockCobblestoneGeneratorContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
+    public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
             super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
         }
     }
-    public final IIntArray fields = new IIntArray() {
+    public final ContainerData fields = new ContainerData() {
         public int get(int index) {
 
             if (index == 0)
@@ -85,7 +81,7 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
         }
     };
     @Override
-    public Container IcreateMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new BlockCobblestoneGeneratorContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
     public final int[] provides = new int[Direction.values().length];
@@ -104,13 +100,13 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
     public int resultType = 1;
 
     public static class BlockCobblestoneGeneratorTileDefinition extends wily.betterfurnaces.tileentity.BlockCobblestoneGeneratorTile{
-        public BlockCobblestoneGeneratorTileDefinition() {
-            super(Registration.COB_GENERATOR_TILE.get());
+        public BlockCobblestoneGeneratorTileDefinition(BlockPos pos, BlockState state) {
+            super(Registration.COB_GENERATOR_TILE.get(), pos, state);
         }
 
     }
-    public BlockCobblestoneGeneratorTile(TileEntityType<?> tileentitytypeIn) {
-        super(tileentitytypeIn, 5);
+    public BlockCobblestoneGeneratorTile(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state) {
+        super(tileentitytypeIn, pos, state, 5);
 
     }
 
@@ -121,47 +117,46 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
         }
     }
 
-    @Override
-    public void tick() {
-        if (actualCobTime != getCobTime()){
-            actualCobTime = getCobTime();
+    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, BlockCobblestoneGeneratorTile e) {
+        if (e.actualCobTime != e.getCobTime()){
+            e.actualCobTime = e.getCobTime();
         }
-        if (cobTime > getCobTime()){
-            cobTime = getCobTime();
+        if (e.cobTime > e.getCobTime()){
+            e.cobTime = e.getCobTime();
         }
-        ItemStack output = this.getItem(2);
-        ItemStack upgrade = this.getItem(3);
-        ItemStack upgrade1 = this.getItem(4);
+        ItemStack output = e.getItem(2);
+        ItemStack upgrade = e.getItem(3);
+        ItemStack upgrade1 = e.getItem(4);
         boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
         boolean can1 = (output.isEmpty());
-        boolean can3 = (output.getItem() == getResult().getItem());
-        if (cobGen() > 0){
-            forceUpdateAllStates();
+        boolean can3 = (output.getItem() == e.getResult().getItem());
+        if (e.cobGen() > 0){
+            e.forceUpdateAllStates();
         }
-        if ((cobGen() == 3) || cobTime > 0 && cobTime < actualCobTime) {
+        if ((e.cobGen() == 3) || e.cobTime > 0 && e.cobTime < e.actualCobTime) {
             if ((can && can3 )|| can1)
-            ++this.cobTime;
+            ++e.cobTime;
         }
-        if (!this.level.isClientSide) {
-            if (!output.isEmpty()) AutoIO();
-            if ((cobTime >= getCobTime() && ((can  && can3)|| can1))){
+        if (!e.level.isClientSide) {
+            if (!output.isEmpty()) e.AutoIO();
+            if ((e.cobTime >= e.getCobTime() && ((can  && can3)|| can1))){
                 if (can1) {
-                    this.inventory.set(OUTPUT, getResult());
+                    e.inventory.set(OUTPUT, e.getResult());
                     if (upgrade1.getItem() instanceof ItemOreProcessing) {
-                        breakDurabilityItem(upgrade1);
+                        e.breakDurabilityItem(upgrade1);
                     }
                 }else {
                     if (can && can3) {
-                        output.grow(getResult().getCount());
+                        output.grow(e.getResult().getCount());
                         if (upgrade1.getItem() instanceof ItemOreProcessing) {
-                            breakDurabilityItem(upgrade1);
+                            e.breakDurabilityItem(upgrade1);
                         }
                     }
                 }
-                this.getLevel().playSound(null, this.getBlockPos(), SoundEvents.LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.3F, 0.3F);
-                cobTime = 0;
-                breakDurabilityItem(upgrade);
-                AutoIO();
+                e.getLevel().playSound(null, e.getBlockPos(), SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 0.3F, 0.3F);
+                e.cobTime = 0;
+                e.breakDurabilityItem(upgrade);
+                e.AutoIO();
             }
         }
 
@@ -169,11 +164,11 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
     protected int cobGen(){
         ItemStack input = this.inventory.get(0);
         ItemStack input1 = this.inventory.get(1);
-        if (input.getItem() == Items.LAVA_BUCKET.getItem() && input1.isEmpty()){
+        if (input.getItem() == Items.LAVA_BUCKET && input1.isEmpty()){
             return 1;
-        }else if (input1.getItem() == Items.WATER_BUCKET.getItem() && input.isEmpty()){
+        }else if (input1.getItem() == Items.WATER_BUCKET && input.isEmpty()){
             return 2;
-        }else if (input.getItem() == Items.LAVA_BUCKET.getItem() && input1.getItem() == Items.WATER_BUCKET.getItem()){
+        }else if (input.getItem() == Items.LAVA_BUCKET && input1.getItem() == Items.WATER_BUCKET){
             return 3;
         }else return 0;
     }
@@ -211,26 +206,26 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
     }
     protected boolean hasLava() {
         ItemStack input = this.inventory.get(0);
-        return (input.getItem() == Items.WATER_BUCKET.getItem());
+        return (input.getItem() == Items.WATER_BUCKET);
     }
     protected boolean hasWater() {
         ItemStack input = this.inventory.get(1);
-        return (input.getItem() == Items.WATER_BUCKET.getItem());
+        return (input.getItem() == Items.WATER_BUCKET);
     }
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
-        ItemStackHelper.loadAllItems(tag, this.inventory);
+    public void load(CompoundTag tag) {
+        ContainerHelper.loadAllItems(tag, this.inventory);
         this.cobTime = tag.getInt("CobTime");
         this.resultType = tag.getInt("ResultType");
         this.actualCobTime = tag.getInt("ActualCobTime");
 
-        super.load(state, tag);
+        super.load(tag);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         super.save(tag);
-        ItemStackHelper.saveAllItems(tag, this.inventory);
+        ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("CobTime", this.cobTime);
         tag.putInt("ResultType", this.resultType);
         tag.putInt("ActualCobTime", this.actualCobTime);
@@ -293,7 +288,7 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
     }
     private void AutoIO(){
         for (Direction dir : Direction.values()) {
-            TileEntity tile = level.getBlockEntity(worldPosition.offset(dir.getNormal()));
+            BlockEntity tile = level.getBlockEntity(worldPosition.offset(dir.getNormal()));
             if (tile == null) {
                 continue;
             }

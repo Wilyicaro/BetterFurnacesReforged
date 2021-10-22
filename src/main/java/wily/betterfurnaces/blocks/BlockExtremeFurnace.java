@@ -1,8 +1,13 @@
 package wily.betterfurnaces.blocks;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.tileentity.BlockDiamondFurnaceTile;
 import wily.betterfurnaces.tileentity.BlockExtremeFurnaceTile;
 
 import javax.annotation.Nullable;
@@ -14,14 +19,16 @@ public class BlockExtremeFurnace extends BlockFurnaceBase {
     public BlockExtremeFurnace(Properties properties) {
         super(properties);
     }
+
+    @Nullable
     @Override
-    public int getHarvestLevel(BlockState state) {
-        return 3;
+    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+        return new BlockExtremeFurnaceTile(p_153215_, p_153216_);
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new BlockExtremeFurnaceTile();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createFurnaceTicker(level, type, Registration.EXTREME_FURNACE_TILE.get());
     }
 }

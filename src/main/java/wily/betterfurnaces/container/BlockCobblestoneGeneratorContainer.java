@@ -1,19 +1,14 @@
 package wily.betterfurnaces.container;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.AbstractCookingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
@@ -25,20 +20,20 @@ import wily.betterfurnaces.items.ItemOreProcessing;
 import wily.betterfurnaces.tileentity.BlockCobblestoneGeneratorTile;
 
 
-public class BlockCobblestoneGeneratorContainer extends Container {
+public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {
 
     protected BlockCobblestoneGeneratorTile te;
-    protected IIntArray fields;
-    protected PlayerEntity playerEntity;
+    protected ContainerData fields;
+    protected Player playerEntity;
     protected IItemHandler playerInventory;
-    protected final World world;
-    private IRecipeType<? extends AbstractCookingRecipe> recipeType;
+    protected final Level world;
+    private RecipeType<? extends AbstractCookingRecipe> recipeType;
 
-    public BlockCobblestoneGeneratorContainer(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
-        this(containerType, windowId, world, pos, playerInventory, player, new IntArray(3));
+    public BlockCobblestoneGeneratorContainer(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
+        this(containerType, windowId, world, pos, playerInventory, player, new SimpleContainerData(3));
     }
 
-    public BlockCobblestoneGeneratorContainer(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
+    public BlockCobblestoneGeneratorContainer(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(containerType, windowId);
         this.te = (BlockCobblestoneGeneratorTile) world.getBlockEntity(pos);
 
@@ -51,13 +46,13 @@ public class BlockCobblestoneGeneratorContainer extends Container {
         this.addSlot(new Slot(te, 0, 53, 27){
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() == Items.LAVA_BUCKET.getItem());
+                return ( stack.getItem() == Items.LAVA_BUCKET);
             }
         });
         this.addSlot(new Slot(te, 1, 108, 27){
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() == Items.WATER_BUCKET.getItem());
+                return ( stack.getItem() == Items.WATER_BUCKET);
             }
         });
         this.addSlot(new SlotOutput(playerEntity, te, 2, 80, 45));
@@ -96,7 +91,7 @@ public class BlockCobblestoneGeneratorContainer extends Container {
 
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = (Slot) this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -162,7 +157,7 @@ public class BlockCobblestoneGeneratorContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
-        return stillValid(IWorldPosCallable.create(te.getLevel(), te.getBlockPos()), playerEntity, Registration.COBBLESTONE_GENERATOR.get());
+    public boolean stillValid(Player playerIn) {
+        return stillValid(ContainerLevelAccess.create(te.getLevel(), te.getBlockPos()), playerEntity, Registration.COBBLESTONE_GENERATOR.get());
     }
 }

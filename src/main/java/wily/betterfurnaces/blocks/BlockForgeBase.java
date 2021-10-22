@@ -1,41 +1,44 @@
 package wily.betterfurnaces.blocks;
 
-import net.minecraft.block.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.*;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
@@ -45,7 +48,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public abstract class BlockForgeBase extends Block implements IWaterLoggable {
+public abstract class BlockForgeBase extends Block implements SimpleWaterloggedBlock, EntityBlock {
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -56,19 +59,8 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(BlockStateProperties.LIT, false).setValue(WATERLOGGED, false).setValue(COLORED,false));
     }
 
-    @Nullable
     @Override
-    public ToolType getHarvestTool(BlockState state) {
-        return ToolType.PICKAXE;
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(BlockStateProperties.LIT) ? 14 : 0;
     }
     @Override
@@ -76,7 +68,7 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         Direction facing = ctx.getClickedFace();
         if (facing == Direction.WEST || facing == Direction.EAST)
             facing = Direction.UP;
@@ -96,7 +88,7 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState p_180633_3_, @Nullable LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState p_180633_3_, @Nullable LivingEntity entity, ItemStack stack) {
         if (entity != null) {
             BlockForgeTileBase te = (BlockForgeTileBase) world.getBlockEntity(pos);
             if (stack.hasCustomHoverName()) {
@@ -108,100 +100,100 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult p_225533_6_) {
         ItemStack stack = player.getItemInHand(handIn).copy();
         ItemStack hand = player.getItemInHand(handIn);
         BlockForgeTileBase te = (BlockForgeTileBase) world.getBlockEntity(pos);
 
         if (world.isClientSide) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             if ((((hand.getItem() instanceof ItemUpgradeMisc && !(hand.getItem() instanceof ItemXpTank)) || hand.getItem() instanceof ItemOreProcessing || hand.getItem() instanceof ItemFuelEfficiency || (hand.getItem() instanceof ItemLiquidFuel && !te.hasXPTank()) || hand.getItem() instanceof ItemEnergyFuel || (hand.getItem() == Registration.XP.get() && !te.isLiquid())) && !(player.isCrouching()))) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }else if ((te.inventory.get(10).getItem() == new ItemStack(Registration.LIQUID.get()).getItem())  && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() &&  !(player.isCrouching())){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
                 FluidActionResult res = FluidUtil.tryEmptyContainer(hand, te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get(), 1000, player, true);
-                if (fluid != null && ForgeHooks.getBurnTime(hand) > 0)
+                if (fluid != null && ForgeHooks.getBurnTime(hand, RecipeType.SMELTING) > 0)
                     if (res.isSuccess()) {
-                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundCategory.PLAYERS, 0.6F, 0.8F);
+                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
                         if (!player.isCreative()) player.setItemInHand(handIn, res.result);
                     }
             }else {
                 this.interactWith(world, pos, player);
             }
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 
-    private ActionResultType interactUpgrade(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
+    private InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         Item hand = player.getItemInHand(handIn).getItem();
         if (!((hand instanceof ItemOreProcessing) || (hand instanceof ItemFuelEfficiency) || (hand instanceof ItemUpgradeMisc) || (hand instanceof ItemLiquidFuel) || (hand instanceof ItemEnergyFuel))){
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        TileEntity te = world.getBlockEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (!(te instanceof BlockForgeTileBase)) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
 
-        if (hand instanceof ItemOreProcessing && hand != ((IInventory) te).getItem(7).getItem()) {
-                if ((!(((IInventory) te).getItem(7).isEmpty())) && (!player.isCreative())) {
-                    InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(7));
+        if (hand instanceof ItemOreProcessing && hand != ((Container) te).getItem(7).getItem()) {
+                if ((!(((Container) te).getItem(7).isEmpty())) && (!player.isCreative())) {
+                    Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(7));
                 }
-                    ((IInventory) te).setItem(7, newStack);
+                    ((Container) te).setItem(7, newStack);
 
         }
         if (hand instanceof ItemFuelEfficiency) {
-            if ((!(((IInventory) te).getItem(8).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(8));
+            if ((!(((Container) te).getItem(8).isEmpty())) && (!player.isCreative())) {
+                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(8));
             }
-            ((IInventory) te).setItem(8, newStack);
+            ((Container) te).setItem(8, newStack);
         }
         if (hand == Registration.XP.get()) {
-            if ((!(((IInventory) te).getItem(9).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(9));
+            if ((!(((Container) te).getItem(9).isEmpty())) && (!player.isCreative())) {
+                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(9));
             }
-            ((IInventory) te).setItem(9, newStack);
+            ((Container) te).setItem(9, newStack);
         }
         if (hand == Registration.FACTORY.get()) {
-            if ((!(((IInventory) te).getItem(11).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(11));
+            if ((!(((Container) te).getItem(11).isEmpty())) && (!player.isCreative())) {
+                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(11));
             }
-            ((IInventory) te).setItem(11, newStack);
+            ((Container) te).setItem(11, newStack);
 
         }
         if (hand instanceof ItemColorUpgrade) {
-            if ((!(((IInventory) te).getItem(12).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(12));
+            if ((!(((Container) te).getItem(12).isEmpty())) && (!player.isCreative())) {
+                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(12));
             }
-            ((IInventory) te).setItem(12, newStack);
+            ((Container) te).setItem(12, newStack);
 
         }
         if (hand instanceof ItemLiquidFuel || hand instanceof ItemEnergyFuel) {
-            if ((!(((IInventory) te).getItem(10).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(10));
+            if ((!(((Container) te).getItem(10).isEmpty())) && (!player.isCreative())) {
+                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(10));
             }
-            ((IInventory) te).setItem(10, newStack);
+            ((Container) te).setItem(10, newStack);
         }
-        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
         if (!player.isCreative()) {
             player.getItemInHand(handIn).shrink(1);
         }
         ((BlockForgeTileBase)te).onUpdateSent();
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
-    private void interactWith(World world, BlockPos pos, PlayerEntity player) {
-        TileEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof INamedContainerProvider) {
-            NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getBlockPos());
+    private void interactWith(Level world, BlockPos pos, Player player) {
+        BlockEntity tileEntity = world.getBlockEntity(pos);
+        if (tileEntity instanceof MenuProvider) {
+            NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) tileEntity, tileEntity.getBlockPos());
             player.awardStat(Stats.INTERACT_WITH_FURNACE);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(BlockState state, World world, BlockPos pos, Random rand) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random rand) {
         if (state.getValue(BlockStateProperties.LIT)) {
             if (world.getBlockEntity(pos) == null)
             {
@@ -219,7 +211,7 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
                 double d2 = (double) pos.getZ() + 0.5D;
                 double d4 = rand.nextDouble() * 0.6D - 0.3D;
                 if (rand.nextDouble() < 0.1D) {
-                    world.playLocalSound(d0, pos.getY(), d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                    world.playLocalSound(d0, pos.getY(), d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
                 }
                 world.addParticle(ParticleTypes.SMOKE, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
                 world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
@@ -245,17 +237,17 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
         }
     }
 
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
+    public void onReplaced(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
 
     }
 
     @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
-            TileEntity te = world.getBlockEntity(pos);
+            BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof BlockForgeTileBase) {
-                InventoryHelper.dropContents(world, pos, (BlockForgeTileBase) te);
-                ((BlockForgeTileBase)te).grantStoredRecipeExperience(world, Vector3d.atCenterOf(pos));
+                Containers.dropContents(world, pos, (BlockForgeTileBase) te);
+                ((BlockForgeTileBase)te).grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -267,13 +259,13 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
         return true;
     }
 
-    public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
-        return Container.getRedstoneSignalFromContainer((IInventory) world.getBlockEntity(pos));
+    public int getComparatorInputOverride(BlockState state, Level world, BlockPos pos) {
+        return AbstractContainerMenu.getRedstoneSignalFromContainer((Container) world.getBlockEntity(pos));
 
     }
 
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderType(BlockState p_149645_1_) {
+        return RenderShape.MODEL;
     }
 
     public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
@@ -287,7 +279,7 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
         return p_185499_1_;
     }
 
-    private int calculateOutput(World worldIn, BlockPos pos, BlockState state) {
+    private int calculateOutput(Level worldIn, BlockPos pos, BlockState state) {
         BlockForgeTileBase tile = ((BlockForgeTileBase)worldIn.getBlockEntity(pos));
         int i = this.getComparatorInputOverride(state, worldIn, pos);
         if (tile != null)
@@ -304,12 +296,12 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
     }
 
     @Override
-    public int getSignal(BlockState p_180656_1_, IBlockReader p_180656_2_, BlockPos p_180656_3_, Direction p_180656_4_) {
+    public int getSignal(BlockState p_180656_1_, BlockGetter p_180656_2_, BlockPos p_180656_3_, Direction p_180656_4_) {
         return super.getDirectSignal(p_180656_1_, p_180656_2_, p_180656_3_, p_180656_4_);
     }
 
     @Override
-    public int getDirectSignal(BlockState blockState, IBlockReader world, BlockPos pos, Direction direction) {
+    public int getDirectSignal(BlockState blockState, BlockGetter world, BlockPos pos, Direction direction) {
         BlockForgeTileBase furnace = ((BlockForgeTileBase) world.getBlockEntity(pos));
         if (furnace != null)
         {
@@ -335,8 +327,17 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING, WATERLOGGED, BlockStateProperties.LIT, COLORED);
+    }
+    @Nullable
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
+        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
+    }
+
+    @Nullable
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends BlockForgeTileBase> p_151990_) {
+        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, BlockForgeTileBase::tick);
     }
 
 }
