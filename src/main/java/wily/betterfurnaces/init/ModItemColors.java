@@ -70,6 +70,7 @@ public class ModItemColors implements IItemColor {
             System.out.println("Registering block color handler");
 
             Minecraft.getMinecraft().getItemColors().registerItemColorHandler(COLOR, ModObjects.COLOR_FURNACE);
+            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(COLOR, ModObjects.COLOR_FORGE);
 
         }
 

@@ -3,6 +3,7 @@ package wily.betterfurnaces.items;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,18 +55,25 @@ public class ItemUpgrade extends Item {
 		} else {
 			nbt = new NBTTagCompound();
 		}
-		nbt.getInteger("red");
+		if (!(nbt.hasKey("red") && nbt.hasKey("green") && nbt.hasKey("blue"))) {
+			nbt.setInteger("red", 255);
+			nbt.setInteger("green", 255);
+			nbt.setInteger("blue", 255);
+			itemStack.setTagCompound(nbt);
+		}
+
 		if ((Minecraft.getMinecraft().currentScreen) instanceof GuiColor && player instanceof EntityPlayer && ((EntityPlayer) player).getHeldItemMainhand() == stack) {
-			int red = ((GuiColor) Minecraft.getMinecraft().currentScreen).red.getValueInt();
-			int green = ((GuiColor) Minecraft.getMinecraft().currentScreen).green.getValueInt();
-			int blue = ((GuiColor) Minecraft.getMinecraft().currentScreen).blue.getValueInt();
-			if (red != nbt.getInteger("red")) {
+			GuiColor color =  (GuiColor) Minecraft.getMinecraft().currentScreen;
+			int red = color.red.getValueInt();
+			int green = color.green.getValueInt();
+			int blue = color.blue.getValueInt();
+			if (color.red != null && red != nbt.getInteger("red") && color.red.dragging) {
 				nbt.setInteger("red", red);
 			}
-			if (red != nbt.getInteger("green")) {
+			if (color.green != null && green != nbt.getInteger("green") && color.green.dragging) {
 				nbt.setInteger("green", green);
 			}
-			if (red != nbt.getInteger("blue")) {
+			if (color.blue != null && blue != nbt.getInteger("blue") && color.blue.dragging) {
 				nbt.setInteger("blue", blue);
 			}
 			itemStack.setTagCompound(nbt);

@@ -1,21 +1,32 @@
 {
-   "type": "minecraft:crafting_shaped",
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
-    "GEG",
-	"GFG"
+    "012",
+    "345"
   ],
   "key": {
-    "E": {
-		"item": "betterfurnacesreforged:iron_conductor_block"
+    "0": {
+      "item": "minecraft:iron_ingot"
     },
-    "G": {
-		"item": "minecraft:iron_ingot"
+    "1": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
     },
-	"F": {
-		"item": "minecraft:furnace"
-	}
+    "2": {
+      "item": "minecraft:iron_ingot"
+    },
+    "3": {
+      "item": "minecraft:iron_ingot"
+    },
+    "4": {
+      "item": "minecraft:furnace"
+    },
+    "5": {
+      "item": "minecraft:iron_ingot"
+    }
   },
   "result": {
-    "item": "betterfurnacesreforged:iron_furnace"
+    "item": "betterfurnacesreforged:iron_furnace",
+    "count": 1
   }
 }

@@ -37,6 +37,7 @@ public class BlockForge extends Block {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool BURNING = PropertyBool.create("burning");
+	public static final PropertyBool COLORED = PropertyBool.create("colored");
 
 	protected final int moreFast;
 	protected final Supplier<TileEntity> teFunc;
@@ -56,7 +57,7 @@ public class BlockForge extends Block {
 		this.setResistance(9.0F);
 		this.setHarvestLevel("pickaxe", 1);
 		this.setLightOpacity(0);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(BURNING, false));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(BURNING, false).withProperty(COLORED, false));
 		this.moreFast = moreFast;
 		this.teFunc = teFunc;
 	}
@@ -84,17 +85,17 @@ public class BlockForge extends Block {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, FACING, BURNING);
+		return new BlockStateContainer(this, FACING, BURNING, COLORED);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.HORIZONTALS[(meta & 0b1100) >> 2]).withProperty(BURNING, (meta & 1) == 1);
+		return getDefaultState().withProperty(FACING, EnumFacing.HORIZONTALS[(meta & 0b1100) >> 2]).withProperty(BURNING, (meta & 1) == 1).withProperty(COLORED, (meta & 2) == 2);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		return (state.getValue(BURNING) ? 1 : 0) | (state.getValue(FACING).getHorizontalIndex() << 2);
+		return (state.getValue(COLORED) ? 2 : 0) | (state.getValue(BURNING) ? 1 : 0) | (state.getValue(FACING).getHorizontalIndex() << 2);
 	}
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()

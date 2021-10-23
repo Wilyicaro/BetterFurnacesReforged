@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fluids.FluidUtil;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.ModObjects;
+import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.net.MessageSync;
 import wily.betterfurnaces.net.MessageSyncTF;
 import wily.betterfurnaces.tile.TileEntityForge;
@@ -47,11 +48,11 @@ public class FContainerBF extends Container {
 		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 12, 133, 5){
 			@Override
 			public boolean isItemValid (ItemStack stack){
-				return false; }});
+				return stack.getItem() == ModObjects.COLOR_UPGRADE; }});
 		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 13, 151, 5){
 			@Override
 			public boolean isItemValid (ItemStack stack){
-				return false; }});
+				return stack.getItem() instanceof ItemUpgrade; }});
 		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 7, 7, 5){
 			@Override
 			public boolean isItemValid (ItemStack stack){
@@ -63,7 +64,7 @@ public class FContainerBF extends Container {
 		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 9, 43, 5){
 			@Override
 			public boolean isItemValid (ItemStack stack){
-				return (new ItemStack(ModObjects.ORE_PROCESSING_UPGRADE, (int) (1)).getItem() == stack.getItem()); }});
+				return false; }});
 		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 10, 79, 5){
 			@Override
 			public boolean isItemValid (ItemStack stack){

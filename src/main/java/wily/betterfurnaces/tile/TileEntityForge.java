@@ -6,11 +6,14 @@ import java.util.Random;
 
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.*;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockForge;
+import wily.betterfurnaces.blocks.BlockIronFurnace;
 import wily.betterfurnaces.inventory.SlotFurnaceInput;
 import wily.betterfurnaces.inventory.SlotUpgrade;
 import wily.betterfurnaces.upgrade.Upgrade;
@@ -49,7 +52,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 	public static final int SLOT_OUTPUT = 4;
 	public static final int SLOT_OUTPUT2 = 5;
 	public static final int SLOT_OUTPUT3 = 6;
-	public static final int[] SLOT_UPGRADE = { 7, 8, 9, 10, 11, 12, 13};
+	public static final int[] SLOT_UPGRADE = { 7, 8, 9, 10, 11, 12};
 	public static final int MAX_FE_TRANSFER = 1200;
 	public static final int MAX_ENERGY_STORED = 32000;
 
@@ -157,11 +160,20 @@ public class TileEntityForge extends TileEntity implements ITickable {
 	/**
 	 * Main logic method for Iron Furnaces.  Does all the furnace things.
 	 */
+	public int hex() {
+		NBTTagCompound nbt = getInventory().getStackInSlot(12).getTagCompound();
+
+		return ((nbt.getInteger("red")&0x0ff)<<16)|((nbt.getInteger("green")&0x0ff)<<8)|(nbt.getInteger("blue")&0x0ff);
+	}
 
 	@Override
 	public final void update() {
 		if (world.isRemote) return;
-			ItemStackHandler inv = getInventory();
+		if (hasUpgrade(Upgrades.COLOR)){
+			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockForge.COLORED, true));
+		}else world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockForge.COLORED, false));
+
+		ItemStackHandler inv = getInventory();
 			ItemStack filler = inv.getStackInSlot(SLOT_FUEL);
 			FluidStack fluid = FluidUtil.getFluidContained(filler);
 			if (isFluid() && fluid != null && TileEntityForge.getFluidBurnTime(fluid) > 0) {
@@ -177,7 +189,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 		boolean canSmelt2 = canSmelt2();
 		boolean canSmelt3 = canSmelt3();
 
-		if (!this.isBurning() && isAltFuel()){
+		if (!this.isBurning() && (isAltFuel() || !(fuel = inv.getStackInSlot(SLOT_FUEL)).isEmpty())){
 			if ((canSmelt) || (canSmelt2) || (canSmelt3)) burnFuel(fuel, false);
 		}
 
@@ -202,7 +214,7 @@ public class TileEntityForge extends TileEntity implements ITickable {
 			}else currentCookTime = 0;
 		}
 
-		if (!this.isBurning() && isAltFuel()) {
+		if (!this.isBurning() && (isAltFuel() || !(fuel = inv.getStackInSlot(SLOT_FUEL)).isEmpty())) {
 			if ((canSmelt()) || (canSmelt2()) || (canSmelt3())) burnFuel(fuel, wasBurning);
 		}
 
@@ -669,6 +681,19 @@ public class TileEntityForge extends TileEntity implements ITickable {
 		tag.setInteger("default_cook", getDefaultCookTime());
 		if (isFluid() && tank.getFluidAmount() > 0) tag.setTag("fluid", tank.getFluid().writeToNBT(new NBTTagCompound()));
 		return tag;
+	}
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		return this.writeToNBT(new NBTTagCompound());
+	}
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.getNbtCompound());
+	}
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
 	}
 
 	/**

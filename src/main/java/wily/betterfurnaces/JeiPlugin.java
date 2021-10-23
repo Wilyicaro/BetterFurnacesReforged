@@ -1,6 +1,7 @@
 package wily.betterfurnaces;
 
 import mezz.jei.api.*;
+import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.item.ItemStack;
 import wily.betterfurnaces.init.ModObjects;
@@ -13,6 +14,8 @@ public class JeiPlugin implements IModPlugin {
 
 
     public void register(IModRegistry registry) {
+        IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
+        blacklist.addIngredientToBlacklist(ModObjects.COLOR_FURNACE);
         registry.addRecipeCatalyst(new ItemStack(ModObjects.IRON_FURNACE), VanillaRecipeCategoryUid.SMELTING);
         registry.addRecipeCatalyst(new ItemStack(ModObjects.GOLD_FURNACE), VanillaRecipeCategoryUid.SMELTING);
         registry.addRecipeCatalyst(new ItemStack(ModObjects.DIAMOND_FURNACE), VanillaRecipeCategoryUid.SMELTING);

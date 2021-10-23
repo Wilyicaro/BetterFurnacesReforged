@@ -1,11 +1,11 @@
 {
-    "parent": "betterfurnacesreforged:block/extremeforgemodel",
-    "textures": {
-  		"side": "betterfurnacesreforged:blocks/extreme_forge_side",
-  		"front": "betterfurnacesreforged:blocks/extreme_forge_front",
+  "parent": "betterfurnacesreforged:block/extremeforgemodelcolored",
+  "textures": {
+  		"side": "betterfurnacesreforged:blocks/colored_forge_side",
+  		"front": "betterfurnacesreforged:blocks/colored_forge_front",
   		"overlayside": "betterfurnacesreforged:blocks/forge_side",
   		"overlayfront": "betterfurnacesreforged:blocks/forge_front"
-    },
+  },
   "display": {
     "thirdperson": {
       "rotation": [
@@ -19,9 +19,9 @@
         -2.75
       ],
       "scale": [
-        0.375,
-        0.375,
-        0.375
+        1.38,
+        1.38,
+        1.38
       ]
     }
   }

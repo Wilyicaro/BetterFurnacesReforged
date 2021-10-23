@@ -32,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 import org.w3c.dom.css.RGBColor;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
+import wily.betterfurnaces.tile.TileEntityForge;
 import wily.betterfurnaces.tile.TileEntityIronFurnace;
 import wily.betterfurnaces.upgrade.Upgrades;
 
@@ -50,17 +51,22 @@ public class ModBlockColors implements IBlockColor
     @Override
     public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
     {
-        TileEntityIronFurnace te = (TileEntityIronFurnace) worldIn.getTileEntity(pos);
-        if (te.hasUpgrade(Upgrades.COLOR)) {
-            tintIndex = 0;
-            return te.hex();
+        if (worldIn.getTileEntity(pos) instanceof  TileEntityForge){
+            TileEntityForge te = (TileEntityForge) worldIn.getTileEntity(pos);
+            ItemStack stack = te.getInventory().getStackInSlot(12);
+            if (te.hasUpgrade(Upgrades.COLOR) && stack.getTagCompound() != null) {
+                return te.hex();
+            }
         }
-        else
-        {
-            tintIndex = 0xFFFFFF;
-            return 0xFFFFFF;
+        if (worldIn.getTileEntity(pos) instanceof  TileEntityIronFurnace){
+            TileEntityIronFurnace te = (TileEntityIronFurnace) worldIn.getTileEntity(pos);
+            ItemStack stack = te.getInventory().getStackInSlot(5);
+            if (te.hasUpgrade(Upgrades.COLOR) && stack.getTagCompound() != null) {
+                return te.hex();
+            }
+        }
 
-        }
+            return 0xFFFFFF;
     }
 
     /**
@@ -77,5 +83,6 @@ public class ModBlockColors implements IBlockColor
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(COLOR, ModObjects.DIAMOND_FURNACE);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(COLOR, ModObjects.NETHERHOT_FURNACE);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(COLOR, ModObjects.EXTREME_FURNACE);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(COLOR, ModObjects.EXTREME_FORGE);
     }
 }

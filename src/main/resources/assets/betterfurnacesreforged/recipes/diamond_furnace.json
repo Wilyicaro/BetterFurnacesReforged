@@ -1,22 +1,42 @@
 {
-   "type": "minecraft:crafting_shaped",
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
-    "HGH",
-    "GFG",
-	"HGH"
+    "012",
+    "345",
+    "678"
   ],
   "key": {
-    "G": {
-		"item": "minecraft:diamond"
+    "0": {
+      "item": "minecraft:glass"
     },
-	"H": {
-		"item": "minecraft:glass"
-	},
-	"F": {
-		"item": "betterfurnacesreforged:gold_furnace"
-	}
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "minecraft:glass"
+    },
+    "3": {
+      "item": "minecraft:diamond"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:gold_furnace"
+    },
+    "5": {
+      "item": "minecraft:diamond"
+    },
+    "6": {
+      "item": "minecraft:glass"
+    },
+    "7": {
+      "item": "minecraft:diamond"
+    },
+    "8": {
+      "item": "minecraft:glass"
+    }
   },
   "result": {
-    "item": "betterfurnacesreforged:diamond_furnace"
+    "item": "betterfurnacesreforged:diamond_furnace",
+    "count": 1
   }
 }

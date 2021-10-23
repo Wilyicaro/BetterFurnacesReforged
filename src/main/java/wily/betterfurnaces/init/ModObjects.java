@@ -46,6 +46,7 @@ public class ModObjects{
 	public static final ItemUpgrade ENERGY_UPGRADE = null;
 	public static final ItemUpgrade COLOR_UPGRADE = null;
 	public static final ItemCFurnace COLOR_FURNACE = null;
+	public static final ItemCFurnace COLOR_FORGE = null;
 
 	public static final ItemKit IRON_UPGRADE = null;
 	public static final ItemKit GOLD_UPGRADE = null;
@@ -92,6 +93,7 @@ public class ModObjects{
 				new ItemUpgrade("energy_upgrade", "info.betterfurnacesreforged.energy"),
 				new ItemUpgrade("color_upgrade", "info.betterfurnacesreforged.color"),
 				new ItemCFurnace("color_furnace"),
+				new ItemCFurnace("color_forge"),
 				new ItemIronKit(),
 				new ItemKit("gold_upgrade", IRON_FURNACE, GOLD_FURNACE),
 				new ItemKit("diamond_upgrade", GOLD_FURNACE, DIAMOND_FURNACE),

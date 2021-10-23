@@ -1,9 +1,16 @@
 package wily.betterfurnaces.handler;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.Sound;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
@@ -22,6 +29,7 @@ import java.io.IOException;
 
 public class GuiColor extends GuiScreen {
     static int i = 0;
+    private int buttonstate = 0;
     protected int xSize = 176;
     protected int ySize = 94;
     protected int guiLeft = (this.width - this.xSize) / 2;
@@ -32,7 +40,7 @@ public class GuiColor extends GuiScreen {
     public GuiSlider blue;
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(BetterFurnacesReforged.MODID, "textures/gui/container/upgrades_gui.png");
-
+    private static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MODID, "textures/gui/container/widgets.png");
     @Override
     public void initGui() {
         super.initGui();
@@ -53,7 +61,75 @@ public class GuiColor extends GuiScreen {
         this.buttonList.add(green);
         this.buttonList.add(blue);
     }
-
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+        super.mouseClicked(mouseX, mouseY, button);
+        double actualMouseX = mouseX - guiLeft;
+        double actualMouseY = mouseY - guiTop;
+        SoundHandler soundHandler = mc.getSoundHandler();
+            if (actualMouseX >= 8 && actualMouseX <= 22 && actualMouseY >= 6 && actualMouseY <= 20) {
+                if (buttonstate == 1) {
+                    soundHandler.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.3F));
+                    buttonstate = 0;
+                } else {
+                    if (buttonstate == 0) {
+                        soundHandler.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.3F));
+                        buttonstate = 1;
+                    }
+                }
+            }
+    }
+    protected void renderColorFurnace( int mouseX, int mouseY) {
+        int actualMouseX = mouseX - guiLeft;
+        int actualMouseY = mouseY - guiTop;
+        this.mc.getTextureManager().bindTexture(WIDGETS);
+        if (buttonstate == 0) {
+            this.drawTexturedModalRect( guiLeft+ 8, guiTop + 8, 126, 189, 14, 14);
+        }
+        if (buttonstate == 1) {
+            this.drawTexturedModalRect(guiLeft + 8, guiTop + 8, 112, 189, 14, 14);
+        }
+        if (actualMouseX>= 8 && actualMouseX <= 22 && actualMouseY >= 6 && actualMouseY <= 20){
+            if (buttonstate == 0) {
+                this.drawTexturedModalRect(guiLeft + 8, guiTop + 8, 154, 189, 14, 14);
+                this.drawHoveringText(Blocks.FURNACE.getLocalizedName(), mouseX, mouseY);
+            }
+            if (buttonstate == 1) {
+                this.drawTexturedModalRect(guiLeft + 8, guiTop + 8, 140, 189, 14, 14);
+                this.drawHoveringText(ModObjects.EXTREME_FORGE.getLocalizedName(), mouseX, mouseY);
+            }
+        }
+        ItemStack stack = new ItemStack(ModObjects.COLOR_FURNACE);
+        ItemStack stack1 = new ItemStack(ModObjects.COLOR_FORGE);
+        GL11.glColor4f(1f,1f,1f,1f);
+        GL11.glScalef(4,4,4);
+        RenderHelper.enableGUIStandardItemLighting();
+        NBTTagCompound nbt;
+        if (stack.hasTagCompound()) {
+            nbt = stack.getTagCompound();
+        } else {
+            nbt = new NBTTagCompound();
+        }
+        nbt.setInteger("red", red.getValueInt());
+        nbt.setInteger("green", green.getValueInt());
+        nbt.setInteger("blue", blue.getValueInt());
+        stack.setTagCompound(nbt);
+        NBTTagCompound nbt1;
+        if (stack1.hasTagCompound()) {
+            nbt1 = stack1.getTagCompound();
+        } else {
+            nbt1 = new NBTTagCompound();
+        }
+        nbt1.setInteger("red", red.getValueInt());
+        nbt1.setInteger("green", green.getValueInt());
+        nbt1.setInteger("blue", blue.getValueInt());
+        stack1.setTagCompound(nbt);
+        if (buttonstate == 0) {
+            this.itemRender.renderItemIntoGUI(stack, (width / 2 - 32)/4, (this.guiTop - 70)/4);
+        }else
+        if (buttonstate == 1)
+            this.itemRender.renderItemIntoGUI(stack1, (width / 2 - 32)/4, (this.guiTop - 70)/4);
+    }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -67,30 +143,11 @@ public class GuiColor extends GuiScreen {
         this.fontRenderer.drawString(s, width / 2 - this.fontRenderer.getStringWidth(s) / 2, this.guiTop + 8, 4210752);
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        GL11.glScalef(4,4,4);
-        RenderHelper.enableGUIStandardItemLighting();
-            ItemStack stack = new ItemStack(ModObjects.COLOR_FURNACE);
-        NBTTagCompound nbt;
-        if (stack.hasTagCompound()) {
-            nbt = stack.getTagCompound();
-        } else {
-            nbt = new NBTTagCompound();
-        }
-        nbt.setInteger("red", red.getValueInt());
-        nbt.setInteger("green", green.getValueInt());
-        nbt.setInteger("blue", blue.getValueInt());
-        stack.setTagCompound(nbt);
-        this.itemRender.renderItemIntoGUI(stack, (width / 2 - 32)/4, (this.guiTop - 70)/4);
-    }
-
-    public int hex() {
-        return ((red.getValueInt()&0x0ff)<<16)|((green.getValueInt()&0x0ff)<<8)|(blue.getValueInt()&0x0ff);
+        renderColorFurnace(mouseX, mouseY);
     }
 
     @Override
     public boolean doesGuiPauseGame() {
         return false;
     }
-
-
 }
