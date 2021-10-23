@@ -62,22 +62,27 @@ public class ItemColorUpgrade extends ItemUpgradeMisc {
         ItemStack itemStack = stack;
         CompoundTag nbt;
         nbt = itemStack.getOrCreateTag();
-        nbt.getInt("red");
+
+        if (!(nbt.contains("red") && nbt.contains("green") && nbt.contains("blue"))) {
+            nbt.putInt("red", 255);
+            nbt.putInt("green", 255);
+            nbt.putInt("blue", 255);
+            itemStack.setTag(nbt);
+        }
         if ((Minecraft.getInstance().screen) instanceof ItemColorScreen && player instanceof Player && ((Player) player).getMainHandItem() == stack) {
             ItemColorScreen color =  (ItemColorScreen) Minecraft.getInstance().screen;
             int red = color.red.getValueInt();
             int green = color.green.getValueInt();
             int blue = color.blue.getValueInt();
-            if (red != nbt.getInt("red") && color.red != null) {
+            if (color.red != null && red != nbt.getInt("red") && color.red.isHovered()) {
                 nbt.putInt("red", red);
             }
-            if (red != nbt.getInt("green") && color.green != null) {
+            if (color.green != null && green != nbt.getInt("green") && color.green.isHovered()) {
                 nbt.putInt("green", green);
             }
-            if (red != nbt.getInt("blue") && color.blue != null) {
+            if (color.blue != null && blue != nbt.getInt("blue") && color.blue.isHovered()) {
                 nbt.putInt("blue", blue);
             }
-            itemStack.setTag(nbt);
         }
     }
     private static class ContainerProviderColorUpgrade implements MenuProvider {
