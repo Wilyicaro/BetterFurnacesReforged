@@ -1,0 +1,30 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "212",
+    "313",
+    "070"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:diamond_block"
+    },
+    "1": {
+      "item": "betterfurnacesreforged:extreme_furnace"
+    },
+    "2": {
+      "item": "minecraft:coal_block"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "7": {
+      "item": "minecraft:soul_sand"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:extreme_forge",
+    "count": 1
+  }
+}

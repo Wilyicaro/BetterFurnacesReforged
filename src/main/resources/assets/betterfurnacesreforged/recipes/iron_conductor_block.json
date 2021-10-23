@@ -1,0 +1,42 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "1": {
+      "item": "minecraft:glass"
+    },
+    "2": {
+      "item": "minecraft:iron_ingot"
+    },
+    "3": {
+      "item": "minecraft:glass"
+    },
+    "4": {
+      "item": "minecraft:gold_ingot"
+    },
+    "5": {
+      "item": "minecraft:glass"
+    },
+    "6": {
+      "item": "minecraft:iron_ingot"
+    },
+    "7": {
+      "item": "minecraft:glass"
+    },
+    "8": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:iron_conductor_block",
+    "count": 1
+  }
+}

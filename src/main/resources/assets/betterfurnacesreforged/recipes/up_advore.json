@@ -1,0 +1,42 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:diamond"
+    },
+    "1": {
+      "item": "minecraft:piston"
+    },
+    "2": {
+      "item": "minecraft:diamond"
+    },
+    "3": {
+      "item": "minecraft:obsidian"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:ore_processing_upgrade"
+    },
+    "5": {
+      "item": "minecraft:obsidian"
+    },
+    "6": {
+      "item": "minecraft:diamond"
+    },
+    "7": {
+      "item": "minecraft:piston"
+    },
+    "8": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:advanced_ore_processing_upgrade",
+    "count": 1
+  }
+}
