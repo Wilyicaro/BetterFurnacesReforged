@@ -61,18 +61,24 @@ public class ItemColorUpgrade extends ItemUpgradeMisc {
         ItemStack itemStack = stack;
         CompoundNBT nbt;
         nbt = itemStack.getOrCreateTag();
-        nbt.getInt("red");
+        if (!(nbt.contains("red") && nbt.contains("green") && nbt.contains("blue"))) {
+            nbt.putInt("red", 255);
+            nbt.putInt("green", 255);
+            nbt.putInt("blue", 255);
+            itemStack.setTag(nbt);
+        }
         if ((Minecraft.getInstance().screen) instanceof ItemColorScreen && player instanceof PlayerEntity && ((PlayerEntity) player).getMainHandItem() == stack) {
-            int red = ((ItemColorScreen) Minecraft.getInstance().screen).red.getValueInt();
-            int green = ((ItemColorScreen) Minecraft.getInstance().screen).green.getValueInt();
-            int blue = ((ItemColorScreen) Minecraft.getInstance().screen).blue.getValueInt();
-            if (red != nbt.getInt("red")) {
+            ItemColorScreen color =  (ItemColorScreen) Minecraft.getInstance().screen;
+            int red = color.red.getValueInt();
+            int green = color.green.getValueInt();
+            int blue = color.blue.getValueInt();
+            if (color.red != null && red != nbt.getInt("red") && color.red.isHovered()) {
                 nbt.putInt("red", red);
             }
-            if (red != nbt.getInt("green")) {
+            if (color.green != null && green != nbt.getInt("green") && color.green.isHovered()) {
                 nbt.putInt("green", green);
             }
-            if (red != nbt.getInt("blue")) {
+            if (color.blue != null && blue != nbt.getInt("blue") && color.blue.isHovered()) {
                 nbt.putInt("blue", blue);
             }
             itemStack.setTag(nbt);

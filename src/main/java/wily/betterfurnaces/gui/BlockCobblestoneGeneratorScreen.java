@@ -73,7 +73,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
     }
 
     private void addTooltips(MatrixStack matrix, int mouseX, int mouseY) {
-        if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 49) {
+        if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
             if (buttonstate == 1) {
                 this.renderTooltip(matrix, Blocks.COBBLESTONE.getName(), mouseX, mouseY);
             } else if (buttonstate == 2) {
@@ -140,7 +140,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         double actualMouseX = mouseX - getGuiLeft();
         double actualMouseY = mouseY - getGuiTop();
-        if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 49) {
+        if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39) {
             if (buttonstate == 1) {
                 buttonstate = 2;
             } else if (buttonstate == 2) {

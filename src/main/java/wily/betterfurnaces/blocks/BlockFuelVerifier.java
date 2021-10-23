@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -22,6 +23,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
+import wily.betterfurnaces.tileentity.BlockCobblestoneGeneratorTile;
 import wily.betterfurnaces.tileentity.BlockFuelVerifierTile;
 
 import javax.annotation.Nullable;
@@ -81,9 +83,16 @@ public abstract class BlockFuelVerifier extends Block {
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
+            TileEntity te = world.getBlockEntity(pos);
+            if (te instanceof BlockFuelVerifierTile) {
+                InventoryHelper.dropContents(world, pos, (BlockFuelVerifierTile) te);
+                world.updateNeighbourForOutputSignal(pos, this);
+            }
+
             super.onRemove(state, world, pos, oldState, p_196243_5_);
         }
     }
+
 
 
     public BlockRenderType getRenderType(BlockState p_149645_1_) {

@@ -755,6 +755,7 @@ public abstract class BlockFurnaceTileBase extends TileEntityInventory implement
         }
             return recipe.getResultItem().copy();
     }
+
     ITag<Item> ore = ItemTags.getAllTags().getTag(new ResourceLocation("forge", "ores"));
     protected void smeltItem(@Nullable IRecipe<?> recipe) {
         timer = 0;

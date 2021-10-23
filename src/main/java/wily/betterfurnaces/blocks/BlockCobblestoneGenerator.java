@@ -136,6 +136,12 @@ public abstract class BlockCobblestoneGenerator extends Block {
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
+            TileEntity te = world.getBlockEntity(pos);
+            if (te instanceof BlockCobblestoneGeneratorTile) {
+                InventoryHelper.dropContents(world, pos, (BlockCobblestoneGeneratorTile) te);
+                world.updateNeighbourForOutputSignal(pos, this);
+            }
+
             super.onRemove(state, world, pos, oldState, p_196243_5_);
         }
     }
