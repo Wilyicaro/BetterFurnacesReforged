@@ -14,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiBF extends GuiContainer {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(BetterFurnacesReforged.MODID, "textures/gui/container/furnace_gui.png");
+	private static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MODID, "textures/gui/container/widgets.png");
 	private final InventoryPlayer playerInventory;
 	private final TileEntityIronFurnace te;
 
@@ -42,12 +43,10 @@ public class GuiBF extends GuiContainer {
 			int k = this.getBurnLeftScaled(13);
 			this.drawTexturedModalRect(i + 55, j + 37 + 12 - k, 176, 12 - k, 14, k + 1);
 		}
-		if (te.hasUpgrade(Upgrades.LIQUID_FUEL)) {
-			this.drawTexturedModalRect(this.guiLeft + 73, this.guiTop + 49, 176, 69, 20, 22);
-		}
 		int l = this.getCookProgressScaled(24);
 		this.drawTexturedModalRect(i + 79, j + 34, 176, 14, l + 1, 16);
 		if (te.hasUpgrade(Upgrades.LIQUID_FUEL)){
+			this.mc.getTextureManager().bindTexture(WIDGETS);
 			this.drawTexturedModalRect(this.guiLeft + 73, this.guiTop + 49, 192, 38, 20, 22);
 			this.zLevel++;
 		this.drawTexturedModalRect(this.guiLeft + 73, this.guiTop + 49, 192, 16, 20, 22);

@@ -82,6 +82,7 @@ public class GuiColor extends GuiScreen {
     protected void renderColorFurnace( int mouseX, int mouseY) {
         int actualMouseX = mouseX - guiLeft;
         int actualMouseY = mouseY - guiTop;
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(WIDGETS);
         if (buttonstate == 0) {
             this.drawTexturedModalRect( guiLeft+ 8, guiTop + 8, 126, 189, 14, 14);
@@ -101,7 +102,6 @@ public class GuiColor extends GuiScreen {
         }
         ItemStack stack = new ItemStack(ModObjects.COLOR_FURNACE);
         ItemStack stack1 = new ItemStack(ModObjects.COLOR_FORGE);
-        GL11.glColor4f(1f,1f,1f,1f);
         GL11.glScalef(4,4,4);
         RenderHelper.enableGUIStandardItemLighting();
         NBTTagCompound nbt;
