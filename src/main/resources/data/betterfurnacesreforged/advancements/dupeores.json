@@ -9,7 +9,7 @@
     "description": {
       "translate": "advancements.dupeores.descr"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
@@ -20,18 +20,18 @@
       "conditions": {
         "items": [
           {
-            "item": "betterfurnacesreforged:ore_processing_upgrade",
-            "count": {
-              "min": 0,
-              "max": 1
-            }
+            "items": [
+              "betterfurnacesreforged:ore_processing_upgrade"
+            ]
           }
         ]
       }
     }
   },
-  "rewards": {
-    "experience": 1
-  },
+  "requirements": [
+    [
+      "dupeores"
+    ]
+  ],
   "parent": "betterfurnacesreforged:overcooked"
 }

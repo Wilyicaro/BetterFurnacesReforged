@@ -9,7 +9,7 @@
     "description": {
       "translate": "advancements.overcooked.descr"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
@@ -20,18 +20,18 @@
       "conditions": {
         "items": [
           {
-            "item": "betterfurnacesreforged:iron_furnace",
-            "count": {
-              "min": 0,
-              "max": 1
-            }
+            "items": [
+            "betterfurnacesreforged:iron_furnace"
+            ]
           }
         ]
       }
     }
   },
-  "rewards": {
-    "experience": 1
-  },
+  "requirements": [
+    [
+      "overcooked"
+    ]
+  ],
   "parent": "minecraft:story/smelt_iron"
 }

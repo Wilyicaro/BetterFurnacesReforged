@@ -9,7 +9,7 @@
     "description": {
       "translate": "advancements.thebestfurnace.descr"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
@@ -20,18 +20,18 @@
       "conditions": {
         "items": [
           {
-            "item": "betterfurnacesreforged:extreme_furnace",
-            "count": {
-              "min": 0,
-              "max": 1
-            }
+            "items": [
+              "betterfurnacesreforged:extreme_furnace"
+            ]
           }
         ]
       }
     }
   },
-  "rewards": {
-    "experience": 1
-  },
+  "requirements": [
+    [
+      "thebestfurnace"
+    ]
+  ],
   "parent": "betterfurnacesreforged:overcooked"
 }

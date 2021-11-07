@@ -1,6 +1,7 @@
 package wily.betterfurnaces.items;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -37,8 +38,8 @@ import java.util.List;
 
 public class ItemUpgradeTier extends Item {
 
-    private Block from;
-    private Block to;
+    public Block from;
+    public Block to;
     boolean one = false;
 
     public ItemUpgradeTier(Properties properties, Block from, Block to) {
@@ -51,6 +52,7 @@ public class ItemUpgradeTier extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_shift_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
+        tooltip.add(new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", from.getName().getString(), to.getName().getString())).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
     }
 
     @Override

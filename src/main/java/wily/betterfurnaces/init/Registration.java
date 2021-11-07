@@ -126,8 +126,8 @@ public class Registration {
         return new BlockFuelVerifierTile.BlockFuelVerifierTileContainer(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<ItemColorFurnace> COLOR_FURNACE = ITEMS.register("color_furnace", () -> new ItemColorFurnace(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<ItemColorFurnace> COLOR_FORGE = ITEMS.register("color_forge", () -> new ItemColorFurnace(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<ItemColorBlock> COLOR_FURNACE = ITEMS.register("color_furnace", () -> new ItemColorBlock(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<ItemColorBlock> COLOR_FORGE = ITEMS.register("color_forge", () -> new ItemColorBlock(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<BlockConductorBase> IRON_CONDUCTOR_BLOCK = BLOCKS.register("iron_conductor_block", () -> new BlockConductorBase(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8.0F, 20.0F)));
     public static final RegistryObject<Item>  IRON_CONDUCTOR_ITEM = ITEMS.register("iron_conductor_block", () -> new BlockItem(IRON_CONDUCTOR_BLOCK.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));

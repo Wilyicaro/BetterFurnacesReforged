@@ -15,17 +15,11 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemColorFurnace extends Item {
+public class ItemColorBlock extends Item {
 
 
-    public ItemColorFurnace(Properties properties) {
+    public ItemColorBlock(Properties properties) {
         super(properties);
     }
 
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
-    }
 }

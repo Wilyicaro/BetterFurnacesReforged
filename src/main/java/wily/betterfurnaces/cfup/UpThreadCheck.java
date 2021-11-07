@@ -24,7 +24,7 @@ public class UpThreadCheck extends Thread {
     public void run() {
         BetterFurnacesReforged.LOGGER.info("Starting Update Check...");
         try {
-            URL newestURL = new URL("https://github.com/Wilyicaro/BetterFurnacesReforged/" + BetterFurnacesReforged.MC_VERSION + "/update/versions.properties");
+            URL newestURL = new URL("https://raw.githubusercontent.com/Wilyicaro/BetterFurnacesReforged/" + BetterFurnacesReforged.MC_VERSION + "/update/versions.properties");
             Properties updateProperties = new Properties();
             updateProperties.load(new InputStreamReader(newestURL.openStream()));
 

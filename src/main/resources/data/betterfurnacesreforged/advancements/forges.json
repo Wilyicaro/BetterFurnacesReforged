@@ -20,18 +20,18 @@
       "conditions": {
         "items": [
           {
-            "item": "betterfurnacesreforged:extreme_forge",
-            "count": {
-              "min": 0,
-              "max": 1
-            }
+            "items": [
+              "betterfurnacesreforged:extreme_forge"
+            ]
           }
         ]
       }
     }
   },
-  "rewards": {
-    "experience": 1
-  },
+  "requirements": [
+    [
+      "forges"
+    ]
+  ],
   "parent": "betterfurnacesreforged:thebestfurnace"
 }
