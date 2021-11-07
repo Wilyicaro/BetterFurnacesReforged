@@ -6,9 +6,13 @@ package wily.betterfurnaces.jei;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -50,7 +54,14 @@ public class BfJeiPlugin implements IModPlugin {
 
 		}
 	}
-
+	private void addDescription(IRecipeRegistration registry, ItemStack itemDefinition,
+								Component... message) {
+		registry.addIngredientInfo(itemDefinition, VanillaTypes.ITEM, message);
+	}
+	@Override
+	public void registerRecipes(IRecipeRegistration registration) {
+		addDescription(registration, new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), new TranslatableComponent("description." + BetterFurnacesReforged.MOD_ID + ".cobblestone_generator"));
+	}
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
 		if (Config.enableJeiPlugin.get() && Config.enableJeiClickArea.get()) {

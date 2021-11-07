@@ -55,7 +55,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
     public static final BooleanProperty COLORED = BooleanProperty.create("colored");
 
     public BlockForgeBase(Properties properties) {
-        super(properties);
+        super(properties.noOcclusion());
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(BlockStateProperties.LIT, false).setValue(WATERLOGGED, false).setValue(COLORED,false));
     }
 
