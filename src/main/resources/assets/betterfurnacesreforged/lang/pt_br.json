@@ -59,8 +59,8 @@
   "tooltip.betterfurnacesreforged.gui_left": "Esquerda",
   "tooltip.betterfurnacesreforged.gui_right": "Direita",
   "tooltip.betterfurnacesreforged.gui_none": "Nenhum",
-  "tooltip.betterfurnacesreforged.gui_input": "Saída",
-  "tooltip.betterfurnacesreforged.gui_output": "Entrada",
+  "tooltip.betterfurnacesreforged.gui_input": "Entrada",
+  "tooltip.betterfurnacesreforged.gui_output": "Saída",
   "tooltip.betterfurnacesreforged.gui_input_output": "Saída/Entrada",
   "tooltip.betterfurnacesreforged.gui_fuel": "Saída de Combustível",
   "tooltip.betterfurnacesreforged.gui_reset": "Resetar tudo",
@@ -72,5 +72,7 @@
   "tooltip.betterfurnacesreforged.gui_hold_shift": "Segure ",
   "tooltip.betterfurnacesreforged.gui_shift_more_options": " para mais opções",
   "tooltip.betterfurnacesreforged.hold": "Segure ",
-  "tooltip.betterfurnacesreforged.for_details": " para detalhes."
+  "tooltip.betterfurnacesreforged.for_details": " para detalhes.",
+  "description.betterfurnacesreforged.cobblestone_generator": "Gera pedregulho, pedra, pedra negra ou obsidian a partir da opção escolhida na GUI. Coloque um balde de lava e um balde de água nos respectivos slots para começar a gerar. Podem ser utilizadas as melhorias de Processamento de Minérios para duplicar o resultado, e o de Eficiência de Combustível para diminuir pela metade o tempo de geração"
+
 }

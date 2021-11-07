@@ -5,7 +5,6 @@
   "item.betterfurnacesreforged.adm_upgrade": "Info Upgrade",
   "item.betterfurnacesreforged.factory_upgrade": "Factory Upgrade",
   "item.betterfurnacesreforged.advanced_ore_processing_upgrade": "Advanced Ore Processing Upgrade",
-  "itemGroup.betterfurnacereforged": "Better Furnaces Reforged",
   "advancements.dupeores.title": "Is this allowed?",
   "item.betterfurnacesreforged.liquid_fuel_upgrade": "Fuel Liquid Upgrade",
   "item.betterfurnacesreforged.xp_tank_upgrade": "XP Tank Upgrade",
@@ -74,6 +73,7 @@
   "tooltip.betterfurnacesreforged.gui_hold_shift": "Hold ",
   "tooltip.betterfurnacesreforged.gui_shift_more_options": " for more options",
   "tooltip.betterfurnacesreforged.hold": "Hold ",
-  "tooltip.betterfurnacesreforged.for_details": " for Details."
+  "tooltip.betterfurnacesreforged.for_details": " for Details.",
+  "description.betterfurnacesreforged.cobblestone_generator": "Generates cobblestone, stone, blackstone or obsidian from the option chosen in the GUI. Place a bucket of lava and a bucket of water in their respective slots to start generating. Ore Processing upgrade can be used to double the result and fuel efficiency to cut generation time in half"
 
 }
