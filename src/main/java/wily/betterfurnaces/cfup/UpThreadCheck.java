@@ -7,7 +7,7 @@ import java.net.URL;
 import java.util.Properties;
 
 /**
- * Credits: pizzaatime and Ellpeck, respectively creator of the Actually Additions update checker and creator of Iron Furnaces mod.
+ * Credits: pizzaatime and Ellpeck, respectively creator of the Actually Additions update checker, and creator of Iron Furnaces mod.
  * https://github.com/Qelifern/IronFurnaces
  * Link to the Actually Additions repo: https://github.com/Ellpeck/ActuallyAdditions/
  * Link to the Actually Additions curse page: https://minecraft.curseforge.com/projects/actually-additions
@@ -24,7 +24,7 @@ public class UpThreadCheck extends Thread {
     public void run() {
         BetterFurnacesReforged.LOGGER.info("Starting Update Check...");
         try {
-            URL newestURL = new URL("https://github.com/Wilyicaro/BetterFurnacesReforged/" + BetterFurnacesReforged.MC_VERSION + "/update/versions.properties");
+            URL newestURL = new URL("https://raw.githubusercontent.com/Wilyicaro/BetterFurnacesReforged/" + BetterFurnacesReforged.MC_VERSION + "/update/versions.properties");
             Properties updateProperties = new Properties();
             updateProperties.load(new InputStreamReader(newestURL.openStream()));
 

@@ -125,7 +125,7 @@ public class Config {
                 .defineInRange("recipe_cache", 10, 1, 100);
 
         copperTierSpeed = CLIENT_BUILDER
-                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 120")
+                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 120(Only work with Ultimate Furnaces addon)")
                 .defineInRange("copper_tier.speed", 180, 2, 72000);
 
         ironTierSpeed = CLIENT_BUILDER
@@ -149,7 +149,7 @@ public class Config {
                 .defineInRange("extreme_tier.speed", 4, 2, 72000);
 
         ultimateTierSpeed = CLIENT_BUILDER
-                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 5")
+                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 1 (Only work with Ultimate Furnaces addon)")
                 .defineInRange("ultimate_tier.speed", 1, 1, 72000);
 
         furnaceXPDropValue = CLIENT_BUILDER
@@ -171,13 +171,13 @@ public class Config {
     private static void setupJEIConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder CLIENT_BUILDER) {
 
         enableJeiPlugin = CLIENT_BUILDER
-                .comment(" Enable or disable the JeiPlugin of Iron Furnaces.").define("jei.enable_jei", true);
+                .comment(" Enable or disable the JeiPlugin of BetterFurnaces.").define("jei.enable_jei", true);
 
         enableJeiCatalysts = CLIENT_BUILDER
-                .comment(" Enable or disable the Catalysts in Jei for Iron Furnaces.").define("jei.enable_jei_catalysts", true);
+                .comment(" Enable or disable the Catalysts in Jei for BetterFurnaces.").define("jei.enable_jei_catalysts", true);
 
         enableJeiClickArea = CLIENT_BUILDER
-                .comment(" Enable or disable the Click Area inside the GUI in all of Iron Furnaces' furnaces.").define("jei.enable_jei_click_area", true);
+                .comment(" Enable or disable the Click Area inside the GUI in all of BetterFurnaces furnaces and forges.").define("jei.enable_jei_click_area", true);
 
     }
 
@@ -216,8 +216,8 @@ public class Config {
 
     @SubscribeEvent
     public static void onWorldLoad(final WorldEvent.Load event) {
-        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("betterfurnaces-client.toml"));
-        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve("betterfurnaces.toml"));
+        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + "-client.toml"));
+        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + ".toml"));
 
     }
 

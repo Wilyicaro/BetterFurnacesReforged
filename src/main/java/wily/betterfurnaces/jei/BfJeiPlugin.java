@@ -11,15 +11,16 @@ import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.gui.*;
 import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.items.ItemUpgradeTier;
 
 import java.awt.*;
 
@@ -63,7 +64,19 @@ public class BfJeiPlugin implements IModPlugin {
 	}
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
+		ItemUpgradeTier[] up = {Registration.IRON_UPGRADE.get(), Registration.GOLD_UPGRADE.get(),Registration.DIAMOND_UPGRADE.get(),Registration.NETHERHOT_UPGRADE.get(),Registration.EXTREME_UPGRADE.get()};
 		addDescription(registration, new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), new TranslationTextComponent("description." + BetterFurnacesReforged.MOD_ID + ".cobblestone_generator"));
+		addDescription(registration, new ItemStack(Registration.FUEL_VERIFIER.get()), new TranslationTextComponent("description." + BetterFurnacesReforged.MOD_ID + ".fuel_verifier"));
+		addDescription(registration, new ItemStack(Registration.COLOR.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.color"));
+		addDescription(registration, new ItemStack(Registration.ENERGY.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.energy"));
+		addDescription(registration, new ItemStack(Registration.FUEL.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel"));
+		addDescription(registration, new ItemStack(Registration.ADVFUEL.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel"));
+		addDescription(registration, new ItemStack(Registration.ORE_PROCESSING.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores"));
+		addDescription(registration, new ItemStack(Registration.ADVORE_PROCESSING.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores"));
+		addDescription(registration, new ItemStack(Registration.LIQUID.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.liquid"));
+		addDescription(registration, new ItemStack(Registration.XP.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.xp"));
+		for(ItemUpgradeTier i : up)
+		addDescription(registration, new ItemStack(i), new StringTextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
 	}
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {

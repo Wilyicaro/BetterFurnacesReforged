@@ -3,6 +3,7 @@ package wily.betterfurnaces.items;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
@@ -22,6 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.cfup.UpCheck;
 import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
 
 import javax.annotation.Nullable;
@@ -29,8 +31,8 @@ import java.util.List;
 
 public class ItemUpgradeTier extends Item {
 
-    private Block from;
-    private Block to;
+    public Block from;
+    public Block to;
     boolean one = false;
 
     public ItemUpgradeTier(Properties properties, Block from, Block to) {
@@ -43,6 +45,7 @@ public class ItemUpgradeTier extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_shift_right_click").setStyle(Style.EMPTY.applyFormat(TextFormatting.GOLD).withItalic(true)));
+        tooltip.add(new StringTextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", from.getName().getString(), to.getName().getString())).setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
     }
 
     @Override

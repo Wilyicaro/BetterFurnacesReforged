@@ -12,6 +12,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import wily.betterfurnaces.cfup.UpCheck;
 import wily.betterfurnaces.init.ClientSide;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
@@ -46,8 +47,14 @@ public class BetterFurnacesReforged
         MOD_EVENT_BUS.register(Registration.class);
         Registration.init();
 
-        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("betterfurnaces-client.toml"));
-        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve("betterfurnaces.toml"));
+        if (Config.checkUpdates.get()) {
+            new UpCheck();
+        } else {
+            this.LOGGER.warn("You have disabled BetterFurnace's Update Checker, to re-enable: change the value of Update Checker in .minecraft->config->ironfurnaces-client.toml to 'true'.");
+        }
+
+        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + "-client.toml"));
+        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + ".toml"));
 
     }
 

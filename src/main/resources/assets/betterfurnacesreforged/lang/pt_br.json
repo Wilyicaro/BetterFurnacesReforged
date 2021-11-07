@@ -48,6 +48,9 @@
   "tooltip.betterfurnacesreforged.upgrade.liquid": "Usa líquidos como combustível",
   "tooltip.betterfurnacesreforged.upgrade.energy": "Usa Forge Energy(FE) como combustível",
   "tooltip.betterfurnacesreforged.upgrade.xp": "Transforma o xp resultante da fornalha/forja em um XP líquido no tanque criado",
+  "tooltip.betterfurnacesreforged.upgrade.isworking": "Atualmente, não há nenhum mod configurado que suporte esta melhoria.",
+  "tooltip.betterfurnacesreforged.upgrade.factory": "Adiciona a possibilidade de entrar e sair itens automaticamente, ou pelo nível de redstone, pelos lados configurados dentro da interface da fornalha",
+  "tooltip.betterfurnacesreforged.upgrade.tier": "Melhora a fornalha de %s para %s",
   "tooltip.betterfurnacesreforged.gui_open": "Mostrar",
   "tooltip.betterfurnacesreforged.gui_close": "Esconder",
   "tooltip.betterfurnacesreforged.gui_auto_input": "Entrada automática",
@@ -73,6 +76,14 @@
   "tooltip.betterfurnacesreforged.gui_shift_more_options": " para mais opções",
   "tooltip.betterfurnacesreforged.hold": "Segure ",
   "tooltip.betterfurnacesreforged.for_details": " para detalhes.",
-  "description.betterfurnacesreforged.cobblestone_generator": "Gera pedregulho, pedra, pedra negra ou obsidian a partir da opção escolhida na GUI. Coloque um balde de lava e um balde de água nos respectivos slots para começar a gerar. Podem ser utilizadas as melhorias de Processamento de Minérios para duplicar o resultado, e o de Eficiência de Combustível para diminuir pela metade o tempo de geração"
+  "description.betterfurnacesreforged.cobblestone_generator": "Gera pedregulho, pedra, pedra negra ou obsidian a partir da opção escolhida na GUI. Coloque um balde de lava e um balde de água nos respectivos slots para começar a gerar. Podem ser utilizadas as melhorias de Processamento de Minérios para duplicar o resultado, e o de Eficiência de Combustível para diminuir pela metade o tempo de geração",
+  "description.betterfurnacesreforged.fuel_verifier": "Apenas mostra a quantidade que cada combustível é capaz de derreter(Inútil)",
+
+  "_comment": "Updates",
+  "betterfurnacesreforged.update.speech": "[{\"text\":\"Há um update disponível para \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"dark_aqua\"},{\"text\":\"!\",\"color\":\"none\"}]",
+  "betterfurnacesreforged.update.version": "[{\"text\":\"Versão atual: \"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\", Nova versão: \",\"color\":\"none\"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
+  "betterfurnacesreforged.update.buttons": "{\"text\":\"] [\",\"color\":\"none\"},{\"text\":\"Click for Download\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}},{\"text\":\"]\",\"color\":\"none\"}]",
+  "betterfurnacesreforged.update.buttonOptions": "Shift-Clique: Download! (No navegador)",
+  "betterfurnacesreforged.update.failed": "[{\"text\":\"O gerenciador de updates do \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"blue\"},{\"text\":\"falhou! Observe os Logs para mais informações!\",\"color\":\"none\"}]"
 
 }

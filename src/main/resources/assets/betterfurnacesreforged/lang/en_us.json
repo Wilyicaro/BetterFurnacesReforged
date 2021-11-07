@@ -49,6 +49,9 @@
   "tooltip.betterfurnacesreforged.upgrade.liquid": "Uses liquid fuel instead of solid fuel",
   "tooltip.betterfurnacesreforged.upgrade.energy": "Uses FE instead of solid fuel in Extreme Forge",
   "tooltip.betterfurnacesreforged.upgrade.xp": "Turns the resulting xp from the furnace/forge into a liquid xp in a created tank",
+  "tooltip.betterfurnacesreforged.upgrade.isworking": "There is currently no mods configured that supports this upgrade.",
+  "tooltip.betterfurnacesreforged.upgrade.factory": "Adds the possibility to enter and exit items automatically, or by redstone level, from the sides configured within the furnace interface",
+  "tooltip.betterfurnacesreforged.upgrade.tier": "Upgrade furnace from %s to %s",
   "tooltip.betterfurnacesreforged.gui_open": "Show",
   "tooltip.betterfurnacesreforged.gui_close": "Hide",
   "tooltip.betterfurnacesreforged.gui_auto_input": "Auto Input",
@@ -74,6 +77,14 @@
   "tooltip.betterfurnacesreforged.gui_shift_more_options": " for more options",
   "tooltip.betterfurnacesreforged.hold": "Hold ",
   "tooltip.betterfurnacesreforged.for_details": " for Details.",
-  "description.betterfurnacesreforged.cobblestone_generator": "Generates cobblestone, stone, blackstone or obsidian from the option chosen in the GUI. Place a bucket of lava and a bucket of water in their respective slots to start generating. Ore Processing upgrade can be used to double the result and fuel efficiency to cut generation time in half"
+  "description.betterfurnacesreforged.cobblestone_generator": "Generates cobblestone, stone, blackstone or obsidian from the option chosen in the GUI. Place a bucket of lava and a bucket of water in their respective slots to start generating. Ore Processing upgrade can be used to double the result and fuel efficiency to cut generation time in half",
+  "description.betterfurnacesreforged.fuel_verifier": "It only shows how much each fuel is capable of melting (Useless)",
+
+  "_comment": "Updates",
+  "betterfurnacesreforged.update.speech": "[{\"text\":\"There is an Update for \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"dark_aqua\"},{\"text\":\"available!\",\"color\":\"none\"}]",
+  "betterfurnacesreforged.update.version": "[{\"text\":\"Current Version: \"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\", newest Version: \",\"color\":\"none\"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
+  "betterfurnacesreforged.update.buttons": "{\"text\":\"] [\",\"color\":\"none\"},{\"text\":\"Click for Download\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}},{\"text\":\"]\",\"color\":\"none\"}]",
+  "betterfurnacesreforged.update.buttonOptions": "Shift-Click: Download! (In Browser)",
+  "betterfurnacesreforged.update.failed": "[{\"text\":\"The Update Check for \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"blue\"},{\"text\":\"failed! Check Logs for more Info!\",\"color\":\"none\"}]"
 
 }
