@@ -753,14 +753,12 @@ public abstract class BlockFurnaceTileBase extends TileEntityInventory implement
         ItemStack itemstack = this.inventory.get(INPUT);
         ItemStack out = recipe.getResultItem().copy();
         if ((getUpgrade(this.getItem(3)) == 1)) {
-            if (((itemstack.getItem().is(ore)))) {
-                out.grow(out.getCount());
-                return out;
-            }
-            if ((getUpgrade(this.getItem(1)) == 7)) {
-                out.setCount(out.getCount() * 4);
-                return out;
-            }
+            out.setCount(out.getCount() * 2);
+            return out;
+        }
+        if ((getUpgrade(this.getItem(3)) == 7)) {
+            out.setCount(out.getCount() * 4);
+            return out;
         }
             return recipe.getResultItem().copy();
     }
