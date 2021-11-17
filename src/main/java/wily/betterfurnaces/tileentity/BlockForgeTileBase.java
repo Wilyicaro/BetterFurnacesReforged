@@ -232,7 +232,7 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
     };
 
     private int getUpgrade(ItemStack stack) {
-        if (stack.getItem() instanceof ItemOreProcessing) {
+        if (stack.getItem() instanceof ItemOreProcessing && !stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade")) {
             return 1;
         } else if (stack.getItem() instanceof ItemFuelEfficiency) {
             return 2;
@@ -246,7 +246,7 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
             return 6;
         }else if (stack.getItem() == Registration.XP.get()) {
             return 7;
-        }else if (stack.getItem().getRegistryName().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade")){
+        }else if (stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade")){
             return 8;
         }
         return 0;

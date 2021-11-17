@@ -26,11 +26,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.blocks.BlockFurnaceBase;
 import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
 
 import javax.annotation.Nullable;
@@ -96,19 +98,26 @@ public class ItemUpgradeTier extends Item {
                 ItemStack fuel  = ((Container) te).getItem(1).copy();
                 ItemStack output  = ((Container) te).getItem(2).copy();
                 ItemStack upgrade  = ItemStack.EMPTY;
+                ItemStack upgrade1  = ItemStack.EMPTY;
+                ItemStack upgrade2  = ItemStack.EMPTY;
                 if (te instanceof BlockFurnaceTileBase) {
                     upgrade = ((Container) te).getItem(3).copy();
+                    upgrade1 = ((Container) te).getItem(4).copy();
+                    upgrade2 = ((Container) te).getItem(5).copy();
                 }
                 world.removeBlockEntity(te.getBlockPos());
                 world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                world.setBlock(pos, next, 3);
+                world.setBlock(pos, next.setValue(BlockStateProperties.LIT, te.getBlockState().getValue(BlockStateProperties.LIT)).setValue(BlockFurnaceBase.COLORED, te.getBlockState().getValue(BlockFurnaceBase.COLORED)), 3);
                 world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 BlockEntity newTe = world.getBlockEntity(pos);
                 ((Container)newTe).setItem(0, input);
                 ((Container)newTe).setItem(1, fuel);
                 ((Container)newTe).setItem(2, output);
+                newTe.deserializeNBT(te.serializeNBT());
                 if (newTe instanceof BlockFurnaceTileBase) {
                     ((Container)newTe).setItem(3, upgrade);
+                    ((Container)newTe).setItem(4, upgrade1);
+                    ((Container)newTe).setItem(5, upgrade2);
                     ((BlockFurnaceTileBase)newTe).fields.set(0, furnaceBurnTime);
                     ((BlockFurnaceTileBase)newTe).fields.set(1, currentItemBurnTime);
                     ((BlockFurnaceTileBase)newTe).fields.set(2, cooktime);

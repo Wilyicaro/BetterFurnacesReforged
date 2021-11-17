@@ -53,6 +53,20 @@ minecraft {
     }
 }
 
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "betterfurnaces",
+                "Specification-Vendor"    : "wily",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "wily",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
