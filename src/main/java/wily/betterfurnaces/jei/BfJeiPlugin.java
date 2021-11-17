@@ -70,11 +70,12 @@ public class BfJeiPlugin implements IModPlugin {
 		addDescription(registration, new ItemStack(Registration.COLOR.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.color"));
 		addDescription(registration, new ItemStack(Registration.ENERGY.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.energy"));
 		addDescription(registration, new ItemStack(Registration.FUEL.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel"));
-		addDescription(registration, new ItemStack(Registration.ADVFUEL.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel"));
+		addDescription(registration, new ItemStack(Registration.ADVFUEL.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel"), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable"));
 		addDescription(registration, new ItemStack(Registration.ORE_PROCESSING.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores"));
-		addDescription(registration, new ItemStack(Registration.ADVORE_PROCESSING.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores"));
+		addDescription(registration, new ItemStack(Registration.ADVORE_PROCESSING.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores"), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable"));
 		addDescription(registration, new ItemStack(Registration.LIQUID.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.liquid"));
 		addDescription(registration, new ItemStack(Registration.XP.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.xp"));
+		addDescription(registration, new ItemStack(Registration.FACTORY.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.factory"));
 		for(ItemUpgradeTier i : up)
 		addDescription(registration, new ItemStack(i), new StringTextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
 	}

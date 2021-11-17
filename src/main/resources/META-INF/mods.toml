@@ -4,14 +4,14 @@ license="GNU"
 
 [[mods]]
 modId="betterfurnacesreforged"
-version="1.4.7"
+version="1.4.9"
 displayName="BetterFurnaces Reforged"
 credits=" TheFrogMC(Original mod creator) and Qelifern (Iron Furnaces creator)"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/better-furnaces-reforged/"
 logoFile="logo.png"
 authors="Wilyicaro"
 description='''
-This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, presenting only the main things used in the original mod
+This mod is a remake of the outdated mod from 1.7.10, Better Furnaces, presenting only the main things used in the original mod
 '''
 
 [[dependencies.betterfurnacesreforged]]

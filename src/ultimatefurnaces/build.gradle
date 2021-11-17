@@ -12,14 +12,14 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = '1.16.5-1.1.1'
+version = "${minecraft_version}-${mod_version}"
 group = 'wily.ultimatefurnaces'
 archivesBaseName = 'Ultimate-Furnaces-BFR'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
-    mappings channel: 'official', version: "1.16.5"
+    mappings channel: "${mappings_channel}", version: "${minecraft_version}"
 
     runs {
         client {
@@ -51,9 +51,9 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.2.2'
-    compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.1.118:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.1.118")
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
     compileOnly fg.deobf("curse.maven:project-mmo-353935:3434289")
     runtimeOnly fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly fileTree(include: ['*.jar'], dir: 'libs')

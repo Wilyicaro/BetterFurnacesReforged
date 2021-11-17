@@ -13,7 +13,6 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.init.Registration;
 import wily.ultimatefurnaces.init.ClientSide;
 import wily.ultimatefurnaces.init.ModObjects;
 import wily.ultimatefurnaces.init.Registration;

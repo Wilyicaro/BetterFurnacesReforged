@@ -10,5 +10,7 @@
   "block.ultimatefurnaces_bfr.ultimate_forge": "Ultimate Forge",
   "item.ultimatefurnaces_bfr.copper_upgrade": "Copper Upgrade",
   "item.ultimatefurnaces_bfr.iron_upgrade": "Iron Upgrade",
-  "item.ultimatefurnaces_bfr.ultimate_upgrade": "Ultimate Upgrade"
+  "item.ultimatefurnaces_bfr.ultimate_upgrade": "Ultimate Upgrade",
+  "item.ultimatefurnaces_bfr.ultimate_ore_processing_upgrade": "Ultimate Ore Processing Upgrade",
+  "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruples the amount that each molten ore gives"
 }

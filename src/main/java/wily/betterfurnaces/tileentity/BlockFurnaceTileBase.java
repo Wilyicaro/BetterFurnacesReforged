@@ -254,7 +254,7 @@ public abstract class BlockFurnaceTileBase extends TileEntityInventory implement
     };
 
     private int getUpgrade(ItemStack stack) {
-        if (stack.getItem() instanceof ItemOreProcessing) {
+        if (stack.getItem() instanceof ItemOreProcessing && !stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade")) {
             return 1;
         } else if (stack.getItem() instanceof ItemFuelEfficiency) {
             return 2;
@@ -266,7 +266,10 @@ public abstract class BlockFurnaceTileBase extends TileEntityInventory implement
             return 5;
         }else if (stack.getItem() == Registration.XP.get()) {
             return 6;
-        }
+        }else if (stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade")){
+            return 7;
+    }
+
         return 0;
     }
 
@@ -735,7 +738,9 @@ public abstract class BlockFurnaceTileBase extends TileEntityInventory implement
                 else if (!output.sameItem(recipeOutput)) return false;
                 else {
                     if ((getUpgrade(this.getItem(3)) == 1) && (input.getItem().is(ore))) {
-                        return output.getCount() + recipeOutput.getCount() + 1 <= output.getMaxStackSize();
+                        return output.getCount() + recipeOutput.getCount() * 2 <= output.getMaxStackSize();
+                    }else if ((getUpgrade(this.getItem(3)) == 7) && (input.getItem().is(ore))) {
+                        return output.getCount() + recipeOutput.getCount() * 4 <= output.getMaxStackSize();
                     }else{
                         return output.getCount() + recipeOutput.getCount() <= output.getMaxStackSize();
                     }
@@ -750,8 +755,12 @@ public abstract class BlockFurnaceTileBase extends TileEntityInventory implement
         if ((getUpgrade(this.getItem(3)) == 1)) {
             if (((itemstack.getItem().is(ore)))) {
                 out.grow(out.getCount());
-            }
                 return out;
+            }
+            if ((getUpgrade(this.getItem(1)) == 7)) {
+                out.setCount(out.getCount() * 4);
+                return out;
+            }
         }
             return recipe.getResultItem().copy();
     }
