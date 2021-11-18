@@ -4,7 +4,7 @@ license="GNU"
 
 [[mods]]
 modId="ultimatefurnaces_bfr"
-version="1.1.1"
+version="${file.jarVersion}"
 displayName="Ultimate Furnaces"
 credits=" Wilyicaro"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/ultimate-furnaces-bfr/"
@@ -17,25 +17,25 @@ An official addon for BetterFurnaces Reforged mod, that add 2 new furnaces and 6
 [[dependencies.ultimatefurnaces_bfr]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.5]"
+    versionRange="[1.17.1]"
     ordering="NONE"
     side="BOTH"
     [[dependencies.ultimatefurnaces_bfr]]
         modId="betterfurnacesreforged"
         mandatory=true
-        versionRange="[1.4.2,]"
+        versionRange="[1.2.1,]"
         ordering="NONE"
         side="BOTH"
 [[dependencies.ultimatefurnaces_bfr]]
         modId="pmmo"
         mandatory=false
-        versionRange="[1.16.5-3,)"
+        versionRange="[1.17.1-3,)"
         ordering="NONE"
         side="BOTH"
 [[dependencies.ultimatefurnaces_bfr]]
    modId="jei"
    mandatory=false
-   versionRange="[7,)"
+   versionRange="[8,)"
    ordering="NONE"
    side="BOTH"
 [[dependencies.ultimatefurnaces_bfr]]

@@ -3,14 +3,19 @@ package wily.ultimatefurnaces.jei;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
-import mezz.jei.api.registration.IAdvancedRegistration;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.gui.*;
+import wily.betterfurnaces.items.ItemUpgradeTier;
 import wily.ultimatefurnaces.gui.*;
 import wily.ultimatefurnaces.init.Registration;
 
@@ -21,10 +26,16 @@ public class UFJeiPlugin implements IModPlugin {
     public ResourceLocation getPluginUid() {
         return new ResourceLocation(BetterFurnacesReforged.MOD_ID, "plugin_" + BetterFurnacesReforged.MOD_ID);
     }
-
+    private void addDescription(IRecipeRegistration registry, ItemStack itemDefinition,
+                                Component... message) {
+        registry.addIngredientInfo(itemDefinition, VanillaTypes.ITEM, message);
+    }
     @Override
-    public void registerAdvanced(IAdvancedRegistration registration) {
-
+    public void registerRecipes(IRecipeRegistration registration) {
+        addDescription(registration, new ItemStack(Registration.ULTIMATE_UPGRADE.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ultore"), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable"));
+        ItemUpgradeTier[] up = {Registration.COPPER_UPGRADE.get(), Registration.ULTIMATE_UPGRADE.get(), Registration.IRON_UPGRADE.get()};
+        for(ItemUpgradeTier i : up)
+            addDescription(registration, new ItemStack(i), new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
     }
 
     @Override

@@ -1,11 +1,11 @@
 package wily.ultimatefurnaces.init;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import wily.betterfurnaces.items.ItemColorUpgrade;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
@@ -13,8 +13,8 @@ import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
 
 import javax.annotation.Nullable;
 
-public class BlockColorsHandler implements IBlockColor {
-    public static final IBlockColor COLOR = new BlockColorsHandler();
+public class BlockColorsHandler implements BlockColor {
+    public static final BlockColor COLOR = new BlockColorsHandler();
 
     @SubscribeEvent
     public static void registerBlockColors() {
@@ -31,7 +31,7 @@ public class BlockColorsHandler implements IBlockColor {
     }
 
     @Override
-    public int getColor(BlockState blockState, @Nullable IBlockDisplayReader iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
+    public int getColor(BlockState blockState, @Nullable BlockAndTintGetter iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
         if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof BlockFurnaceTileBase) {
             BlockFurnaceTileBase te = (BlockFurnaceTileBase) iBlockDisplayReader.getBlockEntity(blockPos);
             ItemStack stack = te.inventory.get(5);

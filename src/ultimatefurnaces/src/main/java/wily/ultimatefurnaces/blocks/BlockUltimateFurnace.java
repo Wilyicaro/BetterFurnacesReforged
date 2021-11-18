@@ -1,9 +1,13 @@
 package wily.ultimatefurnaces.blocks;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import wily.betterfurnaces.blocks.BlockFurnaceBase;
+import wily.ultimatefurnaces.init.Registration;
 import wily.ultimatefurnaces.tileentity.BlockUltimateFurnaceTile;
 
 import javax.annotation.Nullable;
@@ -15,14 +19,16 @@ public class BlockUltimateFurnace extends BlockFurnaceBase {
     public BlockUltimateFurnace(Properties properties) {
         super(properties);
     }
+
+    @Nullable
     @Override
-    public int getHarvestLevel(BlockState state) {
-        return 3;
+    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+        return new BlockUltimateFurnaceTile(p_153215_, p_153216_);
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new BlockUltimateFurnaceTile();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createFurnaceTicker(level, type, Registration.ULTIMATE_FURNACE_TILE.get());
     }
 }

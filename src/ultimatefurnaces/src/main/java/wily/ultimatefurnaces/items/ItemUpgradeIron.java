@@ -1,6 +1,5 @@
 package wily.ultimatefurnaces.items;
 
-import net.minecraft.block.Blocks;
 import wily.betterfurnaces.items.ItemUpgradeTier;
 import wily.ultimatefurnaces.init.Registration;
 
