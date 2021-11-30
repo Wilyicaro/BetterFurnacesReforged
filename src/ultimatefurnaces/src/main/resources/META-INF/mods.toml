@@ -1,0 +1,51 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="GNU"
+
+[[mods]]
+modId="ultimatefurnaces_bfr"
+version="${file.jarVersion}"
+displayName="Ultimate Furnaces"
+credits=" Wilyicaro"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/ultimate-furnaces-bfr/"
+logoFile="logo.png"
+authors="Wilyicaro"
+description='''
+An official addon for BetterFurnaces Reforged mod, that add 2 new furnaces and 6 forges
+'''
+
+[[dependencies.ultimatefurnaces_bfr]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.17.1]"
+    ordering="NONE"
+    side="BOTH"
+    [[dependencies.ultimatefurnaces_bfr]]
+        modId="betterfurnacesreforged"
+        mandatory=true
+        versionRange="[1.2.1,]"
+        ordering="NONE"
+        side="BOTH"
+[[dependencies.ultimatefurnaces_bfr]]
+        modId="pmmo"
+        mandatory=false
+        versionRange="[1.17.1-3,)"
+        ordering="NONE"
+        side="BOTH"
+[[dependencies.ultimatefurnaces_bfr]]
+   modId="jei"
+   mandatory=false
+   versionRange="[8,)"
+   ordering="NONE"
+   side="BOTH"
+[[dependencies.ultimatefurnaces_bfr]]
+   modId="ftbguilibrary"
+   mandatory=false
+   versionRange="[1,)"
+   ordering="NONE"
+   side="BOTH"
+
+
+
+
+

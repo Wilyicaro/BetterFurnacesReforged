@@ -1,0 +1,15 @@
+{
+  "block.ultimatefurnaces_bfr.copper_furnace": "Fornalha de Cobre",
+  "block.ultimatefurnaces_bfr.ultimate_furnace": "Fornalha Ultimate",
+  "block.ultimatefurnaces_bfr.copper_forge": "Forja de Cobre",
+  "block.ultimatefurnaces_bfr.iron_forge": "Forja de Ferro",
+  "block.ultimatefurnaces_bfr.gold_forge": "Forja de Ouro",
+  "block.ultimatefurnaces_bfr.diamond_forge": "Forja de Diamante",
+  "block.ultimatefurnaces_bfr.netherhot_forge": "Forja do Nether",
+  "block.ultimatefurnaces_bfr.ultimate_forge": "Forja Ultimate",
+  "item.ultimatefurnaces_bfr.copper_upgrade": "Melhoria de Cobre",
+  "item.ultimatefurnaces_bfr.iron_upgrade": "Melhoria de Ferro",
+  "item.ultimatefurnaces_bfr.ultimate_upgrade": "Melhoria Ultimate",
+  "item.ultimatefurnaces_bfr.ultimate_ore_processing_upgrade": "Melhoria de Processamento de Minérios Ultimate",
+  "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruplica a quantidade resultante de cada minério derretido"
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "betterfurnacesreforged:block/bforientable",
+  "textures": {
+    "top": "ultimatefurnaces_bfr:blocks/ultimerite_top",
+    "side": "ultimatefurnaces_bfr:blocks/ultimerite_side",
+    "front": "ultimatefurnaces_bfr:blocks/ultimerite_front",
+    "overlay": "betterfurnacesreforged:blocks/front"
+  }
+}

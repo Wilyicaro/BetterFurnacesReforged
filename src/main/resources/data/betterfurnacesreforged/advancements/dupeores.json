@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "betterfurnacesreforged:ore_processing_upgrade"
+    },
+    "title": {
+      "translate": "advancements.dupeores.title"
+    },
+    "description": {
+      "translate": "advancements.dupeores.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "dupeores": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "betterfurnacesreforged:ore_processing_upgrade"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "dupeores"
+    ]
+  ],
+  "parent": "betterfurnacesreforged:overcooked"
+}

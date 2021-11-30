@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "betterfurnacesreforged:blocks/extreme_top",
+    "side": "betterfurnacesreforged:blocks/cob_generator_side",
+    "front": "betterfurnacesreforged:blocks/water_cob_generator_front"
+  }
+}
