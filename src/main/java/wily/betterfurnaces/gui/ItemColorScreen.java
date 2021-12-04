@@ -3,8 +3,15 @@ package wily.betterfurnaces.gui;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -15,11 +22,14 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.Slider;
+import net.minecraftforge.client.model.data.IModelData;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.blocks.BlockFurnaceBase;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemColorUpgrade.ContainerColorUpgrade;
 
@@ -74,9 +84,9 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     @Override
     protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
         int actualMouseX = mouseX - getGuiLeft();
-        int actualMouseY = mouseY - getGuiTop();
-        RenderSystem.setShaderTexture(0, WIDGETS);
-        if (buttonstate == 0) {
+            int actualMouseY = mouseY - getGuiTop();
+            RenderSystem.setShaderTexture(0, WIDGETS);
+            if (buttonstate == 0) {
             this.blit(matrix, getGuiLeft() + 8, getGuiTop() + 8, 126, 189, 14, 14);
         }
         if (buttonstate == 1) {
@@ -92,18 +102,20 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
                 this.renderTooltip(matrix, Registration.EXTREME_FORGE.get().getName(), mouseX, mouseY);
             }
         }
-        ItemStack stack = new ItemStack(Registration.COLOR_FURNACE.get());
-        ItemStack stack1 = new ItemStack(Registration.COLOR_FORGE.get());
+        ItemStack stack = new ItemStack(Registration.EXTREME_FURNACE_ITEM.get());
+        ItemStack stack1 = new ItemStack(Registration.EXTREME_FORGE_ITEM.get());
         Lighting.setupFor3DItems();
         CompoundTag nbt = stack.getOrCreateTag();
         nbt.putInt("red", red.getValueInt());
         nbt.putInt("green", green.getValueInt());
         nbt.putInt("blue", blue.getValueInt());
+        nbt.putBoolean("colored", true);
         stack.setTag(nbt);
         CompoundTag nbt1 = stack1.getOrCreateTag();
         nbt1.putInt("red", red.getValueInt());
         nbt1.putInt("green", green.getValueInt());
         nbt1.putInt("blue", blue.getValueInt());
+        nbt1.putBoolean("colored", true);
         stack.setTag(nbt);
         if (buttonstate == 0) {
             this.itemRenderer.renderGuiItem(stack, (width / 2 - 8), (this.getGuiTop() - 48));

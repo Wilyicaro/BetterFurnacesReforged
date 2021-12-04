@@ -2,8 +2,18 @@ package wily.betterfurnaces.init;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemModelGenerator;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ItemModelMesherForge;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -30,7 +40,17 @@ public class ClientSide {
         ItemBlockRenderTypes.setRenderLayer(Registration.EXTREME_FORGE.get(), RenderType.translucent());
         BlockColorsHandler.registerBlockColors();
         ItemColorsHandler.registerItemColors();
-
+        event.enqueueWork(() ->
+        {
+            ItemProperties.register(Registration.EXTREME_FURNACE_ITEM.get(),
+                    new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> {
+                        return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
+                    });
+            ItemProperties.register(Registration.EXTREME_FORGE_ITEM.get(),
+                    new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> {
+                        return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
+                    });
+        });
     }
 
 }
