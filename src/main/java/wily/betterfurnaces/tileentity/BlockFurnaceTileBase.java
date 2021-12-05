@@ -1,6 +1,7 @@
 package wily.betterfurnaces.tileentity;
 
 import com.google.common.collect.Lists;
+import harmonised.pmmo.events.FurnaceHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -784,6 +785,12 @@ public abstract class BlockFurnaceTileBase extends TileEntityInventory implement
 
             if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.inventory.get(FUEL).isEmpty() && this.inventory.get(FUEL).getItem() == Items.BUCKET) {
                 this.inventory.set(FUEL, new ItemStack(Items.WATER_BUCKET));
+            }
+            if (ModList.get().isLoaded("pmmo")) {
+                FurnaceHandler.handleSmelted(itemstack, itemstack2, level, worldPosition, 0);
+                if (this.recipeType == RecipeType.SMOKING) {
+                    FurnaceHandler.handleSmelted(itemstack, itemstack2, level, worldPosition, 1);
+                }
             }
             itemstack.shrink(1);
         }
