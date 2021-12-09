@@ -223,13 +223,11 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory{
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
         ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("CobTime", this.cobTime);
         tag.putInt("ResultType", this.resultType);
         tag.putInt("ActualCobTime", this.actualCobTime);
-        return tag;
     }
 
 

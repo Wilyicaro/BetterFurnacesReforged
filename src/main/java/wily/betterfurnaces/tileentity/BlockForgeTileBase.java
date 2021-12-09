@@ -1,7 +1,6 @@
 package wily.betterfurnaces.tileentity;
 
 import com.google.common.collect.Lists;
-import harmonised.pmmo.events.FurnaceHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -46,6 +45,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.BlockForgeBase;
@@ -72,17 +72,20 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
     public static final int OUTPUT1 = 5;
     public static final int OUTPUT2 = 6;
     public static final int[] UPMIS = { 11, 12, 13};
+    public static final int[] INPUTS = { 0, 1, 2};
 
     protected AbstractCookingRecipe curRecipe;
 
     private Random rand = new Random();
 
+    private ItemStackHandler stackHandler;
     public int show_inventory_settings;
     protected int timer;
     private int currentUpgrade;
     /**
      * The number of ticks that the furnace will keep burning
      */
+    public int EnergyUse() {return 1800;}
     private int furnaceBurnTime;
     public int cookTime;
     public int totalCookTime = this.getCookTime();
@@ -105,7 +108,6 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
                 setChanged();
             }
         };
-
     }
 
     private int getFromCache(LRUCache<Item, Optional<AbstractCookingRecipe>> c, Item key) {
@@ -141,10 +143,10 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
         return ((getUpgrade(getItem(9)) == 7));
     }
     public boolean isLiquid() {
-       return (getUpgrade(getItem(10)) == 4);
+        return (getUpgrade(getItem(10)) == 4);
     }
     private boolean isEnergy() {
-        return ((getUpgrade(getItem(10)) == 5) && energyStorage.getEnergyStored() >= 80);
+        return ((getUpgrade(getItem(10)) == 5) && energyStorage.getEnergyStored() > EnergyUse());
     }
     protected int getCookTime() {
 
@@ -276,7 +278,7 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
             level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);
         }
     };
-    private final EnergyStorage energyStorage = new EnergyStorage(32000,1000,1000, 0) {
+    private final ForgeEnergyStorage energyStorage = new ForgeEnergyStorage(this,0,32000) {
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
             int retval = super.receiveEnergy(maxReceive, simulate);
@@ -297,7 +299,6 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
             return retval;
         }
     };
-
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
         if (state.getValue(BlockStateProperties.LIT) != this.isBurning()) {
@@ -321,11 +322,12 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
         if (e.isBurning()) {
             --e.furnaceBurnTime;
         }
+        ItemStack heater = e.getItem(10);
 
-            if ((e.getUpgrade(e.getItem(12)) == 3)) {
-                if (!(level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.COLORED)))
-                    level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.COLORED, true), 3);
-            } else if ((level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.COLORED))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.COLORED, false), 3);
+        if ((e.getUpgrade(e.getItem(12)) == 3)) {
+            if (!(level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.COLORED)))
+                level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.COLORED, true), 3);
+        } else if ((level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.COLORED))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.COLORED, false), 3);
         if (e.recipeType != RecipeType.SMELTING) {
             e.recipeType = RecipeType.SMELTING;
         }
@@ -415,7 +417,8 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
                         if (!e.getItem(8).isEmpty() && e.getUpgrade(e.getItem(8)) == 2)
                             e.furnaceBurnTime = 2 * 200 * get_cook_time / 200;
                         e.recipesUsed = e.furnaceBurnTime;
-                        e.energyStorage.extractEnergy(200, false);
+                        for (int a : INPUTS)
+                            e.energyStorage.consumeEnergy(e.EnergyUse() * e.OreProcessingMultiplier(e.getItem(a)), false);
                     }else{
                         if (!e.getItem(8).isEmpty() && e.getUpgrade(e.getItem(8)) == 2){
                             e.furnaceBurnTime = 2 * (getBurnTime(itemstack)) * get_cook_time / 200;
@@ -448,7 +451,7 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
                         e.smeltItem(irecipe1.orElse(null), INPUT1, OUTPUT1);
                         e.smeltItem(irecipe2.orElse(null), INPUT2, OUTPUT2);
                         for (int slot : UPMIS)
-                        if (e.getUpgrade(e.getItem(slot)) == 6) e.autoIO();
+                            if (e.getUpgrade(e.getItem(slot)) == 6) e.autoIO();
                         flag1 = true;
                     }
                 } else {
@@ -462,25 +465,25 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
                 e.level.setBlock(e.worldPosition, e.level.getBlockState(e.worldPosition).setValue(BlockStateProperties.LIT, e.isBurning()), 3);
             }
             for (int slot : UPMIS)
-            if ((e.timer % 24 == 0) && (e.getUpgrade(e.getItem(slot)) == 6)){
-                if (e.cookTime <= 0) {
+                if ((e.timer % 24 == 0) && (e.getUpgrade(e.getItem(slot)) == 6)){
+                    if (e.cookTime <= 0) {
 
-                    if (e.getItem(INPUT).isEmpty() || e.getItem(INPUT1).isEmpty() || e.getItem(INPUT2).isEmpty()) {
-                        e.autoIO();
-                        flag1 = true;
-                    } else if (e.getItem(INPUT).getCount() < e.getItem(INPUT).getMaxStackSize() || e.getItem(INPUT1).getCount() < e.getItem(INPUT1).getMaxStackSize() || e.getItem(INPUT2).getCount() < e.getItem(INPUT2).getMaxStackSize()) {
-                        e.autoIO();
-                        flag1 = true;
-                    }
-                    if (e.getItem(FUEL).isEmpty()) {
-                        e.autoIO();
-                        flag1 = true;
-                    } else if (e.getItem(FUEL).getCount() < e.getItem(FUEL).getMaxStackSize()) {
-                        e.autoIO();
-                        flag1 = true;
+                        if (e.getItem(INPUT).isEmpty() || e.getItem(INPUT1).isEmpty() || e.getItem(INPUT2).isEmpty()) {
+                            e.autoIO();
+                            flag1 = true;
+                        } else if (e.getItem(INPUT).getCount() < e.getItem(INPUT).getMaxStackSize() || e.getItem(INPUT1).getCount() < e.getItem(INPUT1).getMaxStackSize() || e.getItem(INPUT2).getCount() < e.getItem(INPUT2).getMaxStackSize()) {
+                            e.autoIO();
+                            flag1 = true;
+                        }
+                        if (e.getItem(FUEL).isEmpty()) {
+                            e.autoIO();
+                            flag1 = true;
+                        } else if (e.getItem(FUEL).getCount() < e.getItem(FUEL).getMaxStackSize()) {
+                            e.autoIO();
+                            flag1 = true;
+                        }
                     }
                 }
-            }
         }
 
         if (flag1) {
@@ -489,9 +492,9 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
 
     }
     public int hex() {
-            CompoundTag nbt = inventory.get(12).getTag();
+        CompoundTag nbt = inventory.get(12).getTag();
 
-            return ((nbt.getInt("red") & 0x0ff) << 16) | ((nbt.getInt("green") & 0x0ff) << 8) | (nbt.getInt("blue") & 0x0ff);
+        return ((nbt.getInt("red") & 0x0ff) << 16) | ((nbt.getInt("green") & 0x0ff) << 8) | (nbt.getInt("blue") & 0x0ff);
     }
 
 
@@ -585,12 +588,12 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
                                 }
                             }
                         }
-                        }
                     }
-
                 }
+
             }
         }
+    }
 
     @Nonnull
     public ItemStack insertItemInternal(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -760,7 +763,19 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
     public boolean isBurning() {
         return this.furnaceBurnTime > 0;
     }
-
+    protected boolean isOre(ItemStack input){
+        return (input.is(ore) || input.getItem().getRegistryName().toString().contains("ore"));
+    }
+    protected int OreProcessingMultiplier(ItemStack input){
+        if (isOre(input)){
+            if (getUpgrade(this.getItem(7)) == 1){
+                return 2;
+            }else if (getUpgrade(this.getItem(7)) == 8){
+                return 4;
+            }else if (input == null) return 0;
+        }
+        return 1;
+    }
     protected boolean canSmelt(@Nullable Recipe<?> recipe, int INPUT, int OUTPUT) {
         ItemStack input = this.inventory.get(INPUT);
         if (!input.isEmpty() && recipe != null) {
@@ -770,32 +785,16 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
                 if (output.isEmpty()) return true;
                 else if (!output.sameItem(recipeOutput)) return false;
                 else {
-                    if ((getUpgrade(this.getItem(7)) == 1) && (input.is(ore))) {
-                        return output.getCount() + recipeOutput.getCount() * 2 <= output.getMaxStackSize();
-                    }else if ((getUpgrade(this.getItem(7)) == 8) && (input.is(ore))) {
-                        return output.getCount() + recipeOutput.getCount() * 4 <= output.getMaxStackSize();
-                    }else{
-                        return output.getCount() + recipeOutput.getCount() <= output.getMaxStackSize();
-                    }
+                    return output.getCount() + recipeOutput.getCount() * OreProcessingMultiplier(input) <= output.getMaxStackSize();
                 }
             }
         }
         return false;
     }
     private ItemStack getResult(@Nullable Recipe<?> recipe, ItemStack input) {
-        ItemStack itemstack = input;
         ItemStack out = recipe.getResultItem().copy();
-        if (((itemstack.is(ore)))) {
-            if ((getUpgrade(this.getItem(7)) == 1)) {
-                out.setCount(out.getCount() * 2);
-                return out;
-            }
-            if ((getUpgrade(this.getItem(7)) == 8)) {
-                out.setCount(out.getCount() * 4);
-                return out;
-            }
-        }
-            return recipe.getResultItem().copy();
+        out.setCount(out.getCount() * OreProcessingMultiplier(input));
+        return out;
     }
 
     Tag<Item> ore = ItemTags.getAllTags().getTag(new ResourceLocation("forge", "ores"));
@@ -806,7 +805,7 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
             ItemStack itemstack2 = this.inventory.get(OUTPUT);
             if (itemstack2.isEmpty()) {
                 this.inventory.set(OUTPUT, getResult(recipe, itemstack));
-                if ((getUpgrade(this.getItem(7)) == 1) && ((itemstack.is(ore)))) {
+                if ((getUpgrade(this.getItem(7)) == 1) && ((isOre(itemstack)))) {
                     breakDurabilityItem(getItem(7));
                     if ((this.getItem(9).getItem() == Registration.ORE_PROCESSING.get())) {
                         breakDurabilityItem(getItem(9));
@@ -814,7 +813,7 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
                 }
             } else if (itemstack2.getItem() == getResult(recipe, itemstack).getItem()) {
                 itemstack2.grow(getResult(recipe, itemstack).getCount());
-                if ((getUpgrade(this.getItem(7)) == 1) && (itemstack.is(ore))) {
+                if ((getUpgrade(this.getItem(7)) == 1) && (isOre(itemstack))) {
                     breakDurabilityItem(getItem(7));
                     if ((this.getItem(9).getItem() == Registration.ORE_PROCESSING.get())) {
                         breakDurabilityItem(getItem(9));
@@ -829,17 +828,12 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
             if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.inventory.get(FUEL).isEmpty() && this.inventory.get(FUEL).getItem() == Items.BUCKET) {
                 this.inventory.set(FUEL, new ItemStack(Items.WATER_BUCKET));
             }
-            if (ModList.get().isLoaded("pmmo")) {
-                FurnaceHandler.handleSmelted(itemstack, itemstack2, level, worldPosition, 0);
-                if (this.recipeType == RecipeType.SMOKING) {
-                    FurnaceHandler.handleSmelted(itemstack, itemstack2, level, worldPosition, 1);
-                }
-            }
             itemstack.shrink(1);
         }
     }
     @Override
     public void load(CompoundTag tag) {
+        super.load(tag);
         ContainerHelper.loadAllItems(tag, this.inventory);
         this.furnaceBurnTime = tag.getInt("BurnTime");
         this.cookTime = tag.getInt("CookTime");
@@ -847,40 +841,30 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
         this.timer = 0;
         this.currentUpgrade = tag.getInt("Upgrade");
         this.recipesUsed = this.getBurnTime(this.inventory.get(1));
-        if (isLiquid())
-            fluidTank.readFromNBT(tag);
-        if (hasXPTank())
-            xpTank.readFromNBT(tag);
+        if (tag.getCompound("fluidTank") != null)
+            fluidTank.readFromNBT(tag.getCompound("fluidTank"));
+        if (tag.getCompound("xpTank") != null)
+            xpTank.readFromNBT(tag.getCompound("xpTank"));
         CompoundTag compoundnbt = tag.getCompound("RecipesUsed");
-        this.energyStorage.deserializeNBT(tag);
-
+        if (tag.getCompound("energy") != null)
+            energyStorage.deserializeNBT(tag.getCompound("energy"));
         for (String s : compoundnbt.getAllKeys()) {
             this.recipes.put(new ResourceLocation(s), compoundnbt.getInt(s));
         }
         this.show_inventory_settings = tag.getInt("ShowInvSettings");
         this.furnaceSettings.read(tag);
-        /**
-         CompoundNBT energyTag = tag.getCompound("energy");
-         energy.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(energyTag));
-         **/
-
-        super.load(tag);
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
         ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("BurnTime", this.furnaceBurnTime);
         tag.putInt("CookTime", this.cookTime);
         tag.putInt("CookTimeTotal", this.totalCookTime);
         tag.putInt("Upgrade", this.currentUpgrade);
-        if (isLiquid())
-        fluidTank.writeToNBT(tag);
-        if (hasXPTank())
-        xpTank.writeToNBT(tag);
-        energyStorage.serializeNBT();
-
+        tag.put("fluidTank", fluidTank.writeToNBT(tag.getCompound("fluidTank")));
+        tag.put("xpTank", xpTank.writeToNBT(tag.getCompound("xpTank")));
+        tag.put("energy", energyStorage.serializeNBT());
         tag.putInt("ShowInvSettings", this.show_inventory_settings);
         this.furnaceSettings.write(tag);
         CompoundTag compoundnbt = new CompoundTag();
@@ -888,8 +872,6 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
             compoundnbt.putInt(recipeId.toString(), craftedAmount);
         });
         tag.put("RecipesUsed", compoundnbt);
-
-        return tag;
     }
 
     protected static int getBurnTime(ItemStack stack) {
@@ -942,7 +924,7 @@ public abstract class BlockForgeTileBase extends TileEntityInventory implements 
             }
         }
         if (!this.isRemoved() && (getUpgrade(getItem(10)) == 5) && capability == CapabilityEnergy.ENERGY)
-            return LazyOptional.of(() -> energyStorage).cast();
+            return (LazyOptional.of(() -> energyStorage).cast());
 
         return super.getCapability(capability, facing);
     }

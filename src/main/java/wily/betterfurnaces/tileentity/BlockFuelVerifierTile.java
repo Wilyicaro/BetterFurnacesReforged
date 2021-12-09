@@ -106,11 +106,9 @@ public class BlockFuelVerifierTile extends TileEntityInventory {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
         ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("BurnTime", this.burnTime);
-        return tag;
     }
 
     protected static int getBurnTime(ItemStack stack) {
