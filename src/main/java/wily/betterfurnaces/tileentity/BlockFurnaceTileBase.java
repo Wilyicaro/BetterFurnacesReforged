@@ -728,6 +728,17 @@ public abstract class BlockFurnaceTileBase extends TileEntityInventory implement
         return this.furnaceBurnTime > 0;
     }
 
+    protected int OreProcessingMultiplier(ItemStack input){
+        if (input.getItem().is(ore)){
+            if (getUpgrade(this.getItem(3)) == 1){
+                return 2;
+            }else if (getUpgrade(this.getItem(3)) == 7){
+                return 4;
+            }
+        }else if (input == null) return 0;
+        return 1;
+    }
+
     protected boolean canSmelt(@Nullable IRecipe<?> recipe) {
         ItemStack input = this.inventory.get(0);
         if (!this.inventory.get(0).isEmpty() && recipe != null) {
@@ -737,30 +748,16 @@ public abstract class BlockFurnaceTileBase extends TileEntityInventory implement
                 if (output.isEmpty()) return true;
                 else if (!output.sameItem(recipeOutput)) return false;
                 else {
-                    if ((getUpgrade(this.getItem(3)) == 1) && (input.getItem().is(ore))) {
-                        return output.getCount() + recipeOutput.getCount() * 2 <= output.getMaxStackSize();
-                    }else if ((getUpgrade(this.getItem(3)) == 7) && (input.getItem().is(ore))) {
-                        return output.getCount() + recipeOutput.getCount() * 4 <= output.getMaxStackSize();
-                    }else{
-                        return output.getCount() + recipeOutput.getCount() <= output.getMaxStackSize();
-                    }
+                    return output.getCount() + recipeOutput.getCount() * OreProcessingMultiplier(input) <= output.getMaxStackSize();
                 }
             }
         }
         return false;
     }
     private ItemStack getResult(@Nullable IRecipe<?> recipe) {
-        ItemStack itemstack = this.inventory.get(INPUT);
         ItemStack out = recipe.getResultItem().copy();
-        if ((getUpgrade(this.getItem(3)) == 1)) {
-            out.setCount(out.getCount() * 2);
-            return out;
-        }
-        if ((getUpgrade(this.getItem(3)) == 7)) {
-            out.setCount(out.getCount() * 4);
-            return out;
-        }
-            return recipe.getResultItem().copy();
+        out.setCount(out.getCount() * OreProcessingMultiplier(getItem(INPUT)));
+        return out;
     }
 
     ITag<Item> ore = ItemTags.getAllTags().getTag(new ResourceLocation("forge", "ores"));

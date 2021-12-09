@@ -93,20 +93,21 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
                 this.renderTooltip(matrix, Registration.EXTREME_FORGE.get().getName(), mouseX, mouseY);
             }
         }
-        ItemStack stack = new ItemStack(Registration.COLOR_FURNACE.get());
-        ItemStack stack1 = new ItemStack(Registration.COLOR_FORGE.get());
         GL11.glScalef(4,4,4);
         RenderHelper.setupFor3DItems();
+        ItemStack stack = new ItemStack(Registration.EXTREME_FURNACE_ITEM.get());
+        ItemStack stack1 = new ItemStack(Registration.EXTREME_FORGE_ITEM.get());
         CompoundNBT nbt = stack.getOrCreateTag();
         nbt.putInt("red", red.getValueInt());
         nbt.putInt("green", green.getValueInt());
         nbt.putInt("blue", blue.getValueInt());
+        nbt.putBoolean("colored", true);
         stack.setTag(nbt);
         CompoundNBT nbt1 = stack1.getOrCreateTag();
         nbt1.putInt("red", red.getValueInt());
         nbt1.putInt("green", green.getValueInt());
         nbt1.putInt("blue", blue.getValueInt());
-        stack.setTag(nbt);
+        nbt1.putBoolean("colored", true);
         if (buttonstate == 0) {
             this.itemRenderer.renderGuiItem(stack, (width / 2 - 32)/4, (this.getGuiTop() - 70)/4);
         }else

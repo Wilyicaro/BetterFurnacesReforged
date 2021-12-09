@@ -4,7 +4,7 @@ license="GNU"
 
 [[mods]]
 modId="ultimatefurnaces_bfr"
-version="1.1.1"
+version="${file.jarVersion}"
 displayName="Ultimate Furnaces"
 credits=" Wilyicaro"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/ultimate-furnaces-bfr/"
