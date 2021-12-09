@@ -18,5 +18,13 @@
         0.375
       ]
     }
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "betterfurnacesreforged:colored": 1
+      },
+      "model": "betterfurnacesreforged:item/color_furnace"
+    }
+  ]
 }

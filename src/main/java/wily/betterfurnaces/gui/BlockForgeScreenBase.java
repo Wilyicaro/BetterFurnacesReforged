@@ -31,6 +31,7 @@ import wily.betterfurnaces.network.PacketForgeShowSettingsButton;
 import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.StringHelper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
@@ -92,7 +93,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
             this.renderTooltip(matrix, new TextComponent(((BlockForgeContainerBase) this.getMenu()).getFluidStackStored().getDisplayName().getString() + ": " +((BlockForgeContainerBase) this.getMenu()).getFluidStackStored().getAmount() + " mB"), actualMouseX, actualMouseY);
         if ((((BlockForgeContainerBase) this.getMenu()).slots.get(10).getItem().getItem() instanceof ItemEnergyFuel) &&
                 (mouseX > getGuiLeft() + 8 && mouseX < getGuiLeft() + 24 && mouseY > getGuiTop() + 62 && mouseY < getGuiTop() + 96))
-            this.renderTooltip(matrix, new TextComponent(((BlockForgeContainerBase) this.getMenu()).getEnergyStored()/1000 + " kFE/" + ((BlockForgeContainerBase) this.getMenu()).getEnergyMaxStored()/1000 + "kFE"), actualMouseX, actualMouseY);
+            this.renderTooltip(matrix, new TextComponent( getMenu().getEnergyStored()/1000 + " kFE/" + getMenu().getEnergyMaxStored()/ 1000 + "kFE"), actualMouseX, actualMouseY);
         if (((BlockForgeContainerBase) this.getMenu()).slots.get(11).getItem().getItem() == new ItemStack(Registration.FACTORY.get()).getItem()) {
             if (this.getMenu().showInventoryButtons() && this.getMenu().getRedstoneMode() == 4) {
                 int comSub = this.getMenu().getComSub();

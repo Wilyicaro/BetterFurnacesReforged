@@ -3,6 +3,8 @@ package wily.betterfurnaces.init;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -30,6 +32,17 @@ public class ClientSide {
         ItemBlockRenderTypes.setRenderLayer(Registration.EXTREME_FORGE.get(), RenderType.translucent());
         BlockColorsHandler.registerBlockColors();
         ItemColorsHandler.registerItemColors();
+        event.enqueueWork(() ->
+        {
+            ItemProperties.register(Registration.EXTREME_FURNACE_ITEM.get(),
+                    new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> {
+                        return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
+                    });
+            ItemProperties.register(Registration.EXTREME_FORGE_ITEM.get(),
+                    new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> {
+                        return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
+                    });
+        });
 
     }
 

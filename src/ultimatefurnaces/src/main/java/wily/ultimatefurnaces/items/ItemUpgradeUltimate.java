@@ -7,6 +7,6 @@ public class ItemUpgradeUltimate extends ItemUpgradeTier {
 
 
     public ItemUpgradeUltimate(Properties properties) {
-        super(properties, wily.betterfurnaces.init.Registration.NETHERHOT_FURNACE.get(), Registration.ULTIMATE_FURNACE.get());
+        super(properties, wily.betterfurnaces.init.Registration.EXTREME_FURNACE.get(), Registration.ULTIMATE_FURNACE.get());
     }
 }
