@@ -20,17 +20,17 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemColorUpgrade;
 import wily.betterfurnaces.items.ItemFuelEfficiency;
 import wily.betterfurnaces.items.ItemOreProcessing;
 import wily.betterfurnaces.items.ItemUpgradeMisc;
-import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 
 
 public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
 
-    protected BlockForgeTileBase te;
+    protected BlockEntitySmeltingBase te;
     protected ContainerData fields;
     protected Player playerEntity;
     protected IItemHandler playerInventory;
@@ -44,7 +44,7 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
 
     public BlockForgeContainerBase(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(containerType, windowId);
-        this.te = (BlockForgeTileBase) world.getBlockEntity(pos);
+        this.te = (BlockEntitySmeltingBase) world.getBlockEntity(pos);
         this.recipeType = te.recipeType;
 
         this.playerEntity = player;

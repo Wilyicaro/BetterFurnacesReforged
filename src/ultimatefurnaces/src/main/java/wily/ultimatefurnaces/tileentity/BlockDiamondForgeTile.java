@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.tileentity.BlockForgeTileBase;
+import wily.betterfurnaces.blockentity.BlockForgeTileBase;
 import wily.ultimatefurnaces.container.BlockDiamondForgeContainer;
 import wily.ultimatefurnaces.init.Registration;
 

@@ -8,8 +8,8 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import wily.betterfurnaces.items.ItemColorUpgrade;
-import wily.betterfurnaces.tileentity.BlockForgeTileBase;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.blockentity.BlockForgeTileBase;
+import wily.betterfurnaces.blockentity.BlockFurnaceTileBase;
 
 import javax.annotation.Nullable;
 

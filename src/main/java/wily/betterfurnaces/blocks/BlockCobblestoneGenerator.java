@@ -26,7 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.tileentity.BlockCobblestoneGeneratorTile;
+import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -60,7 +60,7 @@ public abstract class BlockCobblestoneGenerator extends Block implements EntityB
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult p_225533_6_) {
         ItemStack stack = player.getItemInHand(handIn).copy();
         ItemStack hand = player.getItemInHand(handIn);
-        BlockCobblestoneGeneratorTile te = (BlockCobblestoneGeneratorTile) world.getBlockEntity(pos);
+        BlockEntityCobblestoneGenerator te = (BlockEntityCobblestoneGenerator) world.getBlockEntity(pos);
 
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
@@ -86,7 +86,7 @@ public abstract class BlockCobblestoneGenerator extends Block implements EntityB
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof BlockCobblestoneGeneratorTile)) {
+        if (!(te instanceof BlockEntityCobblestoneGenerator)) {
             return InteractionResult.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
@@ -113,15 +113,15 @@ public abstract class BlockCobblestoneGenerator extends Block implements EntityB
         if (!player.isCreative()) {
             player.getItemInHand(handIn).shrink(1);
         }
-        ((BlockCobblestoneGeneratorTile)te).onUpdateSent();
+        ((BlockEntityCobblestoneGenerator)te).onUpdateSent();
         return InteractionResult.SUCCESS;
     }
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof BlockCobblestoneGeneratorTile) {
-                Containers.dropContents(world, pos, (BlockCobblestoneGeneratorTile) te);
+            if (te instanceof BlockEntityCobblestoneGenerator) {
+                Containers.dropContents(world, pos, (BlockEntityCobblestoneGenerator) te);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -151,14 +151,14 @@ public abstract class BlockCobblestoneGenerator extends Block implements EntityB
     }
 
     @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends BlockCobblestoneGeneratorTile> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, BlockCobblestoneGeneratorTile::tick);
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends BlockEntityCobblestoneGenerator> p_151990_) {
+        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, BlockEntityCobblestoneGenerator::tick);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new BlockCobblestoneGeneratorTile.BlockCobblestoneGeneratorTileDefinition(p_153215_, p_153216_);
+        return new BlockEntityCobblestoneGenerator.BlockEntityCobblestoneGeneratorDefinition(p_153215_, p_153216_);
     }
 
     @Nullable

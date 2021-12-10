@@ -3,17 +3,17 @@ package wily.betterfurnaces.container;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.betterfurnaces.items.ItemEnergyFuel;
 import wily.betterfurnaces.items.ItemLiquidFuel;
-import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 
 public class SlotHeater extends Slot {
 
-    private BlockForgeTileBase tf;
+    private BlockEntitySmeltingBase tf;
 
     public SlotHeater(Container te, int slotIndex, int xPosition, int yPosition) {
         super(te, slotIndex, xPosition, yPosition);
-            this.tf = (BlockForgeTileBase) te;
+            this.tf = (BlockEntitySmeltingBase) te;
     }
 
     /**

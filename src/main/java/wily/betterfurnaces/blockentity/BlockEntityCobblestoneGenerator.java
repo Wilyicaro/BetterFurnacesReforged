@@ -1,4 +1,4 @@
-package wily.betterfurnaces.tileentity;
+package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class BlockCobblestoneGeneratorTile extends TileEntityInventory{
+public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
     @Override
     public int[] IgetSlotsForFace(Direction side) {
@@ -58,21 +58,21 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory{
         public int get(int index) {
 
             if (index == 0)
-            return BlockCobblestoneGeneratorTile.this.cobTime;
+            return BlockEntityCobblestoneGenerator.this.cobTime;
             if (index == 1)
-                return BlockCobblestoneGeneratorTile.this.resultType;
+                return BlockEntityCobblestoneGenerator.this.resultType;
             if (index == 2)
-                return BlockCobblestoneGeneratorTile.this.actualCobTime;
+                return BlockEntityCobblestoneGenerator.this.actualCobTime;
             else return 0;
         }
 
         public void set(int index, int value) {
             if (index == 0)
-            BlockCobblestoneGeneratorTile.this.cobTime = value;
+            BlockEntityCobblestoneGenerator.this.cobTime = value;
             if (index == 1)
-                BlockCobblestoneGeneratorTile.this.resultType = value;
+                BlockEntityCobblestoneGenerator.this.resultType = value;
             if (index == 2)
-                BlockCobblestoneGeneratorTile.this.actualCobTime = value;
+                BlockEntityCobblestoneGenerator.this.actualCobTime = value;
         }
 
         @Override
@@ -99,13 +99,13 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory{
     private int actualCobTime = getCobTime();
     public int resultType = 1;
 
-    public static class BlockCobblestoneGeneratorTileDefinition extends wily.betterfurnaces.tileentity.BlockCobblestoneGeneratorTile{
-        public BlockCobblestoneGeneratorTileDefinition(BlockPos pos, BlockState state) {
+    public static class BlockEntityCobblestoneGeneratorDefinition extends BlockEntityCobblestoneGenerator {
+        public BlockEntityCobblestoneGeneratorDefinition(BlockPos pos, BlockState state) {
             super(Registration.COB_GENERATOR_TILE.get(), pos, state);
         }
 
     }
-    public BlockCobblestoneGeneratorTile(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state) {
+    public BlockEntityCobblestoneGenerator(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state) {
         super(tileentitytypeIn, pos, state, 5);
 
     }
@@ -117,7 +117,7 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory{
         }
     }
 
-    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, BlockCobblestoneGeneratorTile e) {
+    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, BlockEntityCobblestoneGenerator e) {
         if (e.actualCobTime != e.getCobTime()){
             e.actualCobTime = e.getCobTime();
         }

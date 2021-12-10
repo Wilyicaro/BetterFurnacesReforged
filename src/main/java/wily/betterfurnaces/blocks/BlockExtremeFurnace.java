@@ -6,9 +6,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import wily.betterfurnaces.blockentity.BlockEntityExtremeFurnace;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.tileentity.BlockDiamondFurnaceTile;
-import wily.betterfurnaces.tileentity.BlockExtremeFurnaceTile;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +22,7 @@ public class BlockExtremeFurnace extends BlockFurnaceBase {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new BlockExtremeFurnaceTile(p_153215_, p_153216_);
+        return new BlockEntityExtremeFurnace(p_153215_, p_153216_);
     }
 
     @Nullable

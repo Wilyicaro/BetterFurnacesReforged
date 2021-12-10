@@ -17,12 +17,12 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemFuelEfficiency;
 import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.tileentity.BlockCobblestoneGeneratorTile;
+import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
 
 
 public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {
 
-    protected BlockCobblestoneGeneratorTile te;
+    protected BlockEntityCobblestoneGenerator te;
     protected ContainerData fields;
     protected Player playerEntity;
     protected IItemHandler playerInventory;
@@ -35,7 +35,7 @@ public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {
 
     public BlockCobblestoneGeneratorContainer(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(containerType, windowId);
-        this.te = (BlockCobblestoneGeneratorTile) world.getBlockEntity(pos);
+        this.te = (BlockEntityCobblestoneGenerator) world.getBlockEntity(pos);
 
         this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);

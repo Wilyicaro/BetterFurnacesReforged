@@ -13,11 +13,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import wily.betterfurnaces.blockentity.BlockEntityExtremeForge;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.tileentity.BlockDiamondFurnaceTile;
-import wily.betterfurnaces.tileentity.BlockExtremeForgeTile;
-import wily.betterfurnaces.tileentity.BlockExtremeFurnaceTile;
-import wily.betterfurnaces.tileentity.BlockForgeTileBase;
+import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -37,11 +35,11 @@ public class BlockExtremeForge extends BlockForgeBase {
             {
                 return;
             }
-            if (!(world.getBlockEntity(pos) instanceof BlockForgeTileBase))
+            if (!(world.getBlockEntity(pos) instanceof BlockEntitySmeltingBase))
             {
                 return;
             }
-            BlockForgeTileBase tile = ((BlockForgeTileBase) world.getBlockEntity(pos));
+            BlockEntitySmeltingBase tile = ((BlockEntitySmeltingBase) world.getBlockEntity(pos));
 
             if (state.getValue(BlockStateProperties.FACING) == Direction.SOUTH){
                 double d0 = (double) pos.getX() + 0.5D;
@@ -77,7 +75,7 @@ public class BlockExtremeForge extends BlockForgeBase {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new BlockExtremeForgeTile(p_153215_, p_153216_);
+        return new BlockEntityExtremeForge(p_153215_, p_153216_);
     }
 
     @Nullable

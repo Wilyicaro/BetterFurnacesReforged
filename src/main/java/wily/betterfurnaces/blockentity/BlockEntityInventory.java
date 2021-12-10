@@ -1,4 +1,4 @@
-package wily.betterfurnaces.tileentity;
+package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,12 +24,12 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-public abstract class TileEntityInventory extends BlockEntity implements ITileInventory, WorldlyContainer, MenuProvider, Nameable {
+public abstract class BlockEntityInventory extends BlockEntity implements ITileInventory, WorldlyContainer, MenuProvider, Nameable {
 
     public NonNullList<ItemStack> inventory;
     protected Component name;
 
-    public TileEntityInventory(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int sizeInventory) {
+    public BlockEntityInventory(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int sizeInventory) {
         super(tileEntityTypeIn, pos, state);
         inventory = NonNullList.withSize(sizeInventory, ItemStack.EMPTY);
     }
@@ -145,13 +145,11 @@ public abstract class TileEntityInventory extends BlockEntity implements ITileIn
     }
 
     @Override
-    public CompoundTag save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
         ContainerHelper.saveAllItems(nbt, this.inventory);
         if (this.name != null) {
             nbt.putString("CustomName", Component.Serializer.toJson(this.name));
         }
-        return nbt;
     }
 
     @Override

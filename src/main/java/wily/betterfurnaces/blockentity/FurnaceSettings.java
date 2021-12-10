@@ -1,4 +1,4 @@
-package wily.betterfurnaces.tileentity;
+package wily.betterfurnaces.blockentity;
 
 import net.minecraft.nbt.CompoundTag;
 import wily.betterfurnaces.BetterFurnacesReforged;

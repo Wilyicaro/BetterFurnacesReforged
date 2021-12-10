@@ -1,4 +1,4 @@
-package wily.betterfurnaces.tileentity;
+package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Inventory;

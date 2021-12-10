@@ -35,12 +35,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.network.NetworkHooks;
+import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemFuelEfficiency;
 import wily.betterfurnaces.items.ItemLiquidFuel;
 import wily.betterfurnaces.items.ItemOreProcessing;
 import wily.betterfurnaces.items.ItemUpgradeMisc;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -75,7 +75,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState p_180633_3_, @Nullable LivingEntity entity, ItemStack stack) {
         if (entity != null) {
-            BlockFurnaceTileBase te = (BlockFurnaceTileBase) world.getBlockEntity(pos);
+            BlockEntitySmeltingBase te = (BlockEntitySmeltingBase) world.getBlockEntity(pos);
             if (stack.hasCustomHoverName()) {
                 te.setCustomName(stack.getDisplayName());
             }
@@ -88,7 +88,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult p_225533_6_) {
         ItemStack stack = player.getItemInHand(handIn).copy();
         ItemStack hand = player.getItemInHand(handIn);
-        BlockFurnaceTileBase te = (BlockFurnaceTileBase) world.getBlockEntity(pos);
+        BlockEntitySmeltingBase te = (BlockEntitySmeltingBase) world.getBlockEntity(pos);
 
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
@@ -116,7 +116,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof BlockFurnaceTileBase)) {
+        if (!(te instanceof BlockEntitySmeltingBase)) {
             return InteractionResult.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
@@ -144,7 +144,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         if (!player.isCreative()) {
             player.getItemInHand(handIn).shrink(1);
         }
-        ((BlockFurnaceTileBase)te).onUpdateSent();
+        ((BlockEntitySmeltingBase)te).onUpdateSent();
         return InteractionResult.SUCCESS;
     }
 
@@ -163,7 +163,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
             {
                 return;
             }
-            if (!(world.getBlockEntity(pos) instanceof BlockFurnaceTileBase))
+            if (!(world.getBlockEntity(pos) instanceof BlockEntitySmeltingBase))
             {
                 return;
             }
@@ -198,9 +198,9 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof BlockFurnaceTileBase) {
-                Containers.dropContents(world, pos, (BlockFurnaceTileBase) te);
-                ((BlockFurnaceTileBase)te).grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
+            if (te instanceof BlockEntitySmeltingBase) {
+                Containers.dropContents(world, pos, (BlockEntitySmeltingBase) te);
+                ((BlockEntitySmeltingBase)te).grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -230,7 +230,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
     }
 
     private int calculateOutput(Level worldIn, BlockPos pos, BlockState state) {
-        BlockFurnaceTileBase tile = ((BlockFurnaceTileBase)worldIn.getBlockEntity(pos));
+        BlockEntitySmeltingBase tile = ((BlockEntitySmeltingBase)worldIn.getBlockEntity(pos));
         int i = this.getComparatorInputOverride(state, worldIn, pos);
         if (tile != null)
         {
@@ -252,7 +252,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
 
     @Override
     public int getDirectSignal(BlockState blockState, BlockGetter world, BlockPos pos, Direction direction) {
-        BlockFurnaceTileBase furnace = ((BlockFurnaceTileBase) world.getBlockEntity(pos));
+        BlockEntitySmeltingBase furnace = ((BlockEntitySmeltingBase) world.getBlockEntity(pos));
         if (furnace != null)
         {
             int mode = furnace.furnaceSettings.get(8);
@@ -287,7 +287,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
     }
 
     @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends BlockFurnaceTileBase> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, BlockFurnaceTileBase::tick);
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends BlockEntitySmeltingBase> p_151990_) {
+        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, BlockEntitySmeltingBase::tick);
     }
 }

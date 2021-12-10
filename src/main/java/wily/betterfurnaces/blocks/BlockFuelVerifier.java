@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.tileentity.BlockFuelVerifierTile;
+import wily.betterfurnaces.blockentity.BlockEntityFuelVerifier;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -75,8 +75,8 @@ public abstract class BlockFuelVerifier extends Block implements EntityBlock {
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof BlockFuelVerifierTile) {
-                Containers.dropContents(world, pos, (BlockFuelVerifierTile) te);
+            if (te instanceof BlockEntityFuelVerifier) {
+                Containers.dropContents(world, pos, (BlockEntityFuelVerifier) te);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -108,14 +108,14 @@ public abstract class BlockFuelVerifier extends Block implements EntityBlock {
     }
 
     @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends BlockFuelVerifierTile> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, BlockFuelVerifierTile::tick);
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends BlockEntityFuelVerifier> p_151990_) {
+        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, BlockEntityFuelVerifier::tick);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new BlockFuelVerifierTile.BlockFuelVerifierTileDefinition(p_153215_, p_153216_);
+        return new BlockEntityFuelVerifier.BlockEntityFuelVerifierDefinition(p_153215_, p_153216_);
     }
 
     @Nullable
