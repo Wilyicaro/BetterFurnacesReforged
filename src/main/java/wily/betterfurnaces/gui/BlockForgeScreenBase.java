@@ -22,7 +22,6 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.container.BlockForgeContainerBase;
-import wily.betterfurnaces.container.BlockFurnaceContainerBase;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemEnergyFuel;
 import wily.betterfurnaces.items.ItemLiquidFuel;

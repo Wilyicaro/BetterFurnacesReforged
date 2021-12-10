@@ -39,7 +39,7 @@ import wily.betterfurnaces.items.ItemFuelEfficiency;
 import wily.betterfurnaces.items.ItemLiquidFuel;
 import wily.betterfurnaces.items.ItemOreProcessing;
 import wily.betterfurnaces.items.ItemUpgradeMisc;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -86,7 +86,7 @@ public abstract class BlockFurnaceBase extends Block {
     @Override
     public void setPlacedBy(World world, BlockPos pos, BlockState p_180633_3_, @Nullable LivingEntity entity, ItemStack stack) {
         if (entity != null) {
-            BlockFurnaceTileBase te = (BlockFurnaceTileBase) world.getBlockEntity(pos);
+            BlockSmeltingTileBase te = (BlockSmeltingTileBase) world.getBlockEntity(pos);
             if (stack.hasCustomHoverName()) {
                 te.setCustomName(stack.getDisplayName());
             }
@@ -99,7 +99,7 @@ public abstract class BlockFurnaceBase extends Block {
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
         ItemStack stack = player.getItemInHand(handIn).copy();
         ItemStack hand = player.getItemInHand(handIn);
-        BlockFurnaceTileBase te = (BlockFurnaceTileBase) world.getBlockEntity(pos);
+        BlockSmeltingTileBase te = (BlockSmeltingTileBase) world.getBlockEntity(pos);
 
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
@@ -127,7 +127,7 @@ public abstract class BlockFurnaceBase extends Block {
             return ActionResultType.SUCCESS;
         }
         TileEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof BlockFurnaceTileBase)) {
+        if (!(te instanceof BlockSmeltingTileBase)) {
             return ActionResultType.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
@@ -155,7 +155,7 @@ public abstract class BlockFurnaceBase extends Block {
         if (!player.isCreative()) {
             player.getItemInHand(handIn).shrink(1);
         }
-        ((BlockFurnaceTileBase)te).onUpdateSent();
+        ((BlockSmeltingTileBase)te).onUpdateSent();
         return ActionResultType.SUCCESS;
     }
 
@@ -174,7 +174,7 @@ public abstract class BlockFurnaceBase extends Block {
             {
                 return;
             }
-            if (!(world.getBlockEntity(pos) instanceof BlockFurnaceTileBase))
+            if (!(world.getBlockEntity(pos) instanceof BlockSmeltingTileBase))
             {
                 return;
             }
@@ -209,9 +209,9 @@ public abstract class BlockFurnaceBase extends Block {
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             TileEntity te = world.getBlockEntity(pos);
-            if (te instanceof BlockFurnaceTileBase) {
-                InventoryHelper.dropContents(world, pos, (BlockFurnaceTileBase) te);
-                ((BlockFurnaceTileBase)te).grantStoredRecipeExperience(world, Vector3d.atCenterOf(pos));
+            if (te instanceof BlockSmeltingTileBase) {
+                InventoryHelper.dropContents(world, pos, (BlockSmeltingTileBase) te);
+                ((BlockSmeltingTileBase)te).grantStoredRecipeExperience(world, Vector3d.atCenterOf(pos));
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -241,7 +241,7 @@ public abstract class BlockFurnaceBase extends Block {
     }
 
     private int calculateOutput(World worldIn, BlockPos pos, BlockState state) {
-        BlockFurnaceTileBase tile = ((BlockFurnaceTileBase)worldIn.getBlockEntity(pos));
+        BlockSmeltingTileBase tile = ((BlockSmeltingTileBase)worldIn.getBlockEntity(pos));
         int i = this.getComparatorInputOverride(state, worldIn, pos);
         if (tile != null)
         {
@@ -263,7 +263,7 @@ public abstract class BlockFurnaceBase extends Block {
 
     @Override
     public int getDirectSignal(BlockState blockState, IBlockReader world, BlockPos pos, Direction direction) {
-        BlockFurnaceTileBase furnace = ((BlockFurnaceTileBase) world.getBlockEntity(pos));
+        BlockSmeltingTileBase furnace = ((BlockSmeltingTileBase) world.getBlockEntity(pos));
         if (furnace != null)
         {
             int mode = furnace.furnaceSettings.get(8);

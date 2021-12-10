@@ -5,20 +5,20 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 public class SlotOutput extends Slot {
 
     private final PlayerEntity player;
     private int removeCount;
-    private BlockFurnaceTileBase te;
+    private BlockSmeltingTileBase te;
     private BlockForgeTileBase tf;
 
     public SlotOutput(PlayerEntity player, IInventory te, int slotIndex, int xPosition, int yPosition) {
         super(te, slotIndex, xPosition, yPosition);
         this.player = player;
-        if (te instanceof BlockFurnaceTileBase) {
-            this.te = (BlockFurnaceTileBase) te;
+        if (te instanceof BlockSmeltingTileBase) {
+            this.te = (BlockSmeltingTileBase) te;
         }else if (te instanceof BlockForgeTileBase) {
             this.tf = (BlockForgeTileBase) te;
         }
@@ -50,8 +50,8 @@ public class SlotOutput extends Slot {
     @Override
     protected void onQuickCraft(ItemStack stack, int p_75210_2_) {
         stack.onCraftedBy(this.player.level, this.player, this.removeCount);
-        if (!this.player.level.isClientSide && this.te instanceof BlockFurnaceTileBase) {
-            ((BlockFurnaceTileBase)this.te).unlockRecipes(this.player);
+        if (!this.player.level.isClientSide && this.te instanceof BlockSmeltingTileBase) {
+            ((BlockSmeltingTileBase)this.te).unlockRecipes(this.player);
         }
         if (!this.player.level.isClientSide && this.tf instanceof BlockForgeTileBase) {
             ((BlockForgeTileBase)this.tf).unlockRecipes(this.player);

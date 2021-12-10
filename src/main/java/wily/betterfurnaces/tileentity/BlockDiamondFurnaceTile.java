@@ -8,9 +8,9 @@ import wily.betterfurnaces.Config;
 import wily.betterfurnaces.container.BlockDiamondFurnaceContainer;
 import wily.betterfurnaces.init.Registration;
 
-public class BlockDiamondFurnaceTile extends BlockFurnaceTileBase {
+public class BlockDiamondFurnaceTile extends BlockSmeltingTileBase {
     public BlockDiamondFurnaceTile() {
-        super(Registration.DIAMOND_FURNACE_TILE.get());
+        super(Registration.DIAMOND_FURNACE_TILE.get(),6);
     }
 
     @Override

@@ -24,9 +24,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blocks.BlockFurnaceBase;
-import wily.betterfurnaces.cfup.UpCheck;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -62,20 +60,20 @@ public class ItemUpgradeTier extends Item {
             }
             TileEntity te = world.getBlockEntity(pos);
             BlockItemUseContext ctx2 = new BlockItemUseContext(ctx);
-            if (te instanceof FurnaceTileEntity || te instanceof BlockFurnaceTileBase) {
+            if (te instanceof FurnaceTileEntity || te instanceof BlockSmeltingTileBase) {
                 int cooktime = 0;
                 int currentItemBurnTime = 0;
                 int furnaceBurnTime = 0;
                 int show = 0;
                 int[] settings = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-                if (te instanceof BlockFurnaceTileBase) {
-                    furnaceBurnTime = ((BlockFurnaceTileBase) te).fields.get(0);
-                    currentItemBurnTime = ((BlockFurnaceTileBase) te).fields.get(1);
-                    cooktime = ((BlockFurnaceTileBase) te).fields.get(2);
-                    show = ((BlockFurnaceTileBase) te).fields.get(4);
-                    for (int i = 0; i < ((BlockFurnaceTileBase) te).furnaceSettings.size(); i++)
+                if (te instanceof BlockSmeltingTileBase) {
+                    furnaceBurnTime = ((BlockSmeltingTileBase) te).fields.get(0);
+                    currentItemBurnTime = ((BlockSmeltingTileBase) te).fields.get(1);
+                    cooktime = ((BlockSmeltingTileBase) te).fields.get(2);
+                    show = ((BlockSmeltingTileBase) te).fields.get(4);
+                    for (int i = 0; i < ((BlockSmeltingTileBase) te).furnaceSettings.size(); i++)
                     {
-                        settings[i] = ((BlockFurnaceTileBase) te).furnaceSettings.get(i);
+                        settings[i] = ((BlockSmeltingTileBase) te).furnaceSettings.get(i);
                     }
 
                 }
@@ -93,31 +91,31 @@ public class ItemUpgradeTier extends Item {
                 ItemStack upgrade  = ItemStack.EMPTY;
                 ItemStack upgrade1  = ItemStack.EMPTY;
                 ItemStack upgrade2  = ItemStack.EMPTY;
-                if (te instanceof BlockFurnaceTileBase) {
+                if (te instanceof BlockSmeltingTileBase) {
                     upgrade = ((IInventory) te).getItem(3).copy();
                     upgrade1 = ((IInventory) te).getItem(4).copy();
                     upgrade2 = ((IInventory) te).getItem(5).copy();
                 }
                 world.removeBlockEntity(te.getBlockPos());
                 world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                world.setBlock(pos, next.setValue(BlockStateProperties.LIT, te.getBlockState().getValue(BlockStateProperties.LIT)).setValue(BlockFurnaceBase.COLORED, te.getBlockState().getValue(BlockFurnaceBase.COLORED)), 3);
+                world.setBlock(pos, next.setValue(BlockStateProperties.LIT, te.getBlockState().getValue(BlockStateProperties.LIT)), 3);
                 world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 TileEntity newTe = world.getBlockEntity(pos);
                 ((IInventory)newTe).setItem(0, input);
                 ((IInventory)newTe).setItem(1, fuel);
                 ((IInventory)newTe).setItem(2, output);
                 newTe.deserializeNBT(next, te.serializeNBT());
-                if (newTe instanceof BlockFurnaceTileBase) {
+                if (newTe instanceof BlockSmeltingTileBase) {
                     ((IInventory)newTe).setItem(3, upgrade);
                     ((IInventory)newTe).setItem(4, upgrade1);
                     ((IInventory)newTe).setItem(5, upgrade2);
-                    ((BlockFurnaceTileBase)newTe).fields.set(0, furnaceBurnTime);
-                    ((BlockFurnaceTileBase)newTe).fields.set(1, currentItemBurnTime);
-                    ((BlockFurnaceTileBase)newTe).fields.set(2, cooktime);
-                    ((BlockFurnaceTileBase)newTe).fields.set(4, show);
-                    for (int i = 0; i < ((BlockFurnaceTileBase)newTe).furnaceSettings.size(); i++)
+                    ((BlockSmeltingTileBase)newTe).fields.set(0, furnaceBurnTime);
+                    ((BlockSmeltingTileBase)newTe).fields.set(1, currentItemBurnTime);
+                    ((BlockSmeltingTileBase)newTe).fields.set(2, cooktime);
+                    ((BlockSmeltingTileBase)newTe).fields.set(4, show);
+                    for (int i = 0; i < ((BlockSmeltingTileBase)newTe).furnaceSettings.size(); i++)
                     {
-                        ((BlockFurnaceTileBase)newTe).furnaceSettings.set(i, settings[i]);
+                        ((BlockSmeltingTileBase)newTe).furnaceSettings.set(i, settings[i]);
                     }
                 }
                 world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos).getBlock().defaultBlockState(), world.getBlockState(pos),3,  3);

@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import wily.betterfurnaces.items.ItemEnergyFuel;
 import wily.betterfurnaces.items.ItemLiquidFuel;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
 
 public class SlotHeater extends Slot {
 

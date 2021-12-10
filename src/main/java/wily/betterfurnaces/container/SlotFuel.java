@@ -4,7 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 public class SlotFuel extends Slot {
 
@@ -16,7 +16,7 @@ public class SlotFuel extends Slot {
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-        return BlockFurnaceTileBase.isItemFuel(stack) || isBucket(stack);
+        return BlockSmeltingTileBase.isItemFuel(stack) || isBucket(stack);
     }
 
     public int getMaxStackSize(ItemStack stack) {

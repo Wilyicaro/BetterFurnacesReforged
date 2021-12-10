@@ -2,14 +2,10 @@ package wily.betterfurnaces.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.container.BlockFurnaceContainerBase;
 
 public class FluidRenderUtil {
     public static void renderTiledFluid(MatrixStack matrix, ContainerScreen screen, int x, int y, int sizeX, int sizeY, FluidStack fluid, boolean hasColor){

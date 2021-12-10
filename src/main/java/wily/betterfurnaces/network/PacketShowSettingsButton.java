@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 import java.util.function.Supplier;
 
@@ -40,7 +40,7 @@ public class PacketShowSettingsButton {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayerEntity player = ctx.get().getSender();
 			BlockPos pos = new BlockPos(x, y, z);
-			BlockFurnaceTileBase te = (BlockFurnaceTileBase) player.getLevel().getBlockEntity(pos);
+			BlockSmeltingTileBase te = (BlockSmeltingTileBase) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
 				te.show_inventory_settings = set;
 				te.getLevel().markAndNotifyBlock(pos, player.getLevel().getChunkAt(pos), te.getLevel().getBlockState(pos).getBlock().defaultBlockState(), te.getLevel().getBlockState(pos), 2, 3);

@@ -27,12 +27,12 @@ import wily.betterfurnaces.items.ItemFuelEfficiency;
 import wily.betterfurnaces.items.ItemLiquidFuel;
 import wily.betterfurnaces.items.ItemOreProcessing;
 import wily.betterfurnaces.items.ItemUpgradeMisc;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 
 public abstract class BlockFurnaceContainerBase extends Container {
 
-    protected BlockFurnaceTileBase te;
+    protected BlockSmeltingTileBase te;
     protected IIntArray fields;
     protected PlayerEntity playerEntity;
     protected IItemHandler playerInventory;
@@ -45,7 +45,7 @@ public abstract class BlockFurnaceContainerBase extends Container {
 
     public BlockFurnaceContainerBase(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
         super(containerType, windowId);
-        this.te = (BlockFurnaceTileBase) world.getBlockEntity(pos);
+        this.te = (BlockSmeltingTileBase) world.getBlockEntity(pos);
         this.recipeType = te.recipeType;
 
         this.playerEntity = player;

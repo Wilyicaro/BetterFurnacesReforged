@@ -8,9 +8,9 @@ import wily.betterfurnaces.Config;
 import wily.betterfurnaces.container.BlockNetherhotFurnaceContainer;
 import wily.betterfurnaces.init.Registration;
 
-public class BlockNetherhotFurnaceTile extends BlockFurnaceTileBase {
+public class BlockNetherhotFurnaceTile extends BlockSmeltingTileBase {
     public BlockNetherhotFurnaceTile() {
-        super(Registration.NETHERHOT_FURNACE_TILE.get());
+        super(Registration.NETHERHOT_FURNACE_TILE.get(),6);
     }
 
     @Override
