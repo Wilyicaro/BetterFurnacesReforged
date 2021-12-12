@@ -1,4 +1,4 @@
-package wily.betterfurnaces.tileentity;
+package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,9 +10,9 @@ import wily.betterfurnaces.Config;
 import wily.betterfurnaces.container.BlockDiamondFurnaceContainer;
 import wily.betterfurnaces.init.Registration;
 
-public class BlockDiamondFurnaceTile extends BlockFurnaceTileBase {
-    public BlockDiamondFurnaceTile(BlockPos pos, BlockState state) {
-        super(Registration.DIAMOND_FURNACE_TILE.get(), pos, state);
+public class BlockEntityDiamondFurnace extends BlockEntitySmeltingBase {
+    public BlockEntityDiamondFurnace(BlockPos pos, BlockState state) {
+        super(Registration.DIAMOND_FURNACE_TILE.get(), pos, state,6);
     }
 
     @Override

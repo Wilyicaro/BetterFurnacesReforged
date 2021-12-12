@@ -1,4 +1,4 @@
-package wily.betterfurnaces.tileentity;
+package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -7,12 +7,15 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.container.BlockExtremeFurnaceContainer;
+import wily.betterfurnaces.container.BlockExtremeForgeContainer;
 import wily.betterfurnaces.init.Registration;
 
-public class BlockExtremeFurnaceTile extends BlockFurnaceTileBase {
-    public BlockExtremeFurnaceTile(BlockPos pos, BlockState state) {
-        super(Registration.EXTREME_FURNACE_TILE.get(), pos, state);
+public class BlockEntityExtremeForge extends BlockEntityForgeBase {
+
+    public static final String EXTREME_FORGE = "extreme_forge";
+
+    public BlockEntityExtremeForge(BlockPos pos, BlockState state) {
+        super(Registration.EXTREME_FORGE_TILE.get(), pos, state);
     }
 
     @Override
@@ -22,12 +25,12 @@ public class BlockExtremeFurnaceTile extends BlockFurnaceTileBase {
 
     @Override
     public String IgetName() {
-        return "block.betterfurnacesreforged.extreme_furnace";
+        return "block.betterfurnacesreforged.extreme_forge";
     }
 
     @Override
     public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new BlockExtremeFurnaceContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
+        return new BlockExtremeForgeContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
 
 }

@@ -3,18 +3,18 @@ package wily.betterfurnaces.container;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import wily.betterfurnaces.tileentity.BlockForgeTileBase;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
+import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 
 public class SlotInput extends Slot {
-    private BlockFurnaceTileBase te;
-    private BlockForgeTileBase tf;
+    private BlockEntitySmeltingBase te;
+    private BlockEntityForgeBase tf;
     public SlotInput(Container te, int index, int x, int y) {
         super(te, index, x, y);
-        if (te instanceof BlockFurnaceTileBase) {
-            this.te = (BlockFurnaceTileBase) te;
-        }else if (te instanceof BlockForgeTileBase) {
-            this.tf = (BlockForgeTileBase) te;
+        if (te instanceof BlockEntitySmeltingBase) {
+            this.te = (BlockEntitySmeltingBase) te;
+        }else if (te instanceof BlockEntityForgeBase) {
+            this.tf = (BlockEntityForgeBase) te;
         }
     }
 
@@ -22,9 +22,9 @@ public class SlotInput extends Slot {
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-        if (te instanceof BlockFurnaceTileBase) {
+        if (te instanceof BlockEntitySmeltingBase) {
             return te.hasRecipe(stack);
-        }else if (tf instanceof BlockForgeTileBase) {
+        }else if (tf instanceof BlockEntityForgeBase) {
             return tf.hasRecipe(stack);
         }else return false;
     }

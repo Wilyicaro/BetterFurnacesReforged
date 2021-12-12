@@ -1,4 +1,4 @@
-package wily.betterfurnaces.tileentity;
+package wily.betterfurnaces.blockentity;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -9,9 +9,9 @@ public class ForgeEnergyStorage implements IEnergyStorage, INBTSerializable<Comp
     private int energy;
     private int capacity;
     private int maxInOut = 1000000;
-    private BlockForgeTileBase tile;
+    private BlockEntitySmeltingBase tile;
 
-    public ForgeEnergyStorage(BlockForgeTileBase tile, int energy, int capacity) {
+    public ForgeEnergyStorage(BlockEntitySmeltingBase tile, int energy, int capacity) {
         this.energy = energy;
         this.capacity = capacity;
         this.tile = tile;

@@ -7,8 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.tileentity.BlockDiamondFurnaceTile;
-import wily.betterfurnaces.tileentity.BlockGoldFurnaceTile;
+import wily.betterfurnaces.blockentity.BlockEntityGoldFurnace;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +22,7 @@ public class BlockGoldFurnace extends BlockFurnaceBase {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new BlockGoldFurnaceTile(p_153215_, p_153216_);
+        return new BlockEntityGoldFurnace(p_153215_, p_153216_);
     }
 
     @Nullable

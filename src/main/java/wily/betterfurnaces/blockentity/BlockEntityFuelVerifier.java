@@ -1,4 +1,4 @@
-package wily.betterfurnaces.tileentity;
+package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class BlockFuelVerifierTile extends TileEntityInventory {
+public class BlockEntityFuelVerifier extends BlockEntityInventory {
 
     @Override
     public int[] IgetSlotsForFace(Direction side) {
@@ -41,24 +41,24 @@ public class BlockFuelVerifierTile extends TileEntityInventory {
         return "block.betterfurnacesreforged.fuel_verifier";
     }
 
-    public static class BlockFuelVerifierTileContainer extends wily.betterfurnaces.container.BlockFuelVerifierContainer {
-            public BlockFuelVerifierTileContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
+    public static class BlockEntityFuelVerifierContainer extends wily.betterfurnaces.container.BlockFuelVerifierContainer {
+            public BlockEntityFuelVerifierContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
             super(Registration.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player);
         }
 
-    public BlockFuelVerifierTileContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
+    public BlockEntityFuelVerifierContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
             super(Registration.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
         }
     }
     public final ContainerData fields = new ContainerData() {
         public int get(int index) {
             if (index == 0)
-            return BlockFuelVerifierTile.this.burnTime;
+            return BlockEntityFuelVerifier.this.burnTime;
             else return 0;
         }
 
         public void set(int index, int value) {
-            BlockFuelVerifierTile.this.burnTime = value;
+            BlockEntityFuelVerifier.this.burnTime = value;
         }
 
         @Override
@@ -68,7 +68,7 @@ public class BlockFuelVerifierTile extends TileEntityInventory {
     };
     @Override
     public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new BlockFuelVerifierTileContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
+        return new BlockEntityFuelVerifierContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
     public final int[] provides = new int[Direction.values().length];
     private final int[] lastProvides = new int[this.provides.length];
@@ -78,18 +78,18 @@ public class BlockFuelVerifierTile extends TileEntityInventory {
      */
     private int burnTime;
 
-    public static class BlockFuelVerifierTileDefinition extends BlockFuelVerifierTile {
-        public BlockFuelVerifierTileDefinition(BlockPos pos, BlockState state) {
+    public static class BlockEntityFuelVerifierDefinition extends BlockEntityFuelVerifier {
+        public BlockEntityFuelVerifierDefinition(BlockPos pos, BlockState state) {
             super(Registration.FUEL_VERIFIER_TILE.get(), pos, state);
         }
 
     }
-    public BlockFuelVerifierTile(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state) {
+    public BlockEntityFuelVerifier(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state) {
         super(tileentitytypeIn, pos, state, 1);
 
     }
 
-    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, BlockFuelVerifierTile e) {
+    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, BlockEntityFuelVerifier e) {
         ItemStack fuel = e.getItem(0);
         if (!e.level.isClientSide) {
             if (!(fuel.isEmpty()))

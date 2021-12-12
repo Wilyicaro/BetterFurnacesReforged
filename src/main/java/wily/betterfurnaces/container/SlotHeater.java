@@ -5,15 +5,15 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.items.ItemEnergyFuel;
 import wily.betterfurnaces.items.ItemLiquidFuel;
-import wily.betterfurnaces.tileentity.BlockForgeTileBase;
+import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
 
 public class SlotHeater extends Slot {
 
-    private BlockForgeTileBase tf;
+    private BlockEntityForgeBase tf;
 
     public SlotHeater(Container te, int slotIndex, int xPosition, int yPosition) {
         super(te, slotIndex, xPosition, yPosition);
-            this.tf = (BlockForgeTileBase) te;
+            this.tf = (BlockEntityForgeBase) te;
     }
 
     /**

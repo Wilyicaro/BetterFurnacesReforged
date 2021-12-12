@@ -1,4 +1,4 @@
-package wily.betterfurnaces.tileentity;
+package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,9 +10,9 @@ import wily.betterfurnaces.Config;
 import wily.betterfurnaces.container.BlockGoldFurnaceContainer;
 import wily.betterfurnaces.init.Registration;
 
-public class BlockGoldFurnaceTile extends BlockFurnaceTileBase {
-    public BlockGoldFurnaceTile(BlockPos pos, BlockState state) {
-        super(Registration.GOLD_FURNACE_TILE.get(), pos, state);
+public class BlockEntityGoldFurnace extends BlockEntitySmeltingBase {
+    public BlockEntityGoldFurnace(BlockPos pos, BlockState state) {
+        super(Registration.GOLD_FURNACE_TILE.get(), pos, state,6);
     }
 
     @Override

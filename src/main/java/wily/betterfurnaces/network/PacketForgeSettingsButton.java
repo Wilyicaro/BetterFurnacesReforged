@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
-import wily.betterfurnaces.tileentity.BlockForgeTileBase;
+import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
 
 import java.util.function.Supplier;
 
@@ -44,7 +44,7 @@ public class PacketForgeSettingsButton {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer player = ctx.get().getSender();
 			BlockPos pos = new BlockPos(x, y, z);
-			BlockForgeTileBase te = (BlockForgeTileBase) player.getLevel().getBlockEntity(pos);
+			BlockEntityForgeBase te = (BlockEntityForgeBase) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
 				te.furnaceSettings.set(index, set);
 				te.getLevel().markAndNotifyBlock(pos, player.getLevel().getChunkAt(pos), te.getLevel().getBlockState(pos).getBlock().defaultBlockState(), te.getLevel().getBlockState(pos), 2, 3);
