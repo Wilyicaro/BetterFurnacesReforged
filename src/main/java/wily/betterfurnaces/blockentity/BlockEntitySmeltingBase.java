@@ -667,17 +667,17 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getSettingFront() {
-        int i = DirectionUtil.getId(this.getBlockState().getValue(BlockStateProperties.FACING));
+        int i = DirectionUtil.getId(facing());
         return this.furnaceSettings.get(i);
     }
 
     public int getSettingBack() {
-        int i = DirectionUtil.getId(this.getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
+        int i = DirectionUtil.getId(facing().getOpposite());
         return this.furnaceSettings.get(i);
     }
 
     public int getSettingLeft() {
-        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
+        Direction facing = facing();
         if (facing == Direction.NORTH) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.EAST));
         } else if (facing == Direction.WEST) {
@@ -690,7 +690,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getSettingRight() {
-        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
+        Direction facing = facing();
         if (facing == Direction.NORTH) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.WEST));
         } else if (facing == Direction.WEST) {
@@ -703,17 +703,17 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getIndexFront() {
-        int i = this.getBlockState().getValue(BlockStateProperties.FACING).ordinal();
+        int i = facing().ordinal();
         return i;
     }
 
     public int getIndexBack() {
-        int i = this.getBlockState().getValue(BlockStateProperties.FACING).getOpposite().ordinal();
+        int i = facing().getOpposite().ordinal();
         return i;
     }
 
     public int getIndexLeft() {
-        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
+        Direction facing = facing();
         if (facing == Direction.NORTH) {
             return Direction.EAST.ordinal();
         } else if (facing == Direction.WEST) {
@@ -726,7 +726,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getIndexRight() {
-        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
+        Direction facing = facing();
         if (facing == Direction.NORTH) {
             return Direction.WEST.ordinal();
         } else if (facing == Direction.WEST) {

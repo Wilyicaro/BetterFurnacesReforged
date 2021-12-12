@@ -1,4 +1,4 @@
-package wily.ultimatefurnaces.tileentity;
+package wily.ultimatefurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -7,13 +7,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.blockentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.ultimatefurnaces.container.BlockUltimateFurnaceContainer;
 import wily.ultimatefurnaces.init.Registration;
 
-public class BlockUltimateFurnaceTile extends BlockFurnaceTileBase {
+public class BlockUltimateFurnaceTile extends BlockEntitySmeltingBase {
     public BlockUltimateFurnaceTile(BlockPos pos, BlockState state) {
-        super(Registration.ULTIMATE_FURNACE_TILE.get(), pos, state);
+        super(Registration.ULTIMATE_FURNACE_TILE.get(), pos, state,6);
     }
 
     @Override

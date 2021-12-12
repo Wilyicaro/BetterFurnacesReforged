@@ -17,7 +17,7 @@ version = "${minecraft_version}-${mod_version}"
 group = 'wily.ultimatefurnaces'
 archivesBaseName = 'Ultimate-Furnaces-BFR'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
     mappings channel: "${mappings_channel}", version: "${minecraft_version}"
@@ -67,9 +67,10 @@ jar {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
-    compileOnly fg.deobf("curse.maven:project-mmo-353935:3434289")
+    compileOnly fg.deobf("mezz.jei:jei-1.18:${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18:${jei_version}")
+    compileOnly fg.deobf("curse.maven:project-mmo-${pmmo_version}")
+    runtimeOnly fg.deobf("curse.maven:project-mmo-${pmmo_version}")
     runtimeOnly fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly fileTree(include: ['*.jar'], dir: 'libs')
 

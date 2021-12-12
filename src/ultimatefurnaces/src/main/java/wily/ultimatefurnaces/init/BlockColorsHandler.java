@@ -7,9 +7,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.betterfurnaces.items.ItemColorUpgrade;
-import wily.betterfurnaces.blockentity.BlockForgeTileBase;
-import wily.betterfurnaces.blockentity.BlockFurnaceTileBase;
 
 import javax.annotation.Nullable;
 
@@ -32,20 +31,13 @@ public class BlockColorsHandler implements BlockColor {
 
     @Override
     public int getColor(BlockState blockState, @Nullable BlockAndTintGetter iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
-        if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof BlockFurnaceTileBase) {
-            BlockFurnaceTileBase te = (BlockFurnaceTileBase) iBlockDisplayReader.getBlockEntity(blockPos);
-            ItemStack stack = te.inventory.get(5);
+        if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof BlockEntitySmeltingBase) {
+            BlockEntitySmeltingBase te = (BlockEntitySmeltingBase) iBlockDisplayReader.getBlockEntity(blockPos);
+            ItemStack stack = te.inventory.get(te.UPGRADECOLOR());
             if (stack.getItem() instanceof ItemColorUpgrade && (stack.getTag() != null)) {
                 return te.hex();
             }
         }
-            if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof BlockForgeTileBase) {
-                BlockForgeTileBase te = (BlockForgeTileBase) iBlockDisplayReader.getBlockEntity(blockPos);
-                    ItemStack stack = te.inventory.get(12);
-                    if (stack.getItem() instanceof ItemColorUpgrade && (stack.getTag() != null)) {
-                        return te.hex();
-                    }
-                }
         return 0xFFFFFF;
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import wily.betterfurnaces.blocks.BlockFurnaceBase;
 import wily.ultimatefurnaces.init.Registration;
-import wily.ultimatefurnaces.tileentity.BlockCopperFurnaceTile;
+import wily.ultimatefurnaces.blockentity.BlockCopperFurnaceTile;
 
 import javax.annotation.Nullable;
 
