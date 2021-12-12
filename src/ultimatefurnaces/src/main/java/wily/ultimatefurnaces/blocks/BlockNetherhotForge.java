@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import wily.betterfurnaces.blocks.BlockForgeBase;
 import wily.ultimatefurnaces.init.Registration;
-import wily.ultimatefurnaces.tileentity.BlockNetherhotForgeTile;
+import wily.ultimatefurnaces.blockentity.BlockNetherhotForgeTile;
 
 import javax.annotation.Nullable;
 

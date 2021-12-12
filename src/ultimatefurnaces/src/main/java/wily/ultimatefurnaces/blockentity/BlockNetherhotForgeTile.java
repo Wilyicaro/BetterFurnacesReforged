@@ -1,4 +1,4 @@
-package wily.ultimatefurnaces.tileentity;
+package wily.ultimatefurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -7,27 +7,27 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.blockentity.BlockForgeTileBase;
-import wily.ultimatefurnaces.container.BlockDiamondForgeContainer;
+import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
+import wily.ultimatefurnaces.container.BlockNetherhotForgeContainer;
 import wily.ultimatefurnaces.init.Registration;
 
-public class BlockDiamondForgeTile extends BlockForgeTileBase {
-    public BlockDiamondForgeTile(BlockPos pos, BlockState state) {
-        super(Registration.DIAMOND_FORGE_TILE.get(), pos, state);
+public class BlockNetherhotForgeTile extends BlockEntityForgeBase {
+    public BlockNetherhotForgeTile(BlockPos pos, BlockState state) {
+        super(Registration.NETHERHOT_FORGE_TILE.get(), pos, state);
     }
 
     @Override
     public ForgeConfigSpec.IntValue getCookTimeConfig() {
-        return Config.diamondTierSpeed;
+        return Config.netherhotTierSpeed;
     }
 
     @Override
     public String IgetName() {
-        return "block.ultimatefurnaces_bfr.diamond_forge";
+        return "block.ultimatefurnaces_bfr.netherhot_forge";
     }
 
     @Override
     public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new BlockDiamondForgeContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
+        return new BlockNetherhotForgeContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
 }

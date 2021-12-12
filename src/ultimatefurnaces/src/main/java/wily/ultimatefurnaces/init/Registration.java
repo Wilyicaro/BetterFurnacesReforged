@@ -22,7 +22,7 @@ import wily.ultimatefurnaces.container.*;
 import wily.ultimatefurnaces.items.ItemUpgradeCopper;
 import wily.ultimatefurnaces.items.ItemUpgradeIron;
 import wily.ultimatefurnaces.items.ItemUpgradeUltimate;
-import wily.ultimatefurnaces.tileentity.*;
+import wily.ultimatefurnaces.blockentity.*;
 
 public class Registration {
 

@@ -1,4 +1,4 @@
-package wily.ultimatefurnaces.tileentity;
+package wily.ultimatefurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -7,27 +7,27 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.blockentity.BlockForgeTileBase;
-import wily.ultimatefurnaces.container.BlockCopperForgeContainer;
+import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
+import wily.ultimatefurnaces.container.BlockUltimateForgeContainer;
 import wily.ultimatefurnaces.init.Registration;
 
-public class BlockCopperForgeTile extends BlockForgeTileBase {
-    public BlockCopperForgeTile(BlockPos pos, BlockState state) {
-        super(Registration.COPPER_FORGE_TILE.get(), pos, state);
+public class BlockUltimateForgeTile extends BlockEntityForgeBase {
+    public BlockUltimateForgeTile(BlockPos pos, BlockState state) {
+        super(Registration.ULTIMATE_FORGE_TILE.get(), pos, state);
     }
 
     @Override
     public ForgeConfigSpec.IntValue getCookTimeConfig() {
-        return Config.copperTierSpeed;
+        return Config.ultimateTierSpeed;
     }
 
     @Override
     public String IgetName() {
-        return "block.ultimatefurnaces_bfr.copper_forge";
+        return "block.ultimatefurnaces_bfr.ultimate_forge";
     }
 
     @Override
     public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new BlockCopperForgeContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
+        return new BlockUltimateForgeContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
 }
