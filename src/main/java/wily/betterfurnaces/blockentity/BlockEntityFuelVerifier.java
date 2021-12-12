@@ -160,13 +160,5 @@ public class BlockEntityFuelVerifier extends BlockEntityInventory {
         return false;
     }
 
-    protected boolean doesNeedUpdateSend() {
-        return !Arrays.equals(this.provides, this.lastProvides);
-    }
-
-    public void onUpdateSent() {
-        System.arraycopy(this.provides, 0, this.lastProvides, 0, this.provides.length);
-        this.level.updateNeighborsAt(this.worldPosition, getBlockState().getBlock());
-    }
 
 }

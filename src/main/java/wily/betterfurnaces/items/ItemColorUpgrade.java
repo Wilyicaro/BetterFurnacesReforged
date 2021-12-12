@@ -70,17 +70,20 @@ public class ItemColorUpgrade extends ItemUpgradeMisc {
         }
         if ((Minecraft.getInstance().screen) instanceof ItemColorScreen && player instanceof Player && ((Player) player).getMainHandItem() == stack) {
             ItemColorScreen color =  (ItemColorScreen) Minecraft.getInstance().screen;
-            int red = color.red.getValueInt();
-            int green = color.green.getValueInt();
-            int blue = color.blue.getValueInt();
-            if (color.red != null && red != nbt.getInt("red") && color.red.isHoveredOrFocused()) {
+            if (color.red != null) {
+                int red = color.red.getValueInt();
+                if (red != nbt.getInt("red") && color.red.isHoveredOrFocused())
                 nbt.putInt("red", red);
             }
-            if (color.green != null && green != nbt.getInt("green") && color.green.isHoveredOrFocused()) {
-                nbt.putInt("green", green);
+            if (color.green != null) {
+                int green = color.green.getValueInt();
+                if (green != nbt.getInt("green") && color.green.isHoveredOrFocused())
+                    nbt.putInt("green", green);
             }
-            if (color.blue != null && blue != nbt.getInt("blue") && color.blue.isHoveredOrFocused()) {
-                nbt.putInt("blue", blue);
+            if (color.blue != null) {
+                int blue = color.blue.getValueInt();
+                if (blue != nbt.getInt("blue") && color.blue.isHoveredOrFocused())
+                    nbt.putInt("blue", blue);
             }
         }
     }

@@ -214,22 +214,27 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
     }
     @Override
     public void load(CompoundTag tag) {
+        super.load(tag);
         ContainerHelper.loadAllItems(tag, this.inventory);
         this.cobTime = tag.getInt("CobTime");
         this.resultType = tag.getInt("ResultType");
         this.actualCobTime = tag.getInt("ActualCobTime");
 
-        super.load(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag) {
         ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("CobTime", this.cobTime);
         tag.putInt("ResultType", this.resultType);
         tag.putInt("ActualCobTime", this.actualCobTime);
-    }
 
+        return super.save(tag);
+    }
+    @Override
+    public void saveAdditional(CompoundTag tag) {
+        save(tag);
+    }
 
     net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] invHandlers =
             net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);

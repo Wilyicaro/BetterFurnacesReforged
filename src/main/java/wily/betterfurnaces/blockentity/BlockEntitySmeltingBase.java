@@ -823,6 +823,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
     @Override
     public void load( CompoundTag tag) {
+        super.load(tag);
         ContainerHelper.loadAllItems(tag, this.inventory);
         this.furnaceBurnTime = tag.getInt("BurnTime");
         this.cookTime = tag.getInt("CookTime");
@@ -841,12 +842,10 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         }
         this.show_inventory_settings = tag.getInt("ShowInvSettings");
         this.furnaceSettings.read(tag);
-        super.load(tag);
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
         ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("BurnTime", this.furnaceBurnTime);
         tag.putInt("CookTime", this.cookTime);
@@ -863,7 +862,11 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         });
         tag.put("RecipesUsed", compoundnbt);
 
-        return tag;
+        return super.save(tag);
+    }
+    @Override
+    public void saveAdditional(CompoundTag tag) {
+        save(tag);
     }
 
     protected static int getBurnTime(ItemStack stack) {
