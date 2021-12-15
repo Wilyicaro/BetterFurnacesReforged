@@ -21,6 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.ItemStackHandler;
+import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 
@@ -135,21 +137,26 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         this.inventory = NonNullList.withSize(this.getMaxStackSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(nbt, this.inventory);
-        if (nbt.contains("CustomName", 8)) {
-            this.name = Component.Serializer.fromJson(nbt.getString("CustomName"));
+        ContainerHelper.loadAllItems(tag, this.inventory);
+        if (tag.contains("CustomName", 8)) {
+            this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt) {
-        ContainerHelper.saveAllItems(nbt, this.inventory);
+    public CompoundTag save(CompoundTag tag) {
+        ContainerHelper.saveAllItems(tag, this.inventory);
         if (this.name != null) {
-            nbt.putString("CustomName", Component.Serializer.toJson(this.name));
+            tag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
+        return super.save(tag);
+    }
+    @Override
+    public void saveAdditional(CompoundTag tag) {
+        save(tag);
     }
 
     @Override

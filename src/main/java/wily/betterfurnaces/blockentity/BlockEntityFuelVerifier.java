@@ -106,9 +106,11 @@ public class BlockEntityFuelVerifier extends BlockEntityInventory {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag) {
         ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("BurnTime", this.burnTime);
+
+        return super.save(tag);
     }
 
     protected static int getBurnTime(ItemStack stack) {

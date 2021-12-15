@@ -3,6 +3,7 @@ package wily.betterfurnaces.container;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -115,6 +116,12 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
     @OnlyIn(Dist.CLIENT)
     public boolean getAutoOutput() {
         return this.te.getAutoOutput() == 1;
+    }
+
+    @Override
+    public void slotsChanged(Container p_38868_) {
+        this.broadcastChanges();
+        te.setChanged();
     }
 
     @OnlyIn(Dist.CLIENT)

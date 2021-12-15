@@ -46,6 +46,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.BlockForgeBase;
 import wily.betterfurnaces.blocks.BlockFurnaceBase;
@@ -63,6 +64,7 @@ import java.util.Random;
 public abstract class BlockEntitySmeltingBase extends BlockEntityInventory implements RecipeHolder, StackedContentsCompatible {
     public final int[] provides = new int[Direction.values().length];
     private final int[] lastProvides = new int[this.provides.length];
+
 
     public int FUEL() {return 1;}
     public int UPGRADEORE(){ return 3;}
@@ -343,7 +345,11 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         boolean wasBurning = e.isBurning();
         boolean flag1 = false;
         boolean flag2 = false;
-
+        ItemStackHandler posinv = new ItemStackHandler(e.inventory.size());
+        posinv.deserializeNBT(e.serializeNBT());
+        for (int i : new int[e.inventory.size()])
+        if (posinv.getStackInSlot(i) != e.inventory.get(i) || !e.inventory.isEmpty())
+            e.setChanged();
         if (e.isBurning()) {
             --e.furnaceBurnTime;
         }
@@ -667,17 +673,17 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getSettingFront() {
-        int i = DirectionUtil.getId(facing());
+        int i = DirectionUtil.getId(this.getBlockState().getValue(BlockStateProperties.FACING));
         return this.furnaceSettings.get(i);
     }
 
     public int getSettingBack() {
-        int i = DirectionUtil.getId(facing().getOpposite());
+        int i = DirectionUtil.getId(this.getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
         return this.furnaceSettings.get(i);
     }
 
     public int getSettingLeft() {
-        Direction facing = facing();
+        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
         if (facing == Direction.NORTH) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.EAST));
         } else if (facing == Direction.WEST) {
@@ -690,7 +696,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getSettingRight() {
-        Direction facing = facing();
+        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
         if (facing == Direction.NORTH) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.WEST));
         } else if (facing == Direction.WEST) {
@@ -703,17 +709,17 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getIndexFront() {
-        int i = facing().ordinal();
+        int i = this.getBlockState().getValue(BlockStateProperties.FACING).ordinal();
         return i;
     }
 
     public int getIndexBack() {
-        int i = facing().getOpposite().ordinal();
+        int i = this.getBlockState().getValue(BlockStateProperties.FACING).getOpposite().ordinal();
         return i;
     }
 
     public int getIndexLeft() {
-        Direction facing = facing();
+        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
         if (facing == Direction.NORTH) {
             return Direction.EAST.ordinal();
         } else if (facing == Direction.WEST) {
@@ -726,7 +732,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getIndexRight() {
-        Direction facing = facing();
+        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
         if (facing == Direction.NORTH) {
             return Direction.WEST.ordinal();
         } else if (facing == Direction.WEST) {
@@ -846,6 +852,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     @Override
     public CompoundTag save(CompoundTag tag) {
+        BetterFurnacesReforged.LOGGER.info("This is an test, please dont tell to anyone!");
         ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("BurnTime", this.furnaceBurnTime);
         tag.putInt("CookTime", this.cookTime);
@@ -863,10 +870,6 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         tag.put("RecipesUsed", compoundnbt);
 
         return super.save(tag);
-    }
-    @Override
-    public void saveAdditional(CompoundTag tag) {
-        save(tag);
     }
 
     protected static int getBurnTime(ItemStack stack) {
