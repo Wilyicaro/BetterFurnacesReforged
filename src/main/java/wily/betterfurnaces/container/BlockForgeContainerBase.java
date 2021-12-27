@@ -253,23 +253,24 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-                if (index < 14) {
-                    if (!this.moveItemStackTo(itemstack1, 14, this.slots.size(), true)) {
+                    if (index < 14) {
+                        if (!this.moveItemStackTo(itemstack1, 14, this.slots.size(), true)) {
+                            return ItemStack.EMPTY;
+                        }
+                        slot.onQuickCraft(itemstack1, itemstack);
+                    } else if (!this.moveItemStackTo(itemstack1, 0, 14, false)) {
+                        if (index < 14 + 27) {
+                            if (!this.moveItemStackTo(itemstack1, 14 + 27, this.slots.size(), true)) {
+                                return ItemStack.EMPTY;
+                            }
+                        } else {
+                            if (!this.moveItemStackTo(itemstack1, 14, 14 + 27, false)) {
+                                return ItemStack.EMPTY;
+                            }
+                        }
                         return ItemStack.EMPTY;
                     }
-                    slot.onQuickCraft(itemstack1, itemstack);
-                } else if (!this.moveItemStackTo(itemstack1, 0, 14, false)) {
-                    if (index < 6 + 27) {
-                        if (!this.moveItemStackTo(itemstack1, 6 + 27, this.slots.size(), true)) {
-                            return ItemStack.EMPTY;
-                        }
-                    } else {
-                        if (!this.moveItemStackTo(itemstack1, 14, 14 + 27, false)) {
-                            return ItemStack.EMPTY;
-                        }
-                    }
-                    return ItemStack.EMPTY;
-            }
+
             if (itemstack1.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {

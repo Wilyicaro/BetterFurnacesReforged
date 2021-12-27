@@ -70,17 +70,17 @@ public class BlockFuelVerifierContainer extends AbstractContainerMenu {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index < 1) {
-                if (!this.moveItemStackTo(itemstack1, 6, this.slots.size(), true)) {
+                if (!this.moveItemStackTo(itemstack1, 1, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickCraft(itemstack1, itemstack);
-            } else if (!this.moveItemStackTo(itemstack1, 0, 6, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                 if (index < 1 + 27) {
-                    if (!this.moveItemStackTo(itemstack1, 6 + 27, this.slots.size(), true)) {
+                    if (!this.moveItemStackTo(itemstack1, 1 + 27, this.slots.size(), true)) {
                         return ItemStack.EMPTY;
                     }
                 } else {
-                    if (!this.moveItemStackTo(itemstack1, 6, 6 + 27, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 1, 1 + 27, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
