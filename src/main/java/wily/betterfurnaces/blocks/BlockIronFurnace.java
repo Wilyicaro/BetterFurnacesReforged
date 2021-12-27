@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import net.minecraft.util.*;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.inventory.ContainerBF;
-import wily.betterfurnaces.tile.TileEntityIronFurnace;
+import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
@@ -127,8 +127,8 @@ public class BlockIronFurnace extends Block {
 	@Override
 	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
 		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof TileEntityIronFurnace) {
-			ItemStackHandler inv = ((TileEntityIronFurnace) te).getInventory();
+		if (te instanceof TileEntitySmeltingBase) {
+			ItemStackHandler inv = ((TileEntitySmeltingBase) te).getInventory();
 			int i = 0;
 			float f = 0.0F;
 			for (int j = 0; j < 3; ++j) {
@@ -148,10 +148,10 @@ public class BlockIronFurnace extends Block {
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity te = world.getTileEntity(pos);
-		if (!world.isRemote && te instanceof TileEntityIronFurnace && ((TileEntityIronFurnace) te).isFluid()) {
+		if (!world.isRemote && te instanceof TileEntitySmeltingBase && ((TileEntitySmeltingBase) te).isFluid()) {
 			ItemStack stack = player.getHeldItem(hand);
 			FluidStack fs = FluidUtil.getFluidContained(stack);
-			if (fs != null && TileEntityIronFurnace.getFluidBurnTime(fs) > 0) {
+			if (fs != null && TileEntitySmeltingBase.getFluidBurnTime(fs) > 0) {
 				FluidActionResult res = FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(world, pos, null), 1000, player, true);
 				if (res.isSuccess()) {
 					world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY_LAVA, SoundCategory.PLAYERS, 0.6F, 0.8F);
@@ -170,8 +170,8 @@ public class BlockIronFurnace extends Block {
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof TileEntityIronFurnace && world.getBlockState(pos).getBlock() != state.getBlock()) {
-			ItemStackHandler inv = ((TileEntityIronFurnace) te).getInventory();
+		if (te instanceof TileEntitySmeltingBase && world.getBlockState(pos).getBlock() != state.getBlock()) {
+			ItemStackHandler inv = ((TileEntitySmeltingBase) te).getInventory();
 			for (int i = 0; i < inv.getSlots(); i++)
 				Block.spawnAsEntity(world, pos, inv.getStackInSlot(i));
 			world.updateComparatorOutputLevel(pos, this);

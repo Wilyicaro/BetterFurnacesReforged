@@ -5,7 +5,7 @@ import java.util.List;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
 import wily.betterfurnaces.init.ModObjects;
-import wily.betterfurnaces.tile.TileEntityIronFurnace;
+import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -54,12 +54,12 @@ public class ItemKit extends Item {
 			IBlockState state = world.getBlockState(pos);
 			if (state.getBlock() != prev) return EnumActionResult.FAIL;
 			TileEntity te = world.getTileEntity(pos);
-			if (te instanceof TileEntityIronFurnace) {
+			if (te instanceof TileEntitySmeltingBase) {
 				NBTTagCompound tag = new NBTTagCompound();
 				te.writeToNBT(tag);
 				tag.removeTag("id");
-				((TileEntityIronFurnace) te).clear();
-				boolean burning = state == ((TileEntityIronFurnace) te).getLitState();
+				((TileEntitySmeltingBase) te).clear();
+				boolean burning = state == ((TileEntitySmeltingBase) te).getLitState();
 				EnumFacing face = state.getValue(BlockIronFurnace.FACING);
 				world.setBlockState(pos, next.getDefaultState().withProperty(BlockIronFurnace.FACING, face).withProperty(BlockIronFurnace.BURNING, burning));
 				world.getTileEntity(pos).readFromNBT(tag);

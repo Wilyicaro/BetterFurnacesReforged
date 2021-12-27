@@ -1,6 +1,6 @@
 package wily.betterfurnaces.tile;
 
-public class TileEntityNetherhotFurnace extends TileEntityIronFurnace {
+public class TileEntityNetherhotFurnace extends TileEntitySmeltingBase {
 
 	@Override
 	protected int getDefaultCookTime() {

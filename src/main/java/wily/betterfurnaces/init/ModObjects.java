@@ -63,7 +63,7 @@ public class ModObjects{
 				new BlockConductor("iron_conductor_block"),
 				new BlockConductor("gold_conductor_block"),
 				new BlockConductor("netherhot_conductor_block"),
-				new BlockIronFurnace("iron_furnace", 1.5, TileEntityIronFurnace::new),
+				new BlockIronFurnace("iron_furnace", 1.5, TileEntitySmeltingBase::new),
 				new BlockIronFurnace("gold_furnace", 2, TileEntityGoldFurnace::new),
 				new BlockIronFurnace("diamond_furnace", 4, TileEntityDiamondFurnace::new),
 				new BlockIronFurnace("netherhot_furnace",8, TileEntityNetherhotFurnace::new),

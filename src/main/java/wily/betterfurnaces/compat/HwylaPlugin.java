@@ -4,13 +4,10 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import net.minecraftforge.fml.common.Mod;
 import wily.betterfurnaces.blocks.BlockForge;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
-import wily.betterfurnaces.init.ModObjects;
-import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.tile.TileEntityForge;
-import wily.betterfurnaces.tile.TileEntityIronFurnace;
+import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -33,10 +30,8 @@ public class HwylaPlugin implements IWailaPlugin, IWailaDataProvider {
 
 	@Override
 	public void register(IWailaRegistrar reg) {
-		reg.registerBodyProvider(this, TileEntityIronFurnace.class);
-		reg.registerBodyProvider(this, TileEntityForge.class);
-		reg.registerNBTProvider(this, TileEntityIronFurnace.class);
-		reg.registerNBTProvider(this, TileEntityForge.class);
+		reg.registerBodyProvider(this, TileEntitySmeltingBase.class);
+		reg.registerNBTProvider(this, TileEntitySmeltingBase.class);
 	}
 
 	@Nonnull
@@ -131,11 +126,9 @@ public class HwylaPlugin implements IWailaPlugin, IWailaDataProvider {
 	@Nonnull
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
-		if (te instanceof TileEntityIronFurnace) {
-			return te instanceof TileEntityIronFurnace ? ((TileEntityIronFurnace) te).writeHwylaData(tag) : tag;
-		}else if (te instanceof TileEntityForge){
-			return te instanceof TileEntityForge ? ((TileEntityForge) te).writeHwylaData(tag) : tag;
-		}else return null;
+		if (te instanceof TileEntitySmeltingBase) {
+			return te instanceof TileEntitySmeltingBase ? ((TileEntitySmeltingBase) te).writeHwylaData(tag) : tag;
+		} else return null;
 	}
 
 }

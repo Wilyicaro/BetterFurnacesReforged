@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import wily.betterfurnaces.inventory.ContainerBF;
 import wily.betterfurnaces.inventory.FContainerBF;
 import wily.betterfurnaces.tile.TileEntityForge;
-import wily.betterfurnaces.tile.TileEntityIronFurnace;
+import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 
 public class GuiHandler implements IGuiHandler{
 
@@ -20,7 +20,7 @@ public class GuiHandler implements IGuiHandler{
 
 		TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 	    if (id == ContainerBF.GUIID)
-	        return new ContainerBF(player.inventory, (TileEntityIronFurnace)tileEntity);
+	        return new ContainerBF(player.inventory, (TileEntitySmeltingBase)tileEntity);
 		if (id == FContainerBF.GUIID)
 					return new FContainerBF(player.inventory, (TileEntityForge)tileEntity);
 		return null;
@@ -32,7 +32,7 @@ public class GuiHandler implements IGuiHandler{
 
 		TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 		if (id == ContainerBF.GUIID)
-	        return new GuiBF(player.inventory, (TileEntityIronFurnace)tileEntity);
+	        return new GuiBF(player.inventory, (TileEntitySmeltingBase)tileEntity);
 		if (id == FContainerBF.GUIID)
 					return new GuiForgeBF(player.inventory, (TileEntityForge)tileEntity);
 		if (id == GuiColor.GUIID)

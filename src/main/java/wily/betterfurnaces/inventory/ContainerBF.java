@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.net.MessageSync;
-import wily.betterfurnaces.tile.TileEntityIronFurnace;
+import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,10 +21,10 @@ public class ContainerBF extends Container {
 	public static final int SLOTS_INVENTORY = SLOTS_TE_SIZE;
 	public static final int SLOTS_HOTBAR = SLOTS_INVENTORY + 3 * 9;
 
-	private final TileEntityIronFurnace te;
+	private final TileEntitySmeltingBase te;
 	private final EntityPlayerMP player;
 
-	public ContainerBF(InventoryPlayer playerInv, TileEntityIronFurnace te) {
+	public ContainerBF(InventoryPlayer playerInv, TileEntitySmeltingBase te) {
 		this.te = te;
 		this.addSlotToContainer(new SlotFurnaceInput(te.getInventory(), 0, 54, 18));
 		this.addSlotToContainer(new SlotFurnaceFuel(te.getInventory(), 1, 54, 54));
@@ -91,7 +91,7 @@ public class ContainerBF extends Container {
 
 			if (index >= SLOTS_INVENTORY && index <= SLOTS_HOTBAR + 9) {
 				if (TileEntityFurnace.isItemFuel(stack)) {
-					int s = TileEntityIronFurnace.SLOT_FUEL;
+					int s = te.FUEL();
 					if (!mergeItemStack(stack, s, s + 1, false)) { return ItemStack.EMPTY; }
 				}
 				if (!mergeItemStack(stack, SLOTS_TE, SLOTS_TE + SLOTS_TE_SIZE, false)) { return ItemStack.EMPTY; }

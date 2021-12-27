@@ -98,7 +98,7 @@ public class GuiForgeBF extends GuiContainer {
 
 	private int getEnergyStoredScaled(int pixels) {
 		int cur = tf.getEnergy();
-		int max = TileEntityForge.MAX_ENERGY_STORED;
+		int max = tf.MAX_ENERGY_STORED();
 		return getPixels(cur, max, pixels);
 	}
 
@@ -115,7 +115,7 @@ public class GuiForgeBF extends GuiContainer {
 	}
 
 	private int getBurnLeftScaled(int pixels) {
-		if (tf.isElectric() && tf.getEnergy() >= tf.getEnergyUse()) return pixels;
+		if (tf.isEnergy() && tf.getEnergy() >= tf.getEnergyUse()) return pixels;
 		return getPixels(tf.getBurnTime(), Math.max(1, tf.getFuelLength()), pixels);
 	}
 

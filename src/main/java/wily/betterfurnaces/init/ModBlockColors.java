@@ -12,31 +12,19 @@
  */
 package wily.betterfurnaces.init;
 
-import java.awt.*;
-import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.ItemStackHandler;
-import org.w3c.dom.css.RGBColor;
-import wily.betterfurnaces.blocks.BlockIronFurnace;
 import wily.betterfurnaces.tile.TileEntityForge;
-import wily.betterfurnaces.tile.TileEntityIronFurnace;
+import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import wily.betterfurnaces.upgrade.Upgrades;
-
-import javax.vecmath.Color3f;
 
 @SideOnly(Side.CLIENT)
 public class ModBlockColors implements IBlockColor
@@ -51,16 +39,9 @@ public class ModBlockColors implements IBlockColor
     @Override
     public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
     {
-        if (worldIn.getTileEntity(pos) instanceof  TileEntityForge){
-            TileEntityForge te = (TileEntityForge) worldIn.getTileEntity(pos);
-            ItemStack stack = te.getInventory().getStackInSlot(12);
-            if (te.hasUpgrade(Upgrades.COLOR) && stack.getTagCompound() != null) {
-                return te.hex();
-            }
-        }
-        if (worldIn.getTileEntity(pos) instanceof  TileEntityIronFurnace){
-            TileEntityIronFurnace te = (TileEntityIronFurnace) worldIn.getTileEntity(pos);
-            ItemStack stack = te.getInventory().getStackInSlot(5);
+        if (worldIn.getTileEntity(pos) instanceof TileEntitySmeltingBase){
+            TileEntitySmeltingBase te = (TileEntitySmeltingBase) worldIn.getTileEntity(pos);
+            ItemStack stack = te.getInventory().getStackInSlot(te.UPGRADECOLOR());
             if (te.hasUpgrade(Upgrades.COLOR) && stack.getTagCompound() != null) {
                 return te.hex();
             }

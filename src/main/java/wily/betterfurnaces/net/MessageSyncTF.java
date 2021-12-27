@@ -2,10 +2,8 @@ package wily.betterfurnaces.net;
 
 import java.nio.charset.StandardCharsets;
 
-import wily.betterfurnaces.handler.GuiBF;
 import wily.betterfurnaces.handler.GuiForgeBF;
 import wily.betterfurnaces.tile.TileEntityForge;
-import wily.betterfurnaces.tile.TileEntityIronFurnace;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidRegistry;

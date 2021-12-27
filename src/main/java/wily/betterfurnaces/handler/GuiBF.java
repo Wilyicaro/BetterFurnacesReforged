@@ -2,7 +2,7 @@ package wily.betterfurnaces.handler;
 
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.inventory.ContainerBF;
-import wily.betterfurnaces.tile.TileEntityIronFurnace;
+import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import wily.betterfurnaces.upgrade.Upgrades;
 import wily.betterfurnaces.utils.FluidRenderUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -16,9 +16,9 @@ public class GuiBF extends GuiContainer {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(BetterFurnacesReforged.MODID, "textures/gui/container/furnace_gui.png");
 	private static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MODID, "textures/gui/container/widgets.png");
 	private final InventoryPlayer playerInventory;
-	private final TileEntityIronFurnace te;
+	private final TileEntitySmeltingBase te;
 
-	public GuiBF(InventoryPlayer player, TileEntityIronFurnace te) {
+	public GuiBF(InventoryPlayer player, TileEntitySmeltingBase te) {
 		super(new ContainerBF(player, te));
 		this.te = te;
 		this.playerInventory = player;
@@ -94,7 +94,7 @@ public class GuiBF extends GuiContainer {
 		return getPixels(te.getBurnTime(), Math.max(1, te.getFuelLength()), pixels);
 	}
 
-	public TileEntityIronFurnace getTE() {
+	public TileEntitySmeltingBase getTE() {
 		return te;
 	}
 

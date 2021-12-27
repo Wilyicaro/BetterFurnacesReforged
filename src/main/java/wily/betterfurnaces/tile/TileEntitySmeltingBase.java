@@ -4,12 +4,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import net.minecraft.init.SoundEvents;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.SoundCategory;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidUtil;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.SlotFurnaceFuel;
 import wily.betterfurnaces.inventory.SlotFurnaceInput;
 import wily.betterfurnaces.inventory.SlotUpgrade;
@@ -44,36 +48,46 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class TileEntityIronFurnace extends TileEntity implements ITickable {
+public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	//Constants
-	public static final int SLOT_INPUT = 0;
-	public static final int SLOT_FUEL = 1;
-	public static final int SLOT_OUTPUT = 2;
-	public static final int[] SLOT_UPGRADE = { 3, 4, 5 };
-	public static final int MAX_FE_TRANSFER = 0;
-	public static final int MAX_ENERGY_STORED = 0;
+	public int FUEL() {return 1;}
+	public int[] UPGRADES(){ return new int[] {3,4,5};}
+	public int UPGRADEORE(){ return 3;}
+	public int UPGRADEENDER(){ return 4;}
+	public int UPGRADECOLOR(){ return 5;}
+	public int FINPUT(){ return INPUTS()[0];}
+	public int LINPUT(){ return INPUTS()[INPUTS().length - 1];}
+	public int FOUTPUT(){ return OUTPUTS()[0];}
+	public int LOUTPUT(){ return OUTPUTS()[OUTPUTS().length - 1];}
+	public int[] INPUTS(){ return new int[]{0};}
+	public int[] OUTPUTS(){ return new int[]{2};}
+	public int LiquidCapacity() {return 4000;}
+	public int MAX_FE_TRANSFER(){ return 0;}
+	public int MAX_ENERGY_STORED(){ return 0;}
+	public int invsize(){ return 6;}
 
 	//Item Handling, RangedWrappers are for sided i/o
-	protected final ItemStackHandler inv = new ItemStackHandler(6) {
+	protected final ItemStackHandler inv = new ItemStackHandler(invsize()) {
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			if (!isItemValid(slot, stack)) return stack;
 			return super.insertItem(slot, stack, simulate);
 		};
 
 		public boolean isItemValid(int slot, ItemStack stack) {
-			if (slot == SLOT_INPUT) return SlotFurnaceInput.isStackValid(stack);
-			if (slot == SLOT_FUEL) return SlotFurnaceFuel.isStackValid(stack);
+			for (int i: INPUTS())
+			if (slot == i) return SlotFurnaceInput.isStackValid(stack);
+			if (slot == FUEL()) return SlotFurnaceFuel.isStackValid(stack);
 			return slot > 2 ? SlotUpgrade.isStackValid(stack) : true;
 		};
 	};
 
-	private final RangedWrapper TOP = new RangedWrapper(inv, SLOT_INPUT, SLOT_INPUT + 1);
-	private final RangedWrapper SIDES = new RangedWrapper(inv, SLOT_FUEL, SLOT_FUEL + 1);
-	private final RangedWrapper BOTTOM = new RangedWrapper(inv, SLOT_OUTPUT, SLOT_OUTPUT + 1);
+	private final RangedWrapper TOP = new RangedWrapper(inv, FINPUT(), LINPUT() + 1);
+	private final RangedWrapper SIDES = new RangedWrapper(inv, FUEL(), FUEL() + 1);
+	private final RangedWrapper BOTTOM = new RangedWrapper(inv, FOUTPUT(), LOUTPUT() + 1);
 
 	//Main TE Fields.
-	protected MutableEnergyStorage energy = new MutableEnergyStorage(MAX_ENERGY_STORED, MAX_FE_TRANSFER, getEnergyUse());
-	protected FluidTank tank = new FluidTank(4000) {
+	protected MutableEnergyStorage energy = new MutableEnergyStorage(MAX_ENERGY_STORED(), MAX_FE_TRANSFER(), getEnergyUse());
+	protected FluidTank tank = new FluidTank(LiquidCapacity()) {
 		@Override
 		public boolean canFillFluidType(FluidStack fluid) {
 			return super.canFillFluidType(fluid) && getFluidBurnTime(fluid) > 0;
@@ -145,7 +159,7 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 		}
 	}
 	public int hex() {
-		NBTTagCompound nbt = getInventory().getStackInSlot(5).getTagCompound();
+		NBTTagCompound nbt = getInventory().getStackInSlot(UPGRADECOLOR()).getTagCompound();
 
 		return ((nbt.getInteger("red")&0x0ff)<<16)|((nbt.getInteger("green")&0x0ff)<<8)|(nbt.getInteger("blue")&0x0ff);
 	}
@@ -159,22 +173,39 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 		if (hasUpgrade(Upgrades.COLOR)){
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockIronFurnace.COLORED, true));
 		}else world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockIronFurnace.COLORED, false));
+
+		ItemStackHandler inv = getInventory();
+		ItemStack filler = inv.getStackInSlot(FUEL());
+		FluidStack fluid = FluidUtil.getFluidContained(filler);
+		if (isFluid() && fluid != null && TileEntityForge.getFluidBurnTime(fluid) > 0) {
+			FluidActionResult fill = FluidUtil.tryEmptyContainer(filler, FluidUtil.getFluidHandler(world, pos, null), 1000, null, true);
+			if (fill.isSuccess()) {
+				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY_LAVA, SoundCategory.PLAYERS, 0.6F, 0.8F);
+				inv.setStackInSlot(FUEL(), fill.result);
+			}
+		}
+
 		ItemStack fuel = ItemStack.EMPTY;
-		boolean canSmelt = canSmelt();
-		if (!this.isBurning() && (isAltFuel() || !(fuel = inv.getStackInSlot(SLOT_FUEL)).isEmpty())) {
-			if (canSmelt) burnFuel(fuel, false);
+		if (!this.isBurning() && (isAltFuel() || !(fuel = inv.getStackInSlot(FUEL())).isEmpty())) {
+			if (canSmelts()) burnFuel(fuel, false);
 		}
 
 		boolean wasBurning = isBurning();
 
 		if (this.isBurning()) {
 			burnTime--;
-			if (canSmelt) smelt();
+			if (canSmelts()) {
+				currentCookTime++;
+				if (this.currentCookTime >= this.getCookTime()) {
+					this.trySmelt();
+					this.currentCookTime = 0;
+				}
+			}
 			else currentCookTime = 0;
 		}
 
-		if (!this.isBurning() && (isAltFuel() || !(fuel = inv.getStackInSlot(SLOT_FUEL)).isEmpty())) {
-			if (canSmelt()) burnFuel(fuel, wasBurning);
+		if (!this.isBurning() && (isAltFuel() || !(fuel = inv.getStackInSlot(FUEL())).isEmpty())) {
+			if (canSmelts()) burnFuel(fuel, wasBurning);
 		}
 
 		if (wasBurning && !isBurning()) world.setBlockState(pos, getDimState());
@@ -190,12 +221,8 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 	/**
 	 * Increments cook time, and tries to smelt the current item.
 	 */
-	protected void smelt() {
-		currentCookTime++;
-		if (this.currentCookTime >= this.getCookTime()) {
-			this.currentCookTime = 0;
-			this.smeltItem();
-		}
+	public void trySmelt(){
+		if (canSmelt(FINPUT(), FOUTPUT())) smeltItem( FINPUT(), FOUTPUT());
 	}
 
 	/**
@@ -204,17 +231,22 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 	 * @param burnedThisTick If we have burned this tick, used to determine if we need to change blockstate.
 	 */
 	protected void burnFuel(ItemStack fuel, boolean burnedThisTick) {
-		if (isFluid() && tank.getFluid() != null) {
+		if (isEnergy() && energy.getEnergyStored() >= getEnergyUse()) {
+			fuelLength = (burnTime = energy.getEnergyStored() >= getEnergyUse() ? 1 : 0);
+			for (int a : INPUTS())
+			if (this.isBurning()) energy.extractEnergy(getEnergyUse() * (hasUpgrade(Upgrades.ORE_PROCESSING) && isOre(inv.getStackInSlot(a)) ? 2 : 1), false);
+		} else if (isFluid() && tank.getFluid() != null) {
 			fuelLength = burnTime = getFluidBurnTime(tank.getFluid());
 			if (this.isBurning()) tank.getFluid().amount--;
-		} else {
+		}else {
 			fuelLength = burnTime = getItemBurnTime(fuel) * getDefaultCookTime() / 200;
 			if (this.isBurning()) {
 				Item item = fuel.getItem();
 				fuel.shrink(1);
-				if (fuel.isEmpty()) inv.setStackInSlot(SLOT_FUEL, item.getContainerItem(fuel));
+				if (fuel.isEmpty()) inv.setStackInSlot(FUEL(), item.getContainerItem(fuel));
 			}
 		}
+
 		if (isBurning() && !burnedThisTick) world.setBlockState(pos, getLitState());
 		markDirty();
 	}
@@ -222,9 +254,9 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 	/**
 	 * @return If the current item in the input slot can be smelted.
 	 */
-	protected boolean canSmelt() {
-		ItemStack input = inv.getStackInSlot(SLOT_INPUT);
-		ItemStack output = inv.getStackInSlot(SLOT_OUTPUT);
+	protected boolean canSmelt(int i, int o) {
+		ItemStack input = inv.getStackInSlot(i);
+		ItemStack output = inv.getStackInSlot(o);
 		if (input.isEmpty() || input == failedMatch) return false;
 
 		if (recipeKey.isEmpty() || !OreDictionary.itemMatches(recipeKey, input, false)) {
@@ -267,21 +299,24 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 
 		return !recipeOutput.isEmpty() && (output.isEmpty() || (ItemHandlerHelper.canItemStacksStack(check, output) && (check.getCount() + output.getCount() <= output.getMaxStackSize())));
 	}
-
+	public boolean canSmelts(){
+		return canSmelt(FINPUT(), FOUTPUT());
+	}
 	/**
 	 * Actually smelts the item in the input slot.  Has special casing for vanilla wet sponge, because w e w vanilla.
 	 */
-	public void smeltItem() {
-		ItemStack stack = inv.getStackInSlot(3);
-		ItemStack ender = inv.getStackInSlot(4);
-		ItemStack input = inv.getStackInSlot(SLOT_INPUT);
-		ItemStack recipeOutput = getResult();
-		ItemStack curOutput = inv.getStackInSlot(SLOT_OUTPUT);
+	public void smeltItem(int INPUT, int OUTPUT) {
+		ItemStack recipeOutput = getResult(INPUT);
+		ItemStack curOutput = inv.getStackInSlot(OUTPUT);
+		ItemStack stack = inv.getStackInSlot(UPGRADEORE());
+		ItemStack ender = inv.getStackInSlot(UPGRADEENDER());
+		ItemStack input = inv.getStackInSlot(INPUT);
 
-		if (curOutput.isEmpty()) inv.setStackInSlot(SLOT_OUTPUT, recipeOutput);
+
+		if (curOutput.isEmpty()) inv.setStackInSlot(OUTPUT, recipeOutput);
 		else if (ItemHandlerHelper.canItemStacksStack(curOutput, recipeOutput)) curOutput.grow(recipeOutput.getCount());
 
-		if (input.isItemEqual(WET_SPONGE) && inv.getStackInSlot(SLOT_FUEL).getItem() == Items.BUCKET) inv.setStackInSlot(SLOT_FUEL, new ItemStack(Items.WATER_BUCKET));
+		if (input.isItemEqual(WET_SPONGE) && inv.getStackInSlot(FUEL()).getItem() == Items.BUCKET) inv.setStackInSlot(FUEL(), new ItemStack(Items.WATER_BUCKET));
 		if ((stack != null) || (this.isBurning())) {
 			if (stack.attemptDamageItem((int) 1, new Random(), null)) {
 				stack.shrink(1);
@@ -311,7 +346,7 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 	 * @return If this TE currently has said upgrade.
 	 */
 	public boolean hasUpgrade(Upgrade upg) {
-		for (int slot : SLOT_UPGRADE)
+		for (int slot : UPGRADES())
 			if (upg.matches(inv.getStackInSlot(slot))) return true;
 		return false;
 	}
@@ -324,13 +359,16 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 		if (isAltFuel()) return 0;
 		return TileEntityFurnace.getItemBurnTime(stack) * (hasUpgrade(Upgrades.EFFICIENCY) || hasUpgrade(Upgrades.ADVEFFICIENCY) ? 2 : 1);
 	}
+	public int getEnergy() {
+		return energy.getEnergyStored();
+	}
 
 	/**
 	 * Says "I have items and energy!"
 	 */
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && isFluid()) return true;
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && isFluid() || capability == CapabilityEnergy.ENERGY && isEnergy()) return true;
 		return super.hasCapability(capability, facing);
 	}
 
@@ -339,6 +377,7 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 	 */
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY && isEnergy()) return CapabilityEnergy.ENERGY.cast(this.energy);
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			IItemHandler h;
 			if (facing == null) h = inv;
@@ -386,9 +425,10 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 
 	private boolean hasOreResult = false;
 
-	private ItemStack getResult() {
+	private ItemStack getResult(int i) {
+		ItemStack input = inv.getStackInSlot(i);
 		if ((hasUpgrade(Upgrades.ORE_PROCESSING)) || hasUpgrade(Upgrades.ADVORE_PROCESSING)) {
-			ItemStack out = OreProcessingRegistry.getSmeltingResult(inv.getStackInSlot(SLOT_INPUT)).copy();
+			ItemStack out = OreProcessingRegistry.getSmeltingResult(input).copy();
 			if (out.isEmpty() && isOre(recipeKey)) {
 				out = FurnaceRecipes.instance().getSmeltingList().get(recipeKey).copy();
 				out.grow(out.getCount());
@@ -410,7 +450,9 @@ public class TileEntityIronFurnace extends TileEntity implements ITickable {
 		}
 		return false;
 	}
-
+	public boolean isEnergy() {
+		return hasUpgrade(Upgrades.ELECTRIC_FUEL);
+	}
 	/**
 	 * @return The actual cook time of this furnace, taking speed into account.
 	 */

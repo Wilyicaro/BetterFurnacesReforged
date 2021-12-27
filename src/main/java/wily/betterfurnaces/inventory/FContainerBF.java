@@ -105,7 +105,7 @@ public class FContainerBF extends Container {
 
 			if (index >= SLOTS_INVENTORY && index <= SLOTS_HOTBAR + 9) {
 				if (TileEntityFurnace.isItemFuel(stack)) {
-					int s = TileEntityForge.SLOT_FUEL;
+					int s = tf.FUEL();
 					if (!mergeItemStack(stack, s, s + 1, false)) { return ItemStack.EMPTY; }
 				}
 				if (!mergeItemStack(stack, SLOTS_TE, SLOTS_TE + SLOTS_TE_SIZE, false)) { return ItemStack.EMPTY; }
