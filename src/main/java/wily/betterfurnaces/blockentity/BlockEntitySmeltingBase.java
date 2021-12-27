@@ -7,6 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.Mth;
@@ -34,9 +36,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -413,10 +418,17 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             }
 
             ItemStack itemstack = e.inventory.get(e.FUEL());
+            if (e.isLiquid() && itemstack.hasContainerItem()) {
+                FluidActionResult res = FluidUtil.tryEmptyContainer(itemstack, e.fluidTank, 1000, null, true);
+                if ( res.isSuccess()) {
+                    e.level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
+                    e.inventory.set(e.FUEL(), res.result);
+                }
+            }
             if ((e.isBurning() || !itemstack.isEmpty() || e.isLiquid() || e.isEnergy()) &&  e.inputSlotsEmpty()) {
                 boolean valid = e.smeltValid();
                 if (!e.isBurning() && (valid)) {
-                    if (e.isLiquid() && e.fluidTank.getFluidAmount() >= 10 ){
+                    if (e.isLiquid() && (e.fluidTank.getFluidAmount() >= 10) ){
                         int f = getBurnTime(new ItemStack(e.fluidTank.getFluidInTank(1).getFluid().getBucket()));
                         e.furnaceBurnTime = f * get_cook_time / 20000;
                         if (!e.getItem(e.UPGRADEENDER()).isEmpty() && e.getUpgrade(e.getItem(e.UPGRADEENDER())) == 2)
@@ -440,12 +452,12 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                     }
                     if (e.isBurning()) {
                         flag1 = true;
-                        if (!e.isLiquid() && !e.isEnergy())
-                            if (itemstack.hasContainerItem()) e.inventory.set(e.FUEL(), itemstack.getContainerItem());
+                        if ((!e.isLiquid() || e.fluidTank.getFluidAmount() < 10) && !e.isEnergy())
+                            if (itemstack.hasContainerItem()) e.inventory.set(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
                             else if (!itemstack.isEmpty()) {
                                 itemstack.shrink(1);
                                 if (itemstack.isEmpty()) {
-                                    e.inventory.set(e.FUEL(), itemstack.getContainerItem());
+                                    e.inventory.set(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
                                 }
                             }
                     }
@@ -852,7 +864,6 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        BetterFurnacesReforged.LOGGER.info("This is an test, please dont tell to anyone!");
         ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("BurnTime", this.furnaceBurnTime);
         tag.putInt("CookTime", this.cookTime);
