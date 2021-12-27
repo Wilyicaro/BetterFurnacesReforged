@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.audio.SoundSource;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IRecipeHelperPopulator;
@@ -28,9 +29,7 @@ import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -39,7 +38,9 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -171,7 +172,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
         return recipe;
     }
     public boolean isLiquid() {
-       return ((getUpgrade(getItem(UPGRADEFLUID())) == 4) && fluidTank.getFluidAmount() >= 10);
+       return ((getUpgrade(getItem(UPGRADEFLUID())) == 4));
     }
     public boolean hasXPTank() {
         return ((getUpgrade(getItem(UPGRADEXP())) == 6));
@@ -434,11 +435,18 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                 this.onUpdateSent();
             }
 
-                    ItemStack itemstack = this.inventory.get(FUEL());
+            ItemStack itemstack = this.inventory.get(FUEL());
+            if (isLiquid() && itemstack.hasContainerItem()) {
+                FluidActionResult res = FluidUtil.tryEmptyContainer(itemstack, fluidTank, 1000, null, true);
+                if ( res.isSuccess()) {
+                    level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundCategory.PLAYERS, 0.6F, 0.8F);
+                    inventory.set(FUEL(), res.result);
+                }
+            }
                     if ((isBurning() || !itemstack.isEmpty() || isLiquid() || isEnergy())  && inputSlotsEmpty()) {
                         boolean valid = smeltValid();
                         if (!this.isBurning() && valid) {
-                            if (isLiquid()){
+                            if (isLiquid() && (fluidTank.getFluidAmount() >= 10)){
                                 int f = getBurnTime(new ItemStack(fluidTank.getFluidInTank(1).getFluid().getBucket()));
                                 this.furnaceBurnTime = f * get_cook_time / 20000;
                                 if (!this.getItem(UPGRADEENDER()).isEmpty() && getUpgrade(getItem(UPGRADEENDER())) == 2)
@@ -462,12 +470,12 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                             }
                             if (this.isBurning()) {
                                 flag1 = true;
-                                if (!isLiquid() && !isEnergy())
-                                    if (itemstack.hasContainerItem()) this.inventory.set(FUEL(), itemstack.getContainerItem());
+                                if ((!isLiquid() || fluidTank.getFluidAmount() < 10) && !isEnergy())
+                                    if (itemstack.hasContainerItem()) this.inventory.set(FUEL(), ForgeHooks.getContainerItem(itemstack));
                                     else if (!itemstack.isEmpty()) {
                                         itemstack.shrink(1);
                                         if (itemstack.isEmpty()) {
-                                            this.inventory.set(FUEL(), itemstack.getContainerItem());
+                                            this.inventory.set(FUEL(), ForgeHooks.getContainerItem(itemstack));
                                         }
                                     }
                             }
@@ -945,7 +953,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                 return invHandlers[5].cast();
         }
         if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if (!this.isRemoved() && (getUpgrade(getItem(UPGRADEFLUID())) == 4)) {
+            if (!this.isRemoved() && isLiquid()) {
                 return (LazyOptional.of(() -> fluidTank).cast());
             }
             if (!this.isRemoved() && hasXPTank()) {

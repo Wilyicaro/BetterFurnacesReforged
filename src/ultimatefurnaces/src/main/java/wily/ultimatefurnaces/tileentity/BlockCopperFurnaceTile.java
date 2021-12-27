@@ -5,13 +5,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.tileentity.BlockFurnaceTileBase;
+import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 import wily.ultimatefurnaces.container.BlockCopperFurnaceContainer;
 import wily.ultimatefurnaces.init.Registration;
 
-public class BlockCopperFurnaceTile extends BlockFurnaceTileBase {
+public class BlockCopperFurnaceTile extends BlockSmeltingTileBase {
     public BlockCopperFurnaceTile() {
-        super(Registration.COPPER_FURNACE_TILE.get());
+        super(Registration.COPPER_FURNACE_TILE.get(),6);
     }
 
     @Override

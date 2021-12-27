@@ -256,8 +256,8 @@ public abstract class BlockForgeContainerBase extends Container {
                     }
                     slot.onQuickCraft(itemstack1, itemstack);
                 } else if (!this.moveItemStackTo(itemstack1, 0, 14, false)) {
-                    if (index < 6 + 27) {
-                        if (!this.moveItemStackTo(itemstack1, 6 + 27, this.slots.size(), true)) {
+                    if (index < 14 + 27) {
+                        if (!this.moveItemStackTo(itemstack1, 14 + 27, this.slots.size(), true)) {
                             return ItemStack.EMPTY;
                         }
                     } else {

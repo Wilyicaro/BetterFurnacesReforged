@@ -102,18 +102,18 @@ public class BlockCobblestoneGeneratorContainer extends Container {
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (index < 4) {
-                if (!this.moveItemStackTo(itemstack1, 6, this.slots.size(), true)) {
+            if (index < 5) {
+                if (!this.moveItemStackTo(itemstack1, 5, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickCraft(itemstack1, itemstack);
-            } else if (!this.moveItemStackTo(itemstack1, 0, 6, false)) {
-                if (index < 4 + 27) {
-                    if (!this.moveItemStackTo(itemstack1, 6 + 27, this.slots.size(), true)) {
+            } else if (!this.moveItemStackTo(itemstack1, 0, 5, false)) {
+                if (index < 5 + 27) {
+                    if (!this.moveItemStackTo(itemstack1, 5 + 27, this.slots.size(), true)) {
                         return ItemStack.EMPTY;
                     }
                 } else {
-                    if (!this.moveItemStackTo(itemstack1, 6, 6 + 27, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 5, 5 + 27, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
