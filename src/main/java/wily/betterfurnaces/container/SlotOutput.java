@@ -12,15 +12,12 @@ public class SlotOutput extends Slot {
     private final Player player;
     private int removeCount;
     private BlockEntitySmeltingBase te;
-    private BlockEntitySmeltingBase tf;
 
     public SlotOutput(Player player, Container te, int slotIndex, int xPosition, int yPosition) {
         super(te, slotIndex, xPosition, yPosition);
         this.player = player;
         if (te instanceof BlockEntitySmeltingBase) {
             this.te = (BlockEntitySmeltingBase) te;
-        }else if (te instanceof BlockEntitySmeltingBase) {
-            this.tf = (BlockEntitySmeltingBase) te;
         }
     }
 
@@ -50,10 +47,7 @@ public class SlotOutput extends Slot {
     protected void onQuickCraft(ItemStack stack, int p_75210_2_) {
         stack.onCraftedBy(this.player.level, this.player, this.removeCount);
         if (!this.player.level.isClientSide && this.te instanceof BlockEntitySmeltingBase) {
-            ((BlockEntitySmeltingBase)this.te).unlockRecipes(this.player);
-        }
-        if (!this.player.level.isClientSide && this.tf instanceof BlockEntitySmeltingBase) {
-            ((BlockEntitySmeltingBase)this.tf).unlockRecipes(this.player);
+            (te).unlockRecipes(this.player);
         }
 
         this.removeCount = 0;

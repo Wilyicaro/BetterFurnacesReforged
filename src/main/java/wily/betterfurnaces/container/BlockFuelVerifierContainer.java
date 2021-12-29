@@ -13,8 +13,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.blockentity.BlockEntityFuelVerifier;
+import wily.betterfurnaces.init.Registration;
 
 
 public class BlockFuelVerifierContainer extends AbstractContainerMenu {

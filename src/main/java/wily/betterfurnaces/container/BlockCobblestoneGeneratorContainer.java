@@ -14,10 +14,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemFuelEfficiency;
 import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
 
 
 public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {

@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -142,7 +141,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
             if (!output.isEmpty()) e.AutoIO();
             if ((e.cobTime >= e.getCobTime() && ((can  && can3)|| can1))){
                 if (can1) {
-                    e.inventory.set(OUTPUT, e.getResult());
+                    e.getInv().setStackInSlot(OUTPUT, e.getResult());
                     if (upgrade1.getItem() instanceof ItemOreProcessing) {
                         e.breakDurabilityItem(upgrade1);
                     }
@@ -163,8 +162,8 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
     }
     protected int cobGen(){
-        ItemStack input = this.inventory.get(0);
-        ItemStack input1 = this.inventory.get(1);
+        ItemStack input = this.getInv().getStackInSlot(0);
+        ItemStack input1 = this.getInv().getStackInSlot(1);
         if (input.getItem() == Items.LAVA_BUCKET && input1.isEmpty()){
             return 1;
         }else if (input1.getItem() == Items.WATER_BUCKET && input.isEmpty()){
@@ -174,7 +173,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         }else return 0;
     }
     protected int getCobTime(){
-        ItemStack upgrade = this.inventory.get(UPGRADE);
+        ItemStack upgrade = this.getInv().getStackInSlot(UPGRADE);
         if (upgrade.isEmpty() && resultType < 3){
             return 80;
         }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType < 3){
@@ -206,17 +205,21 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         else return 1;
     }
     protected boolean hasLava() {
-        ItemStack input = this.inventory.get(0);
+        ItemStack input = this.getInv().getStackInSlot(0);
         return (input.getItem() == Items.WATER_BUCKET);
     }
     protected boolean hasWater() {
-        ItemStack input = this.inventory.get(1);
+        ItemStack input = this.getInv().getStackInSlot(1);
         return (input.getItem() == Items.WATER_BUCKET);
     }
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        ContainerHelper.loadAllItems(tag, this.inventory);
+        if (tag.getCompound("inventory").isEmpty() && !tag.getList("Items",10).isEmpty()) {
+            if (isEmpty())
+                getInv().deserializeNBT(tag);
+        }else
+        getInv().deserializeNBT(tag.getCompound("inventory"));
         this.cobTime = tag.getInt("CobTime");
         this.resultType = tag.getInt("ResultType");
         this.actualCobTime = tag.getInt("ActualCobTime");
@@ -225,7 +228,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        ContainerHelper.saveAllItems(tag, this.inventory);
+        tag.put("inventory", getInv().serializeNBT());
         tag.putInt("CobTime", this.cobTime);
         tag.putInt("ResultType", this.resultType);
         tag.putInt("ActualCobTime", this.actualCobTime);

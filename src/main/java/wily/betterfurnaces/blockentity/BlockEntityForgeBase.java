@@ -44,7 +44,7 @@ public abstract class BlockEntityForgeBase extends BlockEntitySmeltingBase {
 
     @Override
     public boolean inputSlotsEmpty(){
-        return (!this.inventory.get(FINPUT()).isEmpty() || !this.inventory.get(FINPUT() +1).isEmpty() || !this.inventory.get(FINPUT() + 2).isEmpty());
+        return (!this.getInv().getStackInSlot(FINPUT()).isEmpty() || !this.getInv().getStackInSlot(FINPUT() +1).isEmpty() || !this.getInv().getStackInSlot(FINPUT() + 2).isEmpty());
     }
     @Override
     public boolean smeltValid(){

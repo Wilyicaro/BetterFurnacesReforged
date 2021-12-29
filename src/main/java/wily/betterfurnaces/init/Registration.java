@@ -17,12 +17,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.BlockEntityExtremeFurnace;
+import wily.betterfurnaces.blockentity.*;
 import wily.betterfurnaces.blocks.*;
 import wily.betterfurnaces.container.*;
 import wily.betterfurnaces.items.*;
-import wily.betterfurnaces.blockentity.*;
-import wily.betterfurnaces.blockentity.BlockEntityDiamondFurnace;
 
 public class Registration {
 

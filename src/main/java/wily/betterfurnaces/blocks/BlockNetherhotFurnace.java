@@ -6,8 +6,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.blockentity.BlockEntityNetherhotFurnace;
+import wily.betterfurnaces.init.Registration;
 
 import javax.annotation.Nullable;
 

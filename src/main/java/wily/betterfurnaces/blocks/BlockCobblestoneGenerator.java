@@ -24,9 +24,9 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
+import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

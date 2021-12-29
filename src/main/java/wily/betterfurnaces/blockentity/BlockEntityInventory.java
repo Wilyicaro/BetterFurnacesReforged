@@ -10,7 +10,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.WorldlyContainer;
@@ -22,18 +21,39 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
-import org.lwjgl.system.CallbackI;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public abstract class BlockEntityInventory extends BlockEntity implements ITileInventory, WorldlyContainer, MenuProvider, Nameable {
 
-    public NonNullList<ItemStack> inventory;
+    public ItemStackHandler inventory;
+    public NonNullList<ItemStack> inventoryList;
+    public boolean loadEmpty = false;
     protected Component name;
 
     public BlockEntityInventory(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int sizeInventory) {
         super(tileEntityTypeIn, pos, state);
-        inventory = NonNullList.withSize(sizeInventory, ItemStack.EMPTY);
+        this.inventory = new ItemStackHandler(sizeInventory) {
+            @Nonnull
+            @Override
+            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+                return Objects.requireNonNullElseGet(stack, () -> super.insertItem(slot, stack, simulate));
+            }
+
+            @Override
+            protected void onContentsChanged(final int slot) {
+                super.onContentsChanged(slot);
+                    if (loadEmpty == false)
+                    inventoryList.set(slot, getStackInSlot(slot));
+                setChanged();
+            }
+        };
+        inventoryList = NonNullList.withSize(inventory.getSlots(), ItemStack.EMPTY);
+        for (int slot : new int[sizeInventory])
+            inventoryList.set(slot, inventory.getStackInSlot(slot));
     }
 
     @Override
@@ -84,18 +104,19 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
 
     @Override
     public int getContainerSize() {
-        return this.inventory.size();
+        return this.inventoryList.size();
     }
 
     @Override
     public boolean isEmpty() {
-        for(ItemStack itemstack : this.inventory) {
+        for(ItemStack itemstack : inventoryList) {
             if (!itemstack.isEmpty()) {
                 return false;
             }
         }
         return true;
     }
+
     public void breakDurabilityItem(ItemStack stack){
         if (stack.isDamageableItem()) {
             stack.hurt(1, null, null);
@@ -108,24 +129,24 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
 
     @Override
     public ItemStack getItem(int slot) {
-        return this.inventory.get(slot);
+        return this.inventory.getStackInSlot(slot);
     }
 
     @Override
     public ItemStack removeItem(int i, int i1) {
-        return ContainerHelper.removeItem(this.inventory, i, i1);
+        return inventory.extractItem(i, i1,false);
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int i) {
-        return ContainerHelper.takeItem(this.inventory, i);
+        return inventory.extractItem(i, 1,false);
     }
 
     @Override
     public void setItem(int index, ItemStack stack) {
-        ItemStack itemstack = this.inventory.get(index);
+        ItemStack itemstack = this.inventory.getStackInSlot(index);
         boolean flag = !stack.isEmpty() && stack.sameItem(itemstack) && ItemStack.tagMatches(stack, itemstack);
-        this.inventory.set(index, stack);
+        this.inventory.setStackInSlot(index, stack);
         if (stack.getCount() > this.getMaxStackSize()) {
             stack.setCount(this.getMaxStackSize());
         }
@@ -139,8 +160,8 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.inventory = NonNullList.withSize(this.getMaxStackSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, this.inventory);
+        this.inventoryList = NonNullList.withSize(this.getMaxStackSize(), ItemStack.EMPTY);
+        inventory.deserializeNBT(tag.getCompound("inventory"));
         if (tag.contains("CustomName", 8)) {
             this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
@@ -148,7 +169,7 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        ContainerHelper.saveAllItems(tag, this.inventory);
+        tag.put("inventory", inventory.serializeNBT());
         if (this.name != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
@@ -184,6 +205,9 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
         return this.getName();
     }
 
+    public @NotNull ItemStackHandler getInv() {
+        return inventory;
+    }
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
@@ -192,6 +216,7 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
 
     @Override
     public void clearContent() {
-        this.inventory.clear();
+        for (int slot : new int[inventory.getSlots()])
+        this.inventory.setStackInSlot(slot, ItemStack.EMPTY);
     }
 }

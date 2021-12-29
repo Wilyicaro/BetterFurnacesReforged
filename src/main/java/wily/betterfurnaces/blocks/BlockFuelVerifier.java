@@ -22,8 +22,8 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
-import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.blockentity.BlockEntityFuelVerifier;
+import wily.betterfurnaces.init.Registration;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

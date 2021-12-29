@@ -3,7 +3,6 @@ package wily.betterfurnaces.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -22,7 +21,6 @@ import wily.betterfurnaces.init.Registration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 public class BlockEntityFuelVerifier extends BlockEntityInventory {
 
@@ -100,14 +98,18 @@ public class BlockEntityFuelVerifier extends BlockEntityInventory {
     }
     @Override
     public void load(CompoundTag tag) {
-        ContainerHelper.loadAllItems(tag, this.inventory);
+        if (tag.getCompound("inventory").isEmpty() && !tag.getList("Items",10).isEmpty()) {
+            if (isEmpty())
+                getInv().deserializeNBT(tag);
+        }else
+        getInv().deserializeNBT(tag.getCompound("inventory"));
         this.burnTime = tag.getInt("BurnTime");
         super.load(tag);
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        ContainerHelper.saveAllItems(tag, this.inventory);
+        tag.put("inventory", getInv().serializeNBT());
         tag.putInt("BurnTime", this.burnTime);
 
         return super.save(tag);

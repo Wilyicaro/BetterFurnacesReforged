@@ -12,7 +12,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
@@ -49,11 +48,9 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.blocks.BlockForgeBase;
 import wily.betterfurnaces.blocks.BlockFurnaceBase;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.*;
@@ -61,10 +58,7 @@ import wily.betterfurnaces.util.DirectionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public abstract class BlockEntitySmeltingBase extends BlockEntityInventory implements RecipeHolder, StackedContentsCompatible {
     public final int[] provides = new int[Direction.values().length];
@@ -87,11 +81,8 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     public int[] OUTPUTS(){ return new int[]{2};}
 
-    protected AbstractCookingRecipe curRecipe;
-
     private Random rand = new Random();
 
-    private ItemStackHandler stackHandler;
     public int show_inventory_settings;
     protected int timer;
 
@@ -112,6 +103,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     public Direction facing(){
         return this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
     }
+
 
     public BlockEntitySmeltingBase(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state, int invsize) {
         super(tileentitytypeIn, pos, state, invsize);
@@ -332,7 +324,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             return Optional.empty();
     }
     public boolean inputSlotsEmpty(){
-        return !this.inventory.get(FINPUT()).isEmpty();
+        return !this.getInv().getStackInSlot(FINPUT()).isEmpty();
     }
     public boolean smeltValid(){
         return this.canSmelt(irecipeSlot(FINPUT()).orElse(null), FINPUT(), FOUTPUT());
@@ -350,11 +342,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         boolean wasBurning = e.isBurning();
         boolean flag1 = false;
         boolean flag2 = false;
-        ItemStackHandler posinv = new ItemStackHandler(e.inventory.size());
-        posinv.deserializeNBT(e.serializeNBT());
-        for (int i : new int[e.inventory.size()])
-        if (posinv.getStackInSlot(i) != e.inventory.get(i) || !e.inventory.isEmpty())
-            e.setChanged();
+
         if (e.isBurning()) {
             --e.furnaceBurnTime;
         }
@@ -417,12 +405,12 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                 e.onUpdateSent();
             }
 
-            ItemStack itemstack = e.inventory.get(e.FUEL());
+            ItemStack itemstack = e.getInv().getStackInSlot(e.FUEL());
             if (e.isLiquid() && itemstack.hasContainerItem()) {
                 FluidActionResult res = FluidUtil.tryEmptyContainer(itemstack, e.fluidTank, 1000, null, true);
                 if ( res.isSuccess()) {
                     e.level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
-                    e.inventory.set(e.FUEL(), res.result);
+                    e.getInv().setStackInSlot(e.FUEL(), res.result);
                 }
             }
             if ((e.isBurning() || !itemstack.isEmpty() || e.isLiquid() || e.isEnergy()) &&  e.inputSlotsEmpty()) {
@@ -453,11 +441,11 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                     if (e.isBurning()) {
                         flag1 = true;
                         if ((!e.isLiquid() || e.fluidTank.getFluidAmount() < 10) && !e.isEnergy())
-                            if (itemstack.hasContainerItem()) e.inventory.set(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
+                            if (itemstack.hasContainerItem()) e.getInv().setStackInSlot(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
                             else if (!itemstack.isEmpty()) {
                                 itemstack.shrink(1);
                                 if (itemstack.isEmpty()) {
-                                    e.inventory.set(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
+                                    e.getInv().setStackInSlot(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
                                 }
                             }
                     }
@@ -514,7 +502,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     }
     public int hex() {
-        CompoundTag nbt = inventory.get(UPGRADECOLOR()).getTag();
+        CompoundTag nbt = getInv().getStackInSlot(UPGRADECOLOR()).getTag();
 
         return ((nbt.getInt("red") & 0x0ff) << 16) | ((nbt.getInt("green") & 0x0ff) << 8) | (nbt.getInt("blue") & 0x0ff);
     }
@@ -617,7 +605,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         if (!canPlaceItemThroughFace(slot, stack, null))
             return stack;
 
-        ItemStack existing = this.inventory.get(slot);
+        ItemStack existing = this.getInv().getStackInSlot(slot);
 
         int limit = stack.getMaxStackSize();
 
@@ -635,7 +623,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
         if (!simulate) {
             if (existing.isEmpty()) {
-                this.inventory.set(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
+                this.getInv().setStackInSlot(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
             } else {
                 existing.grow(reachedLimit ? limit : stack.getCount());
             }
@@ -685,22 +673,21 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getSettingFront() {
-        int i = DirectionUtil.getId(this.getBlockState().getValue(BlockStateProperties.FACING));
+        int i = DirectionUtil.getId(facing());
         return this.furnaceSettings.get(i);
     }
 
     public int getSettingBack() {
-        int i = DirectionUtil.getId(this.getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
+        int i = DirectionUtil.getId(facing().getOpposite());
         return this.furnaceSettings.get(i);
     }
 
     public int getSettingLeft() {
-        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
-        if (facing == Direction.NORTH) {
+        if (facing() == Direction.NORTH) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.EAST));
-        } else if (facing == Direction.WEST) {
+        } else if (facing() == Direction.WEST) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.NORTH));
-        } else if (facing == Direction.SOUTH) {
+        } else if (facing() == Direction.SOUTH) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.WEST));
         } else {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.SOUTH));
@@ -708,12 +695,11 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getSettingRight() {
-        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
-        if (facing == Direction.NORTH) {
+        if (facing() == Direction.NORTH) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.WEST));
-        } else if (facing == Direction.WEST) {
+        } else if (facing() == Direction.WEST) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.SOUTH));
-        } else if (facing == Direction.SOUTH) {
+        } else if (facing() == Direction.SOUTH) {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.EAST));
         } else {
             return this.furnaceSettings.get(DirectionUtil.getId(Direction.NORTH));
@@ -721,22 +707,21 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getIndexFront() {
-        int i = this.getBlockState().getValue(BlockStateProperties.FACING).ordinal();
+        int i = facing().ordinal();
         return i;
     }
 
     public int getIndexBack() {
-        int i = this.getBlockState().getValue(BlockStateProperties.FACING).getOpposite().ordinal();
+        int i = facing().getOpposite().ordinal();
         return i;
     }
 
     public int getIndexLeft() {
-        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
-        if (facing == Direction.NORTH) {
+        if (facing() == Direction.NORTH) {
             return Direction.EAST.ordinal();
-        } else if (facing == Direction.WEST) {
+        } else if (facing() == Direction.WEST) {
             return Direction.NORTH.ordinal();
-        } else if (facing == Direction.SOUTH) {
+        } else if (facing() == Direction.SOUTH) {
             return Direction.WEST.ordinal();
         } else {
             return Direction.SOUTH.ordinal();
@@ -744,12 +729,11 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public int getIndexRight() {
-        Direction facing = this.getBlockState().getValue(BlockStateProperties.FACING);
-        if (facing == Direction.NORTH) {
+        if (facing() == Direction.NORTH) {
             return Direction.WEST.ordinal();
-        } else if (facing == Direction.WEST) {
+        } else if (facing() == Direction.WEST) {
             return Direction.SOUTH.ordinal();
-        } else if (facing == Direction.SOUTH) {
+        } else if (facing() == Direction.SOUTH) {
             return Direction.EAST.ordinal();
         } else {
             return Direction.NORTH.ordinal();
@@ -791,11 +775,11 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         return 1;
     }
     protected boolean canSmelt(@Nullable Recipe<?> recipe, int INPUT, int OUTPUT) {
-        ItemStack input = this.inventory.get(INPUT);
+        ItemStack input = this.getInv().getStackInSlot(INPUT);
         if (!input.isEmpty() && recipe != null) {
             ItemStack recipeOutput = recipe.getResultItem();
             if (!recipeOutput.isEmpty()) {
-                ItemStack output = this.inventory.get(OUTPUT);
+                ItemStack output = this.getInv().getStackInSlot(OUTPUT);
                 if (output.isEmpty()) return true;
                 else if (!output.sameItem(recipeOutput)) return false;
                 else {
@@ -815,10 +799,10 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     protected void smeltItem(@Nullable Recipe<?> recipe, int INPUT, int OUTPUT) {
         timer = 0;
         if (recipe != null && this.canSmelt(recipe, INPUT, OUTPUT)) {
-            ItemStack itemstack = this.inventory.get(INPUT);
-            ItemStack itemstack2 = this.inventory.get(OUTPUT);
+            ItemStack itemstack = this.getInv().getStackInSlot(INPUT);
+            ItemStack itemstack2 = this.getInv().getStackInSlot(OUTPUT);
             if (itemstack2.isEmpty()) {
-                this.inventory.set(OUTPUT, getResult(recipe, itemstack));
+                this.getInv().setStackInSlot(OUTPUT, getResult(recipe, itemstack));
                 if ((getUpgrade(this.getItem(UPGRADEORE())) == 1) && ((isOre(itemstack)))) {
                     breakDurabilityItem(getItem(7));
                 }
@@ -833,8 +817,8 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                 this.setRecipeUsed(recipe);
             }
 
-            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.inventory.get(FUEL()).isEmpty() && this.inventory.get(FUEL()).getItem() == Items.BUCKET) {
-                this.inventory.set(FUEL(), new ItemStack(Items.WATER_BUCKET));
+            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.getInv().getStackInSlot(FUEL()).isEmpty() && this.getInv().getStackInSlot(FUEL()).getItem() == Items.BUCKET) {
+                this.getInv().setStackInSlot(FUEL(), new ItemStack(Items.WATER_BUCKET));
             }
             itemstack.shrink(1);
         }
@@ -842,12 +826,16 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     @Override
     public void load( CompoundTag tag) {
         super.load(tag);
-        ContainerHelper.loadAllItems(tag, this.inventory);
+        if (tag.getCompound("inventory").isEmpty() && !tag.getList("Items",10).isEmpty()) {
+            if (isEmpty())
+            getInv().deserializeNBT(tag);
+        }else
+        getInv().deserializeNBT(tag.getCompound("inventory"));
         this.furnaceBurnTime = tag.getInt("BurnTime");
         this.cookTime = tag.getInt("CookTime");
         this.totalCookTime = tag.getInt("CookTimeTotal");
         this.timer = 0;
-        this.recipesUsed = this.getBurnTime(this.inventory.get(1));
+        this.recipesUsed = this.getBurnTime(this.getInv().getStackInSlot(1));
         if (tag.getCompound("fluidTank") != null)
             fluidTank.readFromNBT(tag.getCompound("fluidTank"));
         if (tag.getCompound("xpTank") != null)
@@ -864,7 +852,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        ContainerHelper.saveAllItems(tag, this.inventory);
+        tag.put("inventory", getInv().serializeNBT());
         tag.putInt("BurnTime", this.furnaceBurnTime);
         tag.putInt("CookTime", this.cookTime);
         tag.putInt("CookTimeTotal", this.totalCookTime);
@@ -901,24 +889,42 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     LazyOptional<? extends IItemHandler>[] invHandlers =
             net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
 
+
+    ArrayList<LazyOptional<?>> capabilities = new ArrayList<>(Arrays.asList(
+            LazyOptional.of(this::getInv),
+            LazyOptional.of(() -> new RangedWrapper(getInv(), FUEL(), FUEL() + 1)),
+            LazyOptional.of(() -> new RangedWrapper(getInv(), FINPUT(), LINPUT() + 1)),
+            LazyOptional.of(() -> new RangedWrapper(getInv(), FOUTPUT(), LOUTPUT() + 1))
+    ));
+
     @Nonnull
     @Override
     public <
             T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
-        if (!this.isRemoved() && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == Direction.DOWN)
-                return invHandlers[0].cast();
-            else if (facing == Direction.UP)
-                return invHandlers[1].cast();
-            else if (facing == Direction.NORTH)
-                return invHandlers[2].cast();
-            else if (facing == Direction.SOUTH)
-                return invHandlers[3].cast();
-            else if (facing == Direction.WEST)
-                return invHandlers[4].cast();
-            else
-                return invHandlers[5].cast();
+        if (!this.isRemoved() && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            if (getUpgrade(getItem(UPGRADEFACTORY())) == 5) {
+                if (facing != null) {
+                    if (facing == Direction.DOWN)
+                        return invHandlers[0].cast();
+                    else if (facing == Direction.UP)
+                        return invHandlers[1].cast();
+                    else if (facing == Direction.NORTH)
+                        return invHandlers[2].cast();
+                    else if (facing == Direction.SOUTH)
+                        return invHandlers[3].cast();
+                    else if (facing == Direction.WEST)
+                        return invHandlers[4].cast();
+                    else
+                        return invHandlers[5].cast();
+                }
+            }
+            if (facing == null) return capabilities.get(0).cast();
+                return switch (facing) {
+                    case UP -> capabilities.get(2).cast();
+                    case DOWN -> capabilities.get(3).cast();
+                    default -> capabilities.get(1).cast();
+            };
         }
         if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             if (!this.isRemoved() && (getUpgrade(getItem(UPGRADEFLUID())) == 4)) {
@@ -985,7 +991,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
             }
         if (index == FUEL()) {
-            ItemStack itemstack = this.inventory.get(FUEL());
+            ItemStack itemstack = this.getInv().getStackInSlot(FUEL());
             return getBurnTime(stack) > 0 || (stack.getItem() == Items.BUCKET && itemstack.getItem() != Items.BUCKET);
         }
         return false;
@@ -1070,7 +1076,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     @Override
     public void fillStackedContents(StackedContents helper) {
-        for (ItemStack itemstack : this.inventory) {
+        for (ItemStack itemstack : this.inventoryList) {
             helper.accountStack(itemstack);
         }
 
