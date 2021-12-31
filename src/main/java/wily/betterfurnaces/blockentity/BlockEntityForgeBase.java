@@ -9,20 +9,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 public abstract class BlockEntityForgeBase extends BlockEntitySmeltingBase {
     @Override
     public int FUEL() {return 3;}
-    @Override
-    public int UPGRADEORE(){ return 7;}
-    @Override
-    public int UPGRADEENDER(){ return 8;}
-    @Override
-    public int UPGRADEXP(){ return 9;}
-    @Override
-    public int UPGRADEFLUID(){ return 10;}
-    @Override
-    public int UPGRADEENERGY(){ return 10;}
-    @Override
-    public int UPGRADEFACTORY(){return 11;}
-    @Override
-    public int UPGRADECOLOR() {return 12;}
+    public int UPGRADES()[]{ return new int[]{7,8,9,10,11,12,13};}
     @Override
     public int[] INPUTS(){ return new int[]{0,1,2};}
     @Override

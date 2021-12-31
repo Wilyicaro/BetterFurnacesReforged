@@ -49,6 +49,7 @@
   "tooltip.betterfurnacesreforged.upgrade.liquid": "Usa líquidos como combustível",
   "tooltip.betterfurnacesreforged.upgrade.energy": "Usa Forge Energy(FE) como combustível",
   "tooltip.betterfurnacesreforged.upgrade.xp": "Transforma o xp resultante da fornalha/forja em um XP líquido no tanque criado",
+  "tooltip.betterfurnacesreforged.gui_show_orientation": "Orientação",
   "tooltip.betterfurnacesreforged.gui_open": "Mostrar",
   "tooltip.betterfurnacesreforged.gui_close": "Esconder",
   "tooltip.betterfurnacesreforged.gui_auto_input": "Entrada automática",

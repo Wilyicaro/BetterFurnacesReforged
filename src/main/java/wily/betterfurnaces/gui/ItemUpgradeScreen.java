@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.container.ItemUpgradeContainerBase;
-import wily.betterfurnaces.items.ItemColorUpgrade;
+import wily.betterfurnaces.items.ItemUpgradeColor;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class ItemUpgradeScreen<T extends ItemUpgradeContainerBase> extends AbstractContainerScreen<T> {
@@ -57,7 +57,7 @@ public abstract class ItemUpgradeScreen<T extends ItemUpgradeContainerBase> exte
     }
     @Override
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-        ItemStack stack = ((ItemColorUpgrade.ContainerColorUpgrade) this.getMenu()).itemStackBeingHeld;
+        ItemStack stack = ((ItemUpgradeColor.ContainerColorUpgrade) this.getMenu()).itemStackBeingHeld;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI);
         int relX = (this.width - this.getXSize()) / 2;

@@ -23,15 +23,15 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemColorUpgrade;
+import wily.betterfurnaces.items.ItemUpgradeColor;
 import wily.betterfurnaces.items.ItemFuelEfficiency;
 import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.items.ItemUpgradeMisc;
+import wily.betterfurnaces.items.ItemUpgrade;
 
 
 public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
 
-    protected BlockEntitySmeltingBase te;
+    public BlockEntitySmeltingBase te;
     protected ContainerData fields;
     protected Player playerEntity;
     protected IItemHandler playerInventory;
@@ -66,29 +66,13 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
         this.addSlot(new SlotOutput(playerEntity, te, 4, 108, y3));
         this.addSlot(new SlotOutput(playerEntity, te, 5, 126, y3));
         this.addSlot(new SlotOutput(playerEntity, te, 6, 144, y3));
-        this.addSlot(new SlotUpgrade(te, 7, 7, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemOreProcessing);
-            }});
-        this.addSlot(new SlotUpgrade(te, 8, 25, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemFuelEfficiency);
-            }});
-        this.addSlot(new SlotUpgrade(te, 9, 43, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {return (stack.getItem() == Registration.XP.get() && !te.isLiquid());}});
+        this.addSlot(new SlotUpgrade(te, 7, 7, y4));
+        this.addSlot(new SlotUpgrade(te, 8, 25, y4));
+        this.addSlot(new SlotUpgrade(te, 9, 43, y4));
         this.addSlot(new SlotHeater(te, 10, 79, y4));
-        this.addSlot(new SlotUpgrade(te, 11, 115, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {return (stack.getItem() == Registration.FACTORY.get() );}});
-        this.addSlot(new SlotUpgrade(te, 12, 133, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {return (stack.getItem() instanceof ItemColorUpgrade);}});
-        this.addSlot(new SlotUpgrade(te, 13, 151, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {return (stack.getItem() instanceof ItemUpgradeMisc);}});
+        this.addSlot(new SlotUpgrade(te, 11, 115, y4));
+        this.addSlot(new SlotUpgrade(te, 12, 133, y4));
+        this.addSlot(new SlotUpgrade(te, 13, 151, y4));
         layoutPlayerInventorySlots(8, 106);
         checkContainerSize(this.te, 14);
         checkContainerDataCount(this.fields, 5);

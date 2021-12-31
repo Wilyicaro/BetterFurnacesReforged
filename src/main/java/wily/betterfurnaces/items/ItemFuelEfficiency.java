@@ -16,7 +16,7 @@ import wily.betterfurnaces.init.Registration;
 
 import java.util.List;
 
-public class ItemFuelEfficiency extends Item {
+public class ItemFuelEfficiency extends ItemUpgrade {
 
     public ItemFuelEfficiency(Properties properties) {
         super(properties);
@@ -26,7 +26,6 @@ public class ItemFuelEfficiency extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
         tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         if (stack.getItem() != Registration.FUEL.get())
             tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));

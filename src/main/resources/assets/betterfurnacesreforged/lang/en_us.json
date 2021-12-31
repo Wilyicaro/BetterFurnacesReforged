@@ -53,6 +53,7 @@
   "tooltip.betterfurnacesreforged.upgrade.isworking": "There is currently no mods configured that supports this upgrade.",
   "tooltip.betterfurnacesreforged.upgrade.factory": "Adds the possibility to enter and exit items automatically, or by redstone level, from the sides configured within the furnace interface",
   "tooltip.betterfurnacesreforged.upgrade.tier": "Upgrade furnace from %s to %s",
+  "tooltip.betterfurnacesreforged.gui_show_orientation": "Orientation",
   "tooltip.betterfurnacesreforged.gui_open": "Show",
   "tooltip.betterfurnacesreforged.gui_close": "Hide",
   "tooltip.betterfurnacesreforged.gui_auto_input": "Auto Input",

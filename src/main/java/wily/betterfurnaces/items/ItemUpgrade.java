@@ -15,10 +15,10 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemUpgradeMisc extends Item {
+public class ItemUpgrade extends Item {
 
 
-    public ItemUpgradeMisc(Properties properties) {
+    public ItemUpgrade(Properties properties) {
         super(properties);
     }
 

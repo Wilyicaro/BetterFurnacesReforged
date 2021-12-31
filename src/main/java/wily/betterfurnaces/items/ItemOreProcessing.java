@@ -16,7 +16,7 @@ import wily.betterfurnaces.init.Registration;
 
 import java.util.List;
 
-public class ItemOreProcessing extends Item {
+public class ItemOreProcessing extends ItemUpgrade {
 
 
     public ItemOreProcessing(Properties properties) {
@@ -27,7 +27,6 @@ public class ItemOreProcessing extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
         if (!stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade"))
             tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         else tooltip.add(new TranslatableComponent("tooltip.ultimate_furnaces_bfr.upgrade.ultore").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));

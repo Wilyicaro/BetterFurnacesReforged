@@ -28,16 +28,16 @@ import wily.betterfurnaces.init.Registration;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemColorUpgrade extends ItemUpgradeMisc {
+public class ItemUpgradeColor extends ItemUpgrade {
 
-    public ItemColorUpgrade(Properties properties) {
+    public ItemUpgradeColor(Properties properties) {
         super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.color").setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
     }
 
@@ -88,7 +88,7 @@ public class ItemColorUpgrade extends ItemUpgradeMisc {
         }
     }
     private static class ContainerProviderColorUpgrade implements MenuProvider {
-        public ContainerProviderColorUpgrade(ItemColorUpgrade item, ItemStack stack) {
+        public ContainerProviderColorUpgrade(ItemUpgradeColor item, ItemStack stack) {
             this.itemStackColorUpgrade = stack;
         }
 

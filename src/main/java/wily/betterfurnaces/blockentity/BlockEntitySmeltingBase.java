@@ -48,9 +48,10 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.RangedWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.ArrayUtils;
 import wily.betterfurnaces.Config;
+import wily.betterfurnaces.blocks.BlockForgeBase;
 import wily.betterfurnaces.blocks.BlockFurnaceBase;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.*;
@@ -66,20 +67,15 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
 
     public int FUEL() {return 1;}
-    public int UPGRADEORE(){ return 3;}
-    public int UPGRADEENDER(){ return 4;}
-    public int UPGRADEXP(){ return 5;}
-    public int UPGRADEFLUID(){ return 5;}
-    public int UPGRADEENERGY(){ return 5;}
-    public int UPGRADEFACTORY(){return 5;}
-    public int UPGRADECOLOR() {return 5;}
+    public int UPGRADES()[]{ return new int[]{3,4,5};}
     public int FINPUT(){ return INPUTS()[0];}
     public int LINPUT(){ return INPUTS()[INPUTS().length - 1];}
     public int FOUTPUT(){ return OUTPUTS()[0];}
     public int LOUTPUT(){ return OUTPUTS()[OUTPUTS().length - 1];}
     public int[] INPUTS(){ return new int[]{0};}
-
     public int[] OUTPUTS(){ return new int[]{2};}
+    public int[] FSLOTS(){ return  ArrayUtils.addAll(ArrayUtils.addAll(ISLOTS(), OUTPUTS()));}
+    public int[] ISLOTS(){ return  ArrayUtils.addAll(INPUTS(),new int[FUEL()]);}
 
     private Random rand = new Random();
 
@@ -146,13 +142,16 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         return recipe;
     }
     public boolean hasXPTank() {
-        return ((getUpgrade(getItem(UPGRADEXP())) == 6));
+        return hasUpgrade(Registration.XP.get());
+    }
+    public boolean hasEnder() {
+        return (hasUpgrade(Registration.FUEL.get()) || hasUpgrade(Registration.ADVFUEL.get()));
     }
     public boolean isLiquid() {
-        return (getUpgrade(getItem(UPGRADEFLUID())) == 4);
+        return hasUpgrade(Registration.LIQUID.get());
     }
     private boolean isEnergy() {
-        return ((getUpgrade(getItem(UPGRADEENERGY())) == 8) && energyStorage.getEnergyStored() > EnergyUse());
+        return (hasUpgrade(Registration.ENERGY.get()) && energyStorage.getEnergyStored() > EnergyUse());
     }
     protected int getCookTime() {
 
@@ -209,6 +208,8 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                     return BlockEntitySmeltingBase.this.totalCookTime;
                 case 4:
                     return BlockEntitySmeltingBase.this.show_inventory_settings;
+                case 5:
+                    return getBlockState().getValue(BlockForgeBase.SHOW_ORIENTATION) ? 1 : 0;
                 default:
                     return 0;
             }
@@ -230,6 +231,8 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                     break;
                 case 4:
                     BlockEntitySmeltingBase.this.show_inventory_settings = value;
+                case 5:
+                    getBlockState().setValue(BlockForgeBase.SHOW_ORIENTATION, value == 1);
                     break;
             }
 
@@ -241,26 +244,41 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         }
     };
 
-    private int getUpgrade(ItemStack stack) {
-        if (stack.getItem() instanceof ItemOreProcessing && !stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade")) {
-            return 1;
-        } else if (stack.getItem() instanceof ItemFuelEfficiency) {
-            return 2;
-        } else if (stack.getItem() instanceof ItemColorUpgrade) {
-            return 3;
-        }else if (stack.getItem() instanceof ItemLiquidFuel) {
-            return 4;
-        }else if (stack.getItem() == Registration.FACTORY.get()) {
-            return 5;
-        }else if (stack.getItem() == Registration.XP.get()) {
-            return 6;
-        }else if (stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade")){
-            return 7;
-        }else if (stack.getItem() instanceof ItemEnergyFuel) {
-            return 8;
-        }
-        return 0;
+    public boolean hasUpgrade(Item upg) {
+        for (int slot : UPGRADES())
+            if (upg == getItem(slot).getItem()) return true;
+        return false;
     }
+
+    public boolean hasUpgradeType(Item upg) {
+        if (getUpgradeType(upg) == 1) return (hasUpgrade(Registration.LIQUID.get()) || hasUpgrade(Registration.XP.get()));
+        else if (getUpgradeType(upg) == 2) return (hasUpgrade(Registration.FUEL.get()) || hasUpgrade(Registration.ADVFUEL.get()));
+        else if (getUpgradeType(upg) == 3) return (hasUpgrade(Registration.ORE_PROCESSING.get()) || hasUpgrade(Registration.ADVORE_PROCESSING.get()));
+        return hasUpgrade(upg);
+    }
+    public int getUpgradeType(Item upg) {
+        if (upg == Registration.LIQUID.get() || upg == Registration.XP.get()) return 1;
+        else if (upg == Registration.FUEL.get() || upg == Registration.ADVFUEL.get()) return 2;
+        else if (upg == Registration.ORE_PROCESSING.get() || upg == Registration.ADVORE_PROCESSING.get()) return 3;
+        return 4;
+    }
+
+    public Item getItemUpgradeType(Item upg) {
+        if (getUpgradeType(upg) == 1 && hasUpgrade(Registration.LIQUID.get())) return Registration.LIQUID.get();
+        if (getUpgradeType(upg) == 1 && hasUpgrade(Registration.XP.get())) return Registration.XP.get();
+        if (getUpgradeType(upg) == 2 && hasUpgrade(Registration.FUEL.get())) return Registration.FUEL.get();
+        if (getUpgradeType(upg) == 2 && hasUpgrade(Registration.ADVFUEL.get())) return Registration.ADVFUEL.get();
+        if (getUpgradeType(upg) == 3 && hasUpgrade(Registration.ORE_PROCESSING.get()))return Registration.ORE_PROCESSING.get();
+        if (getUpgradeType(upg) == 3 && hasUpgrade(Registration.ADVORE_PROCESSING.get())) return Registration.ADVORE_PROCESSING.get();
+        return upg;
+    }
+
+    public ItemStack getUpgradeSlotItem(Item upg) {
+        for (int slot : UPGRADES())
+            if (upg == getItem(slot).getItem()) return getItem(slot);
+            return getItem(UPGRADES()[0]);
+    }
+
     protected final FluidTank fluidTank = new FluidTank(LiquidCapacity(), fs -> {
         if (getBurnTime(new ItemStack(fs.getFluid().getBucket())) > 0)
             return true;
@@ -347,7 +365,9 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             --e.furnaceBurnTime;
         }
 
-        if ((e.getUpgrade(e.getItem(e.UPGRADECOLOR())) == 3)) {
+        if (!e.hasUpgrade(Registration.FACTORY.get()) && e instanceof BlockEntityForgeBase && (level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.SHOW_ORIENTATION))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.SHOW_ORIENTATION, false), 3);
+
+        if ((e.hasUpgrade(Registration.COLOR.get()))) {
             if (!(level.getBlockState(e.getBlockPos()).getValue(BlockFurnaceBase.COLORED)))
                 level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockFurnaceBase.COLORED, true), 3);
         } else if ((level.getBlockState(e.getBlockPos()).getValue(BlockFurnaceBase.COLORED))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockFurnaceBase.COLORED, false), 3);
@@ -419,19 +439,27 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                     if (e.isLiquid() && (e.fluidTank.getFluidAmount() >= 10) ){
                         int f = getBurnTime(new ItemStack(e.fluidTank.getFluidInTank(1).getFluid().getBucket()));
                         e.furnaceBurnTime = f * get_cook_time / 20000;
-                        if (!e.getItem(e.UPGRADEENDER()).isEmpty() && e.getUpgrade(e.getItem(e.UPGRADEENDER())) == 2)
+                        if (e.hasEnder()) {
                             e.furnaceBurnTime = 2 * f * get_cook_time / 20000;
+                            if (e.hasUpgrade(Registration.FUEL.get())) {
+                                e.breakDurabilityItem(e.getUpgradeSlotItem(Registration.FUEL.get()));
+                            }
+                        }
                         e.recipesUsed = e.furnaceBurnTime;
                         e.fluidTank.drain(10, IFluidHandler.FluidAction.EXECUTE);
                     }else if (e.isEnergy()){
                         e.furnaceBurnTime = 200 * get_cook_time / 200;
-                        if (!e.getItem(e.UPGRADEENDER()).isEmpty() && e.getUpgrade(e.getItem(e.UPGRADEENDER())) == 2)
+                        if (e.hasEnder()) {
                             e.furnaceBurnTime = 2 * 200 * get_cook_time / 200;
+                            if (e.hasUpgrade(Registration.FUEL.get())) {
+                                e.breakDurabilityItem(e.getUpgradeSlotItem(Registration.FUEL.get()));
+                            }
+                        }
                         e.recipesUsed = e.furnaceBurnTime;
                         for (int a : e.INPUTS())
                             e.energyStorage.consumeEnergy(e.EnergyUse() * e.OreProcessingMultiplier(e.getItem(a)), false);
                     }else{
-                        if (!e.getItem(e.UPGRADEENDER()).isEmpty() && e.getUpgrade(e.getItem(e.UPGRADEENDER())) == 2){
+                        if (e.hasEnder()){
                             e.furnaceBurnTime = 2 * (getBurnTime(itemstack)) * get_cook_time / 200;
                         }else{
                             e.furnaceBurnTime = getBurnTime(itemstack) * get_cook_time / 200;
@@ -444,13 +472,15 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                             if (itemstack.hasContainerItem()) e.getInv().setStackInSlot(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
                             else if (!itemstack.isEmpty()) {
                                 itemstack.shrink(1);
+                                if (e.hasEnder()) {
+                                    if (e.hasUpgrade(Registration.FUEL.get())) {
+                                        e.breakDurabilityItem(e.getUpgradeSlotItem(Registration.FUEL.get()));
+                                    }
+                                }
                                 if (itemstack.isEmpty()) {
                                     e.getInv().setStackInSlot(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
                                 }
                             }
-                    }
-                    if (!e.getItem(e.UPGRADEENDER()).isEmpty() && e.getUpgrade(e.getItem(8)) == 2) {
-                        e.breakDurabilityItem(e.getItem(e.UPGRADEENDER()));
                     }
                 }
                 if (e.isBurning() && valid ) {
@@ -459,7 +489,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                         e.cookTime = 0;
                         e.totalCookTime = e.getCookTime();
                         e.trySmelt();
-                        if (e.getUpgrade(e.getItem(e.UPGRADEFACTORY())) == 5)
+                        if (e.hasUpgrade(Registration.FACTORY.get()))
                             e.autoIO();
                         flag1 = true;
                     }
@@ -473,7 +503,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                 flag1 = true;
                 e.level.setBlock(e.worldPosition, e.level.getBlockState(e.worldPosition).setValue(BlockStateProperties.LIT, e.isBurning()), 3);
             }
-                if ((e.timer % 24 == 0) && (e.getUpgrade(e.getItem(e.UPGRADEFACTORY())) == 5)){
+                if ((e.timer % 24 == 0) && (e.hasUpgrade(Registration.FACTORY.get()))){
                     if (e.cookTime <= 0) {
                         int a = 0;
                         for (int i: e.INPUTS())
@@ -502,7 +532,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     }
     public int hex() {
-        CompoundTag nbt = getInv().getStackInSlot(UPGRADECOLOR()).getTag();
+        CompoundTag nbt = getUpgradeSlotItem(Registration.COLOR.get()).getTag();
 
         return ((nbt.getInt("red") & 0x0ff) << 16) | ((nbt.getInt("green") & 0x0ff) << 8) | (nbt.getInt("blue") & 0x0ff);
     }
@@ -535,7 +565,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                                         }
                                         ItemStack stack = other.extractItem(i, other.getStackInSlot(i).getMaxStackSize(), true);
                                         if (hasRecipe(stack) && getItem(INPUT).isEmpty() || ItemHandlerHelper.canItemStacksStack(getItem(INPUT), stack))
-                                            insertItemInternal(INPUT, other.extractItem(i, other.getStackInSlot(i).getMaxStackSize() - this.getItem(INPUT).getCount(), false), false);
+                                            inventory.insertItem(INPUT, other.extractItem(i, other.getStackInSlot(i).getMaxStackSize() - this.getItem(INPUT).getCount(), false), false);
                                     }
                                 }
                                 if (this.furnaceSettings.get(dir.ordinal()) == 4) {
@@ -548,7 +578,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                                         }
                                         ItemStack stack = other.extractItem(i, other.getStackInSlot(i).getMaxStackSize(), true);
                                         if (isItemFuel(stack) && getItem(FUEL()).isEmpty() || ItemHandlerHelper.canItemStacksStack(getItem(FUEL()), stack)) {
-                                            insertItemInternal(FUEL(), other.extractItem(i, other.getStackInSlot(i).getMaxStackSize() - this.getItem(FUEL()).getCount(), false), false);
+                                            inventory.insertItem(FUEL(), other.extractItem(i, other.getStackInSlot(i).getMaxStackSize() - this.getItem(FUEL()).getCount(), false), false);
                                         }
                                     }
                                 }
@@ -560,13 +590,13 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                                     if (this.getItem(FUEL()).isEmpty()) {
                                         continue;
                                     }
-                                    ItemStack stack = extractItemInternal(FUEL(), 1, true);
+                                    ItemStack stack = inventory.extractItem(FUEL(), 1, true);
                                     if (stack.getItem() != Items.BUCKET) {
                                         continue;
                                     }
                                     for (int i = 0; i < other.getSlots(); i++) {
                                         if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || (ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i)))) {
-                                            other.insertItem(i, extractItemInternal(FUEL(), stack.getCount(), false), false);
+                                            other.insertItem(i, inventory.extractItem(FUEL(), stack.getCount(), false), false);
                                         }
                                     }
                                 }
@@ -580,9 +610,9 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                                             continue;
                                         }
                                         for (int i = 0; i < other.getSlots(); i++) {
-                                            ItemStack stack = extractItemInternal(output, this.getItem(output).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
-                                            if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || (ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i)))) {
-                                                other.insertItem(i, extractItemInternal(output, stack.getCount(), false), false);
+                                            ItemStack stack = inventory.extractItem(output, this.getItem(output).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
+                                            if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && (ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i)))) {
+                                                other.insertItem(i, inventory.extractItem(output, stack.getCount(), false), false);
                                             }
                                         }
 
@@ -594,72 +624,6 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                 }
 
             }
-        }
-    }
-
-    @Nonnull
-    public ItemStack insertItemInternal(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        if (stack.isEmpty())
-            return ItemStack.EMPTY;
-
-        if (!canPlaceItemThroughFace(slot, stack, null))
-            return stack;
-
-        ItemStack existing = this.getInv().getStackInSlot(slot);
-
-        int limit = stack.getMaxStackSize();
-
-        if (!existing.isEmpty()) {
-            if (!ItemHandlerHelper.canItemStacksStack(stack, existing))
-                return stack;
-
-            limit -= existing.getCount();
-        }
-
-        if (limit <= 0)
-            return stack;
-
-        boolean reachedLimit = stack.getCount() > limit;
-
-        if (!simulate) {
-            if (existing.isEmpty()) {
-                this.getInv().setStackInSlot(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
-            } else {
-                existing.grow(reachedLimit ? limit : stack.getCount());
-            }
-            this.setChanged();
-        }
-
-        return reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
-    }
-
-    @Nonnull
-    private ItemStack extractItemInternal(int slot, int amount, boolean simulate) {
-        if (amount == 0)
-            return ItemStack.EMPTY;
-
-        ItemStack existing = this.getItem(slot);
-
-        if (existing.isEmpty())
-            return ItemStack.EMPTY;
-
-        int toExtract = Math.min(amount, existing.getMaxStackSize());
-
-        if (existing.getCount() <= toExtract) {
-            if (!simulate) {
-                this.setItem(slot, ItemStack.EMPTY);
-                this.setChanged();
-                return existing;
-            } else {
-                return existing.copy();
-            }
-        } else {
-            if (!simulate) {
-                this.setItem(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
-                this.setChanged();
-            }
-
-            return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
         }
     }
 
@@ -766,9 +730,9 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
     protected int OreProcessingMultiplier(ItemStack input){
         if (isOre(input)){
-            if (getUpgrade(this.getItem(UPGRADEORE())) == 1){
+            if (hasUpgrade(Registration.ORE_PROCESSING.get()) || hasUpgrade(Registration.ADVORE_PROCESSING.get())){
                 return 2;
-            }else if (getUpgrade(this.getItem(UPGRADEORE())) == 7){
+            }else if (hasUpgrade(ForgeRegistries.ITEMS.getValue(new ResourceLocation("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade")))){
                 return 4;
             }
         }else if (input == null) return 0;
@@ -803,13 +767,13 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             ItemStack itemstack2 = this.getInv().getStackInSlot(OUTPUT);
             if (itemstack2.isEmpty()) {
                 this.getInv().setStackInSlot(OUTPUT, getResult(recipe, itemstack));
-                if ((getUpgrade(this.getItem(UPGRADEORE())) == 1) && ((isOre(itemstack)))) {
-                    breakDurabilityItem(getItem(7));
+                if (hasUpgrade(Registration.ORE_PROCESSING.get()) && ((isOre(itemstack)))) {
+                    breakDurabilityItem(getUpgradeSlotItem(Registration.ORE_PROCESSING.get()));
                 }
             } else if (itemstack2.getItem() == getResult(recipe, itemstack).getItem()) {
                 itemstack2.grow(getResult(recipe, itemstack).getCount());
-                if ((getUpgrade(this.getItem(UPGRADEORE())) == 1) && (isOre(itemstack))) {
-                    breakDurabilityItem(getItem(UPGRADEORE()));
+                if (hasUpgrade(Registration.ORE_PROCESSING.get()) && (isOre(itemstack))) {
+                    breakDurabilityItem(getUpgradeSlotItem(Registration.ORE_PROCESSING.get()));
                 }
             }
             this.checkXP(recipe);
@@ -890,12 +854,6 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
 
 
-    ArrayList<LazyOptional<?>> capabilities = new ArrayList<>(Arrays.asList(
-            LazyOptional.of(this::getInv),
-            LazyOptional.of(() -> new RangedWrapper(getInv(), FUEL(), FUEL() + 1)),
-            LazyOptional.of(() -> new RangedWrapper(getInv(), FINPUT(), LINPUT() + 1)),
-            LazyOptional.of(() -> new RangedWrapper(getInv(), FOUTPUT(), LOUTPUT() + 1))
-    ));
 
     @Nonnull
     @Override
@@ -903,7 +861,6 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
         if (!this.isRemoved() && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (getUpgrade(getItem(UPGRADEFACTORY())) == 5) {
                 if (facing != null) {
                     if (facing == Direction.DOWN)
                         return invHandlers[0].cast();
@@ -918,23 +875,16 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                     else
                         return invHandlers[5].cast();
                 }
-            }
-            if (facing == null) return capabilities.get(0).cast();
-                return switch (facing) {
-                    case UP -> capabilities.get(2).cast();
-                    case DOWN -> capabilities.get(3).cast();
-                    default -> capabilities.get(1).cast();
-            };
         }
         if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if (!this.isRemoved() && (getUpgrade(getItem(UPGRADEFLUID())) == 4)) {
+            if (!this.isRemoved() && isLiquid()) {
                 return (LazyOptional.of(() -> fluidTank).cast());
             }
             if (!this.isRemoved() && hasXPTank()) {
                 return (LazyOptional.of(() -> xpTank).cast());
             }
         }
-        if (!this.isRemoved() && isForge() && (getUpgrade(getItem(UPGRADEENERGY())) == 8) && capability == CapabilityEnergy.ENERGY)
+        if (!this.isRemoved() && isForge() && (hasUpgrade(Registration.ENERGY.get())) && capability == CapabilityEnergy.ENERGY)
             return (LazyOptional.of(() -> energyStorage).cast());
 
         return super.getCapability(capability, facing);
@@ -943,56 +893,68 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     @Override
     public int[] IgetSlotsForFace(Direction side) {
-        if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 0) {
-            return new int[]{};
-        } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 1) {
-            return new int[]{0, 1};
-        } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 2) {
-            return new int[]{2};
-        } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 3) {
-            return new int[]{0, 1, 2};
-        } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 4) {
-            return new int[]{1};
+        if (hasUpgrade(Registration.FACTORY.get())) {
+            if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 0) {
+                return new int[]{};
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 1) {
+                return ISLOTS();
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 2) {
+                return OUTPUTS();
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 3) {
+                return FSLOTS();
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 4) {
+                return new int[]{FUEL()};
+            }
+        }else {
+            if (side == side.UP) return INPUTS();
+            else if (side == side.DOWN) return OUTPUTS();
+            else return new int[]{FUEL()};
         }
+
         return new int[]{};
     }
 
     @Override
     public boolean IcanExtractItem(int index, ItemStack stack, Direction direction) {
-        if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 0) {
-            return false;
-        } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 1) {
-            return false;
-        } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 2) {
-            return (index == 4 || index == 5 || index == 6);
-        } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 3) {
-            return (index == 4 || index == 5 || index == 6);
-        } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && stack.getItem() != Items.BUCKET) {
-            return false;
-        } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && stack.getItem() == Items.BUCKET) {
-            return true;
+        if (hasUpgrade(Registration.FACTORY.get())) {
+            if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 0) {
+                return false;
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 1) {
+                return false;
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 2) {
+                return (index >= FOUTPUT() && index <= LOUTPUT());
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 3) {
+                return (index >= FOUTPUT() && index <= LOUTPUT());
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && stack.getItem() != Items.BUCKET) {
+                return false;
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && stack.getItem() == Items.BUCKET) {
+                return true;
+            }
+        }else{
+            if (direction == direction.DOWN && index >= FOUTPUT() && index <= LOUTPUT()) return true;
         }
         return false;
     }
 
     @Override
     public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        for (int o : OUTPUTS())
-            if (index == o || index > o) {
+        if (index >= FOUTPUT() && index <= LOUTPUT())
                 return false;
-            }
-        for (int i : INPUTS())
-            if (index == i) {
+
+            if (index >= FINPUT() && index <= LINPUT()) {
                 if (stack.isEmpty()) {
                     return false;
                 }
 
                 return hasRecipe(stack);
-
             }
+
         if (index == FUEL()) {
             ItemStack itemstack = this.getInv().getStackInSlot(FUEL());
             return getBurnTime(stack) > 0 || (stack.getItem() == Items.BUCKET && itemstack.getItem() != Items.BUCKET);
+        }
+        if (index > LOUTPUT()) {
+            return (stack.getItem() instanceof ItemUpgrade || (stack.getItem() instanceof ItemLiquidFuel && !(this instanceof BlockEntityForgeBase))) && !hasUpgrade(stack.getItem()) && !hasUpgradeType(stack.getItem());
         }
         return false;
     }

@@ -310,7 +310,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
                             }
                             for (int i = 0; i < other.getSlots(); i++) {
                                 ItemStack stack = extractItemInternal(OUTPUT, this.getItem(OUTPUT).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
-                                if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
+                                if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
                                     other.insertItem(i, extractItemInternal(OUTPUT, stack.getCount(), false), false);
                                 }
                             }
@@ -321,7 +321,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
     @Override
     public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        if (index == OUTPUT || index == 3) {
+        if (index == OUTPUT) {
             return false;
         }
         if (index == INPUT) {
@@ -341,10 +341,6 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
         }
         return false;
-    }
-
-    protected boolean doesNeedUpdateSend() {
-        return !Arrays.equals(this.provides, this.lastProvides);
     }
 
     public void onUpdateSent() {

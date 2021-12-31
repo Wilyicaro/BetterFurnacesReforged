@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public abstract class BlockEntityInventory extends BlockEntity implements ITileInventory, WorldlyContainer, MenuProvider, Nameable {
+public abstract class BlockEntityInventory extends BlockEntity implements IBlockEntityInventory, WorldlyContainer, MenuProvider, Nameable {
 
     public ItemStackHandler inventory;
     public NonNullList<ItemStack> inventoryList;
@@ -39,6 +39,11 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
         this.inventory = new ItemStackHandler(sizeInventory) {
             @Nonnull
             @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                return IisItemValidForSlot(slot, stack);
+            }
+            @Nonnull
+            @Override
             public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
                 return Objects.requireNonNullElseGet(stack, () -> super.insertItem(slot, stack, simulate));
             }
@@ -46,14 +51,12 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
             @Override
             protected void onContentsChanged(final int slot) {
                 super.onContentsChanged(slot);
-                    if (loadEmpty == false)
+                    if (!loadEmpty)
                     inventoryList.set(slot, getStackInSlot(slot));
                 setChanged();
             }
         };
         inventoryList = NonNullList.withSize(inventory.getSlots(), ItemStack.EMPTY);
-        for (int slot : new int[sizeInventory])
-            inventoryList.set(slot, inventory.getStackInSlot(slot));
     }
 
     @Override
@@ -160,7 +163,8 @@ public abstract class BlockEntityInventory extends BlockEntity implements ITileI
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.inventoryList = NonNullList.withSize(this.getMaxStackSize(), ItemStack.EMPTY);
+        for (int slot : new int[inventory.getSlots()])
+            inventoryList.set(slot, inventory.getStackInSlot(slot));
         inventory.deserializeNBT(tag.getCompound("inventory"));
         if (tag.contains("CustomName", 8)) {
             this.name = Component.Serializer.fromJson(tag.getString("CustomName"));

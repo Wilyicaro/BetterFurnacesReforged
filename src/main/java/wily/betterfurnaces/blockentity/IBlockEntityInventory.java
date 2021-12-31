@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 
-public interface ITileInventory {
+public interface IBlockEntityInventory {
 
     public int[] IgetSlotsForFace(Direction side);
 

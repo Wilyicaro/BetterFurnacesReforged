@@ -23,12 +23,12 @@ import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.betterfurnaces.items.ItemFuelEfficiency;
 import wily.betterfurnaces.items.ItemLiquidFuel;
 import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.items.ItemUpgradeMisc;
+import wily.betterfurnaces.items.ItemUpgrade;
 
 
 public abstract class BlockFurnaceContainerBase extends AbstractContainerMenu {
 
-    protected BlockEntitySmeltingBase te;
+    public BlockEntitySmeltingBase te;
     protected ContainerData fields;
     protected Player playerEntity;
     protected IItemHandler playerInventory;
@@ -54,22 +54,9 @@ public abstract class BlockFurnaceContainerBase extends AbstractContainerMenu {
         this.addSlot(new SlotInput(te, 0, 54, 18));
         this.addSlot(new SlotFuel(this.te, 1, 54, 54));
         this.addSlot(new SlotOutput(playerEntity, te, 2, 116, 35));
-        this.addSlot(new SlotUpgrade(te, 3, 8, 18){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemOreProcessing);
-            }
-        });
-        this.addSlot(new SlotUpgrade(te, 4, 8, 36){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemFuelEfficiency);
-            }
-        });
-        this.addSlot(new SlotUpgrade(te, 5, 8, 54){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return (stack.getItem() instanceof ItemUpgradeMisc || stack.getItem() instanceof ItemLiquidFuel);}});
+        this.addSlot(new SlotUpgrade(te, 3, 8, 18));
+        this.addSlot(new SlotUpgrade(te, 4, 8, 36));
+        this.addSlot(new SlotUpgrade(te, 5, 8, 54));
         layoutPlayerInventorySlots(8, 84);
         checkContainerSize(this.te, 6);
         checkContainerDataCount(this.fields, 5);

@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.Slider;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemColorUpgrade.ContainerColorUpgrade;
+import wily.betterfurnaces.items.ItemUpgradeColor.ContainerColorUpgrade;
 
 @OnlyIn(Dist.CLIENT)
 public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {

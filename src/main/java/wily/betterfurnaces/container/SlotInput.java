@@ -7,7 +7,6 @@ import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 
 public class SlotInput extends Slot {
     private BlockEntitySmeltingBase te;
-    private BlockEntitySmeltingBase tf;
     public SlotInput(Container te, int index, int x, int y) {
         super(te, index, x, y);
         this.te = (BlockEntitySmeltingBase) te;

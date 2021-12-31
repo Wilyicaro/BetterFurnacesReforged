@@ -53,10 +53,11 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty COLORED = BooleanProperty.create("colored");
+    public static final BooleanProperty SHOW_ORIENTATION = BooleanProperty.create("show_orientation");
 
     public BlockForgeBase(Properties properties) {
         super(properties.noOcclusion());
-        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(BlockStateProperties.LIT, false).setValue(WATERLOGGED, false).setValue(COLORED,false));
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(BlockStateProperties.LIT, false).setValue(WATERLOGGED, false).setValue(COLORED,false).setValue(SHOW_ORIENTATION, false));
     }
 
     @Override
@@ -108,7 +109,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if ((((hand.getItem() instanceof ItemUpgradeMisc && !(hand.getItem() instanceof ItemXpTank)) || hand.getItem() instanceof ItemOreProcessing || hand.getItem() instanceof ItemFuelEfficiency || (hand.getItem() instanceof ItemLiquidFuel && !te.hasXPTank()) || hand.getItem() instanceof ItemEnergyFuel || (hand.getItem() == Registration.XP.get() && !te.isLiquid())) && !(player.isCrouching()))) {
+            if ((hand.getItem() instanceof ItemUpgrade) || (hand.getItem() instanceof ItemLiquidFuel) || (hand.getItem() instanceof ItemEnergyFuel) && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }else if ((te.getInv().getStackInSlot(10).getItem() == new ItemStack(Registration.LIQUID.get()).getItem())  && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() &&  !(player.isCrouching())){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
@@ -127,7 +128,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
 
     private InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         Item hand = player.getItemInHand(handIn).getItem();
-        if (!((hand instanceof ItemOreProcessing) || (hand instanceof ItemFuelEfficiency) || (hand instanceof ItemUpgradeMisc) || (hand instanceof ItemLiquidFuel) || (hand instanceof ItemEnergyFuel))){
+        if (!((hand instanceof ItemUpgrade) || (hand instanceof ItemLiquidFuel) || (hand instanceof ItemEnergyFuel))){
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);
@@ -136,49 +137,35 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
+        BlockEntitySmeltingBase be = (BlockEntitySmeltingBase) te;
 
-        if (hand instanceof ItemOreProcessing && hand != ((Container) te).getItem(7).getItem()) {
-                if ((!(((Container) te).getItem(7).isEmpty())) && (!player.isCreative())) {
-                    Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(7));
-                }
-                    ((Container) te).setItem(7, newStack);
-
-        }
-        if (hand instanceof ItemFuelEfficiency) {
-            if ((!(((Container) te).getItem(8).isEmpty())) && (!player.isCreative())) {
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(8));
-            }
-            ((Container) te).setItem(8, newStack);
-        }
-        if (hand == Registration.XP.get()) {
-            if ((!(((Container) te).getItem(9).isEmpty())) && (!player.isCreative())) {
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(9));
-            }
-            ((Container) te).setItem(9, newStack);
-        }
-        if (hand == Registration.FACTORY.get()) {
-            if ((!(((Container) te).getItem(11).isEmpty())) && (!player.isCreative())) {
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(11));
-            }
-            ((Container) te).setItem(11, newStack);
-
-        }
-        if (hand instanceof ItemColorUpgrade) {
-            if ((!(((Container) te).getItem(12).isEmpty())) && (!player.isCreative())) {
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(12));
-            }
-            ((Container) te).setItem(12, newStack);
-
-        }
         if (hand instanceof ItemLiquidFuel || hand instanceof ItemEnergyFuel) {
             if ((!(((Container) te).getItem(10).isEmpty())) && (!player.isCreative())) {
                 Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(10));
             }
             ((Container) te).setItem(10, newStack);
-        }
-        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
-        if (!player.isCreative()) {
-            player.getItemInHand(handIn).shrink(1);
+            world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
+            if (!player.isCreative()) {
+                player.getItemInHand(handIn).shrink(1);
+            }
+        }else {
+            if (be.hasUpgradeType(stack.getItem())) {
+                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeSlotItem(be.getItemUpgradeType(stack.getItem())));
+            }
+            for (int upg : be.UPGRADES()) {
+                if (be.inventory.isItemValid(upg, stack) && !stack.isEmpty() && upg != 10) {
+                    if (!(be.getItem(upg).isEmpty()) && upg == be.UPGRADES()[be.UPGRADES().length - 1] && !player.isCreative()) {
+                        Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getItem(upg));
+                    }
+                    if (be.getItem(upg).isEmpty()) {
+                        ((Container) te).setItem(upg, newStack);
+                        if (!player.isCreative()) {
+                            player.getItemInHand(handIn).shrink(1);
+                        }
+                        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    }
+                }
+            }
         }
         ((BlockEntitySmeltingBase)te).onUpdateSent();
         return InteractionResult.SUCCESS;
@@ -237,10 +224,6 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
         }
     }
 
-    public void onReplaced(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
-
-    }
-
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
@@ -254,18 +237,9 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
             super.onRemove(state, world, pos, oldState, p_196243_5_);
         }
     }
-
-    public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
-        return true;
-    }
-
     public int getComparatorInputOverride(BlockState state, Level world, BlockPos pos) {
         return AbstractContainerMenu.getRedstoneSignalFromContainer((Container) world.getBlockEntity(pos));
 
-    }
-
-    public RenderShape getRenderType(BlockState p_149645_1_) {
-        return RenderShape.MODEL;
     }
 
     public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
@@ -328,7 +302,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.FACING, WATERLOGGED, BlockStateProperties.LIT, COLORED);
+        builder.add(BlockStateProperties.FACING, WATERLOGGED, BlockStateProperties.LIT, COLORED, SHOW_ORIENTATION);
     }
     @Nullable
     protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {

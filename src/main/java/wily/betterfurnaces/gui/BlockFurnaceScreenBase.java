@@ -64,13 +64,12 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
     protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
         int actualMouseX = mouseX - ((this.width - this.getXSize()) / 2);
         int actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
-        //drawString(Minecraft.getInstance().fontRenderer, "Energy: " + getMenu().getEnergy(), 10, 10, 0xffffff);
         this.minecraft.font.draw(matrix, this.playerInv.getDisplayName(), 7, this.getYSize() - 93, 4210752);
         this.minecraft.font.draw(matrix, name, 7 + this.getXSize() / 2 - this.minecraft.font.width(name.getString()) / 2, 6, 4210752);
-        if ((((BlockFurnaceContainerBase) this.getMenu()).slots.get(5).getItem().getItem() == new ItemStack(Registration.LIQUID.get()).getItem()) &&
+        if (getMenu().te.hasUpgrade(Registration.LIQUID.get()) &&
                 (mouseX > getGuiLeft() + 73 && mouseX < getGuiLeft() + 92 && mouseY > getGuiTop() + 49 && mouseY < getGuiTop() + 70))
             this.renderTooltip(matrix, new TextComponent(((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored().getDisplayName().getString() +": " + ((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored().getAmount() + " mB"), actualMouseX, actualMouseY);
-        if (((BlockFurnaceContainerBase) this.getMenu()).slots.get(5).getItem().getItem() == new ItemStack(Registration.FACTORY.get()).getItem()) {
+        if (getMenu().te.hasUpgrade(Registration.FACTORY.get())) {
             if (this.getMenu().showInventoryButtons() && this.getMenu().getRedstoneMode() == 4) {
                 int comSub = this.getMenu().getComSub();
                 int i = comSub > 9 ? 28 : 31;
@@ -175,7 +174,7 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
         i = ((BlockFurnaceContainerBase) this.getMenu()).getCookScaled(24);
         this.blit(matrix, getGuiLeft() + 79, getGuiTop() + 34, 176, 14, i + 1, 16);
 
-        if (this.getMenu().slots.get(5).getItem().getItem() == new ItemStack(Registration.LIQUID.get()).getItem()) {
+        if (getMenu().te.hasUpgrade(Registration.LIQUID.get())){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 73, getGuiTop() + 49, 192, 38, 20, 22);
             FluidStack fluid =  ((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored();
@@ -190,7 +189,7 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
             this.blit(matrix, getGuiLeft() + 73, getGuiTop() + 49, 192, 16, 20, 22);
         }
 
-        if (this.getMenu().slots.get(5).getItem().getItem() == new ItemStack(Registration.XP.get()).getItem()) {
+        if (this.getMenu().te.hasUpgrade(Registration.XP.get())) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 116, getGuiTop() + 57, 208, 0, 16, 16);
             FluidStack fluid =  ((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored();
@@ -204,7 +203,7 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 116, getGuiTop() + 57, 192, 0, 16, 16);
         }
-        if (((BlockFurnaceContainerBase) this.getMenu()).slots.get(5).getItem().getItem() == new ItemStack(Registration.FACTORY.get()).getItem()) {
+        if (getMenu().te.hasUpgrade(Registration.FACTORY.get())) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             int actualMouseX = mouseX - ((this.width - this.getXSize()) / 2);
             int actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
@@ -502,47 +501,49 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
     }
 
     public void mouseClickedRedstoneButtons(double mouseX, double mouseY) {
-        if (mouseX >= -31 && mouseX <= -18 && mouseY >= 132 && mouseY <= 147) {
-            if (this.sub_button && isShiftKeyDown()) {
-                Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 9, this.getMenu().getComSub() - 1));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
+        if (getMenu().showInventoryButtons()) {
+            if (mouseX >= -31 && mouseX <= -18 && mouseY >= 132 && mouseY <= 147) {
+                if (this.sub_button && isShiftKeyDown()) {
+                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 9, this.getMenu().getComSub() - 1));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
+                }
             }
-        }
-        if (mouseX >= -31 && mouseX <= -18 && mouseY >= 132 && mouseY <= 147) {
-            if (this.add_button && !isShiftKeyDown()) {
-                Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 9, this.getMenu().getComSub() + 1));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+            if (mouseX >= -31 && mouseX <= -18 && mouseY >= 132 && mouseY <= 147) {
+                if (this.add_button && !isShiftKeyDown()) {
+                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 9, this.getMenu().getComSub() + 1));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                }
             }
-        }
-        if (mouseX >= -47 && mouseX <= -34 && mouseY >= 118 && mouseY <= 131) {
-            if (this.getMenu().getRedstoneMode() != 0) {
-                Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 0));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+            if (mouseX >= -47 && mouseX <= -34 && mouseY >= 118 && mouseY <= 131) {
+                if (this.getMenu().getRedstoneMode() != 0) {
+                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 0));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                }
             }
-        }
 
-        if (mouseX >= -31 && mouseX <= -18 && mouseY >= 118 && mouseY <= 131) {
-            if (this.getMenu().getRedstoneMode() != 1 && !isShiftKeyDown()) {
-                Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 1));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+            if (mouseX >= -31 && mouseX <= -18 && mouseY >= 118 && mouseY <= 131) {
+                if (this.getMenu().getRedstoneMode() != 1 && !isShiftKeyDown()) {
+                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 1));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                }
+                if (this.getMenu().getRedstoneMode() != 2 && isShiftKeyDown()) {
+                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 2));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                }
             }
-            if (this.getMenu().getRedstoneMode() != 2 && isShiftKeyDown()) {
-                Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 2));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
-            }
-        }
 
-        if (mouseX >= -15 && mouseX <= -2 && mouseY >= 118 && mouseY <= 131) {
-            if (this.getMenu().getRedstoneMode() != 3) {
-                Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 3));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+            if (mouseX >= -15 && mouseX <= -2 && mouseY >= 118 && mouseY <= 131) {
+                if (this.getMenu().getRedstoneMode() != 3) {
+                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 3));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                }
             }
-        }
 
-        if (mouseX >= -47 && mouseX <= -34 && mouseY >= 134 && mouseY <= 147) {
-            if (this.getMenu().getRedstoneMode() != 4) {
-                Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 4));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+            if (mouseX >= -47 && mouseX <= -34 && mouseY >= 134 && mouseY <= 147) {
+                if (this.getMenu().getRedstoneMode() != 4) {
+                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 4));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                }
             }
         }
     }
