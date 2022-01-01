@@ -1,100 +1,79 @@
 {
-  "variants": {
-    "facing=south,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge"
+  "multipart": [
+    {   "when": { "facing": "north", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge" }
     },
-    "facing=north,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge"
+    {   "when": { "facing": "east", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge", "x": 90 }
     },
-    "facing=east,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge",
-      "x": 90
+    {   "when": { "facing": "south", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge" }
     },
-    "facing=west,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge",
-      "x": 90
+    {   "when": { "facing": "west", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge", "x": 90 }
     },
-    "facing=up,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing": "up", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge", "x": 90 , "y" :  90 }
     },
-    "facing=down,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"down", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge", "x": 90 , "y" :  90}
     },
-    "facing=south,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge_on"
+    {   "when": { "facing":"north", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge_on" }
     },
-    "facing=north,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge_on"
+    {   "when": { "facing":"east", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge_on", "x": 90 }
     },
-    "facing=east,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge_on",
-      "x": 90
+    {   "when": { "facing":"south", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge_on" }
     },
-    "facing=west,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge_on",
-      "x": 90
+    {   "when": { "facing": "west", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge_on", "x": 90 }
     },
-    "facing=up,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge_on",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"up", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge_on", "x": 90 , "y" :  90 }
     },
-    "facing=down,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/gold_forge_on",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"down", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/gold_forge_on", "x": 90 , "y" :  90}
     },
-    "facing=south,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge"
+    {   "when": { "facing":"north", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge" }
     },
-    "facing=north,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge"
+    {   "when": { "facing":"east", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge", "x": 90 }
     },
-    "facing=east,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge",
-      "x": 90
+    {   "when": { "facing":"south", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge" }
     },
-    "facing=west,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge",
-      "x": 90
+    {   "when": { "facing":"west", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge", "x": 90 }
     },
-    "facing=up,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"up", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge", "x": 90 , "y" :  90 }
     },
-    "facing=down,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"down", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge", "x": 90 , "y" :  90}
     },
-    "facing=south,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on"
+    {   "when": { "facing":"north","lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on" }
     },
-    "facing=north,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on"
+    {   "when": { "facing":"east", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on", "x": 90 }
     },
-    "facing=east,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on",
-      "x": 90
+    {   "when": { "facing":"south", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on" }
     },
-    "facing=west,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on",
-      "x": 90
+    {   "when": { "facing":"west", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on", "x": 90 }
     },
-    "facing=up,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"up", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on", "x": 90 , "y" :  90 }
     },
-    "facing=down,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"down", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on", "x": 90 , "y" :  90}
+    },
+    {   "when": { "show_orientation": "true" },
+      "apply": { "model": "betterfurnacesreforged:block/nsweud" }
     }
-  }
+  ]
 }

@@ -3,12 +3,7 @@ package wily.betterfurnaces.container;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
-import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemLiquidFuel;
-import wily.betterfurnaces.items.ItemUpgrade;
-import wily.betterfurnaces.items.ItemXpTank;
 
 public class SlotUpgrade extends Slot {
 

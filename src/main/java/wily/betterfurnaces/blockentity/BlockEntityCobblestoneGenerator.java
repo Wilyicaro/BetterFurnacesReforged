@@ -21,12 +21,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import wily.betterfurnaces.blocks.BlockCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemOreProcessing;
+import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
+import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
@@ -142,13 +141,13 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
             if ((e.cobTime >= e.getCobTime() && ((can  && can3)|| can1))){
                 if (can1) {
                     e.getInv().setStackInSlot(OUTPUT, e.getResult());
-                    if (upgrade1.getItem() instanceof ItemOreProcessing) {
+                    if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing) {
                         e.breakDurabilityItem(upgrade1);
                     }
                 }else {
                     if (can && can3) {
                         output.grow(e.getResult().getCount());
-                        if (upgrade1.getItem() instanceof ItemOreProcessing) {
+                        if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing) {
                             e.breakDurabilityItem(upgrade1);
                         }
                     }
@@ -176,15 +175,15 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         ItemStack upgrade = this.getInv().getStackInSlot(UPGRADE);
         if (upgrade.isEmpty() && resultType < 3){
             return 80;
-        }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType < 3){
+        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType < 3){
             return 40;
         }else if (upgrade.isEmpty() && resultType == 3){
             return 150;
-        }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType == 3){
+        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 3){
             return 75;
         }else if (upgrade.isEmpty() && resultType == 4){
             return 600;
-        }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType == 4){
+        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 4){
             return 300;
         }else return 0;
     }
@@ -200,7 +199,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
     }
     protected int getResultCount(){
         ItemStack upgrade1 = this.getItem(4);
-        if (upgrade1.getItem() instanceof ItemOreProcessing)
+        if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing)
             return 2;
         else return 1;
     }

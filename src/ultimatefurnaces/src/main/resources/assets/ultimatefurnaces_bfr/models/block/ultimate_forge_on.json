@@ -1,5 +1,5 @@
 {
-  "parent": "betterfurnacesreforged:custom/extremeforgemodel",
+  "parent": "betterfurnacesreforged:block/forge",
   "textures": {
     "particle": "ultimatefurnaces_bfr:blocks/ultimerite_top",
     "front": "ultimatefurnaces_bfr:blocks/ultimate_forge_front",

@@ -34,15 +34,10 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
-import wily.betterfurnaces.container.BlockFurnaceContainerBase;
-import wily.betterfurnaces.container.SlotUpgrade;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemLiquidFuel;
-import wily.betterfurnaces.items.ItemOreProcessing;
+import wily.betterfurnaces.items.ItemUpgradeLiquidFuel;
 import wily.betterfurnaces.items.ItemUpgrade;
 
 import javax.annotation.Nullable;
@@ -97,7 +92,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if ((hand.getItem() instanceof ItemUpgrade || hand.getItem() instanceof ItemLiquidFuel) && !(player.isCrouching())) {
+            if ((hand.getItem() instanceof ItemUpgrade || hand.getItem() instanceof ItemUpgradeLiquidFuel) && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }else if ((te.getInv().getStackInSlot(5).getItem() == new ItemStack(Registration.LIQUID.get()).getItem())  && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() &&  !(player.isCrouching())){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
@@ -116,7 +111,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
 
     private InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!(hand.getItem() instanceof ItemUpgrade || hand.getItem() instanceof ItemLiquidFuel)){
+        if (!(hand.getItem() instanceof ItemUpgrade || hand.getItem() instanceof ItemUpgradeLiquidFuel)){
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);

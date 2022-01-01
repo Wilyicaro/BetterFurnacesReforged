@@ -15,7 +15,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import wily.betterfurnaces.items.ItemOreProcessing;
+import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 import wily.ultimatefurnaces.UltimateFurnaces;
 import wily.ultimatefurnaces.blocks.*;
 import wily.ultimatefurnaces.container.*;
@@ -124,7 +124,7 @@ public class Registration {
 
     public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeUltimate> ULTIMATE_UPGRADE = ITEMS.register("ultimate_upgrade", () -> new ItemUpgradeUltimate(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
-    public static final RegistryObject<ItemOreProcessing> UORE = ITEMS.register("ultimate_ore_processing_upgrade", () -> new ItemOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<ItemUpgradeOreProcessing> UORE = ITEMS.register("ultimate_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {

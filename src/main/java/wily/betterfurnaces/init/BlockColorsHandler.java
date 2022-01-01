@@ -17,7 +17,6 @@ public class BlockColorsHandler implements BlockColor {
     @SubscribeEvent
     public static void registerBlockColors() {
         System.out.println("Registering block color handler");
-
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.IRON_FURNACE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.GOLD_FURNACE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.DIAMOND_FURNACE.get());
@@ -31,7 +30,7 @@ public class BlockColorsHandler implements BlockColor {
         if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof BlockEntitySmeltingBase) {
             BlockEntitySmeltingBase te = (BlockEntitySmeltingBase) iBlockDisplayReader.getBlockEntity(blockPos);
             ItemStack stack = te.getUpgradeSlotItem(Registration.COLOR.get());
-            if (stack.getItem() == Registration.COLOR.get() && (stack.getTag() != null)) {
+            if (te.hasUpgrade(Registration.COLOR.get()) && (stack.getTag() != null)) {
                 return te.hex();
             }
         }

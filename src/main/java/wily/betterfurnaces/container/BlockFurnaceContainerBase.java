@@ -20,10 +20,6 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemLiquidFuel;
-import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.items.ItemUpgrade;
 
 
 public abstract class BlockFurnaceContainerBase extends AbstractContainerMenu {

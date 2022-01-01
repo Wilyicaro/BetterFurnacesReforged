@@ -21,15 +21,15 @@ public class ClientSide {
         MenuScreens.register(Registration.DIAMOND_FORGE_CONTAINER.get(), BlockDiamondForgeScreen::new);
         MenuScreens.register(Registration.NETHERHOT_FORGE_CONTAINER.get(), BlockNetherhotForgeScreen::new);
         MenuScreens.register(Registration.ULTIMATE_FORGE_CONTAINER.get(), BlockUltimateForgeScreen::new);
-        ItemBlockRenderTypes.setRenderLayer(Registration.COPPER_FURNACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.ULTIMATE_FURNACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.COPPER_FORGE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.IRON_FORGE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.GOLD_FORGE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.DIAMOND_FORGE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.NETHERHOT_FORGE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.ULTIMATE_FORGE.get(), RenderType.cutout());
-        BlockColorsHandler.registerBlockColors();
+        ItemBlockRenderTypes.setRenderLayer(Registration.COPPER_FURNACE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.ULTIMATE_FURNACE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.COPPER_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.IRON_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.GOLD_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.DIAMOND_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.NETHERHOT_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.ULTIMATE_FORGE.get(), RenderType.cutoutMipped());
+        BlockColorsHandlerUF.registerBlockColors();
 
     }
 

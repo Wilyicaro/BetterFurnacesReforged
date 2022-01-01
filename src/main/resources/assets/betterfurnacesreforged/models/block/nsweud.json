@@ -1,8 +1,10 @@
 {
   "parent": "block/cube",
+  "ambientocclusion": false,
   "elements":[
-    {   "from": [ -0.5, -0.5, -0.5 ],
-      "to": [ 16.5, 16.5, 16.5 ],
+    {   "from": [ -0.1, -0.1, -0.1 ],
+      "to": [ 16.1, 16.1, 16.1 ],
+      "shade": false,
       "faces": {
         "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#down" },
         "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#up"},

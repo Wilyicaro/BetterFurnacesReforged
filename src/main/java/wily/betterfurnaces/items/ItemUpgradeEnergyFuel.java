@@ -14,10 +14,10 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 
 import java.util.List;
 
-public class ItemEnergyFuel extends Item {
+public class ItemUpgradeEnergyFuel extends Item {
 
 
-    public ItemEnergyFuel(Properties properties) {
+    public ItemUpgradeEnergyFuel(Properties properties) {
         super(properties);
     }
 

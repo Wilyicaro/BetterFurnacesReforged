@@ -15,10 +15,10 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemLiquidFuel extends Item {
+public class ItemUpgradeLiquidFuel extends Item {
 
 
-    public ItemLiquidFuel(Properties properties) {
+    public ItemUpgradeLiquidFuel(Properties properties) {
         super(properties);
     }
 

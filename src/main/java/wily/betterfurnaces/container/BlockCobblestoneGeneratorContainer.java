@@ -16,8 +16,8 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemOreProcessing;
+import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
+import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 
 
 public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {
@@ -59,13 +59,13 @@ public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {
         this.addSlot(new SlotUpgrade(te, 3, 8, 18){
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemFuelEfficiency);
+                return ( stack.getItem() instanceof ItemUpgradeFuelEfficiency);
             }
         });
         this.addSlot(new SlotUpgrade(te, 4, 8, 36){
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemOreProcessing);
+                return ( stack.getItem() instanceof ItemUpgradeOreProcessing);
             }
         });
         layoutPlayerInventorySlots(8, 84);

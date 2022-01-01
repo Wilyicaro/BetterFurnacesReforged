@@ -26,7 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
+import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -65,7 +65,7 @@ public abstract class BlockCobblestoneGenerator extends Block implements EntityB
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof ItemFuelEfficiency)) {
+            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof ItemUpgradeFuelEfficiency)) {
                 interactInsert(world, pos, player, handIn, stack);
             } else this.interactWith(world, pos, player);
         }
@@ -82,7 +82,7 @@ public abstract class BlockCobblestoneGenerator extends Block implements EntityB
     }
     private InteractionResult interactInsert(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof ItemFuelEfficiency))){
+        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof ItemUpgradeFuelEfficiency))){
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);
@@ -91,7 +91,7 @@ public abstract class BlockCobblestoneGenerator extends Block implements EntityB
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
-        if (player.getItemInHand(handIn).getItem() instanceof ItemFuelEfficiency) {
+        if (player.getItemInHand(handIn).getItem() instanceof ItemUpgradeFuelEfficiency) {
             if ((!(((Container) te).getItem(3).isEmpty())) && (!player.isCreative())){
                 Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(3));
             }

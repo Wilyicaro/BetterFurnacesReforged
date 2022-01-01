@@ -16,23 +16,26 @@ import wily.betterfurnaces.init.Registration;
 
 import java.util.List;
 
-public class ItemFuelEfficiency extends ItemUpgrade {
+public class ItemUpgradeOreProcessing extends ItemUpgrade {
 
-    public ItemFuelEfficiency(Properties properties) {
+
+    public ItemUpgradeOreProcessing(Properties properties) {
         super(properties);
     }
-    
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
-        if (stack.getItem() != Registration.FUEL.get())
+        if (!stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade"))
+            tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
+        else tooltip.add(new TranslatableComponent("tooltip.ultimate_furnaces_bfr.upgrade.ultore").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
+        if (stack.getItem() != Registration.ORE_PROCESSING.get())
             tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
     }
     public void inventoryTick(ItemStack stack, Level world, Entity player, int slot, boolean selected) {
         super.inventoryTick(stack, world, player, slot, selected);
-        if (stack.isDamageableItem() && stack.getDamageValue() >= 256){
+        if (stack.isDamageableItem() && stack.getDamageValue() >= 128){
             stack.shrink(1);
         }
     }

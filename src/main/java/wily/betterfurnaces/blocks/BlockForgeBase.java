@@ -31,6 +31,10 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
@@ -57,12 +61,21 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
 
     public BlockForgeBase(Properties properties) {
         super(properties.noOcclusion());
-        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(BlockStateProperties.LIT, false).setValue(WATERLOGGED, false).setValue(COLORED,false).setValue(SHOW_ORIENTATION, false));
+        this.registerDefaultState( this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(BlockStateProperties.LIT, false).setValue(WATERLOGGED, false).setValue(COLORED,false).setValue(SHOW_ORIENTATION, false));
+    }
+    @Override
+    public VoxelShape getShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
+        return FORGE_SHAPE;
     }
 
+    public static final VoxelShape FORGE_SHAPE = Shapes.join(Shapes.block(), Shapes.or(box(0, 0,0, 16,1,16), box(15,1,0,16,15,1), box(0,1,0,1,15,1), box(0,1,15,1,15,16), box(15,1,15,16,15,16), box(1.75,15,1.75,14.5,15,14.5), box(0,15,0,16,16,16) ,box(1, 0.5,1,15,15,15)), BooleanOp.AND);
     @Override
     public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(BlockStateProperties.LIT) ? 14 : 0;
+    }
+
+    public static boolean getOrientation(BlockState state, BlockGetter world, BlockPos pos) {
+        return state.getValue(SHOW_ORIENTATION);
     }
     @Override
     public FluidState getFluidState(BlockState state) {
@@ -109,7 +122,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if ((hand.getItem() instanceof ItemUpgrade) || (hand.getItem() instanceof ItemLiquidFuel) || (hand.getItem() instanceof ItemEnergyFuel) && !(player.isCrouching())) {
+            if ((hand.getItem() instanceof ItemUpgrade) || (hand.getItem() instanceof ItemUpgradeLiquidFuel) || (hand.getItem() instanceof ItemUpgradeEnergyFuel) && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }else if ((te.getInv().getStackInSlot(10).getItem() == new ItemStack(Registration.LIQUID.get()).getItem())  && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() &&  !(player.isCrouching())){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
@@ -128,7 +141,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
 
     private InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         Item hand = player.getItemInHand(handIn).getItem();
-        if (!((hand instanceof ItemUpgrade) || (hand instanceof ItemLiquidFuel) || (hand instanceof ItemEnergyFuel))){
+        if (!((hand instanceof ItemUpgrade) || (hand instanceof ItemUpgradeLiquidFuel) || (hand instanceof ItemUpgradeEnergyFuel))){
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);
@@ -139,7 +152,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
         newStack.setTag(stack.getTag());
         BlockEntitySmeltingBase be = (BlockEntitySmeltingBase) te;
 
-        if (hand instanceof ItemLiquidFuel || hand instanceof ItemEnergyFuel) {
+        if (hand instanceof ItemUpgradeLiquidFuel || hand instanceof ItemUpgradeEnergyFuel) {
             if ((!(((Container) te).getItem(10).isEmpty())) && (!player.isCreative())) {
                 Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(10));
             }

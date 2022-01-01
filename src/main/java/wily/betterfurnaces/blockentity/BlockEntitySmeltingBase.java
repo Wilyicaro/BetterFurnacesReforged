@@ -349,6 +349,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     public static void tick(Level level, BlockPos worldPosition, BlockState blockState, BlockEntitySmeltingBase e) {
+
         if (e.furnaceSettings.size() <= 0) {
             e.furnaceSettings = new FurnaceSettings() {
                 @Override
@@ -364,9 +365,14 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         if (e.isBurning()) {
             --e.furnaceBurnTime;
         }
-
+        if (e.hasXPTank() && !e.recipes.isEmpty()) e.grantStoredRecipeExperience(level,null);
         if (!e.hasUpgrade(Registration.FACTORY.get()) && e instanceof BlockEntityForgeBase && (level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.SHOW_ORIENTATION))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.SHOW_ORIENTATION, false), 3);
-
+        if (e.isForge())
+        e.getItem(e.FUEL()).getCapability(CapabilityEnergy.ENERGY).ifPresent(E -> {
+            if (e.energyStorage.getEnergyStored() < e.energyStorage.getMaxEnergyStored()) {
+                E.extractEnergy(e.energyStorage.receiveEnergy(E.getEnergyStored(), false), false);
+            }
+        });
         if ((e.hasUpgrade(Registration.COLOR.get()))) {
             if (!(level.getBlockState(e.getBlockPos()).getValue(BlockFurnaceBase.COLORED)))
                 level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockFurnaceBase.COLORED, true), 3);
@@ -470,15 +476,12 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                         flag1 = true;
                         if ((!e.isLiquid() || e.fluidTank.getFluidAmount() < 10) && !e.isEnergy())
                             if (itemstack.hasContainerItem()) e.getInv().setStackInSlot(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
-                            else if (!itemstack.isEmpty()) {
+                            else if (!itemstack.isEmpty() && isItemFuel(itemstack)) {
                                 itemstack.shrink(1);
                                 if (e.hasEnder()) {
                                     if (e.hasUpgrade(Registration.FUEL.get())) {
                                         e.breakDurabilityItem(e.getUpgradeSlotItem(Registration.FUEL.get()));
                                     }
-                                }
-                                if (itemstack.isEmpty()) {
-                                    e.getInv().setStackInSlot(e.FUEL(), ForgeHooks.getContainerItem(itemstack));
                                 }
                             }
                     }
@@ -954,7 +957,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             return getBurnTime(stack) > 0 || (stack.getItem() == Items.BUCKET && itemstack.getItem() != Items.BUCKET);
         }
         if (index > LOUTPUT()) {
-            return (stack.getItem() instanceof ItemUpgrade || (stack.getItem() instanceof ItemLiquidFuel && !(this instanceof BlockEntityForgeBase))) && !hasUpgrade(stack.getItem()) && !hasUpgradeType(stack.getItem());
+            return (stack.getItem() instanceof ItemUpgrade || (stack.getItem() instanceof ItemUpgradeLiquidFuel && !(this instanceof BlockEntityForgeBase))) && !hasUpgrade(stack.getItem()) && !hasUpgradeType(stack.getItem());
         }
         return false;
     }
