@@ -16,18 +16,18 @@ import wily.betterfurnaces.Config;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemXpTank extends ItemUpgrade {
+public class ItemUpgradeXpTank extends ItemUpgrade {
 
 
-    public ItemXpTank(Properties properties) {
-        super(properties);
+    public ItemUpgradeXpTank(Properties properties) {
+        super(properties,6);
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.xp").setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
         if (!ModList.get().isLoaded(Config.getLiquidXPMod()))
             tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.isworking").setStyle(Style.EMPTY.applyFormat((ChatFormatting.RED))));

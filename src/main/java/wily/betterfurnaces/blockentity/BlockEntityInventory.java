@@ -42,11 +42,6 @@ public abstract class BlockEntityInventory extends BlockEntity implements IBlock
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return IisItemValidForSlot(slot, stack);
             }
-            @Nonnull
-            @Override
-            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                return Objects.requireNonNullElseGet(stack, () -> super.insertItem(slot, stack, simulate));
-            }
 
             @Override
             protected void onContentsChanged(final int slot) {

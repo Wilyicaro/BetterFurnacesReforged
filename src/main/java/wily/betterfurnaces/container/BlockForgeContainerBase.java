@@ -1,6 +1,7 @@
 package wily.betterfurnaces.container;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Container;
@@ -21,12 +22,14 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
+import wily.betterfurnaces.util.DirectionUtil;
 
 
 public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
 
-    public BlockEntitySmeltingBase te;
+    public BlockEntityForgeBase te;
     protected ContainerData fields;
     protected Player playerEntity;
     protected IItemHandler playerInventory;
@@ -40,7 +43,7 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
 
     public BlockForgeContainerBase(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(containerType, windowId);
-        this.te = (BlockEntitySmeltingBase) world.getBlockEntity(pos);
+        this.te = (BlockEntityForgeBase) world.getBlockEntity(pos);
         this.recipeType = te.recipeType;
 
         this.playerEntity = player;
@@ -201,13 +204,17 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
 
         return this.fields.get(0) * pixels / i;
     }
-    public int getFluidStoredScaled(int pixels) {
-        int cur = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getFluidInTank(0).getAmount();
-        int max = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getTankCapacity(0);
+    public int getFluidStoredScaled(int pixels, boolean isXp) {
+        Direction facing = null;
+        if (isXp) facing = DirectionUtil.fromId(te.getIndexFront());
+        int cur = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing).resolve().get().getFluidInTank(0).getAmount();
+        int max = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing).resolve().get().getTankCapacity(0);
         return cur * pixels / max;
     }
-    public FluidStack getFluidStackStored() {
-        return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getFluidInTank(0);
+    public FluidStack getFluidStackStored(boolean isXp) {
+        Direction facing = null;
+        if (isXp) facing = DirectionUtil.fromId(te.getIndexFront());
+        return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing).resolve().get().getFluidInTank(0);
     }
     public int getEnergyStoredScaled(int pixels) {
         int cur = te.getCapability(CapabilityEnergy.ENERGY, null).resolve().get().getEnergyStored();

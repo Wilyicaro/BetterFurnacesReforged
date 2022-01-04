@@ -18,7 +18,7 @@ public class ItemUpgradeFactory extends ItemUpgrade {
 
 
     public ItemUpgradeFactory(Properties properties) {
-        super(properties);
+        super(properties,5);
     }
 
     @OnlyIn(Dist.CLIENT)

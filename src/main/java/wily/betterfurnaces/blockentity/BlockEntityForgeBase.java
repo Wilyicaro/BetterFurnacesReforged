@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import wily.betterfurnaces.util.DirectionUtil;
 
 public abstract class BlockEntityForgeBase extends BlockEntitySmeltingBase {
     @Override
@@ -18,6 +19,8 @@ public abstract class BlockEntityForgeBase extends BlockEntitySmeltingBase {
     public int EnergyUse() {return 1800;}
     @Override
     public int LiquidCapacity() {return 8000;}
+    @Override
+    public int EnergyCapacity() {return 64000;}
     @Override
     public boolean isForge(){ return true;}
     @Override
@@ -42,5 +45,51 @@ public abstract class BlockEntityForgeBase extends BlockEntitySmeltingBase {
         this.smeltItem(irecipeSlot(FINPUT()).orElse(null), FINPUT(), correspondentOutputSlot(FINPUT()));
         this.smeltItem(irecipeSlot(FINPUT() + 1).orElse(null), FINPUT() + 1, correspondentOutputSlot(FINPUT() + 1));
         this.smeltItem(irecipeSlot(FINPUT() + 2).orElse(null), FINPUT() + 2, correspondentOutputSlot(FINPUT() + 2));
+    }
+    public int getIndexBottom() {
+        return facing().getOpposite().ordinal();
+    }
+    public int getIndexTop() {
+            return facing().ordinal();
+    }
+    @Override
+    public int getIndexFront() {
+        if (facing() == Direction.NORTH || facing() == Direction.EAST)  {
+            return Direction.DOWN.ordinal();
+        } else if ((facing() == Direction.SOUTH) || (facing() == Direction.WEST)) {
+            return Direction.UP.ordinal();
+        }else if (facing() == Direction.UP){
+            return Direction.NORTH.ordinal();
+        }else {
+            return Direction.SOUTH.ordinal();
+        }
+    }
+    @Override
+    public int getIndexBack() {
+        if (facing() == Direction.NORTH || facing() == Direction.EAST)  {
+            return Direction.UP.ordinal();
+        } else if ((facing() == Direction.SOUTH) || (facing() == Direction.WEST)) {
+            return Direction.DOWN.ordinal();
+        }else if (facing() == Direction.UP){
+            return Direction.SOUTH.ordinal();
+        }else {
+            return Direction.NORTH.ordinal();
+        }
+    }
+    @Override
+    public int getIndexLeft() {
+        if (facing() == Direction.EAST || facing() == Direction.WEST) {
+            return Direction.SOUTH.ordinal();
+        } else {
+            return Direction.EAST.ordinal();
+        }
+    }
+    @Override
+    public int getIndexRight() {
+        if (facing() == Direction.EAST || facing() == Direction.WEST) {
+            return Direction.NORTH.ordinal();
+        } else {
+            return Direction.WEST.ordinal();
+        }
     }
 }

@@ -14,17 +14,16 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 
 import java.util.List;
 
-public class ItemUpgradeEnergyFuel extends Item {
+public class ItemUpgradeEnergyFuel extends ItemUpgrade {
 
 
     public ItemUpgradeEnergyFuel(Properties properties) {
-        super(properties);
+        super(properties,1);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
         tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.energy").setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
     }
 }

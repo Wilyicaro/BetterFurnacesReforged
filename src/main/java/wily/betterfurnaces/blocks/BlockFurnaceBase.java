@@ -92,12 +92,12 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if ((hand.getItem() instanceof ItemUpgrade || hand.getItem() instanceof ItemUpgradeLiquidFuel) && !(player.isCrouching())) {
+            if (hand.getItem() instanceof ItemUpgrade && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
-            }else if ((te.getInv().getStackInSlot(5).getItem() == new ItemStack(Registration.LIQUID.get()).getItem())  && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() &&  !(player.isCrouching())){
+            }else if ((te.hasUpgrade(Registration.LIQUID.get()) && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && BlockEntitySmeltingBase.isItemFuel(hand) &&  !(player.isCrouching()))){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
                 FluidActionResult res = FluidUtil.tryEmptyContainer(hand, te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get(), 1000, player, true);
-                if (fluid != null && ForgeHooks.getBurnTime(hand, RecipeType.SMELTING) > 0)
+                if (fluid != null)
                     if (res.isSuccess()) {
                         world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
                         if (!player.isCreative()) player.setItemInHand(handIn, res.result);
@@ -111,7 +111,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
 
     private InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!(hand.getItem() instanceof ItemUpgrade || hand.getItem() instanceof ItemUpgradeLiquidFuel)){
+        if (!(hand.getItem() instanceof ItemUpgrade)){
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);
@@ -121,13 +121,17 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
         BlockEntitySmeltingBase be = (BlockEntitySmeltingBase) te;
-        if (be.hasUpgradeType(stack.getItem())) {
-            Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeSlotItem(be.getItemUpgradeType(stack.getItem())));
+        if (be.hasUpgradeType((ItemUpgrade) stack.getItem())) {
+            if (!player.isCreative())
+            Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()));
+            else  be.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()).shrink(1);
         }
         for (int upg : be.UPGRADES()) {
             if (be.inventory.isItemValid(upg, stack) && !stack.isEmpty()) {
-                if (!(be.getItem(upg).isEmpty()) && upg == be.UPGRADES()[be.UPGRADES().length - 1] && !player.isCreative()) {
+                if (!(be.getItem(upg).isEmpty()) && upg == be.UPGRADES()[be.UPGRADES().length - 1]) {
+                    if (!player.isCreative())
                     Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getItem(upg));
+                    else be.getItem(upg).shrink(1);
                 }
                 if (be.getItem(upg).isEmpty()) {
                     ((Container) te).setItem(upg, newStack);

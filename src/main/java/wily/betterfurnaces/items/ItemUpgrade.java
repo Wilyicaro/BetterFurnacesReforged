@@ -17,11 +17,12 @@ import java.util.List;
 
 public class ItemUpgrade extends Item {
 
-
-    public ItemUpgrade(Properties properties) {
+public int upgradeType;
+// Use a different int for each type of upgrade
+    public ItemUpgrade(Properties properties, int Type ) {
         super(properties);
+        upgradeType = Type;
     }
-
 
     @OnlyIn(Dist.CLIENT)
     @Override

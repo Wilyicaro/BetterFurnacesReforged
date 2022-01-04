@@ -81,7 +81,7 @@ public class ForgeEnergyStorage implements IEnergyStorage, INBTSerializable<Comp
 
     @Override
     public String toString() {
-        return "ChargerEnergyStorage{" +
+        return "ForgeEmergyStorage{" +
                 "energy=" + energy +
                 ", capacity=" + capacity +
                 ", maxInOut=" + maxInOut +

@@ -15,18 +15,18 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemUpgradeLiquidFuel extends Item {
+public class ItemUpgradeLiquidFuel extends ItemUpgrade {
 
 
     public ItemUpgradeLiquidFuel(Properties properties) {
-        super(properties);
+        super(properties,1);
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.liquid").setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
     }
 }

@@ -18,11 +18,11 @@ import java.util.List;
 
 public class ItemUpgradeOreProcessing extends ItemUpgrade {
 
-
-    public ItemUpgradeOreProcessing(Properties properties) {
-        super(properties);
+    public int getMultiplier;
+    public ItemUpgradeOreProcessing(Properties properties, int Multiplier) {
+        super(properties,3);
+        this.getMultiplier = Multiplier;
     }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
@@ -30,12 +30,12 @@ public class ItemUpgradeOreProcessing extends ItemUpgrade {
         if (!stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade"))
             tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         else tooltip.add(new TranslatableComponent("tooltip.ultimate_furnaces_bfr.upgrade.ultore").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
-        if (stack.getItem() != Registration.ORE_PROCESSING.get())
+        if (!stack.isDamageableItem())
             tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
     }
     public void inventoryTick(ItemStack stack, Level world, Entity player, int slot, boolean selected) {
         super.inventoryTick(stack, world, player, slot, selected);
-        if (stack.isDamageableItem() && stack.getDamageValue() >= 128){
+        if (stack.isDamageableItem() && stack.getDamageValue() >= stack.getMaxDamage()){
             stack.shrink(1);
         }
     }

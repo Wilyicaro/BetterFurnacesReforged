@@ -19,6 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.container.BlockForgeContainerBase;
 import wily.betterfurnaces.container.BlockFurnaceContainerBase;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
@@ -68,16 +69,22 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
         this.minecraft.font.draw(matrix, name, 7 + this.getXSize() / 2 - this.minecraft.font.width(name.getString()) / 2, 6, 4210752);
         if (getMenu().te.hasUpgrade(Registration.LIQUID.get()) &&
                 (mouseX > getGuiLeft() + 73 && mouseX < getGuiLeft() + 92 && mouseY > getGuiTop() + 49 && mouseY < getGuiTop() + 70))
-            this.renderTooltip(matrix, new TextComponent(((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored().getDisplayName().getString() +": " + ((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored().getAmount() + " mB"), actualMouseX, actualMouseY);
+            this.renderTooltip(matrix, new TextComponent(this.getMenu().getFluidStackStored(false).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(false).getAmount() + " mB"), actualMouseX, actualMouseY);
+        if (getMenu().te.hasUpgrade(Registration.ENERGY.get()) &&
+                (mouseX > getGuiLeft() + 31 && mouseX < getGuiLeft() + 47 && mouseY > getGuiTop() + 17 && mouseY < getGuiTop() + 51))
+            this.renderTooltip(matrix, new TextComponent((this.getMenu()).getEnergyStored()/1000 + " kFE/" + ( this.getMenu()).getEnergyMaxStored()/1000 + "kFE"), actualMouseX, actualMouseY);
         if (getMenu().te.hasUpgrade(Registration.FACTORY.get())) {
             if (this.getMenu().showInventoryButtons() && this.getMenu().getRedstoneMode() == 4) {
                 int comSub = this.getMenu().getComSub();
                 int i = comSub > 9 ? 28 : 31;
                 this.minecraft.font.draw(matrix, new TextComponent("" + comSub), i - 42, 138, 4210752);
             }
-
             this.addTooltips(matrix, actualMouseX, actualMouseY);
         }
+        if (getMenu().te.hasUpgrade(Registration.XP.get()) &&
+                (mouseX > getGuiLeft() + 116 && mouseX < getGuiLeft() + 132 && mouseY > getGuiTop() + 57 && mouseY < getGuiTop() + 73))
+            this.renderTooltip(matrix, new TextComponent(this.getMenu().getFluidStackStored(true).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(true).getAmount() + " mB"), actualMouseX, actualMouseY);
+
 
     }
 
@@ -173,12 +180,17 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
 
         i = ((BlockFurnaceContainerBase) this.getMenu()).getCookScaled(24);
         this.blit(matrix, getGuiLeft() + 79, getGuiTop() + 34, 176, 14, i + 1, 16);
-
+        if (getMenu().te.hasUpgrade(Registration.ENERGY.get())){
+            RenderSystem.setShaderTexture(0, WIDGETS);
+            i = ( this.getMenu()).getEnergyStoredScaled(34);
+            this.blit(matrix, getGuiLeft() + 31, getGuiTop() + 17, 240, 0, 16, 34);
+            this.blit(matrix, getGuiLeft() + 31, getGuiTop() + 17, 240, 34, 16, 34-i);
+        }
         if (getMenu().te.hasUpgrade(Registration.LIQUID.get())){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 73, getGuiTop() + 49, 192, 38, 20, 22);
-            FluidStack fluid =  ((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored();
-            i = ((BlockFurnaceContainerBase) this.getMenu()).getFluidStoredScaled(21);
+            FluidStack fluid =  ((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored(false);
+            i = ((BlockFurnaceContainerBase) this.getMenu()).getFluidStoredScaled(21,false);
             if (i > 0) {
                 FluidRenderUtil.renderTiledFluid(matrix, this, 73, 49, 20, 22, fluid, false);
                 RenderSystem.setShaderTexture(0, WIDGETS);
@@ -192,8 +204,8 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
         if (this.getMenu().te.hasUpgrade(Registration.XP.get())) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 116, getGuiTop() + 57, 208, 0, 16, 16);
-            FluidStack fluid =  ((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored();
-            i = ((BlockFurnaceContainerBase) this.getMenu()).getFluidStoredScaled(16);
+            FluidStack fluid =  this.getMenu().getFluidStackStored(true);
+            i = ((BlockFurnaceContainerBase) this.getMenu()).getFluidStoredScaled(16,true);
             if (i > 0) {
                 FluidRenderUtil.renderTiledFluid(matrix, this, 116, 57, 16, 16, fluid, false);
                 RenderSystem.setShaderTexture(0, WIDGETS);

@@ -31,7 +31,7 @@ import java.util.List;
 public class ItemUpgradeColor extends ItemUpgrade {
 
     public ItemUpgradeColor(Properties properties) {
-        super(properties);
+        super(properties,4);
     }
 
     @OnlyIn(Dist.CLIENT)

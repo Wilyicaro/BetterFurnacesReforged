@@ -88,7 +88,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
         this.minecraft.font.draw(matrix, name, 7 + this.getXSize() / 2 - this.minecraft.font.width(name.getString()) / 2, 26, 4210752);
         if (getMenu().te.hasUpgrade(Registration.LIQUID.get()) &&
                 (mouseX > getGuiLeft() + 26 && mouseX < getGuiLeft() + 45 && mouseY > getGuiTop() + 98 && mouseY < getGuiTop() + 128))
-            this.renderTooltip(matrix, new TextComponent(((BlockForgeContainerBase) this.getMenu()).getFluidStackStored().getDisplayName().getString() + ": " +((BlockForgeContainerBase) this.getMenu()).getFluidStackStored().getAmount() + " mB"), actualMouseX, actualMouseY);
+            this.renderTooltip(matrix, new TextComponent(((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(false).getDisplayName().getString() + ": " +((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(false).getAmount() + " mB"), actualMouseX, actualMouseY);
         if (getMenu().te.hasUpgrade(Registration.ENERGY.get()) &&
                 (mouseX > getGuiLeft() + 8 && mouseX < getGuiLeft() + 24 && mouseY > getGuiTop() + 62 && mouseY < getGuiTop() + 96))
             this.renderTooltip(matrix, new TextComponent(((BlockForgeContainerBase) this.getMenu()).getEnergyStored()/1000 + " kFE/" + ((BlockForgeContainerBase) this.getMenu()).getEnergyMaxStored()/1000 + "kFE"), actualMouseX, actualMouseY);
@@ -98,9 +98,11 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
                 int i = comSub > 9 ? 28 : 31;
                 this.minecraft.font.draw(matrix, new TextComponent("" + comSub), i - 42, 118, 4210752);
             }
-
             this.addTooltips(matrix, actualMouseX, actualMouseY);
         }
+        if (getMenu().te.hasUpgrade(Registration.XP.get()) &&
+                (mouseX > getGuiLeft() + 126 && mouseX < getGuiLeft() + 142 && mouseY > getGuiTop() + 102 && mouseY < getGuiTop() + 118))
+            this.renderTooltip(matrix, new TextComponent(this.getMenu().getFluidStackStored(true).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(true).getAmount() + " mB"), actualMouseX, actualMouseY);
 
     }
 
@@ -127,12 +129,12 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
             } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 79 && mouseY <= 88) {
                 List<Component> list = Lists.newArrayList();
                 list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_top"));
-                list.add(this.getMenu().getTooltip(1));
+                list.add(this.getMenu().getTooltip(this.getMenu().te.getIndexTop()));
                 this.renderComponentTooltip(matrix, list, mouseX, mouseY);
             } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 103 && mouseY <= 112) {
                 List<Component> list = Lists.newArrayList();
                 list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_bottom"));
-                list.add(this.getMenu().getTooltip(0));
+                list.add(this.getMenu().getTooltip(this.getMenu().te.getIndexBottom()));
                 this.renderComponentTooltip(matrix, list, mouseX, mouseY);
             } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 91 && mouseY <= 100) {
                 List<Component> list = Lists.newArrayList();
@@ -209,8 +211,8 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
         if (getMenu().te.hasUpgrade(Registration.LIQUID.get())){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 26, getGuiTop() + 98, 192, 38, 20, 22);
-            FluidStack fluid =  ((BlockForgeContainerBase) this.getMenu()).getFluidStackStored();
-            i = ((BlockForgeContainerBase) this.getMenu()).getFluidStoredScaled(21);
+            FluidStack fluid =  ((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(false);
+            i = ((BlockForgeContainerBase) this.getMenu()).getFluidStoredScaled(21,false);
             if (i > 0) {
                 TextureAtlasSprite fluidSprite = this.minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
                         .apply(fluid.getFluid().getAttributes().getStillTexture(fluid)
@@ -227,8 +229,8 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
         if (this.getMenu().te.hasUpgrade(Registration.XP.get())){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 126, getGuiTop() + 102, 208, 0, 16, 16);
-            FluidStack fluid =  ((BlockForgeContainerBase) this.getMenu()).getFluidStackStored();
-            i = ((BlockForgeContainerBase) this.getMenu()).getFluidStoredScaled(16);
+            FluidStack fluid =  ((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(true);
+            i = ((BlockForgeContainerBase) this.getMenu()).getFluidStoredScaled(16,true);
             if (i > 0) {
                 FluidRenderUtil.renderTiledFluid(matrix, this, 126, 102, 16, 16, fluid, false);
                 RenderSystem.setShaderTexture(0, WIDGETS);
@@ -339,7 +341,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
         } else if (setting == 4) {
             this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 79, 30, 161, 10, 10);
         }
-        settings[1] = setting;
+        settings[this.getMenu().te.getIndexTop()] = setting;
 
         setting = this.getMenu().getSettingBottom();
         if (setting == 1) {
@@ -351,7 +353,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
         } else if (setting == 4) {
             this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 103, 30, 161, 10, 10);
         }
-        settings[0] = setting;
+        settings[this.getMenu().te.getIndexBottom()] = setting;
         setting = this.getMenu().getSettingFront();
         if (setting == 1) {
             this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 91, 0, 161, 10, 10);
@@ -472,15 +474,15 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
                 }
             } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 79 && mouseY <= 88) {
                 if (flag) {
-                    sendToServerInverted(this.getMenu().getSettingTop(), 1);
+                    sendToServerInverted(this.getMenu().getSettingTop(), this.getMenu().te.getIndexTop());
                 } else {
-                    sendToServer(this.getMenu().getSettingTop(), 1);
+                    sendToServer(this.getMenu().getSettingTop(), this.getMenu().te.getIndexTop());
                 }
             } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 103 && mouseY <= 112) {
                 if (flag) {
-                    sendToServerInverted(this.getMenu().getSettingBottom(), 0);
+                    sendToServerInverted(this.getMenu().getSettingBottom(), this.getMenu().te.getIndexBottom());
                 } else {
-                    sendToServer(this.getMenu().getSettingBottom(), 0);
+                    sendToServer(this.getMenu().getSettingBottom(), this.getMenu().te.getIndexBottom());
                 }
             } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 91 && mouseY <= 100) {
                 if (isShiftKeyDown()) {

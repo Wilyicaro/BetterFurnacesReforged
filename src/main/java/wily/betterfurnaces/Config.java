@@ -63,16 +63,8 @@ public class Config {
         return "mob_grinding_utils:fluid_xp";
     }
     public static String getLiquidXPMod() {
-        if (Config.xpFluidType.get() == 0) {
-            return "mob_grinding_utils";
-        } else if (Config.xpFluidType.get() == 1) {
-            return "industrialforegoing";
-        } else if (Config.xpFluidType.get() == 2) {
-            return "cyclic";
-        } else if (Config.xpFluidType.get() == 3) {
-            return "reliquary";
-        }
-        return "mob_grinding_utils";
+        String s = getLiquidXPType();
+            return s.substring(0, s.indexOf(":"));
     }
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
@@ -126,7 +118,7 @@ public class Config {
 
         copperTierSpeed = CLIENT_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 120(Only work with Ultimate Furnaces addon)")
-                .defineInRange("copper_tier.speed", 180, 2, 72000);
+                .defineInRange("copper_tier.speed", 175, 2, 72000);
 
         ironTierSpeed = CLIENT_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 150")
