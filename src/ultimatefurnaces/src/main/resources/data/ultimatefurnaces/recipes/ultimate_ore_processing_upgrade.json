@@ -2,31 +2,22 @@
   "group": "ultimatefurnaces",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "213",
-    "656",
-    "417"
+    "313",
+    "242",
+    "313"
   ],
   "key": {
     "1": {
       "item": "minecraft:dragon_head"
     },
     "2": {
-      "item": "betterfurnacesreforged:iron_conductor_block"
+      "item": "betterfurnacesreforged:raw_ore_processing_upgrade"
     },
     "3": {
-      "item": "betterfurnacesreforged:netherhot_conductor_block"
-    },
-    "4": {
-      "item": "betterfurnacesreforged:gold_conductor_block"
-    },
-    "5": {
-      "item": "betterfurnacesreforged:advanced_ore_processing_upgrade"
-    },
-    "6": {
       "item": "minecraft:emerald_block"
     },
-    "7": {
-      "item": "minecraft:coal_block"
+    "4": {
+      "item": "betterfurnacesreforged:advanced_ore_processing_upgrade"
     }
   },
   "result": {

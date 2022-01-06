@@ -13,7 +13,7 @@ public class ModObjects {
 
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(Registration.ULTIMATE_FURNACE.get());
+            return new ItemStack(RegistrationUF.ULTIMATE_FURNACE.get());
         }
     };
 

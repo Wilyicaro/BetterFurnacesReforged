@@ -56,8 +56,8 @@ public class ItemUpgradeColor extends ItemUpgrade {
         }
         return ar;
     }
-    public void inventoryTick(ItemStack stack, Level world, Entity player, int slot, boolean selected) {
-        super.inventoryTick(stack, world, player, slot, selected);
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
         ItemStack itemStack = stack;
         CompoundTag nbt;
         nbt = itemStack.getOrCreateTag();
@@ -67,24 +67,6 @@ public class ItemUpgradeColor extends ItemUpgrade {
             nbt.putInt("green", 255);
             nbt.putInt("blue", 255);
             itemStack.setTag(nbt);
-        }
-        if ((Minecraft.getInstance().screen) instanceof ItemColorScreen && player instanceof Player && ((Player) player).getMainHandItem() == stack) {
-            ItemColorScreen color =  (ItemColorScreen) Minecraft.getInstance().screen;
-            if (color.red != null) {
-                int red = color.red.getValueInt();
-                if (red != nbt.getInt("red") && color.red.isHoveredOrFocused())
-                nbt.putInt("red", red);
-            }
-            if (color.green != null) {
-                int green = color.green.getValueInt();
-                if (green != nbt.getInt("green") && color.green.isHoveredOrFocused())
-                    nbt.putInt("green", green);
-            }
-            if (color.blue != null) {
-                int blue = color.blue.getValueInt();
-                if (blue != nbt.getInt("blue") && color.blue.isHoveredOrFocused())
-                    nbt.putInt("blue", blue);
-            }
         }
     }
     private static class ContainerProviderColorUpgrade implements MenuProvider {

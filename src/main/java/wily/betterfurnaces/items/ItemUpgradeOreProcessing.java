@@ -14,14 +14,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.Registration;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemUpgradeOreProcessing extends ItemUpgrade {
 
     public int getMultiplier;
-    public ItemUpgradeOreProcessing(Properties properties, int Multiplier) {
+    public boolean acceptOre;
+    public boolean acceptRaw;
+    public ItemUpgradeOreProcessing(Properties properties, int Multiplier, boolean acceptOre, boolean acceptRaw ) {
         super(properties,3);
         this.getMultiplier = Multiplier;
+        this.acceptOre = acceptOre;
+        this.acceptRaw = acceptRaw;
     }
     @OnlyIn(Dist.CLIENT)
     @Override

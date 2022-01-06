@@ -38,6 +38,11 @@ public class Messages {
                 PacketOrientationButton::new,
                 PacketOrientationButton::handle);
 
+        INSTANCE.registerMessage(nextID(), PacketColorSlider.class,
+                PacketColorSlider::toBytes,
+                PacketColorSlider::new,
+                PacketColorSlider::handle);
+
 
         // Client side
     }

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wily.ultimatefurnaces.init.ClientSide;
 import wily.ultimatefurnaces.init.ModObjects;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(UltimateFurnaces.MOD_ID)
@@ -20,7 +20,7 @@ public class UltimateFurnaces
 {
 
     public static final String MOD_ID = "ultimatefurnaces_bfr";
-    public static final String VERSION = "1.0.1";
+    public static final String VERSION = "111";
     public static final String MC_VERSION = "1.16.5";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -34,20 +34,20 @@ public class UltimateFurnaces
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ModObjects::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSide::init);
 
-        MOD_EVENT_BUS.register(Registration.class);
-        Registration.init();
+        MOD_EVENT_BUS.register(RegistrationUF.class);
+        RegistrationUF.init();
 
     }
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {
-        Registration.registerBlocks(event);
+        RegistrationUF.registerBlocks(event);
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event)
     {
-        Registration.registerItems(event);
+        RegistrationUF.registerItems(event);
     }
 }

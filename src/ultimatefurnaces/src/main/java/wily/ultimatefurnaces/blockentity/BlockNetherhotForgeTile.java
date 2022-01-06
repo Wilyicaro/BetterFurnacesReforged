@@ -9,11 +9,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
 import wily.ultimatefurnaces.container.BlockNetherhotForgeContainer;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 public class BlockNetherhotForgeTile extends BlockEntityForgeBase {
     public BlockNetherhotForgeTile(BlockPos pos, BlockState state) {
-        super(Registration.NETHERHOT_FORGE_TILE.get(), pos, state);
+        super(RegistrationUF.NETHERHOT_FORGE_TILE.get(), pos, state);
     }
 
     @Override

@@ -9,11 +9,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
 import wily.ultimatefurnaces.container.BlockDiamondForgeContainer;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 public class BlockDiamondForgeTile extends BlockEntityForgeBase {
     public BlockDiamondForgeTile(BlockPos pos, BlockState state) {
-        super(Registration.DIAMOND_FORGE_TILE.get(), pos, state);
+        super(RegistrationUF.DIAMOND_FORGE_TILE.get(), pos, state);
     }
 
     @Override

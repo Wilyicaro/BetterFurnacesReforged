@@ -9,11 +9,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.ultimatefurnaces.container.BlockUltimateFurnaceContainer;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 public class BlockUltimateFurnaceTile extends BlockEntitySmeltingBase {
     public BlockUltimateFurnaceTile(BlockPos pos, BlockState state) {
-        super(Registration.ULTIMATE_FURNACE_TILE.get(), pos, state,6);
+        super(RegistrationUF.ULTIMATE_FURNACE_TILE.get(), pos, state,6);
     }
 
     @Override

@@ -203,7 +203,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
             }
             BlockEntitySmeltingBase tile = ((BlockEntitySmeltingBase) world.getBlockEntity(pos));
 
-            if (state.getValue(BlockStateProperties.FACING) == Direction.SOUTH){
+            if (state.getValue(BlockStateProperties.FACING) == Direction.UP){
                 double d0 = (double) pos.getX() + 0.5D;
                 double d1 = (double) pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
                 double d2 = (double) pos.getZ() + 0.5D;

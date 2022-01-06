@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import wily.betterfurnaces.blocks.BlockFurnaceBase;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 import wily.ultimatefurnaces.blockentity.BlockCopperFurnaceTile;
 
 import javax.annotation.Nullable;
@@ -28,6 +28,6 @@ public class BlockCopperFurnace extends BlockFurnaceBase {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createFurnaceTicker(level, type, Registration.COPPER_FURNACE_TILE.get());
+        return createFurnaceTicker(level, type, RegistrationUF.COPPER_FURNACE_TILE.get());
     }
 }

@@ -24,7 +24,7 @@ import wily.ultimatefurnaces.items.ItemUpgradeIron;
 import wily.ultimatefurnaces.items.ItemUpgradeUltimate;
 import wily.ultimatefurnaces.blockentity.*;
 
-public class Registration {
+public class RegistrationUF {
 
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, UltimateFurnaces.MOD_ID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, UltimateFurnaces.MOD_ID);
@@ -124,7 +124,7 @@ public class Registration {
 
     public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeUltimate> ULTIMATE_UPGRADE = ITEMS.register("ultimate_upgrade", () -> new ItemUpgradeUltimate(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
-    public static final RegistryObject<ItemUpgradeOreProcessing> UORE = ITEMS.register("ultimate_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<ItemUpgradeOreProcessing> UORE_PROCESSING = ITEMS.register("ultimate_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP),4,true,true));
 
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {

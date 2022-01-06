@@ -22,6 +22,8 @@ import net.minecraftforge.client.gui.widget.Slider;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemUpgradeColor.ContainerColorUpgrade;
+import wily.betterfurnaces.network.Messages;
+import wily.betterfurnaces.network.PacketColorSlider;
 
 @OnlyIn(Dist.CLIENT)
 public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
@@ -30,7 +32,6 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     public Slider red;
     public Slider green;
     public Slider blue;
-    public Button change;
     private Player player;
 
 
@@ -52,8 +53,11 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
         this.addRenderableWidget(red);
         this.addRenderableWidget(green);
         this.addRenderableWidget(blue);
-    }
 
+    }
+    protected static void sliderPacket(Slider slider, int diff){
+            Messages.INSTANCE.sendToServer(new PacketColorSlider(slider.getValueInt(), diff));
+    }
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         double actualMouseX = mouseX - getGuiLeft();
@@ -73,6 +77,9 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     }
     @Override
     protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+        if (red.isHoveredOrFocused()) sliderPacket(red, 1);
+        if (green.isHoveredOrFocused()) sliderPacket(green, 2);
+        if (blue.isHoveredOrFocused()) sliderPacket(blue, 3);
         int actualMouseX = mouseX - getGuiLeft();
             int actualMouseY = mouseY - getGuiTop();
             RenderSystem.setShaderTexture(0, WIDGETS);

@@ -23,7 +23,7 @@ An official addon for BetterFurnaces Reforged mod, that add 2 new furnaces and 6
     [[dependencies.ultimatefurnaces_bfr]]
         modId="betterfurnacesreforged"
         mandatory=true
-        versionRange="[1.1.1,]"
+        versionRange="[1.2.,]"
         ordering="NONE"
         side="BOTH"
 [[dependencies.ultimatefurnaces_bfr]]
@@ -35,7 +35,7 @@ An official addon for BetterFurnaces Reforged mod, that add 2 new furnaces and 6
 [[dependencies.ultimatefurnaces_bfr]]
    modId="jei"
    mandatory=false
-   versionRange="[8,)"
+   versionRange="[9,)"
    ordering="NONE"
    side="BOTH"
 [[dependencies.ultimatefurnaces_bfr]]

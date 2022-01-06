@@ -17,7 +17,7 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.items.ItemUpgradeTier;
 import wily.ultimatefurnaces.gui.*;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 @JeiPlugin
 public class UFJeiPlugin implements IModPlugin {
@@ -32,8 +32,8 @@ public class UFJeiPlugin implements IModPlugin {
     }
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        addDescription(registration, new ItemStack(Registration.ULTIMATE_UPGRADE.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ultore"), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable"));
-        ItemUpgradeTier[] up = {Registration.COPPER_UPGRADE.get(), Registration.ULTIMATE_UPGRADE.get(), Registration.IRON_UPGRADE.get()};
+        addDescription(registration, new ItemStack(RegistrationUF.ULTIMATE_UPGRADE.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ultore"), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable"));
+        ItemUpgradeTier[] up = {RegistrationUF.COPPER_UPGRADE.get(), RegistrationUF.ULTIMATE_UPGRADE.get(), RegistrationUF.IRON_UPGRADE.get()};
         for(ItemUpgradeTier i : up)
             addDescription(registration, new ItemStack(i), new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
     }
@@ -41,23 +41,23 @@ public class UFJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
         if (Config.enableJeiPlugin.get() && Config.enableJeiCatalysts.get()) {
-            registry.addRecipeCatalyst(new ItemStack(Registration.COPPER_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeCatalyst(new ItemStack(Registration.ULTIMATE_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeCatalyst(new ItemStack(Registration.COPPER_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeCatalyst(new ItemStack(Registration.IRON_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeCatalyst(new ItemStack(Registration.GOLD_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeCatalyst(new ItemStack(Registration.DIAMOND_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeCatalyst(new ItemStack(Registration.NETHERHOT_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeCatalyst(new ItemStack(Registration.ULTIMATE_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.COPPER_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.ULTIMATE_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.COPPER_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.IRON_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.GOLD_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.DIAMOND_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.NETHERHOT_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.ULTIMATE_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
 
-            registry.addRecipeCatalyst(new ItemStack(Registration.COPPER_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-            registry.addRecipeCatalyst(new ItemStack(Registration.ULTIMATE_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-            registry.addRecipeCatalyst(new ItemStack(Registration.COPPER_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
-            registry.addRecipeCatalyst(new ItemStack(Registration.IRON_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
-            registry.addRecipeCatalyst(new ItemStack(Registration.GOLD_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
-            registry.addRecipeCatalyst(new ItemStack(Registration.DIAMOND_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
-            registry.addRecipeCatalyst(new ItemStack(Registration.NETHERHOT_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
-            registry.addRecipeCatalyst(new ItemStack(Registration.ULTIMATE_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.COPPER_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.ULTIMATE_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.COPPER_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.IRON_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.GOLD_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.DIAMOND_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.NETHERHOT_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
+            registry.addRecipeCatalyst(new ItemStack(RegistrationUF.ULTIMATE_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
 
 
 

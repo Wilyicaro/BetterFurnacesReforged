@@ -345,7 +345,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         if (e.isBurning()) {
             --e.furnaceBurnTime;
         }
-        if (e.hasXPTank()) e.grantStoredRecipeExperience(level,null);
+        if (e.hasXPTank()) e.grantStoredRecipeExperience(level, null);
         if (!e.hasUpgrade(Registration.FACTORY.get()) && e instanceof BlockEntityForgeBase && (level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.SHOW_ORIENTATION))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.SHOW_ORIENTATION, false), 3);
         e.getItem(e.FUEL()).getCapability(CapabilityEnergy.ENERGY).ifPresent(E -> {
             if (e.energyStorage.getEnergyStored() < e.energyStorage.getMaxEnergyStored()) {
@@ -694,8 +694,10 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         return (input.getItem().getRegistryName().toString().contains("raw") && grabRecipe(input).get().getResultItem().is(ingot));
     }
     protected int OreProcessingMultiplier(ItemStack input){
-        if (hasUpgrade(Registration.RAWORE_PROCESSING.get()) && isRaw(input) || hasUpgradeType(Registration.ORE_PROCESSING.get()) && isOre(input) && !hasUpgrade(Registration.RAWORE_PROCESSING.get())){
-            return ((ItemUpgradeOreProcessing)getUpgradeTypeSlotItem(Registration.ORE_PROCESSING.get()).getItem()).getMultiplier;
+        if (hasUpgradeType(Registration.ORE_PROCESSING.get())){
+        ItemUpgradeOreProcessing oreup = (ItemUpgradeOreProcessing)getUpgradeTypeSlotItem(Registration.ORE_PROCESSING.get()).getItem();
+        if  ((isRaw(input) && oreup.acceptRaw) || (isOre( input) && oreup.acceptOre)) return oreup.getMultiplier;
+
         } else if (input == ItemStack.EMPTY) return 0;
         return 1;
     }
@@ -848,10 +850,10 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         return super.getCapability(capability, facing);
     }
     public int getIndexBottom() {
-        return 1;
+        return 0;
     }
     public int getIndexTop() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -971,6 +973,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     public List<Recipe<?>> grantStoredRecipeExperience(Level level, Vec3 worldPosition) {
         List<Recipe<?>> list = Lists.newArrayList();
+        if (this.recipes.object2IntEntrySet() != null)
         for (Object2IntMap.Entry<ResourceLocation> entry : this.recipes.object2IntEntrySet()) {
             level.getRecipeManager().byKey(entry.getKey()).ifPresent((h) -> {
                 list.add(h);
@@ -981,7 +984,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                         recipes.clear();
                     }
                 }
-                    else splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h).getExperience());
+                    else if (worldPosition != null) splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h).getExperience());
 
             });
         }

@@ -13,22 +13,22 @@ import wily.ultimatefurnaces.gui.*;
 public class ClientSide {
 
     public static void init(final FMLClientSetupEvent event) {
-        MenuScreens.register(Registration.COPPER_FURNACE_CONTAINER.get(), BlockCopperFurnaceScreen::new);
-        MenuScreens.register(Registration.ULTIMATE_FURNACE_CONTAINER.get(), BlockUltimateFurnaceScreen::new);
-        MenuScreens.register(Registration.COPPER_FORGE_CONTAINER.get(), BlockCopperForgeScreen::new);
-        MenuScreens.register(Registration.IRON_FORGE_CONTAINER.get(), BlockIronForgeScreen::new);
-        MenuScreens.register(Registration.GOLD_FORGE_CONTAINER.get(), BlockGoldForgeScreen::new);
-        MenuScreens.register(Registration.DIAMOND_FORGE_CONTAINER.get(), BlockDiamondForgeScreen::new);
-        MenuScreens.register(Registration.NETHERHOT_FORGE_CONTAINER.get(), BlockNetherhotForgeScreen::new);
-        MenuScreens.register(Registration.ULTIMATE_FORGE_CONTAINER.get(), BlockUltimateForgeScreen::new);
-        ItemBlockRenderTypes.setRenderLayer(Registration.COPPER_FURNACE.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(Registration.ULTIMATE_FURNACE.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(Registration.COPPER_FORGE.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(Registration.IRON_FORGE.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(Registration.GOLD_FORGE.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(Registration.DIAMOND_FORGE.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(Registration.NETHERHOT_FORGE.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(Registration.ULTIMATE_FORGE.get(), RenderType.cutoutMipped());
+        MenuScreens.register(RegistrationUF.COPPER_FURNACE_CONTAINER.get(), BlockCopperFurnaceScreen::new);
+        MenuScreens.register(RegistrationUF.ULTIMATE_FURNACE_CONTAINER.get(), BlockUltimateFurnaceScreen::new);
+        MenuScreens.register(RegistrationUF.COPPER_FORGE_CONTAINER.get(), BlockCopperForgeScreen::new);
+        MenuScreens.register(RegistrationUF.IRON_FORGE_CONTAINER.get(), BlockIronForgeScreen::new);
+        MenuScreens.register(RegistrationUF.GOLD_FORGE_CONTAINER.get(), BlockGoldForgeScreen::new);
+        MenuScreens.register(RegistrationUF.DIAMOND_FORGE_CONTAINER.get(), BlockDiamondForgeScreen::new);
+        MenuScreens.register(RegistrationUF.NETHERHOT_FORGE_CONTAINER.get(), BlockNetherhotForgeScreen::new);
+        MenuScreens.register(RegistrationUF.ULTIMATE_FORGE_CONTAINER.get(), BlockUltimateForgeScreen::new);
+        ItemBlockRenderTypes.setRenderLayer(RegistrationUF.COPPER_FURNACE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(RegistrationUF.ULTIMATE_FURNACE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(RegistrationUF.COPPER_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(RegistrationUF.IRON_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(RegistrationUF.GOLD_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(RegistrationUF.DIAMOND_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(RegistrationUF.NETHERHOT_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(RegistrationUF.ULTIMATE_FORGE.get(), RenderType.cutoutMipped());
         BlockColorsHandlerUF.registerBlockColors();
 
     }

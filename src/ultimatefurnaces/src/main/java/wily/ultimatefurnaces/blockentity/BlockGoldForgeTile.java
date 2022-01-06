@@ -9,11 +9,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
 import wily.ultimatefurnaces.container.BlockGoldForgeContainer;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 public class BlockGoldForgeTile extends BlockEntityForgeBase {
     public BlockGoldForgeTile(BlockPos pos, BlockState state) {
-        super(Registration.GOLD_FORGE_TILE.get(), pos, state);
+        super(RegistrationUF.GOLD_FORGE_TILE.get(), pos, state);
     }
 
     @Override
