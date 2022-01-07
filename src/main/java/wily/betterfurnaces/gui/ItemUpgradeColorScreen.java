@@ -21,10 +21,12 @@ import net.minecraftforge.fml.client.gui.widget.Slider;
 import org.lwjgl.opengl.GL11;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemColorUpgrade.ContainerColorUpgrade;
+import wily.betterfurnaces.items.ItemUpgradeColor.ContainerColorUpgrade;
+import wily.betterfurnaces.network.Messages;
+import wily.betterfurnaces.network.PacketColorSlider;
 
 @OnlyIn(Dist.CLIENT)
-public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
+public class ItemUpgradeColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
     private int buttonstate = 0;
     public Slider red;
@@ -34,7 +36,7 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     private PlayerEntity player;
 
 
-    public ItemColorScreen(ContainerColorUpgrade container, PlayerInventory inv, ITextComponent name) {
+    public ItemUpgradeColorScreen(ContainerColorUpgrade container, PlayerInventory inv, ITextComponent name) {
         super(container, inv, name);
         player = inv.player;
     }
@@ -53,7 +55,9 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
         this.addButton(green);
         this.addButton(blue);
     }
-
+    protected static void sliderPacket(Slider slider, int diff){
+        Messages.INSTANCE.sendToServer(new PacketColorSlider(slider.getValueInt(), diff));
+    }
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         double actualMouseX = mouseX - getGuiLeft();
@@ -73,6 +77,9 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     }
     @Override
     protected void renderColorFurnace(MatrixStack matrix, float partialTicks, int mouseX, int mouseY) {
+        if (red.isHovered()) sliderPacket(red, 1);
+        if (green.isHovered()) sliderPacket(green, 2);
+        if (blue.isHovered()) sliderPacket(blue, 3);
         int actualMouseX = mouseX - getGuiLeft();
         int actualMouseY = mouseY - getGuiTop();
         this.minecraft.getTextureManager().bind(WIDGETS);

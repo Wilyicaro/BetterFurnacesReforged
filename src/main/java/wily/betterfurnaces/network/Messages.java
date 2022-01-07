@@ -27,15 +27,15 @@ public class Messages {
                 PacketShowSettingsButton::toBytes,
                 PacketShowSettingsButton::new,
                 PacketShowSettingsButton::handle);
-        INSTANCE.registerMessage(nextID(), PacketForgeSettingsButton.class,
-                PacketForgeSettingsButton::toBytes,
-                PacketForgeSettingsButton::new,
-                PacketForgeSettingsButton::handle);
+        INSTANCE.registerMessage(nextID(), PacketOrientationButton.class,
+                PacketOrientationButton::toBytes,
+                PacketOrientationButton::new,
+                PacketOrientationButton::handle);
 
-        INSTANCE.registerMessage(nextID(), PacketForgeShowSettingsButton.class,
-                PacketForgeShowSettingsButton::toBytes,
-                PacketForgeShowSettingsButton::new,
-                PacketForgeShowSettingsButton::handle);
+        INSTANCE.registerMessage(nextID(), PacketColorSlider.class,
+                PacketColorSlider::toBytes,
+                PacketColorSlider::new,
+                PacketColorSlider::handle);
 
         INSTANCE.registerMessage(nextID(), PacketCobButton.class,
                 PacketCobButton::toBytes,

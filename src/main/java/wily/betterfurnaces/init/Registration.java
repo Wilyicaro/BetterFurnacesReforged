@@ -61,9 +61,9 @@ public class Registration {
         return new BlockGoldFurnaceContainer(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<ContainerType<ItemColorUpgrade.ContainerColorUpgrade>> COLOR_UPGRADE_CONTAINER = CONTAINERS.register("color_upgrade", () -> IForgeContainerType.create((windowId, inv, data) -> {
+    public static final RegistryObject<ContainerType<ItemUpgradeColor.ContainerColorUpgrade>> COLOR_UPGRADE_CONTAINER = CONTAINERS.register("color_upgrade", () -> IForgeContainerType.create((windowId, inv, data) -> {
         ItemStack helditem = inv.player.getMainHandItem();
-        return new ItemColorUpgrade.ContainerColorUpgrade(windowId, inv, helditem);
+        return new ItemUpgradeColor.ContainerColorUpgrade(windowId, inv, helditem);
     }));
 
     public static final RegistryObject<BlockDiamondFurnace> DIAMOND_FURNACE = BLOCKS.register(BlockDiamondFurnace.DIAMOND_FURNACE, () -> new BlockDiamondFurnace(AbstractBlock.Properties.copy(Blocks.DIAMOND_BLOCK)));
@@ -142,16 +142,16 @@ public class Registration {
     public static final RegistryObject<ItemUpgradeExtreme> EXTREME_UPGRADE = ITEMS.register("extreme_upgrade", () -> new ItemUpgradeExtreme(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
 
-    public static final RegistryObject<ItemEnergyFuel> ENERGY = ITEMS.register("energy_upgrade", () -> new ItemEnergyFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
+    public static final RegistryObject<ItemUpgradeEnergyFuel> ENERGY = ITEMS.register("energy_upgrade", () -> new ItemUpgradeEnergyFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
 
-    public static final RegistryObject<ItemFuelEfficiency> FUEL = ITEMS.register("fuel_efficiency_upgrade", () -> new ItemFuelEfficiency(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(256)));
-    public static final RegistryObject<ItemOreProcessing> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new ItemOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(128)));
-    public static final RegistryObject<ItemFuelEfficiency> ADVFUEL = ITEMS.register("advanced_fuel_efficiency_upgrade", () -> new ItemFuelEfficiency(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
-    public static final RegistryObject<ItemOreProcessing> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new ItemOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
-    public static final RegistryObject<ItemUpgradeMisc> FACTORY = ITEMS.register("factory_upgrade", () -> new ItemUpgradeMisc(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1) ));
-    public static final RegistryObject<ItemColorUpgrade> COLOR = ITEMS.register("color_upgrade", () -> new ItemColorUpgrade(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
-    public static final RegistryObject<ItemLiquidFuel> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new ItemLiquidFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
-    public static final RegistryObject<ItemXpTank> XP = ITEMS.register("xp_tank_upgrade", () -> new ItemXpTank(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
+    public static final RegistryObject<ItemUpgradeFuelEfficiency> FUEL = ITEMS.register("fuel_efficiency_upgrade", () -> new ItemUpgradeFuelEfficiency(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(256),2));
+    public static final RegistryObject<ItemUpgradeOreProcessing> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(128),2));
+    public static final RegistryObject<ItemUpgradeFuelEfficiency> ADVFUEL = ITEMS.register("advanced_fuel_efficiency_upgrade", () -> new ItemUpgradeFuelEfficiency(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2));
+    public static final RegistryObject<ItemUpgradeOreProcessing> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2));
+    public static final RegistryObject<ItemUpgrade> FACTORY = ITEMS.register("factory_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
+    public static final RegistryObject<ItemUpgradeColor> COLOR = ITEMS.register("color_upgrade", () -> new ItemUpgradeColor(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
+    public static final RegistryObject<ItemUpgradeLiquidFuel> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new ItemUpgradeLiquidFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
+    public static final RegistryObject<ItemUpgradeXpTank> XP = ITEMS.register("xp_tank_upgrade", () -> new ItemUpgradeXpTank(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
 
 
     public static void registerBlocks(RegistryEvent.Register<Block> event)

@@ -2,9 +2,11 @@ package wily.betterfurnaces.container;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import wily.betterfurnaces.items.ItemEnergyFuel;
-import wily.betterfurnaces.items.ItemLiquidFuel;
+import wily.betterfurnaces.items.ItemUpgrade;
+import wily.betterfurnaces.items.ItemUpgradeEnergyFuel;
+import wily.betterfurnaces.items.ItemUpgradeLiquidFuel;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 
 public class SlotHeater extends Slot {
@@ -20,7 +22,7 @@ public class SlotHeater extends Slot {
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-        return stack.getItem() instanceof ItemEnergyFuel || stack.getItem() instanceof ItemLiquidFuel && !tf.hasXPTank();
+        return stack.getItem() instanceof ItemUpgrade && ((ItemUpgrade) stack.getItem()).upgradeType == 1;
     }
 
 

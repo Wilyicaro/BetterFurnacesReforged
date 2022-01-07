@@ -7,14 +7,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import wily.betterfurnaces.items.ItemColorUpgrade;
+import wily.betterfurnaces.items.ItemUpgradeColor;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 import javax.annotation.Nullable;
 
-public class BlockColorsHandler implements IBlockColor {
-    public static final IBlockColor COLOR = new BlockColorsHandler();
+public class BlockColorsHandler extends wily.betterfurnaces.init.BlockColorsHandler {
+    public static final IBlockColor COLOR = new wily.betterfurnaces.init.BlockColorsHandler();
 
     @SubscribeEvent
     public static void registerBlockColors() {
@@ -28,17 +28,5 @@ public class BlockColorsHandler implements IBlockColor {
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.DIAMOND_FORGE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.NETHERHOT_FORGE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.ULTIMATE_FORGE.get());
-    }
-
-    @Override
-    public int getColor(BlockState blockState, @Nullable IBlockDisplayReader iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
-        if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof BlockSmeltingTileBase) {
-            BlockSmeltingTileBase te = (BlockSmeltingTileBase) iBlockDisplayReader.getBlockEntity(blockPos);
-            ItemStack stack = te.inventory.get(te.UPGRADECOLOR());
-            if (stack.getItem() instanceof ItemColorUpgrade && (stack.getTag() != null)) {
-                return te.hex(te.UPGRADECOLOR());
-            }
-        }
-        return 0xFFFFFF;
     }
 }

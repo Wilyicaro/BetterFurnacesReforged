@@ -22,8 +22,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import wily.betterfurnaces.blocks.BlockCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemOreProcessing;
+import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
+import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,9 +132,7 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
         boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
         boolean can1 = (output.isEmpty());
         boolean can3 = (output.getItem() == getResult().getItem());
-        if (cobGen() > 0){
-            forceUpdateAllStates();
-        }
+        forceUpdateAllStates();
         if ((cobGen() == 3) || cobTime > 0 && cobTime < actualCobTime) {
             if ((can && can3 )|| can1)
             ++this.cobTime;
@@ -144,13 +142,13 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
             if ((cobTime >= getCobTime() && ((can  && can3)|| can1))){
                 if (can1) {
                     this.inventory.set(OUTPUT, getResult());
-                    if (upgrade1.getItem() instanceof ItemOreProcessing) {
+                    if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing) {
                         breakDurabilityItem(upgrade1);
                     }
                 }else {
                     if (can && can3) {
                         output.grow(getResult().getCount());
-                        if (upgrade1.getItem() instanceof ItemOreProcessing) {
+                        if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing) {
                             breakDurabilityItem(upgrade1);
                         }
                     }
@@ -178,15 +176,15 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
         ItemStack upgrade = this.inventory.get(UPGRADE);
         if (upgrade.isEmpty() && resultType < 3){
             return 80;
-        }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType < 3){
+        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType < 3){
             return 40;
         }else if (upgrade.isEmpty() && resultType == 3){
             return 150;
-        }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType == 3){
+        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 3){
             return 75;
         }else if (upgrade.isEmpty() && resultType == 4){
             return 600;
-        }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType == 4){
+        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 4){
             return 300;
         }else return 0;
     }
@@ -202,7 +200,7 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
     }
     protected int getResultCount(){
         ItemStack upgrade1 = this.getItem(4);
-        if (upgrade1.getItem() instanceof ItemOreProcessing)
+        if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing)
             return 2;
         else return 1;
     }
@@ -309,7 +307,7 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
                             }
                             for (int i = 0; i < other.getSlots(); i++) {
                                 ItemStack stack = extractItemInternal(OUTPUT, this.getItem(OUTPUT).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
-                                if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
+                                if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
                                     other.insertItem(i, extractItemInternal(OUTPUT, stack.getCount(), false), false);
                                 }
                             }

@@ -16,19 +16,19 @@ import wily.betterfurnaces.init.Registration;
 
 import java.util.List;
 
-public class ItemFuelEfficiency extends Item {
+public class ItemUpgradeFuelEfficiency extends ItemUpgrade {
 
-    public ItemFuelEfficiency(Properties properties) {
-        super(properties);
+    public int getMultiplier;
+    public ItemUpgradeFuelEfficiency(Properties properties, int Multiplier) {
+        super(properties,2);
+        this.getMultiplier = Multiplier;
     }
-    
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(TextFormatting.GOLD).withItalic(true)));
         tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel").setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
-        if (stack.getItem() != Registration.FUEL.get())
+        if (!stack.isDamageableItem())
             tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable").setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
     }
     public void inventoryTick(ItemStack stack, World world, Entity player, int slot, boolean selected) {

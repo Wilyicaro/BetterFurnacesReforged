@@ -4,26 +4,31 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraftforge.energy.CapabilityEnergy;
+import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 public class SlotFuel extends Slot {
 
+    BlockSmeltingTileBase be;
     public SlotFuel(IInventory te, int index, int x, int y) {
         super(te, index, x, y);
+        if (te instanceof  BlockSmeltingTileBase)
+            be = (BlockSmeltingTileBase) te;
     }
 
     /**
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-        return BlockSmeltingTileBase.isItemFuel(stack) || isBucket(stack);
+        return BlockSmeltingTileBase.isItemFuel(stack) && stack.getItem() != Items.BUCKET || stack.getCapability(CapabilityEnergy.ENERGY).isPresent() && be.hasUpgrade(Registration.ENERGY.get()) || isContainer(stack) && be.isLiquid() && stack.getCount() == 1;
     }
 
     public int getMaxStackSize(ItemStack stack) {
-        return isBucket(stack) ? 1 : super.getMaxStackSize(stack);
+        return isContainer(stack) ? 1 : super.getMaxStackSize(stack);
     }
 
-    public static boolean isBucket(ItemStack stack) {
-        return stack.getItem() == Items.BUCKET;
+    public static boolean isContainer(ItemStack stack) {
+        return stack.hasContainerItem();
     }
 }

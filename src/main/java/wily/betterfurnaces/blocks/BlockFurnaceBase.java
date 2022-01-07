@@ -35,10 +35,10 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemLiquidFuel;
-import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.items.ItemUpgradeMisc;
+import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
+import wily.betterfurnaces.items.ItemUpgradeLiquidFuel;
+import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
+import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 import javax.annotation.Nullable;
@@ -104,9 +104,9 @@ public abstract class BlockFurnaceBase extends Block {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            if ((hand.getItem() instanceof ItemUpgradeMisc || hand.getItem() instanceof ItemOreProcessing || hand.getItem() instanceof ItemFuelEfficiency || hand.getItem() instanceof ItemLiquidFuel) && !(player.isCrouching())) {
+            if (hand.getItem() instanceof ItemUpgrade  && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
-            }else if ((te.inventory.get(5).getItem() == new ItemStack(Registration.LIQUID.get()).getItem())  && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() &&  !(player.isCrouching())){
+            }else if (te.isLiquid() && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && BlockSmeltingTileBase.isItemFuel(hand) && !(player.isCrouching())){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
                 FluidActionResult res = FluidUtil.tryEmptyContainer(hand, te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get(), 1000, player, true);
                 if (fluid != null && ForgeHooks.getBurnTime(hand) > 0)
@@ -123,39 +123,37 @@ public abstract class BlockFurnaceBase extends Block {
 
     private ActionResultType interactUpgrade(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!((hand.getItem() instanceof ItemOreProcessing) || (hand.getItem() instanceof ItemFuelEfficiency) || (hand.getItem() instanceof ItemUpgradeMisc) || (hand.getItem() instanceof ItemLiquidFuel))){
+        if (!((hand.getItem() instanceof ItemUpgrade))){
             return ActionResultType.SUCCESS;
         }
-        TileEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof BlockSmeltingTileBase)) {
+        if (!(world.getBlockEntity(pos) instanceof BlockSmeltingTileBase)) {
             return ActionResultType.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
-
-        if (player.getItemInHand(handIn).getItem() instanceof ItemOreProcessing) {
-            if ((!(((IInventory) te).getItem(3).isEmpty())) && (!player.isCreative())){
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(3));
+        BlockSmeltingTileBase te = (BlockSmeltingTileBase)world.getBlockEntity(pos);
+        if (te.hasUpgradeType((ItemUpgrade) stack.getItem())) {
+            if (!player.isCreative())
+                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), te.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()));
+            else  te.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()).shrink(1);
+        }
+        for (int upg : te.UPGRADES()) {
+            if (te.IisItemValidForSlot(upg, stack) && !stack.isEmpty()) {
+                if (!(te.getItem(upg).isEmpty()) && upg == te.UPGRADES()[te.UPGRADES().length - 1]) {
+                    if (!player.isCreative())
+                        InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), te.getItem(upg));
+                    else te.getItem(upg).shrink(1);
+                }
+                if (te.getItem(upg).isEmpty()) {
+                    te.setItem(upg, newStack);
+                    if (!player.isCreative()) {
+                        player.getItemInHand(handIn).shrink(1);
+                    }
+                    world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                }
             }
-            ((IInventory) te).setItem(3, newStack);
         }
-        if (player.getItemInHand(handIn).getItem() instanceof ItemFuelEfficiency) {
-            if ((!(((IInventory) te).getItem(4).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(4));
-            }
-            ((IInventory) te).setItem(4, newStack);
-        }
-        if (player.getItemInHand(handIn).getItem() instanceof ItemUpgradeMisc || player.getItemInHand(handIn).getItem() instanceof ItemLiquidFuel) {
-            if ((!(((IInventory) te).getItem(5).isEmpty())) && (!player.isCreative())) {
-                    InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(5));
-            }
-            ((IInventory) te).setItem(5, stack.copy());
-        }
-        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        if (!player.isCreative()) {
-            player.getItemInHand(handIn).shrink(1);
-        }
-        ((BlockSmeltingTileBase)te).onUpdateSent();
+        te.onUpdateSent();
         return ActionResultType.SUCCESS;
     }
 

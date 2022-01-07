@@ -8,19 +8,7 @@ public abstract class BlockForgeTileBase extends BlockSmeltingTileBase {
     @Override
     public int FUEL() {return 3;}
     @Override
-    public int UPGRADEORE(){ return 7;}
-    @Override
-    public int UPGRADEENDER(){ return 8;}
-    @Override
-    public int UPGRADEXP(){ return 9;}
-    @Override
-    public int UPGRADEFLUID(){ return 10;}
-    @Override
-    public int UPGRADEENERGY(){ return 10;}
-    @Override
-    public int UPGRADEFACTORY(){return 11;}
-    @Override
-    public int UPGRADECOLOR() {return 12;}
+    public int UPGRADES()[]{ return new int[]{7,8,9,10,11,12,13};}
     @Override
     public int[] INPUTS(){ return new int[]{0,1,2};}
     @Override
@@ -29,6 +17,8 @@ public abstract class BlockForgeTileBase extends BlockSmeltingTileBase {
     public int EnergyUse() {return 1800;}
     @Override
     public int LiquidCapacity() {return 8000;}
+    @Override
+    public int EnergyCapacity() {return 64000;}
     @Override
     public boolean isForge(){ return true;}
     @Override
@@ -54,5 +44,53 @@ public abstract class BlockForgeTileBase extends BlockSmeltingTileBase {
         this.smeltItem(irecipeSlot(FINPUT()).orElse(null), FINPUT(), correspondentOutputSlot(FINPUT()));
             this.smeltItem(irecipeSlot(FINPUT() + 1).orElse(null), FINPUT() + 1, correspondentOutputSlot(FINPUT() + 1));
             this.smeltItem(irecipeSlot(FINPUT() + 2).orElse(null), FINPUT() + 2, correspondentOutputSlot(FINPUT() + 2));
+    }
+    @Override
+    public int getIndexBottom() {
+        return facing().getOpposite().ordinal();
+    }
+    @Override
+    public int getIndexTop() {
+        return facing().ordinal();
+    }
+    @Override
+    public int getIndexFront() {
+        if (facing() == Direction.NORTH || facing() == Direction.EAST)  {
+            return Direction.DOWN.ordinal();
+        } else if ((facing() == Direction.SOUTH) || (facing() == Direction.WEST)) {
+            return Direction.UP.ordinal();
+        }else if (facing() == Direction.UP){
+            return Direction.NORTH.ordinal();
+        }else {
+            return Direction.SOUTH.ordinal();
+        }
+    }
+    @Override
+    public int getIndexBack() {
+        if (facing() == Direction.NORTH || facing() == Direction.EAST)  {
+            return Direction.UP.ordinal();
+        } else if ((facing() == Direction.SOUTH) || (facing() == Direction.WEST)) {
+            return Direction.DOWN.ordinal();
+        }else if (facing() == Direction.UP){
+            return Direction.SOUTH.ordinal();
+        }else {
+            return Direction.NORTH.ordinal();
+        }
+    }
+    @Override
+    public int getIndexLeft() {
+        if (facing() == Direction.EAST || facing() == Direction.WEST) {
+            return Direction.SOUTH.ordinal();
+        } else {
+            return Direction.EAST.ordinal();
+        }
+    }
+    @Override
+    public int getIndexRight() {
+        if (facing() == Direction.EAST || facing() == Direction.WEST) {
+            return Direction.NORTH.ordinal();
+        } else {
+            return Direction.WEST.ordinal();
+        }
     }
 }

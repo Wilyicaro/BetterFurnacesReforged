@@ -15,7 +15,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import wily.betterfurnaces.items.ItemOreProcessing;
+import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 import wily.ultimatefurnaces.UltimateFurnaces;
 import wily.ultimatefurnaces.blocks.*;
 import wily.ultimatefurnaces.container.*;
@@ -79,7 +79,7 @@ public class Registration {
     }));
 
     public static final RegistryObject<BlockGoldForge> GOLD_FORGE = BLOCKS.register(BlockGoldForge.GOLD_FORGE, () -> new BlockGoldForge(AbstractBlock.Properties.copy(Blocks.GOLD_BLOCK)));
-    public static final RegistryObject<Item> GOLD_FORGE_ITEM = ITEMS.register(BlockGoldForge.GOLD_FORGE, () -> new BlockItem(GOLD_FORGE.get(), new Item.Properties().tab(wily.ultimatefurnaces.init.ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<Item> GOLD_FORGE_ITEM = ITEMS.register(BlockGoldForge.GOLD_FORGE, () -> new BlockItem(GOLD_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
     public static final RegistryObject<TileEntityType<BlockGoldForgeTile>> GOLD_FORGE_TILE = TILES.register(BlockGoldForge.GOLD_FORGE, () -> TileEntityType.Builder.of(BlockGoldForgeTile::new, GOLD_FORGE.get()).build(null));
 
     public static final RegistryObject<ContainerType<BlockGoldForgeContainer>> GOLD_FORGE_CONTAINER = CONTAINERS.register(BlockGoldForge.GOLD_FORGE, () -> IForgeContainerType.create((windowId, inv, data) -> {
@@ -124,7 +124,7 @@ public class Registration {
 
     public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeUltimate> ULTIMATE_UPGRADE = ITEMS.register("ultimate_upgrade", () -> new ItemUpgradeUltimate(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
-    public static final RegistryObject<ItemOreProcessing> UORE = ITEMS.register("ultimate_ore_processing_upgrade", () -> new ItemOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<ItemUpgradeOreProcessing> UORE = ITEMS.register("ultimate_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP),4));
 
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {

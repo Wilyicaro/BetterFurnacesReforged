@@ -1,100 +1,94 @@
 {
-  "variants": {
-    "facing=south,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge"
+  "multipart": [
+    {   "when": { "facing": "north", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge", "x": 90 }
     },
-    "facing=north,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge"
+    {   "when": { "facing": "east", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge", "y": 90, "x" : 90}
     },
-    "facing=east,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge",
-      "x": 90
+    {   "when": { "facing": "south", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge", "x": -90 }
     },
-    "facing=west,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge",
-      "x": 90
+    {   "when": { "facing": "west", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge", "y": 90, "x" : -90 }
     },
-    "facing=up,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing": "up", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge"}
     },
-    "facing=down,lit=false,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"down", "lit" :  "false", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge", "x": 180}
     },
-    "facing=south,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge_on"
+    {   "when": { "facing":"north", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge_on", "x": 90 }
     },
-    "facing=north,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge_on"
+    {   "when": { "facing":"east", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge_on", "y": 90, "x" : 90 }
     },
-    "facing=east,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge_on",
-      "x": 90
+    {   "when": { "facing":"south", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge_on", "x": -90}
     },
-    "facing=west,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge_on",
-      "x": 90
+    {   "when": { "facing": "west", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge_on", "y": 90, "x" : -90 }
     },
-    "facing=up,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge_on",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"up", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge_on"}
     },
-    "facing=down,lit=true,colored=false": {
-      "model": "ultimatefurnaces_bfr:block/copper_forge_on",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"down", "lit" :  "true", "colored" :  "false" },
+      "apply": { "model": "ultimatefurnaces_bfr:block/copper_forge_on", "x": 180}
     },
-    "facing=south,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge"
+    {   "when": { "facing":"north", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge" , "x": 90}
     },
-    "facing=north,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge"
+    {   "when": { "facing":"east", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge", "y": 90, "x" : 90 }
     },
-    "facing=east,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge",
-      "x": 90
+    {   "when": { "facing":"south", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge", "x": -90 }
     },
-    "facing=west,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge",
-      "x": 90
+    {   "when": { "facing":"west", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge", "y": 90, "x" : -90 }
     },
-    "facing=up,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"up", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge" }
     },
-    "facing=down,lit=false,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"down", "lit" :  "false", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge", "x": 180}
     },
-    "facing=south,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on"
+    {   "when": { "facing":"north","lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on", "x" : 90 }
     },
-    "facing=north,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on"
+    {   "when": { "facing":"east", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on", "y": 90, "x" : 90 }
     },
-    "facing=east,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on",
-      "x": 90
+    {   "when": { "facing":"south", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on", "x" : -90 }
     },
-    "facing=west,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on",
-      "x": 90
+    {   "when": { "facing":"west", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on", "y": 90, "x" : -90}
     },
-    "facing=up,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"up", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on" }
     },
-    "facing=down,lit=true,colored=true": {
-      "model": "betterfurnacesreforged:block/colored_forge_on",
-      "x": 90,
-      "y": 90
+    {   "when": { "facing":"down", "lit" :  "true", "colored" :  "true" },
+      "apply": { "model": "betterfurnacesreforged:block/colored_forge_on", "x": 180}
+    },
+    {   "when": { "show_orientation": "true", "facing": "north"},
+      "apply": { "model": "betterfurnacesreforged:block/nsweud", "x": 90 }
+    },
+    {   "when": { "show_orientation": "true", "facing": "east"},
+      "apply": { "model": "betterfurnacesreforged:block/nsweud", "y": 90, "x" : 90}
+    },
+    {   "when": { "show_orientation": "true", "facing": "south"},
+      "apply": { "model": "betterfurnacesreforged:block/nsweud", "x" : -90 }
+    },
+    {   "when": { "show_orientation": "true","facing": "west"},
+      "apply": { "model": "betterfurnacesreforged:block/nsweud", "y": 90, "x" : -90 }
+    },
+    {   "when": { "show_orientation": "true", "facing": "up"},
+      "apply": { "model": "betterfurnacesreforged:block/nsweud"  }
+    },
+    {   "when": { "show_orientation": "true","facing": "down"},
+      "apply": { "model": "betterfurnacesreforged:block/nsweud", "x": 180 }
     }
-  }
+  ]
 }

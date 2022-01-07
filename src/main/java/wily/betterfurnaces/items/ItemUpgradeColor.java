@@ -1,6 +1,5 @@
 package wily.betterfurnaces.items;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,22 +21,21 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.container.ItemUpgradeContainerBase;
-import wily.betterfurnaces.gui.ItemColorScreen;
 import wily.betterfurnaces.init.Registration;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemColorUpgrade extends ItemUpgradeMisc {
+public class ItemUpgradeColor extends ItemUpgrade {
 
-    public ItemColorUpgrade(Properties properties) {
-        super(properties);
+    public ItemUpgradeColor(Properties properties) {
+        super(properties,4);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(TextFormatting.GOLD).withItalic(true)));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.color").setStyle(Style.EMPTY.applyFormat((TextFormatting.GRAY))));
     }
 
@@ -67,28 +65,9 @@ public class ItemColorUpgrade extends ItemUpgradeMisc {
             nbt.putInt("blue", 255);
             itemStack.setTag(nbt);
         }
-        if ((Minecraft.getInstance().screen) instanceof ItemColorScreen && player instanceof PlayerEntity && ((PlayerEntity) player).getMainHandItem() == stack) {
-            ItemColorScreen color =  (ItemColorScreen) Minecraft.getInstance().screen;
-            if (color.red != null) {
-                int red = color.red.getValueInt();
-                if (red != nbt.getInt("red") && color.red.isHovered())
-                    nbt.putInt("red", red);
-            }
-            if (color.green != null) {
-                int green = color.green.getValueInt();
-                if (green != nbt.getInt("green") && color.green.isHovered())
-                    nbt.putInt("green", green);
-            }
-            if (color.blue != null) {
-                int blue = color.blue.getValueInt();
-                if (blue != nbt.getInt("blue") && color.blue.isHovered())
-                    nbt.putInt("blue", blue);
-            }
-            itemStack.setTag(nbt);
-        }
     }
     private static class ContainerProviderColorUpgrade implements INamedContainerProvider {
-        public ContainerProviderColorUpgrade(ItemColorUpgrade item, ItemStack stack) {
+        public ContainerProviderColorUpgrade(ItemUpgradeColor item, ItemStack stack) {
             this.itemStackColorUpgrade = stack;
         }
 

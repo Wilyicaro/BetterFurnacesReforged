@@ -19,8 +19,6 @@ public class SlotOutput extends Slot {
         this.player = player;
         if (te instanceof BlockSmeltingTileBase) {
             this.te = (BlockSmeltingTileBase) te;
-        }else if (te instanceof BlockForgeTileBase) {
-            this.tf = (BlockForgeTileBase) te;
         }
     }
 
@@ -50,13 +48,7 @@ public class SlotOutput extends Slot {
     @Override
     protected void onQuickCraft(ItemStack stack, int p_75210_2_) {
         stack.onCraftedBy(this.player.level, this.player, this.removeCount);
-        if (!this.player.level.isClientSide && this.te instanceof BlockSmeltingTileBase) {
-            ((BlockSmeltingTileBase)this.te).unlockRecipes(this.player);
-        }
-        if (!this.player.level.isClientSide && this.tf instanceof BlockForgeTileBase) {
-            ((BlockForgeTileBase)this.tf).unlockRecipes(this.player);
-        }
-
+          if (!this.player.level.isClientSide && this.te !=null)  ((BlockSmeltingTileBase)this.te).unlockRecipes(this.player);
         this.removeCount = 0;
         net.minecraftforge.fml.hooks.BasicEventHooks.firePlayerSmeltedEvent(this.player, stack);
     }

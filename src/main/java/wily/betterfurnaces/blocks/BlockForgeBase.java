@@ -24,6 +24,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -39,6 +43,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.*;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
+import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -50,12 +55,20 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty COLORED = BooleanProperty.create("colored");
+    public static final BooleanProperty SHOW_ORIENTATION = BooleanProperty.create("show_orientation");
 
     public BlockForgeBase(Properties properties) {
-        super(properties.noOcclusion());
-        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(BlockStateProperties.LIT, false).setValue(WATERLOGGED, false).setValue(COLORED,false));
+        super(properties.noOcclusion().emissiveRendering(BlockForgeBase::getOrientation));
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(BlockStateProperties.LIT, false).setValue(WATERLOGGED, false).setValue(COLORED,false).setValue(SHOW_ORIENTATION,false));
     }
-
+    public static final VoxelShape FORGE_SHAPE = VoxelShapes.join(VoxelShapes.block(), VoxelShapes.or(box(0, 0,0, 16,1,16), box(15,1,0,16,15,1), box(0,1,0,1,15,1), box(0,1,15,1,15,16), box(15,1,15,16,15,16), box(1.75,15,1.75,14.5,15,14.5), box(0,15,0,16,16,16) ,box(1, 0.5,1,15,15,15)), IBooleanFunction.AND);
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return FORGE_SHAPE;
+    }
+    public static boolean getOrientation(BlockState state, IBlockReader world, BlockPos pos) {
+        return state.getValue(SHOW_ORIENTATION);
+    }
     @Nullable
     @Override
     public ToolType getHarvestTool(BlockState state) {
@@ -77,13 +90,7 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
     }
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext ctx) {
-        Direction facing = ctx.getClickedFace();
-        if (facing == Direction.WEST || facing == Direction.EAST)
-            facing = Direction.UP;
-        else if (facing == Direction.NORTH || facing == Direction.SOUTH)
-            facing = Direction.EAST;
-        else
-            facing = Direction.SOUTH;
+        Direction facing = ctx.getNearestLookingDirection().getOpposite();
         boolean flag = ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER;;
         return this.defaultBlockState().setValue(FACING, facing).setValue(WATERLOGGED, flag);
     }
@@ -116,9 +123,9 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            if ((((hand.getItem() instanceof ItemUpgradeMisc && !(hand.getItem() instanceof ItemXpTank)) || hand.getItem() instanceof ItemOreProcessing || hand.getItem() instanceof ItemFuelEfficiency || (hand.getItem() instanceof ItemLiquidFuel && !te.hasXPTank()) || hand.getItem() instanceof ItemEnergyFuel || (hand.getItem() == Registration.XP.get() && !te.isLiquid())) && !(player.isCrouching()))) {
+            if (hand.getItem() instanceof ItemUpgrade  && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
-            }else if ((te.inventory.get(10).getItem() == new ItemStack(Registration.LIQUID.get()).getItem())  && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() &&  !(player.isCrouching())){
+            }else if ((te.hasUpgrade(Registration.LIQUID.get()))  && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && BlockSmeltingTileBase.isItemFuel(hand) && !(player.isCrouching())){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
                 FluidActionResult res = FluidUtil.tryEmptyContainer(hand, te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get(), 1000, player, true);
                 if (fluid != null && ForgeHooks.getBurnTime(hand) > 0)
@@ -135,60 +142,49 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
 
     private ActionResultType interactUpgrade(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
         Item hand = player.getItemInHand(handIn).getItem();
-        if (!((hand instanceof ItemOreProcessing) || (hand instanceof ItemFuelEfficiency) || (hand instanceof ItemUpgradeMisc) || (hand instanceof ItemLiquidFuel) || (hand instanceof ItemEnergyFuel))){
+        if (!(hand instanceof ItemUpgrade)){
             return ActionResultType.SUCCESS;
         }
-        TileEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof BlockForgeTileBase)) {
+        if (!(world.getBlockEntity(pos) instanceof BlockForgeTileBase)) {
             return ActionResultType.SUCCESS;
         }
+        BlockForgeTileBase te = (BlockForgeTileBase) world.getBlockEntity(pos);
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
 
-        if (hand instanceof ItemOreProcessing && hand != ((IInventory) te).getItem(7).getItem()) {
-                if ((!(((IInventory) te).getItem(7).isEmpty())) && (!player.isCreative())) {
-                    InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(7));
+        if (hand instanceof ItemUpgradeLiquidFuel || hand instanceof ItemUpgradeEnergyFuel) {
+            if ((!(te.getItem(10).isEmpty())) && (!player.isCreative())) {
+                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), te.getItem(10));
+            }
+            te.setItem(10, newStack);
+            world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            if (!player.isCreative()) {
+                player.getItemInHand(handIn).shrink(1);
+            }
+        }else {
+            if (te.hasUpgradeType((ItemUpgrade) stack.getItem())) {
+                if (!player.isCreative())
+                    InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), te.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()));
+                else  te.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()).shrink(1);
+            }
+            for (int upg : te.UPGRADES()) {
+                if (te.IisItemValidForSlot(upg, stack) && !stack.isEmpty() && upg != 10) {
+                    if (!(te.getItem(upg).isEmpty()) && upg == te.UPGRADES()[te.UPGRADES().length - 1]) {
+                        if (!player.isCreative())
+                            InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), te.getItem(upg));
+                        else te.getItem(upg).shrink(1);
+                    }
+                    if (te.getItem(upg).isEmpty()) {
+                        te.setItem(upg, newStack);
+                        if (!player.isCreative()) {
+                            player.getItemInHand(handIn).shrink(1);
+                        }
+                        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    }
                 }
-                    ((IInventory) te).setItem(7, newStack);
-
-        }
-        if (hand instanceof ItemFuelEfficiency) {
-            if ((!(((IInventory) te).getItem(8).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(8));
             }
-            ((IInventory) te).setItem(8, newStack);
         }
-        if (hand == Registration.XP.get()) {
-            if ((!(((IInventory) te).getItem(9).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(9));
-            }
-            ((IInventory) te).setItem(9, newStack);
-        }
-        if (hand == Registration.FACTORY.get()) {
-            if ((!(((IInventory) te).getItem(11).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(11));
-            }
-            ((IInventory) te).setItem(11, newStack);
-
-        }
-        if (hand instanceof ItemColorUpgrade) {
-            if ((!(((IInventory) te).getItem(12).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(12));
-            }
-            ((IInventory) te).setItem(12, newStack);
-
-        }
-        if (hand instanceof ItemLiquidFuel || hand instanceof ItemEnergyFuel) {
-            if ((!(((IInventory) te).getItem(10).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(10));
-            }
-            ((IInventory) te).setItem(10, newStack);
-        }
-        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        if (!player.isCreative()) {
-            player.getItemInHand(handIn).shrink(1);
-        }
-        ((BlockForgeTileBase)te).onUpdateSent();
+        te.onUpdateSent();
         return ActionResultType.SUCCESS;
     }
     private void interactWith(World world, BlockPos pos, PlayerEntity player) {
@@ -213,7 +209,7 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
             }
             BlockForgeTileBase tile = ((BlockForgeTileBase) world.getBlockEntity(pos));
 
-            if (state.getValue(BlockStateProperties.FACING) == Direction.SOUTH){
+            if (state.getValue(BlockStateProperties.FACING) == Direction.UP){
                 double d0 = (double) pos.getX() + 0.5D;
                 double d1 = (double) pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
                 double d2 = (double) pos.getZ() + 0.5D;
@@ -245,10 +241,6 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
         }
     }
 
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
-
-    }
-
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
@@ -262,18 +254,10 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
             super.onRemove(state, world, pos, oldState, p_196243_5_);
         }
     }
-
-    public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
-        return true;
-    }
-
+    
     public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
         return Container.getRedstoneSignalFromContainer((IInventory) world.getBlockEntity(pos));
 
-    }
-
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.MODEL;
     }
 
     public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
@@ -336,7 +320,7 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.FACING, WATERLOGGED, BlockStateProperties.LIT, COLORED);
+        builder.add(BlockStateProperties.FACING, WATERLOGGED, BlockStateProperties.LIT, COLORED,SHOW_ORIENTATION);
     }
 
 }

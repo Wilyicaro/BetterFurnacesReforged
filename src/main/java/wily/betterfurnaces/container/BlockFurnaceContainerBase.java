@@ -9,6 +9,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
@@ -17,22 +18,24 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemLiquidFuel;
-import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.items.ItemUpgradeMisc;
+import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
+import wily.betterfurnaces.items.ItemUpgradeLiquidFuel;
+import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
+import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
+import wily.betterfurnaces.util.DirectionUtil;
 
 
 public abstract class BlockFurnaceContainerBase extends Container {
 
-    protected BlockSmeltingTileBase te;
+    public BlockSmeltingTileBase te;
     protected IIntArray fields;
     protected PlayerEntity playerEntity;
     protected IItemHandler playerInventory;
@@ -58,22 +61,9 @@ public abstract class BlockFurnaceContainerBase extends Container {
         this.addSlot(new SlotInput(te, 0, 54, 18));
         this.addSlot(new SlotFuel(this.te, 1, 54, 54));
         this.addSlot(new SlotOutput(playerEntity, te, 2, 116, 35));
-        this.addSlot(new SlotUpgrade(te, 3, 8, 18){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemOreProcessing);
-            }
-        });
-        this.addSlot(new SlotUpgrade(te, 4, 8, 36){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemFuelEfficiency);
-            }
-        });
-        this.addSlot(new SlotUpgrade(te, 5, 8, 54){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return (stack.getItem() instanceof ItemUpgradeMisc || stack.getItem() instanceof ItemLiquidFuel);}});
+        this.addSlot(new SlotUpgrade(te, 3, 8, 18));
+        this.addSlot(new SlotUpgrade(te, 4, 8, 36));
+        this.addSlot(new SlotUpgrade(te, 5, 8, 54));
         layoutPlayerInventorySlots(8, 84);
         checkContainerSize(this.te, 6);
         checkContainerDataCount(this.fields, 5);
@@ -202,13 +192,28 @@ public abstract class BlockFurnaceContainerBase extends Container {
 
         return this.fields.get(0) * pixels / i;
     }
-    public int getFluidStoredScaled(int pixels) {
-        int cur = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getFluidInTank(0).getAmount();
-        int max = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getTankCapacity(0);
+    public int getFluidStoredScaled(int pixels, boolean isXp) {
+        Direction facing = null;
+        if (isXp) facing = DirectionUtil.fromId(te.getIndexFront());
+        int cur = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing).resolve().get().getFluidInTank(0).getAmount();
+        int max = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing).resolve().get().getTankCapacity(0);
         return cur * pixels / max;
     }
-    public FluidStack getFluidStackStored() {
-        return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getFluidInTank(0);
+    public FluidStack getFluidStackStored(boolean isXp) {
+        Direction facing = null;
+        if (isXp) facing = DirectionUtil.fromId(te.getIndexFront());
+        return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing).resolve().get().getFluidInTank(0);
+    }
+    public int getEnergyStoredScaled(int pixels) {
+        int cur = te.getCapability(CapabilityEnergy.ENERGY, null).resolve().get().getEnergyStored();
+        int max = te.getCapability(CapabilityEnergy.ENERGY, null).resolve().get().getMaxEnergyStored();
+        return cur * pixels / max;
+    }
+    public int getEnergyStored() {
+        return te.getCapability(CapabilityEnergy.ENERGY, null).resolve().get().getEnergyStored();
+    }
+    public int getEnergyMaxStored() {
+        return te.getCapability(CapabilityEnergy.ENERGY, null).resolve().get().getMaxEnergyStored();
     }
     public int BurnTimeGet(){
         return this.fields.get(0);
