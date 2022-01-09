@@ -1,9 +1,11 @@
 package wily.betterfurnaces.container;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import wily.betterfurnaces.items.ItemUpgrade;
+import wily.betterfurnaces.items.ItemUpgradeFactory;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
@@ -32,7 +34,7 @@ public class SlotUpgrade extends Slot {
 
     @Override
     public void setChanged() {
-        if (te instanceof BlockSmeltingTileBase) te.onUpdateSent();
+        if (te != null) te.onUpdateSent();
     }
 
 }

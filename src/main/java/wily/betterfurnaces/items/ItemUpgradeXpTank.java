@@ -19,16 +19,15 @@ import java.util.List;
 public class ItemUpgradeXpTank extends ItemUpgrade {
 
 
-    public ItemUpgradeXpTank(Properties properties) {
-        super(properties,6);
+    public ItemUpgradeXpTank(Properties properties, String tooltip) {
+        super(properties,6, tooltip);
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(TextFormatting.GOLD).withItalic(true)));
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.xp").setStyle(Style.EMPTY.applyFormat((TextFormatting.GRAY))));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (!ModList.get().isLoaded(Config.getLiquidXPMod()))
         tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.isworking").setStyle(Style.EMPTY.applyFormat((TextFormatting.RED))));
     }

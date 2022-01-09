@@ -9,20 +9,23 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.container.BlockForgeContainerBase;
 import wily.betterfurnaces.container.BlockFurnaceContainerBase;
 import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.items.ItemUpgradeFactory;
 import wily.betterfurnaces.network.Messages;
+import wily.betterfurnaces.network.PacketMouseClickPos;
 import wily.betterfurnaces.network.PacketSettingsButton;
 import wily.betterfurnaces.network.PacketShowSettingsButton;
 import wily.betterfurnaces.util.FluidRenderUtil;
@@ -38,7 +41,20 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
     PlayerInventory playerInv;
     ITextComponent name;
 
-
+    private boolean storedFactoryUpgradeType(int type){
+        if (getMenu().te.hasUpgradeType(Registration.FACTORY.get())) {
+            ItemUpgradeFactory stack = ((ItemUpgradeFactory)getMenu().te.getUpgradeTypeSlotItem(Registration.FACTORY.get()).getItem());
+            if (type == 1)
+                return stack.canInput;
+            else if (type == 2)
+                return stack.canOutput;
+            else if (type == 3)
+                return stack.pipeSide;
+            else if (type == 4)
+                return stack.redstoneSignal;
+        }
+        return false;
+    }
     public boolean add_button;
     public boolean sub_button;
 
@@ -73,13 +89,6 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
         if (getMenu().te.hasUpgrade(Registration.ENERGY.get()) &&
                 (mouseX > getGuiLeft() + 31 && mouseX < getGuiLeft() + 47 && mouseY > getGuiTop() + 17 && mouseY < getGuiTop() + 51))
             this.renderTooltip(matrix, new StringTextComponent((this.getMenu()).getEnergyStored()/1000 + " kFE/" + ( this.getMenu()).getEnergyMaxStored()/1000 + "kFE"), actualMouseX, actualMouseY);
-        if (getMenu().te.hasUpgrade(Registration.FACTORY.get())) {
-            if (this.getMenu().showInventoryButtons() && this.getMenu().getRedstoneMode() == 4) {
-                int comSub = this.getMenu().getComSub();
-                int i = comSub > 9 ? 28 : 31;
-                this.minecraft.font.draw(matrix, new StringTextComponent("" + comSub), i - 42, 138, 4210752);
-            }
-        }
         if (getMenu().te.hasUpgrade(Registration.XP.get()) &&
                 (mouseX > getGuiLeft() + 116 && mouseX < getGuiLeft() + 132 && mouseY > getGuiTop() + 57 && mouseY < getGuiTop() + 73))
             this.renderTooltip(matrix, new StringTextComponent(this.getMenu().getFluidStackStored(true).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(true).getAmount() + " mB"), actualMouseX, actualMouseY);
@@ -91,33 +100,38 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
 
     private void addTooltips(MatrixStack matrix, int mouseX, int mouseY) {
         if (!getMenu().showInventoryButtons()) {
-            if (mouseX >= -20 && mouseX <= 0 && mouseY >= 52 && mouseY <= 74) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= 3 && mouseY <= 16) {
                 this.renderTooltip(matrix, new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_open"), mouseX, mouseY);
             }
         } else {
-            if (mouseX >= -13 && mouseX <= 0 && mouseY >= 52 && mouseY <= 74) {
+            if (storedFactoryUpgradeType(3)){
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= 3 && mouseY <= 16) {
                 this.renderComponentTooltip(matrix, StringHelper.getShiftInfoGui(), mouseX, mouseY);
-            } else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 60 && mouseY <= 73) {
-                List<ITextComponent> list = Lists.newArrayList();
-                list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_input"));
-                list.add(new StringTextComponent("" + this.getMenu().getAutoInput()));
-                this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -29 && mouseX <= -16 && mouseY >= 60 && mouseY <= 73) {
-                List<ITextComponent> list = Lists.newArrayList();
-                list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_output"));
-                list.add(new StringTextComponent("" + this.getMenu().getAutoOutput()));
-                this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 79 && mouseY <= 88) {
+            } else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71) {
+                if (storedFactoryUpgradeType(1)) {
+                    List<ITextComponent> list = Lists.newArrayList();
+                    list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_input"));
+                    list.add(new StringTextComponent("" + this.getMenu().getAutoInput()));
+                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                }
+            } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 58 && mouseY <= 71) {
+                if (storedFactoryUpgradeType(2)) {
+                    List<ITextComponent> list = Lists.newArrayList();
+                    list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_output"));
+                    list.add(new StringTextComponent("" + this.getMenu().getAutoOutput()));
+                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                }
+            } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 74 && mouseY <= 87) {
                 List<ITextComponent> list = Lists.newArrayList();
                 list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_top"));
                 list.add(this.getMenu().getTooltip(1));
                 this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 103 && mouseY <= 112) {
+            } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 102 && mouseY <= 115) {
                 List<ITextComponent> list = Lists.newArrayList();
                 list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_bottom"));
                 list.add(this.getMenu().getTooltip(0));
                 this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 91 && mouseY <= 100) {
+            } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 88 && mouseY <= 101) {
                 List<ITextComponent> list = Lists.newArrayList();
                 if (isShiftKeyDown()) {
                     list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_reset"));
@@ -126,41 +140,50 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
                     list.add(this.getMenu().getTooltip(this.getMenu().getIndexFront()));
                 }
                 this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -44 && mouseX <= -35 && mouseY >= 91 && mouseY <= 100) {
+            } else if (mouseX >= -45 && mouseX <= -32 && mouseY >= 88 && mouseY <= 101) {
                 List<ITextComponent> list = Lists.newArrayList();
                 list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_left"));
                 list.add(this.getMenu().getTooltip(this.getMenu().getIndexLeft()));
                 this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -20 && mouseX <= -11 && mouseY >= 91 && mouseY <= 100) {
+            } else if (mouseX >= -17 && mouseX <= -4 && mouseY >= 88 && mouseY <= 101) {
                 List<ITextComponent> list = Lists.newArrayList();
                 list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_right"));
                 list.add(this.getMenu().getTooltip(this.getMenu().getIndexRight()));
                 this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -20 && mouseX <= -11 && mouseY >= 103 && mouseY <= 112) {
+            } else if (mouseX >= -45 && mouseX <= -32 && mouseY >= 102 && mouseY <= 115) {
                 List<ITextComponent> list = Lists.newArrayList();
                 list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_back"));
                 list.add(this.getMenu().getTooltip(this.getMenu().getIndexBack()));
                 this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 118 && mouseY <= 131) {
-                List<ITextComponent> list = Lists.newArrayList();
-                list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_ignored"));
-                this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 118 && mouseY <= 131) {
-                List<ITextComponent> list = Lists.newArrayList();
-                if (isShiftKeyDown()) {
-                    list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_low"));
-                } else {
-                    list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_high"));
+            }
+        }
+            if (storedFactoryUpgradeType(4)) {
+                if (this.getMenu().showInventoryButtons() && this.getMenu().getRedstoneMode() == 4) {
+                    int comSub = this.getMenu().getComSub();
+                    int i = comSub > 9 ? 28 : 31;
+                    this.minecraft.font.draw(matrix, new StringTextComponent("" + comSub), i - 42, 138, TextFormatting.WHITE.getColor());
                 }
-                this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -15 && mouseX <= -2 && mouseY >= 118 && mouseY <= 131) {
-                List<ITextComponent> list = Lists.newArrayList();
-                list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator"));
-                this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-            } else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 134 && mouseY <= 147) {
-                List<ITextComponent> list = Lists.newArrayList();
-                list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator_sub"));
-                this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                if (mouseX >= -47 && mouseX <= -34 && mouseY >= 118 && mouseY <= 131) {
+                    List<ITextComponent> list = Lists.newArrayList();
+                    list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_ignored"));
+                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 118 && mouseY <= 131) {
+                    List<ITextComponent> list = Lists.newArrayList();
+                    if (isShiftKeyDown()) {
+                        list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_low"));
+                    } else {
+                        list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_high"));
+                    }
+                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                } else if (mouseX >= -15 && mouseX <= -2 && mouseY >= 118 && mouseY <= 131) {
+                    List<ITextComponent> list = Lists.newArrayList();
+                    list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator"));
+                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                } else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 134 && mouseY <= 147) {
+                    List<ITextComponent> list = Lists.newArrayList();
+                    list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator_sub"));
+                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                }
             }
 
         }
@@ -216,12 +239,12 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
             Minecraft.getInstance().getTextureManager().bind(WIDGETS);
             this.blit(matrix, getGuiLeft() + 116, getGuiTop() + 57, 192, 0, 16, 16);
         }
-        if (((BlockFurnaceContainerBase) this.getMenu()).slots.get(5).getItem().getItem() == new ItemStack(Registration.FACTORY.get()).getItem()) {
+        if (getMenu().te.hasUpgradeType(Registration.FACTORY.get())) {
             this.minecraft.getTextureManager().bind(WIDGETS);
             int actualMouseX = mouseX - ((this.width - this.getXSize()) / 2);
             int actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
-
-            this.addInventoryButtons(matrix, actualMouseX, actualMouseY);
+            this.addInventoryButtons(matrix, actualMouseX , actualMouseY);
+            if (storedFactoryUpgradeType(4))
             this.addRedstoneButtons(matrix, actualMouseX, actualMouseY);
         }
     }
@@ -266,15 +289,25 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
 
     private void addInventoryButtons(MatrixStack matrix, int mouseX, int mouseY) {
         if (!getMenu().showInventoryButtons()) {
-            this.blit(matrix, getGuiLeft() - 13, getGuiTop() + 52, 0, 28, 16, 19);
+            this.blit(matrix, getGuiLeft() + 7, getGuiTop() + 3, 0, 28, 18, 14);
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= 3 && mouseY <= 16)
+                this.blit(matrix, getGuiLeft() + 7, getGuiTop() + 3, 18, 28, 18, 14);
         } else if (getMenu().showInventoryButtons()) {
-            this.blit(matrix, getGuiLeft() - 56, getGuiTop() + 52, 0, 47, 59, 107);
-            if (mouseX >= -47 && mouseX <= -34 && mouseY >= 60 && mouseY <= 73 || this.getMenu().getAutoInput()) {
-                this.blit(matrix, getGuiLeft() - 47, getGuiTop() + 60, 0, 189, 14, 14);
+            this.blit(matrix, getGuiLeft() + 7, getGuiTop() + 3, 18, 28, 18, 14);
+            this.blit(matrix, getGuiLeft() - 53, getGuiTop() + 52, 0, 47, 59, 107);
+            if (storedFactoryUpgradeType(1)) {
+                this.blit(matrix, getGuiLeft() - 47, getGuiTop() + 58, 56, 157, 14, 14);
+                if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71 || this.getMenu().getAutoInput()) {
+                    this.blit(matrix, getGuiLeft() - 47, getGuiTop() + 58, 0, 189, 14, 14);
+                }
             }
-            if (mouseX >= -29 && mouseX <= -16 && mouseY >= 60 && mouseY <= 73 || this.getMenu().getAutoOutput()) {
-                this.blit(matrix, getGuiLeft() - 29, getGuiTop() + 60, 14, 189, 14, 14);
+            if (storedFactoryUpgradeType(2)) {
+                this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 58, 70, 157, 14, 14);
+                if (mouseX >= -31 && mouseX <= -18 && mouseY >= 58 && mouseY <= 71 || this.getMenu().getAutoOutput()) {
+                    this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 58, 14, 189, 14, 14);
+                }
             }
+            if (storedFactoryUpgradeType(3))
             this.blitIO(matrix);
         }
 
@@ -283,6 +316,10 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
 
     private void blitRedstone(MatrixStack matrix) {
         boolean flag = isShiftKeyDown();
+        this.blit(matrix, getGuiLeft() - 47, getGuiTop() + 118, 28, 203, 14, 14);
+        this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 118, 42, 203, 14, 14);
+        this.blit(matrix, getGuiLeft() - 15, getGuiTop() + 118, 56, 203, 14, 14);
+        this.blit(matrix, getGuiLeft() - 47, getGuiTop() + 134, 70, 203, 14, 14);
         if (flag) {
             this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 118, 84, 189, 14, 14);
         }
@@ -304,70 +341,82 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
     private void blitIO(MatrixStack matrix) {
         int[] settings = new int[]{0, 0, 0, 0, 0, 0};
         int setting = this.getMenu().getSettingTop();
-        if (setting == 1) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 79, 0, 161, 10, 10);
+        if (setting == 0)
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 74, 84, 157, 14, 14);
+        else if (setting == 1) {
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 74, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 79, 10, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 74, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 79, 20, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 74, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 79, 30, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 74, 42, 157, 14, 14);
         }
         settings[1] = setting;
 
         setting = this.getMenu().getSettingBottom();
-        if (setting == 1) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 103, 0, 161, 10, 10);
+        if (setting == 0)
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 102, 84, 157, 14, 14);
+        else if (setting == 1) {
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 102, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 103, 10, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 102, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 103, 20, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 102, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 103, 30, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 102, 42, 157, 14, 14);
         }
         settings[0] = setting;
         setting = this.getMenu().getSettingFront();
-        if (setting == 1) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 91, 0, 161, 10, 10);
+        if (setting == 0)
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 88, 84, 157, 14, 14);
+        else if (setting == 1) {
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 88, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 91, 10, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 88, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 91, 20, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 88, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, getGuiLeft() - 32, getGuiTop() + 91, 30, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 88, 42, 157, 14, 14);
         }
         settings[this.getMenu().getIndexFront()] = setting;
         setting = this.getMenu().getSettingBack();
-        if (setting == 1) {
-            this.blit(matrix, getGuiLeft() - 20, getGuiTop() + 103, 0, 161, 10, 10);
+        if (setting == 0)
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 102, 84, 157, 14, 14);
+        else if (setting == 1) {
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 102, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, getGuiLeft() - 20, getGuiTop() + 103, 10, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 102, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, getGuiLeft() - 20, getGuiTop() + 103, 20, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 102, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, getGuiLeft() - 20, getGuiTop() + 103, 30, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 102, 42, 157, 14, 14);
         }
         settings[this.getMenu().getIndexBack()] = setting;
         setting = this.getMenu().getSettingLeft();
-        if (setting == 1) {
-            this.blit(matrix, getGuiLeft() - 44, getGuiTop() + 91, 0, 161, 10, 10);
+        if (setting == 0)
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 88, 84, 157, 14, 14);
+        else if (setting == 1) {
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 88, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, getGuiLeft() - 44, getGuiTop() + 91, 10, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 88, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, getGuiLeft() - 44, getGuiTop() + 91, 20, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 88, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, getGuiLeft() - 44, getGuiTop() + 91, 30, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 45, getGuiTop() + 88, 42, 157, 14, 14);
         }
         settings[this.getMenu().getIndexLeft()] = setting;
         setting = this.getMenu().getSettingRight();
-        if (setting == 1) {
-            this.blit(matrix, getGuiLeft() - 20, getGuiTop() + 91, 0, 161, 10, 10);
+        if (setting == 0)
+            this.blit(matrix, getGuiLeft() - 17, getGuiTop() + 88, 84, 157, 14, 14);
+        else if (setting == 1) {
+            this.blit(matrix, getGuiLeft() - 17, getGuiTop() + 88, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, getGuiLeft() - 20, getGuiTop() + 91, 10, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 17, getGuiTop() + 88, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, getGuiLeft() - 20, getGuiTop() + 91, 20, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 17, getGuiTop() + 88, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, getGuiLeft() - 20, getGuiTop() + 91, 30, 161, 10, 10);
+            this.blit(matrix, getGuiLeft() - 17, getGuiTop() + 88, 42, 157, 14, 14);
         }
         settings[this.getMenu().getIndexRight()] = setting;
         boolean input = false;
@@ -400,85 +449,96 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         double actualMouseX = mouseX - ((this.width - this.getXSize()) / 2);
         double actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
-        this.mouseClickedRedstoneButtons(actualMouseX, actualMouseY);
+
+        if (storedFactoryUpgradeType(4))
+            this.mouseClickedRedstoneButtons(actualMouseX, actualMouseY);
         this.mouseClickedInventoryButtons(button, actualMouseX, actualMouseY);
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+
     public void mouseClickedInventoryButtons(int button, double mouseX, double mouseY) {
         boolean flag = button == GLFW.GLFW_MOUSE_BUTTON_2;
         if (!getMenu().showInventoryButtons()) {
-            if (mouseX >= -10 && mouseX <= 0 && mouseY >= 52 && mouseY <= 74) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= 3 && mouseY <= 16) {
                 Messages.INSTANCE.sendToServer(new PacketShowSettingsButton(this.getMenu().getPos(), 1));
                 Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
             }
         } else {
-            if (mouseX >= -10 && mouseX <= 0 && mouseY >= 52 && mouseY <= 74) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= 3 && mouseY <= 16) {
                 Messages.INSTANCE.sendToServer(new PacketShowSettingsButton(this.getMenu().getPos(), 0));
                 Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
-            } else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 60 && mouseY <= 73) {
-                if (!this.getMenu().getAutoInput()) {
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 6, 1));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
-                } else {
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 6, 0));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
-                }
-
-            } else if (mouseX >= -29 && mouseX <= -16 && mouseY >= 60 && mouseY <= 73) {
-                if (!this.getMenu().getAutoOutput()) {
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 7, 1));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
-                } else {
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 7, 0));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
-                }
-            } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 79 && mouseY <= 88) {
-                if (flag) {
-                    sendToServerInverted(this.getMenu().getSettingTop(), 1);
-                } else {
-                    sendToServer(this.getMenu().getSettingTop(), 1);
-                }
-            } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 103 && mouseY <= 112) {
-                if (flag) {
-                    sendToServerInverted(this.getMenu().getSettingBottom(), 0);
-                } else {
-                    sendToServer(this.getMenu().getSettingBottom(), 0);
-                }
-            } else if (mouseX >= -32 && mouseX <= -23 && mouseY >= 91 && mouseY <= 100) {
-                if (isShiftKeyDown()) {
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 0, 0));
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 1, 0));
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 2, 0));
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 3, 0));
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 4, 0));
-                    Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 5, 0));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.8F, 0.3F));
-                } else {
-                    if (flag) {
-                        sendToServerInverted(this.getMenu().getSettingFront(), this.getMenu().getIndexFront());
-                    } else {
-                        sendToServer(this.getMenu().getSettingFront(), this.getMenu().getIndexFront());
+            }
+            if (storedFactoryUpgradeType(3)) {
+                if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71) {
+                    if (storedFactoryUpgradeType(1)) {
+                        if (!this.getMenu().getAutoInput()) {
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 6, 1));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                        } else {
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 6, 0));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                        }
+                    }
+                } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 58 && mouseY <= 71) {
+                    if (storedFactoryUpgradeType(2)) {
+                        if (!this.getMenu().getAutoOutput()) {
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 7, 1));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                        } else {
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 7, 0));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                        }
                     }
                 }
-            } else if (mouseX >= -20 && mouseX <= -11 && mouseY >= 103 && mouseY <= 112) {
-                if (flag) {
-                    sendToServerInverted(this.getMenu().getSettingBack(), this.getMenu().getIndexBack());
-                } else {
-                    sendToServer(this.getMenu().getSettingBack(), this.getMenu().getIndexBack());
-                }
-            } else if (mouseX >= -44 && mouseX <= -35 && mouseY >= 91 && mouseY <= 100) {
-                if (flag) {
-                    sendToServerInverted(this.getMenu().getSettingLeft(), this.getMenu().getIndexLeft());
-                } else {
-                    sendToServer(this.getMenu().getSettingLeft(), this.getMenu().getIndexLeft());
-                }
-            } else if (mouseX >= -20 && mouseX <= -11 && mouseY >= 91 && mouseY <= 100) {
-                if (flag) {
-                    sendToServerInverted(this.getMenu().getSettingRight(), this.getMenu().getIndexRight());
-                } else {
-                    sendToServer(this.getMenu().getSettingRight(), this.getMenu().getIndexRight());
-                }
+
+                    if (mouseX >= -31 && mouseX <= -18 && mouseY >= 74 && mouseY <= 87) {
+                        if (flag) {
+                            sendToServerInverted(this.getMenu().getSettingTop(), 1);
+                        } else {
+                            sendToServer(this.getMenu().getSettingTop(), 1);
+                        }
+                    } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 102 && mouseY <= 115) {
+                        if (flag) {
+                            sendToServerInverted(this.getMenu().getSettingBottom(), 0);
+                        } else {
+                            sendToServer(this.getMenu().getSettingBottom(), 0);
+                        }
+                    } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 88 && mouseY <= 101) {
+                        if (isShiftKeyDown()) {
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 0, 0));
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 1, 0));
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 2, 0));
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 3, 0));
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 4, 0));
+                            Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 5, 0));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.8F, 0.3F));
+                        } else {
+                            if (flag) {
+                                sendToServerInverted(this.getMenu().getSettingFront(), this.getMenu().getIndexFront());
+                            } else {
+                                sendToServer(this.getMenu().getSettingFront(), this.getMenu().getIndexFront());
+                            }
+                        }
+                    } else if (mouseX >= -45 && mouseX <= -32 && mouseY >= 102 && mouseY <= 115) {
+                        if (flag) {
+                            sendToServerInverted(this.getMenu().getSettingBack(), this.getMenu().getIndexBack());
+                        } else {
+                            sendToServer(this.getMenu().getSettingBack(), this.getMenu().getIndexBack());
+                        }
+                    } else if (mouseX >= -45 && mouseX <= -32 && mouseY >= 88 && mouseY <= 101) {
+                        if (flag) {
+                            sendToServerInverted(this.getMenu().getSettingLeft(), this.getMenu().getIndexLeft());
+                        } else {
+                            sendToServer(this.getMenu().getSettingLeft(), this.getMenu().getIndexLeft());
+                        }
+                    } else if (mouseX >= -17 && mouseX <= -4 && mouseY >= 88 && mouseY <= 101) {
+                        if (flag) {
+                            sendToServerInverted(this.getMenu().getSettingRight(), this.getMenu().getIndexRight());
+                        } else {
+                            sendToServer(this.getMenu().getSettingRight(), this.getMenu().getIndexRight());
+                        }
+                    }
             }
         }
     }

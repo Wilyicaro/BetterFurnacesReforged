@@ -37,6 +37,11 @@ public class Messages {
                 PacketColorSlider::new,
                 PacketColorSlider::handle);
 
+        INSTANCE.registerMessage(nextID(), PacketMouseClickPos.class,
+                PacketMouseClickPos::toBytes,
+                PacketMouseClickPos::new,
+                PacketMouseClickPos::handle);
+
         INSTANCE.registerMessage(nextID(), PacketCobButton.class,
                 PacketCobButton::toBytes,
                 PacketCobButton::new,

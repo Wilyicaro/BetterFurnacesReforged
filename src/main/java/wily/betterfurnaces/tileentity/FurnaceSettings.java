@@ -4,10 +4,13 @@ import net.minecraft.nbt.CompoundNBT;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 
+import java.util.Arrays;
+
 public class FurnaceSettings {
     public int[] settings;
     public int[] autoIO;
     public int[] redstoneSettings;
+    public boolean cleared = false;
 
     public FurnaceSettings() {
         settings = new int[]{0, 0, 0, 0, 0, 0};
@@ -90,6 +93,8 @@ public class FurnaceSettings {
                     break;
             }
             onChanged();
+            if (cleared)
+            cleared = false;
         } catch (ArrayIndexOutOfBoundsException e) {
             if (Config.showErrors.get()) {
                 BetterFurnacesReforged.LOGGER.error("Something went wrong.");
@@ -104,17 +109,18 @@ public class FurnaceSettings {
         return settings.length + autoIO.length + redstoneSettings.length;
     }
 
-    public void read(CompoundNBT tag) {
+    public void  read(CompoundNBT tag) {
         this.settings = tag.getIntArray("Settings");
         this.autoIO = tag.getIntArray("AutoIO");
         this.redstoneSettings = tag.getIntArray("Redstone");
         onChanged();
     }
 
-    public void write(CompoundNBT tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         tag.putIntArray("Settings", settings);
         tag.putIntArray("AutoIO", autoIO);
         tag.putIntArray("Redstone", redstoneSettings);
+        return tag;
     }
 
     public void onChanged() {

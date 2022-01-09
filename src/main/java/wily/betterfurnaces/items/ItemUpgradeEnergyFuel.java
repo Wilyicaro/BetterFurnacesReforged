@@ -17,14 +17,7 @@ import java.util.List;
 public class ItemUpgradeEnergyFuel extends ItemUpgrade {
 
 
-    public ItemUpgradeEnergyFuel(Properties properties) {
-        super(properties,1);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.energy").setStyle(Style.EMPTY.applyFormat((TextFormatting.GRAY))));
+    public ItemUpgradeEnergyFuel(Properties properties, String tooltip) {
+        super(properties,1, tooltip);
     }
 }

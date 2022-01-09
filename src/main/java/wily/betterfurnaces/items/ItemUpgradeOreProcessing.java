@@ -20,21 +20,24 @@ public class ItemUpgradeOreProcessing extends ItemUpgrade {
 
 
     public int getMultiplier;
-    public boolean acceptOre;
-    public boolean acceptRaw;
     public ItemUpgradeOreProcessing(Properties properties, int Multiplier ) {
-        super(properties,3);
+        super(properties,3, null);
         this.getMultiplier = Multiplier;
     }
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!stack.getItem().getRegistryName().toString().equals("ultimatefurnaces_bfr:ultimate_ore_processing_upgrade"))
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores").setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
-        else tooltip.add(new TranslationTextComponent("tooltip.ultimate_furnaces_bfr.upgrade.ultore").setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
+        String s;
+        String i;
         if (!stack.isDamageableItem())
-            tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable").setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
+            i = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.infinitely").getString();
+        else i = "";
+        if (getMultiplier == 2) s = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.double").getString();
+        else if (getMultiplier == 4) s = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.quadruple").getString();
+        else if (getMultiplier > 4) s = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.multiple").getString();
+        else s = "";
+        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores",s,i).setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
 
     }
     public void inventoryTick(ItemStack stack, World world, Entity player, int slot, boolean selected) {

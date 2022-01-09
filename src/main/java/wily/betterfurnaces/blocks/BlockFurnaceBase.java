@@ -91,7 +91,6 @@ public abstract class BlockFurnaceBase extends Block {
                 te.setCustomName(stack.getDisplayName());
             }
             te.totalCookTime = te.getCookTimeConfig().get();
-            te.placeConfig();
         }
     }
 

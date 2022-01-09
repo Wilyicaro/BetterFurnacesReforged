@@ -25,7 +25,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "170";
+    public static final String VERSION = "171";
     public static final String MC_VERSION = "1.16.5";
 
     public static final Logger LOGGER = LogManager.getLogger();

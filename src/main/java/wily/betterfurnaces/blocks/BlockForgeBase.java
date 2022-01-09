@@ -110,7 +110,6 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
                 te.setCustomName(stack.getDisplayName());
             }
             te.totalCookTime = te.getCookTimeConfig().get();
-            te.placeConfig();
         }
     }
 

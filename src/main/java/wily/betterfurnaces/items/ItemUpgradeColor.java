@@ -23,20 +23,11 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.container.ItemUpgradeContainerBase;
 import wily.betterfurnaces.init.Registration;
 
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class ItemUpgradeColor extends ItemUpgrade {
 
-    public ItemUpgradeColor(Properties properties) {
-        super(properties,4);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.color").setStyle(Style.EMPTY.applyFormat((TextFormatting.GRAY))));
+    public ItemUpgradeColor(Properties properties, String tooltip) {
+        super(properties,4, tooltip);
     }
 
     public ActionResult<ItemStack> use(World world, PlayerEntity entity, Hand hand) {

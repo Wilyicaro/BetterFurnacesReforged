@@ -142,16 +142,19 @@ public class Registration {
     public static final RegistryObject<ItemUpgradeExtreme> EXTREME_UPGRADE = ITEMS.register("extreme_upgrade", () -> new ItemUpgradeExtreme(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
 
-    public static final RegistryObject<ItemUpgradeEnergyFuel> ENERGY = ITEMS.register("energy_upgrade", () -> new ItemUpgradeEnergyFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
-
     public static final RegistryObject<ItemUpgradeFuelEfficiency> FUEL = ITEMS.register("fuel_efficiency_upgrade", () -> new ItemUpgradeFuelEfficiency(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(256),2));
     public static final RegistryObject<ItemUpgradeOreProcessing> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(128),2));
     public static final RegistryObject<ItemUpgradeFuelEfficiency> ADVFUEL = ITEMS.register("advanced_fuel_efficiency_upgrade", () -> new ItemUpgradeFuelEfficiency(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2));
     public static final RegistryObject<ItemUpgradeOreProcessing> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2));
-    public static final RegistryObject<ItemUpgrade> FACTORY = ITEMS.register("factory_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
-    public static final RegistryObject<ItemUpgradeColor> COLOR = ITEMS.register("color_upgrade", () -> new ItemUpgradeColor(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
-    public static final RegistryObject<ItemUpgradeLiquidFuel> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new ItemUpgradeLiquidFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
-    public static final RegistryObject<ItemUpgradeXpTank> XP = ITEMS.register("xp_tank_upgrade", () -> new ItemUpgradeXpTank(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1)));
+    public static final RegistryObject<ItemUpgrade> REDSTONE = ITEMS.register("redstone_signal_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"redstone",false,false,false,true));
+    public static final RegistryObject<ItemUpgrade> PIPING = ITEMS.register("piping_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"piping",false,false,true,false));
+    public static final RegistryObject<ItemUpgrade> INPUT_FACTORY = ITEMS.register("autoinput_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"input",false,true,true,false));
+    public static final RegistryObject<ItemUpgrade> OUTPUT_FACTORY = ITEMS.register("autooutput_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1), "output",true,false,true,false));
+    public static final RegistryObject<ItemUpgrade> FACTORY = ITEMS.register("factory_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"factory",true,true,true,true));
+    public static final RegistryObject<ItemUpgradeColor> COLOR = ITEMS.register("color_upgrade", () -> new ItemUpgradeColor(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"color"));
+    public static final RegistryObject<ItemUpgradeLiquidFuel> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new ItemUpgradeLiquidFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"liquid"));
+    public static final RegistryObject<ItemUpgradeEnergyFuel> ENERGY = ITEMS.register("energy_upgrade", () -> new ItemUpgradeEnergyFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"energy"));
+    public static final RegistryObject<ItemUpgradeXpTank> XP = ITEMS.register("xp_tank_upgrade", () -> new ItemUpgradeXpTank(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"xp"));
 
 
     public static void registerBlocks(RegistryEvent.Register<Block> event)

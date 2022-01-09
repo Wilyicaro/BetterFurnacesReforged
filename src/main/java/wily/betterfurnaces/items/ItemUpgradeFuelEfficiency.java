@@ -20,16 +20,23 @@ public class ItemUpgradeFuelEfficiency extends ItemUpgrade {
 
     public int getMultiplier;
     public ItemUpgradeFuelEfficiency(Properties properties, int Multiplier) {
-        super(properties,2);
+        super(properties,2, null);
         this.getMultiplier = Multiplier;
     }
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel").setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
+        String s;
+        String i;
         if (!stack.isDamageableItem())
-            tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable").setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
+            i = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.infinitely").getString();
+        else i = "";
+        if (getMultiplier == 2) s = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.double").getString();
+        else if (getMultiplier == 4) s = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.quadruple").getString();
+        else if (getMultiplier > 4) s = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.multiple").getString();
+        else s = "";
+        tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel",s,i).setStyle(Style.EMPTY.applyFormat(TextFormatting.GRAY)));
     }
     public void inventoryTick(ItemStack stack, World world, Entity player, int slot, boolean selected) {
         super.inventoryTick(stack, world, player, slot, selected);

@@ -51,6 +51,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.apache.commons.lang3.ArrayUtils;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.BlockForgeBase;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
@@ -109,6 +110,20 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
             @Override
             public void onChanged() {
                 setChanged();
+            }
+            @Override
+            public void set(int index, int value) {
+                if (hasUpgradeType(Registration.FACTORY.get()))
+                     read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getTag());
+                super.set(index,value);
+                if (hasUpgradeType(Registration.FACTORY.get()))
+                    write(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getTag());
+            }
+            @Override
+            public int get(int index) {
+                if (hasUpgradeType(Registration.FACTORY.get()))
+                    read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getTag());
+                return super.get(index);
             }
         };
 
@@ -365,6 +380,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                 }
             };
         }
+
         boolean wasBurning = this.isBurning();
         boolean flag1 = false;
         boolean flag2 = false;
@@ -432,7 +448,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
             }
 
             if (hasXPTank()) grantStoredRecipeExperience(level, null);
-            if (!hasUpgrade(Registration.FACTORY.get()) && isForge() && (level.getBlockState(getBlockPos()).getValue(BlockForgeBase.SHOW_ORIENTATION))) level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockForgeBase.SHOW_ORIENTATION, false), 3);
+            if (!hasUpgradeType(Registration.FACTORY.get()) && isForge() && (level.getBlockState(getBlockPos()).getValue(BlockForgeBase.SHOW_ORIENTATION))) level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockForgeBase.SHOW_ORIENTATION, false), 3);
             getItem(FUEL()).getCapability(CapabilityEnergy.ENERGY).ifPresent(E -> {
                 if (energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored()) {
                     E.extractEnergy(energyStorage.receiveEnergy(E.getEnergyStored(), false), false);
@@ -490,7 +506,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                                 this.cookTime = 0;
                                 this.totalCookTime = this.getCookTime();
                                 trySmelt();
-                                if (hasUpgrade(Registration.FACTORY.get()))
+                                if (hasUpgradeType(Registration.FACTORY.get()))
                                     this.autoIO();
                                 flag1 = true;
                             }
@@ -505,7 +521,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                         flag1 = true;
                         this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(BlockStateProperties.LIT, this.isBurning()), 3);
                     }
-                    if ((timer % 24 == 0) && (hasUpgrade(Registration.FACTORY.get()))){
+                    if ((timer % 24 == 0) && (hasUpgradeType(Registration.FACTORY.get()))){
                         if (this.cookTime <= 0 ) {
                             int a = 0;
                             for (int i: INPUTS())
@@ -775,7 +791,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
     protected int OreProcessingMultiplier(ItemStack input){
         if (hasUpgradeType(Registration.ORE_PROCESSING.get())){
             ItemUpgradeOreProcessing oreup = (ItemUpgradeOreProcessing)getUpgradeTypeSlotItem(Registration.ORE_PROCESSING.get()).getItem();
-            if  (isOre( input) && oreup.acceptOre) return oreup.getMultiplier;
+            if  (isOre( input)) return oreup.getMultiplier;
 
         } else if (input == ItemStack.EMPTY) return 0;
         return 1;
@@ -851,12 +867,10 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
             CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(xpTank, null, tag.get("xpTank"));
         CompoundNBT compoundnbt = tag.getCompound("RecipesUsed");
             CapabilityEnergy.ENERGY.readNBT(energyStorage, null, tag.get("energyStorage"));
-
-        for (String s : compoundnbt.getAllKeys()) {
+            for (String s : compoundnbt.getAllKeys()) {
             this.recipes.put(new ResourceLocation(s), compoundnbt.getInt(s));
         }
         this.show_inventory_settings = tag.getInt("ShowInvSettings");
-        this.furnaceSettings.read(tag);
 
         super.load(state, tag);
     }
@@ -872,7 +886,6 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
         tag.put("xpTank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(xpTank, null));
         tag.put("energyStorage", CapabilityEnergy.ENERGY.writeNBT(energyStorage, null));
         tag.putInt("ShowInvSettings", this.show_inventory_settings);
-        this.furnaceSettings.write(tag);
         CompoundNBT compoundnbt = new CompoundNBT();
         this.recipes.forEach((recipeId, craftedAmount) -> {
             compoundnbt.putInt(recipeId.toString(), craftedAmount);
@@ -952,7 +965,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
 
     @Override
     public int[] IgetSlotsForFace(Direction side) {
-        if (hasUpgrade(Registration.FACTORY.get())) {
+        if (hasUpgradeType(Registration.FACTORY.get())) {
             if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 0) {
                 return new int[]{};
             } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 1) {
@@ -975,7 +988,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
 
     @Override
     public boolean IcanExtractItem(int index, ItemStack stack, Direction direction) {
-        if (hasUpgrade(Registration.FACTORY.get())) {
+        if (hasUpgradeType(Registration.FACTORY.get())) {
             if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 0) {
                 return false;
             } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 1) {
@@ -1120,18 +1133,4 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
     }
 
 
-    public void placeConfig() {
-
-        if (this.furnaceSettings != null) {
-            this.furnaceSettings.set(0, 2);
-            this.furnaceSettings.set(1, 1);
-            for (Direction dir : Direction.values()) {
-                if (dir != Direction.DOWN && dir != Direction.UP) {
-                    this.furnaceSettings.set(dir.ordinal(), 4);
-                }
-            }
-            level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), level.getBlockState(worldPosition).getBlock().defaultBlockState(), level.getBlockState(worldPosition), 3, 3);
-        }
-
-    }
 }
