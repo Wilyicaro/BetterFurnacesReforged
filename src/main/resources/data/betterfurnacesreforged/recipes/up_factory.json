@@ -11,13 +11,13 @@
       "item": "minecraft:diamond"
     },
     "2": {
-      "item": "betterfurnacesreforged:gold_conductor_block"
+      "item": "betterfurnacesreforged:autoinput_upgrade"
     },
     "3": {
-      "item": "betterfurnacesreforged:iron_conductor_block"
+      "item": "betterfurnacesreforged:autooutput_upgrade"
     },
     "4": {
-      "tag": "forge:glass"
+      "item": "betterfurnacesreforged:redstone_signal_upgrade"
     }
   },
   "result": {

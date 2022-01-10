@@ -65,16 +65,6 @@ public class BfJeiPlugin implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		ItemUpgradeTier[] up = {Registration.IRON_UPGRADE.get(), Registration.GOLD_UPGRADE.get(),Registration.DIAMOND_UPGRADE.get(),Registration.NETHERHOT_UPGRADE.get(),Registration.EXTREME_UPGRADE.get()};
 		addDescription(registration, new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), new TranslatableComponent("description." + BetterFurnacesReforged.MOD_ID + ".cobblestone_generator"));
-		addDescription(registration, new ItemStack(Registration.FUEL_VERIFIER.get()), new TranslatableComponent("description." + BetterFurnacesReforged.MOD_ID + ".fuel_verifier"));
-		addDescription(registration, new ItemStack(Registration.COLOR.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.color"));
-		addDescription(registration, new ItemStack(Registration.ENERGY.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.energy"));
-		addDescription(registration, new ItemStack(Registration.FUEL.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel"));
-		addDescription(registration, new ItemStack(Registration.ADVFUEL.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel"), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable"));
-		addDescription(registration, new ItemStack(Registration.ORE_PROCESSING.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores"));
-		addDescription(registration, new ItemStack(Registration.ADVORE_PROCESSING.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores"), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable"));
-		addDescription(registration, new ItemStack(Registration.LIQUID.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.liquid"));
-		addDescription(registration, new ItemStack(Registration.FACTORY.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.factory"));
-		addDescription(registration, new ItemStack(Registration.XP.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.xp"));
 		for(ItemUpgradeTier i : up)
 			addDescription(registration, new ItemStack(i), new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
 	}

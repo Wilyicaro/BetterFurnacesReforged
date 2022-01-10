@@ -1,7 +1,6 @@
 package wily.betterfurnaces.items;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,7 +21,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.container.ItemUpgradeContainerBase;
-import wily.betterfurnaces.gui.ItemColorScreen;
 import wily.betterfurnaces.init.Registration;
 
 import javax.annotation.Nullable;
@@ -30,16 +28,10 @@ import java.util.List;
 
 public class ItemUpgradeColor extends ItemUpgrade {
 
-    public ItemUpgradeColor(Properties properties) {
-        super(properties,4);
+    public ItemUpgradeColor(Properties properties, String tooltip) {
+        super(properties,4, tooltip);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.color").setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
-    }
 
     public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
         InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);

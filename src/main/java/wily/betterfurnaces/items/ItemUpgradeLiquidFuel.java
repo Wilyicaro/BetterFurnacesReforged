@@ -18,8 +18,8 @@ import java.util.List;
 public class ItemUpgradeLiquidFuel extends ItemUpgrade {
 
 
-    public ItemUpgradeLiquidFuel(Properties properties) {
-        super(properties,1);
+    public ItemUpgradeLiquidFuel(Properties properties, String tooltip) {
+        super(properties,1, tooltip);
     }
 
 

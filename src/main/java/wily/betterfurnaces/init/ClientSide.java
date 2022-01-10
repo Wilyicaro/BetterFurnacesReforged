@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -22,7 +21,7 @@ public class ClientSide {
         MenuScreens.register(Registration.NETHERHOT_FURNACE_CONTAINER.get(), BlockNetherhotFurnaceScreen::new);
         MenuScreens.register(Registration.EXTREME_FURNACE_CONTAINER.get(), BlockExtremeFurnaceScreen::new);
         MenuScreens.register(Registration.EXTREME_FORGE_CONTAINER.get(), BlockExtremeForgeScreen::new);
-        MenuScreens.register(Registration.COLOR_UPGRADE_CONTAINER.get(), ItemColorScreen::new);
+        MenuScreens.register(Registration.COLOR_UPGRADE_CONTAINER.get(), ItemUpgradeColorScreen::new);
         MenuScreens.register(Registration.COB_GENERATOR_CONTAINER.get(), BlockCobblestoneGeneratorScreen.BlockCobblestoneGeneratorScreenDefinition::new);
         MenuScreens.register(Registration.FUEL_VERIFIER_CONTAINER.get(), BlockFuelVerifierScreen.BlockFuelVerifierScreenDefiniton::new);
         ItemBlockRenderTypes.setRenderLayer(Registration.IRON_FURNACE.get(), RenderType.cutoutMipped());

@@ -110,6 +110,20 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             public void onChanged() {
                 setChanged();
             }
+            @Override
+            public void set(int index, int value) {
+                if (hasUpgradeType(Registration.FACTORY.get()))
+                    read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getTag());
+                super.set(index,value);
+                if (hasUpgradeType(Registration.FACTORY.get()))
+                    write(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getTag());
+            }
+            @Override
+            public int get(int index) {
+                if (hasUpgradeType(Registration.FACTORY.get()))
+                    read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getTag());
+                return super.get(index);
+            }
         };
     }
 
@@ -346,7 +360,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             --e.furnaceBurnTime;
         }
         if (e.hasXPTank()) e.grantStoredRecipeExperience(level, null);
-        if (!e.hasUpgrade(Registration.FACTORY.get()) && e instanceof BlockEntityForgeBase && (level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.SHOW_ORIENTATION))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.SHOW_ORIENTATION, false), 3);
+        if (!e.hasUpgradeType(Registration.FACTORY.get()) && e instanceof BlockEntityForgeBase && (level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.SHOW_ORIENTATION))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.SHOW_ORIENTATION, false), 3);
         e.getItem(e.FUEL()).getCapability(CapabilityEnergy.ENERGY).ifPresent(E -> {
             if (e.energyStorage.getEnergyStored() < e.energyStorage.getMaxEnergyStored()) {
                 E.extractEnergy(e.energyStorage.receiveEnergy(E.getEnergyStored(), false), false);
@@ -770,7 +784,6 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             this.recipes.put(new ResourceLocation(s), compoundnbt.getInt(s));
         }
         this.show_inventory_settings = tag.getInt("ShowInvSettings");
-        this.furnaceSettings.read(tag);
     }
 
     @Override
@@ -783,7 +796,6 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         tag.put("xpTank", xpTank.writeToNBT(tag.getCompound("xpTank")));
         tag.put("energy", energyStorage.serializeNBT());
         tag.putInt("ShowInvSettings", this.show_inventory_settings);
-        this.furnaceSettings.write(tag);
         CompoundTag compoundnbt = new CompoundTag();
         this.recipes.forEach((recipeId, craftedAmount) -> {
             compoundnbt.putInt(recipeId.toString(), craftedAmount);
@@ -858,7 +870,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     @Override
     public int[] IgetSlotsForFace(Direction side) {
-        if (hasUpgrade(Registration.FACTORY.get())) {
+        if (hasUpgradeType(Registration.FACTORY.get())) {
             if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 0) {
                 return new int[]{};
             } else if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 1) {
@@ -881,7 +893,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     @Override
     public boolean IcanExtractItem(int index, ItemStack stack, Direction direction) {
-        if (hasUpgrade(Registration.FACTORY.get())) {
+        if (hasUpgradeType(Registration.FACTORY.get())) {
             if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 0) {
                 return false;
             } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 1) {
@@ -983,9 +995,10 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
                         xpTank.fill(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(Config.getLiquidXPType()))), amountLiquidXp), IFluidHandler.FluidAction.EXECUTE);
                         recipes.clear();
                     }
+                }else {
+                    if (worldPosition != null)
+                        splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h).getExperience());
                 }
-                    else if (worldPosition != null) splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h).getExperience());
-
             });
         }
 

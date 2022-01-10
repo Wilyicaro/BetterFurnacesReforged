@@ -26,7 +26,7 @@ import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketColorSlider;
 
 @OnlyIn(Dist.CLIENT)
-public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
+public class ItemUpgradeColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
     private int buttonstate = 0;
     public Slider red;
@@ -35,7 +35,7 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     private Player player;
 
 
-    public ItemColorScreen(ContainerColorUpgrade container, Inventory inv, Component name) {
+    public ItemUpgradeColorScreen(ContainerColorUpgrade container, Inventory inv, Component name) {
         super(container, inv, name);
         player = inv.player;
     }

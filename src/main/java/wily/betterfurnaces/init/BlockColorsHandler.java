@@ -29,8 +29,7 @@ public class BlockColorsHandler implements BlockColor {
     public int getColor(BlockState blockState, @Nullable BlockAndTintGetter iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
         if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof BlockEntitySmeltingBase) {
             BlockEntitySmeltingBase te = (BlockEntitySmeltingBase) iBlockDisplayReader.getBlockEntity(blockPos);
-            ItemStack stack = te.getUpgradeSlotItem(Registration.COLOR.get());
-            if (te.hasUpgrade(Registration.COLOR.get()) && (stack.getTag() != null)) {
+            if (te.hasUpgrade(Registration.COLOR.get()) && (te.getUpgradeSlotItem(Registration.COLOR.get()).getTag() != null)) {
                 return te.hex();
             }
         }
