@@ -130,7 +130,9 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
             if (storedFactoryUpgradeType(3)){
                 if (mouseX >= 7 && mouseX <= 24 && mouseY >= 44 && mouseY <= 57) {
                     this.renderComponentTooltip(matrix, StringHelper.getShiftInfoGui(), mouseX, mouseY);
-                } else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71) {
+                    } else if(mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
+                    this.renderTooltip(matrix, new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_show_orientation"), mouseX, mouseY);
+                    }else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71) {
                     if (storedFactoryUpgradeType(1)) {
                         List<ITextComponent> list = Lists.newArrayList();
                         list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_input"));
@@ -337,8 +339,13 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
                     this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 58, 14, 189, 14, 14);
                 }
             }
-            if (storedFactoryUpgradeType(3))
+            if (storedFactoryUpgradeType(3)) {
+                this.blit(matrix, getGuiLeft() - 15, getGuiTop() + 58, 168, 189, 14, 14);
+                if (mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71 || this.getMenu().te.getBlockState().getValue(BlockForgeBase.SHOW_ORIENTATION)){
+                    this.blit(matrix, getGuiLeft() - 15, getGuiTop() + 58, 182, 189, 14, 14);
+                }
                 this.blitIO(matrix);
+            }
         }
 
 
@@ -502,6 +509,16 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
                 Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
             }
             if (storedFactoryUpgradeType(3)) {
+                 if (mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
+                    if (!this.getMenu().te.getBlockState().getValue(BlockForgeBase.SHOW_ORIENTATION)) {
+                        Messages.INSTANCE.sendToServer(new PacketOrientationButton(this.getMenu().getPos(), true));
+                        Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                    } else {
+                        Messages.INSTANCE.sendToServer(new PacketOrientationButton(this.getMenu().getPos(), false));
+                        Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                    }
+
+                }
                 if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71) {
                     if (storedFactoryUpgradeType(1)) {
                         if (!this.getMenu().getAutoInput()) {
