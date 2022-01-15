@@ -37,7 +37,7 @@ info.betterfurnacesreforged.kit=Melhora o tier de %s para %s
 info.betterfurnacesreforged.fluid=Usa líquidos combustíveis como combustível
 
 gui.betterfurnacesreforged.fluid=%s: %s mB
-gui.betterfurnacesreforged.energy=%s kFE/&s kFE
+gui.betterfurnacesreforged.energy=%s kFE/%s kFE
 gui.betterfurnacesreforged.done=Concluído
 gui.betterfurnacesreforged.color.red=Vermelho:
 gui.betterfurnacesreforged.color.green=Verde:

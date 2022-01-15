@@ -154,7 +154,7 @@ public class BlockIronFurnace extends Block {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity te = world.getTileEntity(pos);
 		ItemStack stack = player.getHeldItem(hand);
-		if ((player.getHeldItem(hand).getItem() instanceof ItemUpgrade)  && !(player.isSneaking())) {
+		if (!world.isRemote && (player.getHeldItem(hand).getItem() instanceof ItemUpgrade)  && !(player.isSneaking())) {
 			return this.interactUpgrade(world, pos, player, hand, stack);
 		}
 
@@ -209,7 +209,7 @@ public class BlockIronFurnace extends Block {
 				}
 			}
 		te.update();
-		return false;
+		return true;
 	}
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {

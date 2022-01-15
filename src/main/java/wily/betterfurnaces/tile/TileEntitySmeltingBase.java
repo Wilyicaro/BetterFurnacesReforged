@@ -73,7 +73,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 			for (int i: INPUTS())
 			if (slot == i) return SlotFurnaceInput.isStackValid(stack);
 			if (slot == FUEL()) return SlotFurnaceFuel.isStackValid(stack);
-			if (slot >= UPGRADES()[0]) return (stack.getItem() instanceof ItemUpgrade && ((ItemUpgrade) stack.getItem()).upgradeType > 1 || ((ItemUpgrade) stack.getItem()).upgradeType == 1 && !(UPGRADES().length > 3)) && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem());
+			if (slot >= UPGRADES()[0]) return (stack.getItem() instanceof ItemUpgrade && (((ItemUpgrade) stack.getItem()).upgradeType > 1 || ((ItemUpgrade) stack.getItem()).upgradeType == 1 && !(UPGRADES().length > 3)) && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem()));
 		return false;
 		};
 	};
