@@ -3,6 +3,13 @@ package wily.betterfurnaces.init;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.BlockFurnace;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.IItemPropertyGetter;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockConductor;
 import wily.betterfurnaces.blocks.BlockForge;
@@ -21,6 +28,8 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nullable;
+
 /**
  * Main object class for Furnace Overhaul.  Handles registration.
  * Fields are automatically populated by @ObjectHolder, since their field name is an all-caps version of their registry name.
@@ -38,15 +47,13 @@ public class ModObjects{
 	public static final BlockIronFurnace EXTREME_FURNACE = null;
 	public static final BlockForge EXTREME_FORGE = null;
 
-	public static final ItemUpDamage FUEL_EFFICIENCY_UPGRADE = null;
-	public static final ItemUpDamage ORE_PROCESSING_UPGRADE = null;
+	public static final ItemUpgradeDamage FUEL_EFFICIENCY_UPGRADE = null;
+	public static final ItemUpgradeDamage ORE_PROCESSING_UPGRADE = null;
 	public static final ItemUpgrade ADVANCED_FUEL_EFFICIENCY_UPGRADE = null;
 	public static final ItemUpgrade ADVANCED_ORE_PROCESSING_UPGRADE = null;
 	public static final ItemUpgrade LIQUID_FUEL_UPGRADE = null;
 	public static final ItemUpgrade ENERGY_UPGRADE = null;
 	public static final ItemUpgrade COLOR_UPGRADE = null;
-	public static final ItemCFurnace COLOR_FURNACE = null;
-	public static final ItemCFurnace COLOR_FORGE = null;
 
 	public static final ItemKit IRON_UPGRADE = null;
 	public static final ItemKit GOLD_UPGRADE = null;
@@ -76,6 +83,15 @@ public class ModObjects{
 		reg.registerAll(blocks);
 		for (Block b : blocks) {
 			Item i = new ItemBlock(b).setRegistryName(b.getRegistryName());
+			i.addPropertyOverride(new ResourceLocation(BetterFurnacesReforged.MODID, "empty"),
+					(stack, worldIn, entityIn) -> {
+						NBTTagCompound nbt;
+						if (stack.hasTagCompound()) {
+							nbt = stack.getTagCompound();
+						} else return 0.f;
+						return (nbt.hasKey("red") && nbt.hasKey("green") && nbt.hasKey("blue")) ? 1.f : 0.f;
+
+					});
 			modelList.add(i);
 			ForgeRegistries.ITEMS.register(i);
 		}
@@ -85,15 +101,13 @@ public class ModObjects{
 	public static void items(Register<Item> e) {
 		//Formatter::off
 		registerItems(e.getRegistry(),
-				new ItemUpDamage("fuel_efficiency_upgrade", "info.betterfurnacesreforged.efficiency"),
-				new ItemUpDamage("ore_processing_upgrade", "info.betterfurnacesreforged.ores"),
-				new ItemUpgrade("advanced_fuel_efficiency_upgrade", "info.betterfurnacesreforged.efficiency"),
-				new ItemUpgrade("advanced_ore_processing_upgrade", "info.betterfurnacesreforged.ores"),
-				new ItemUpgrade("liquid_fuel_upgrade", "info.betterfurnacesreforged.fluid"),
-				new ItemUpgrade("energy_upgrade", "info.betterfurnacesreforged.energy"),
-				new ItemUpgrade("color_upgrade", "info.betterfurnacesreforged.color"),
-				new ItemCFurnace("color_furnace"),
-				new ItemCFurnace("color_forge"),
+				new ItemUpgradeDamage("fuel_efficiency_upgrade", "info.betterfurnacesreforged.efficiency", 2,256),
+				new ItemUpgradeDamage("ore_processing_upgrade", "info.betterfurnacesreforged.ores", 3,128),
+				new ItemUpgrade("advanced_fuel_efficiency_upgrade", "info.betterfurnacesreforged.efficiency",2),
+				new ItemUpgrade("advanced_ore_processing_upgrade", "info.betterfurnacesreforged.ores",3),
+				new ItemUpgrade("liquid_fuel_upgrade", "info.betterfurnacesreforged.fluid",1),
+				new ItemUpgrade("energy_upgrade", "info.betterfurnacesreforged.energy",1),
+				new ItemUpgradeColor("color_upgrade", "info.betterfurnacesreforged.color"),
 				new ItemIronKit(),
 				new ItemKit("gold_upgrade", IRON_FURNACE, GOLD_FURNACE),
 				new ItemKit("diamond_upgrade", GOLD_FURNACE, DIAMOND_FURNACE),

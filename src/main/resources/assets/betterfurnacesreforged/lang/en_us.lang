@@ -24,6 +24,8 @@ item.betterfurnacesreforged.extreme_upgrade.name=Extreme Upgrade
 
 itemGroup.betterfurnacesreforged=BetterFurnaces Reforged
 
+info.betterfurnacesreforged.upgrade_right_click=%s%sRight-click to insert upgrade
+info.betterfurnacesreforged.upgrade_shift_right_click=%s%sRight-click holding shift to insert tier upgrade
 info.betterfurnacesreforged.morefast=%s times faster than the vanilla furnace
 info.betterfurnacesreforged.forgemorefast=%s times x 3 slots faster than the vanilla furnace
 info.betterfurnacesreforged.efficiency=Doubles fuel efficiency
@@ -35,7 +37,7 @@ info.betterfurnacesreforged.kit=Upgrades %s into %s
 info.betterfurnacesreforged.fluid=Uses liquid fuel instead of solid fuel.
 
 gui.betterfurnacesreforged.fluid=%s: %s mB
-gui.betterfurnacesreforged.energy=%s kFE/32 kFE
+gui.betterfurnacesreforged.energy=%s kFE/%s kFE
 gui.betterfurnacesreforged.done=Done
 gui.betterfurnacesreforged.color.red=Red:
 gui.betterfurnacesreforged.color.green=Green:

@@ -12,7 +12,6 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.net.MessageSync;
-import wily.betterfurnaces.net.MessageSyncTF;
 import wily.betterfurnaces.tile.TileEntityForge;
 
 import javax.annotation.Nullable;
@@ -32,43 +31,17 @@ public class FContainerBF extends Container {
 		this.addSlotToContainer(new SlotFurnaceInput(tf.getInventory(), 0, 27, 62));
 		this.addSlotToContainer(new SlotFurnaceInput(tf.getInventory(), 1, 45, 62));
 		this.addSlotToContainer(new SlotFurnaceInput(tf.getInventory(), 2, 63, 62));
-		this.addSlotToContainer(new SlotFurnaceHeater(tf.getInventory(), 3, 8, 100){
-		@Override
-		public boolean isItemValid (ItemStack stack) {
-			return ((FluidUtil.getFluidContained(stack) != null && TileEntityForge.getFluidBurnTime(FluidUtil.getFluidContained(stack)) > 0) || TileEntityFurnace.isItemFuel(stack));
-		}
-			});
+		this.addSlotToContainer(new SlotFurnaceFuel(tf.getInventory(), 3, 8, 100));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 4, 108, 80));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 5, 126, 80));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 6, 144, 80));
-		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 11, 115, 5){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return false; }});
-		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 12, 133, 5){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return stack.getItem() == ModObjects.COLOR_UPGRADE; }});
-		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 13, 151, 5){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return stack.getItem() instanceof ItemUpgrade; }});
-		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 7, 7, 5){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return (new ItemStack(ModObjects.ORE_PROCESSING_UPGRADE, (int) (1)).getItem() == stack.getItem() || new ItemStack(ModObjects.ADVANCED_ORE_PROCESSING_UPGRADE, (int) (1)).getItem() == stack.getItem()); }});
-		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 8, 25, 5){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return (new ItemStack(ModObjects.FUEL_EFFICIENCY_UPGRADE, (int) (1)).getItem() == stack.getItem() || new ItemStack(ModObjects.ADVANCED_FUEL_EFFICIENCY_UPGRADE, (int) (1)).getItem() == stack.getItem()); }});
-		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 9, 43, 5){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return false; }});
-		this.addSlotToContainer(new SlotUpgrade(tf.getInventory(), 10, 79, 5){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return (new ItemStack(ModObjects.LIQUID_FUEL_UPGRADE, (int) (1)).getItem() == stack.getItem() || new ItemStack(ModObjects.ENERGY_UPGRADE, (int) (1)).getItem() == stack.getItem()); }});
+		this.addSlotToContainer(new SlotUpgrade(tf, 11, 115, 5));
+		this.addSlotToContainer(new SlotUpgrade(tf, 12, 133, 5));
+		this.addSlotToContainer(new SlotUpgrade(tf, 13, 151, 5));
+		this.addSlotToContainer(new SlotUpgrade(tf, 7, 7, 5));
+		this.addSlotToContainer(new SlotUpgrade(tf, 8, 25, 5));
+		this.addSlotToContainer(new SlotUpgrade(tf, 9, 43, 5));
+		this.addSlotToContainer(new SlotFurnaceHeater(tf, 10, 79, 5));
 		int si;
 		int sj;
 		for (si = 0; si < 3; ++si)
@@ -85,7 +58,7 @@ public class FContainerBF extends Container {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		if (player != null) BetterFurnacesReforged.NETWORK.sendTo(new MessageSyncTF(tf), player);
+		if (player != null) BetterFurnacesReforged.NETWORK.sendTo(new MessageSync(tf), player);
 	}
 
 	@Override

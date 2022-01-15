@@ -3,6 +3,7 @@ package wily.betterfurnaces.net;
 import java.nio.charset.StandardCharsets;
 
 import wily.betterfurnaces.handler.GuiBF;
+import wily.betterfurnaces.handler.GuiForgeBF;
 import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -53,6 +54,11 @@ public class MessageSync implements IMessage {
                     ((GuiBF) Minecraft.getMinecraft().currentScreen).getTE().readContainerSync(message.fromNet, message.stack);
                     });
                 }
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiForgeBF) {
+                Minecraft.getMinecraft().addScheduledTask(() -> {
+                    ((GuiForgeBF) Minecraft.getMinecraft().currentScreen).getTE().readContainerSync(message.fromNet, message.stack);
+                });
+            }
             return null;
         }
 

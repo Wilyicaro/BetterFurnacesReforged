@@ -8,7 +8,7 @@ import wily.betterfurnaces.init.ModBlockColors;
 import wily.betterfurnaces.init.ModItemColors;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.net.MessageSync;
-import wily.betterfurnaces.net.MessageSyncTF;
+import wily.betterfurnaces.net.MessageColorSliderSync;
 import wily.betterfurnaces.tile.*;
 import wily.betterfurnaces.utils.OreProcessingRegistry;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class BetterFurnacesReforged {
 	public static final String MODID = "betterfurnacesreforged";
 	public static final String MODNAME = "BetterFurnaces Reforged";
-	public static final String VERSION = "1.4.4";
+	public static final String VERSION = "1.4.5";
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	public static Object2IntMap<String> FLUID_FUELS = new Object2IntOpenHashMap<>();
@@ -43,7 +43,7 @@ public class BetterFurnacesReforged {
 	public void preInit(FMLPreInitializationEvent event) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 		NETWORK.registerMessage(MessageSync.Handler.class, MessageSync.class, 0, Side.CLIENT);
-		NETWORK.registerMessage(MessageSyncTF.Handler.class, MessageSyncTF.class, 1, Side.CLIENT);
+		NETWORK.registerMessage(MessageColorSliderSync.Handler.class, MessageColorSliderSync.class, 1, Side.SERVER);
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		String[] fuels = cfg.getStringList("Fluid Fuels", "general", new String[] { "lava@20" }, "A list of fluid fuels, in the format name@time, where time is burn ticks per millibucket.");
 		for (String s : fuels) {

@@ -25,9 +25,6 @@ import wily.betterfurnaces.handler.GuiColor;
 @SideOnly(Side.CLIENT)
 public class ModItemColors implements IItemColor {
     public static final IItemColor COLOR = new ModItemColors();
-    public static Random rand = new Random();
-    public GuiColor guiColor;
-    public Minecraft mc;
 
     /* (non-Javadoc)
      * @see net.minecraft.client.renderer.color.IBlockColor#colorMultiplier(net.minecraft.block.state.IBlockState, net.minecraft.world.IBlockAccess, net.minecraft.util.math.BlockPos, int)
@@ -53,8 +50,8 @@ public class ModItemColors implements IItemColor {
             // DEBUG
             System.out.println("Registering block color handler");
 
-            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(COLOR, ModObjects.COLOR_FURNACE);
-            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(COLOR, ModObjects.COLOR_FORGE);
+            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(COLOR, ModObjects.IRON_FURNACE);
+            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(COLOR, ModObjects.EXTREME_FORGE);
 
         }
 

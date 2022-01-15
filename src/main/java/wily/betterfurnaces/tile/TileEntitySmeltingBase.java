@@ -11,14 +11,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fml.common.Mod;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.SlotFurnaceFuel;
 import wily.betterfurnaces.inventory.SlotFurnaceInput;
-import wily.betterfurnaces.inventory.SlotUpgrade;
-import wily.betterfurnaces.upgrade.Upgrade;
-import wily.betterfurnaces.upgrade.Upgrades;
+import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.utils.MutableEnergyStorage;
 import wily.betterfurnaces.utils.OreProcessingRegistry;
 import io.netty.buffer.ByteBuf;
@@ -52,9 +51,6 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	//Constants
 	public int FUEL() {return 1;}
 	public int[] UPGRADES(){ return new int[] {3,4,5};}
-	public int UPGRADEORE(){ return 3;}
-	public int UPGRADEENDER(){ return 4;}
-	public int UPGRADECOLOR(){ return 5;}
 	public int FINPUT(){ return INPUTS()[0];}
 	public int LINPUT(){ return INPUTS()[INPUTS().length - 1];}
 	public int FOUTPUT(){ return OUTPUTS()[0];}
@@ -62,8 +58,8 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	public int[] INPUTS(){ return new int[]{0};}
 	public int[] OUTPUTS(){ return new int[]{2};}
 	public int LiquidCapacity() {return 4000;}
-	public int MAX_FE_TRANSFER(){ return 0;}
-	public int MAX_ENERGY_STORED(){ return 0;}
+	public int MAX_FE_TRANSFER(){ return 1800;}
+	public int MAX_ENERGY_STORED(){ return 16000;}
 	public int invsize(){ return 6;}
 
 	//Item Handling, RangedWrappers are for sided i/o
@@ -72,12 +68,13 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 			if (!isItemValid(slot, stack)) return stack;
 			return super.insertItem(slot, stack, simulate);
 		};
-
+		@Override
 		public boolean isItemValid(int slot, ItemStack stack) {
 			for (int i: INPUTS())
 			if (slot == i) return SlotFurnaceInput.isStackValid(stack);
 			if (slot == FUEL()) return SlotFurnaceFuel.isStackValid(stack);
-			return slot > 2 ? SlotUpgrade.isStackValid(stack) : true;
+			if (slot >= UPGRADES()[0]) return (stack.getItem() instanceof ItemUpgrade && ((ItemUpgrade) stack.getItem()).upgradeType > 1 || ((ItemUpgrade) stack.getItem()).upgradeType == 1 && !(UPGRADES().length > 3)) && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem());
+		return false;
 		};
 	};
 
@@ -159,7 +156,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		}
 	}
 	public int hex() {
-		NBTTagCompound nbt = getInventory().getStackInSlot(UPGRADECOLOR()).getTagCompound();
+		NBTTagCompound nbt = getUpgradeTypeSlotItem(ModObjects.COLOR_UPGRADE).getTagCompound();
 
 		return ((nbt.getInteger("red")&0x0ff)<<16)|((nbt.getInteger("green")&0x0ff)<<8)|(nbt.getInteger("blue")&0x0ff);
 	}
@@ -170,7 +167,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	@Override
 	public final void update() {
 		if (world.isRemote) return;
-		if (hasUpgrade(Upgrades.COLOR)){
+		if (hasUpgrade(ModObjects.COLOR_UPGRADE)){
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockIronFurnace.COLORED, true));
 		}else world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockIronFurnace.COLORED, false));
 
@@ -231,19 +228,28 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	 * @param burnedThisTick If we have burned this tick, used to determine if we need to change blockstate.
 	 */
 	protected void burnFuel(ItemStack fuel, boolean burnedThisTick) {
-		if (isEnergy() && energy.getEnergyStored() >= getEnergyUse()) {
+		boolean Energy = energy.getEnergyStored() >= getEnergyUse();
+		boolean Liquid = isFluid() && tank.getFluidAmount() > 1;
+		if (isEnergy() && Energy) {
 			fuelLength = (burnTime = energy.getEnergyStored() >= getEnergyUse() ? 1 : 0);
 			for (int a : INPUTS())
-			if (this.isBurning()) energy.extractEnergy(getEnergyUse() * (hasUpgrade(Upgrades.ORE_PROCESSING) && isOre(inv.getStackInSlot(a)) ? 2 : 1), false);
-		} else if (isFluid() && tank.getFluid() != null) {
+			if (this.isBurning()) energy.extractEnergy(getEnergyUse() * (hasUpgradeType(ModObjects.ORE_PROCESSING_UPGRADE) && isOre(inv.getStackInSlot(a)) ? 2 : 1), false);
+		} else if (isFluid() && Liquid) {
 			fuelLength = burnTime = getFluidBurnTime(tank.getFluid());
 			if (this.isBurning()) tank.getFluid().amount--;
-		}else {
+		}else if ((Energy && isEnergy()) || (isFluid() && Liquid) || (!isEnergy() && !isFluid()) ){
 			fuelLength = burnTime = getItemBurnTime(fuel) * getDefaultCookTime() / 200;
 			if (this.isBurning()) {
 				Item item = fuel.getItem();
 				fuel.shrink(1);
 				if (fuel.isEmpty()) inv.setStackInSlot(FUEL(), item.getContainerItem(fuel));
+			}
+		}
+		if (hasUpgrade(ModObjects.FUEL_EFFICIENCY_UPGRADE)) {
+			ItemStack ender = getUpgradeSlotItem(ModObjects.FUEL_EFFICIENCY_UPGRADE);
+			if (ender.attemptDamageItem((int) 1, new Random(), null)) {
+				ender.shrink(1);
+				ender.setItemDamage(0);
 			}
 		}
 
@@ -270,7 +276,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 					break;
 				}
 			}
-			if (!matched && (hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING))) {
+			if (!matched && (hasUpgradeType(ModObjects.ORE_PROCESSING_UPGRADE))) {
 				ItemStack stack = OreProcessingRegistry.getSmeltingResult(input);
 				if (stack.isEmpty()) {
 					recipeKey = ItemStack.EMPTY;
@@ -292,7 +298,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		}
 
 		ItemStack check = recipeOutput;
-		if (hasOreResult && ((hasUpgrade(Upgrades.ORE_PROCESSING) || hasUpgrade(Upgrades.ADVORE_PROCESSING)))){
+		if (hasOreResult && hasUpgradeType(ModObjects.ORE_PROCESSING_UPGRADE)){
 			check = check.copy();
 			check.grow(check.getCount());
 		}
@@ -308,8 +314,6 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	public void smeltItem(int INPUT, int OUTPUT) {
 		ItemStack recipeOutput = getResult(INPUT);
 		ItemStack curOutput = inv.getStackInSlot(OUTPUT);
-		ItemStack stack = inv.getStackInSlot(UPGRADEORE());
-		ItemStack ender = inv.getStackInSlot(UPGRADEENDER());
 		ItemStack input = inv.getStackInSlot(INPUT);
 
 
@@ -317,16 +321,11 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		else if (ItemHandlerHelper.canItemStacksStack(curOutput, recipeOutput)) curOutput.grow(recipeOutput.getCount());
 
 		if (input.isItemEqual(WET_SPONGE) && inv.getStackInSlot(FUEL()).getItem() == Items.BUCKET) inv.setStackInSlot(FUEL(), new ItemStack(Items.WATER_BUCKET));
-		if ((stack != null) || (this.isBurning())) {
+		if (hasUpgrade(ModObjects.ORE_PROCESSING_UPGRADE)) {
+			ItemStack stack = getUpgradeSlotItem(ModObjects.ORE_PROCESSING_UPGRADE);
 			if (stack.attemptDamageItem((int) 1, new Random(), null)) {
 				stack.shrink(1);
 				stack.setItemDamage(0);
-			}
-		}
-		if (ender != null) {
-			if (ender.attemptDamageItem((int) 1, new Random(), null)) {
-				ender.shrink(1);
-				ender.setItemDamage(0);
 			}
 		}
 		input.shrink(1);
@@ -345,10 +344,30 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	 * @param upg An upgrade.
 	 * @return If this TE currently has said upgrade.
 	 */
-	public boolean hasUpgrade(Upgrade upg) {
+
+	public boolean hasUpgrade(Item upg) {
 		for (int slot : UPGRADES())
-			if (upg.matches(inv.getStackInSlot(slot))) return true;
+			if (upg == inv.getStackInSlot(slot).getItem()) return true;
 		return false;
+	}
+
+	public boolean hasUpgradeType(ItemUpgrade upg) {
+		for (int slot : UPGRADES()) {
+			if (inv.getStackInSlot(slot).getItem() instanceof ItemUpgrade && upg.upgradeType == ((ItemUpgrade)inv.getStackInSlot(slot).getItem()).upgradeType) return true;
+		}
+		return hasUpgrade(upg);
+	}
+
+	public ItemStack getUpgradeTypeSlotItem(ItemUpgrade upg) {
+		for (int slot : UPGRADES())
+			if (inv.getStackInSlot(slot).getItem() instanceof ItemUpgrade && upg.upgradeType == ((ItemUpgrade) inv.getStackInSlot(slot).getItem()).upgradeType) return inv.getStackInSlot(slot);
+		return inv.getStackInSlot(UPGRADES()[0]);
+	}
+
+	public ItemStack getUpgradeSlotItem(Item upg) {
+		for (int slot : UPGRADES())
+			if (upg == inv.getStackInSlot(slot).getItem()) return inv.getStackInSlot(slot);
+		return inv.getStackInSlot(UPGRADES()[0]);
 	}
 
 	/**
@@ -357,7 +376,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	 */
 	public int getItemBurnTime(ItemStack stack) {
 		if (isAltFuel()) return 0;
-		return TileEntityFurnace.getItemBurnTime(stack) * (hasUpgrade(Upgrades.EFFICIENCY) || hasUpgrade(Upgrades.ADVEFFICIENCY) ? 2 : 1);
+		return TileEntityFurnace.getItemBurnTime(stack) * (hasUpgradeType(ModObjects.FUEL_EFFICIENCY_UPGRADE) ? 2 : 1);
 	}
 	public int getEnergy() {
 		return energy.getEnergyStored();
@@ -412,7 +431,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	 * @return If this TE has the liquid fuel upgrade.
 	 */
 	public boolean isFluid() {
-		return hasUpgrade(Upgrades.LIQUID_FUEL);
+		return hasUpgrade(ModObjects.LIQUID_FUEL_UPGRADE);
 	}
 
 	public boolean isAltFuel() {
@@ -427,7 +446,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 
 	private ItemStack getResult(int i) {
 		ItemStack input = inv.getStackInSlot(i);
-		if ((hasUpgrade(Upgrades.ORE_PROCESSING)) || hasUpgrade(Upgrades.ADVORE_PROCESSING)) {
+		if (hasUpgradeType(ModObjects.ORE_PROCESSING_UPGRADE)) {
 			ItemStack out = OreProcessingRegistry.getSmeltingResult(input).copy();
 			if (out.isEmpty() && isOre(recipeKey)) {
 				out = FurnaceRecipes.instance().getSmeltingList().get(recipeKey).copy();
@@ -451,7 +470,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		return false;
 	}
 	public boolean isEnergy() {
-		return hasUpgrade(Upgrades.ELECTRIC_FUEL);
+		return hasUpgrade(ModObjects.ENERGY_UPGRADE);
 	}
 	/**
 	 * @return The actual cook time of this furnace, taking speed into account.
@@ -465,7 +484,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	}
 
 	public int getEnergyUse() {
-		return 0;
+		return 600;
 	}
 
 

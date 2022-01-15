@@ -1,9 +1,9 @@
 package wily.betterfurnaces.handler;
 
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.ContainerBF;
 import wily.betterfurnaces.tile.TileEntitySmeltingBase;
-import wily.betterfurnaces.upgrade.Upgrades;
 import wily.betterfurnaces.utils.FluidRenderUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -45,7 +45,13 @@ public class GuiBF extends GuiContainer {
 		}
 		int l = this.getCookProgressScaled(24);
 		this.drawTexturedModalRect(i + 79, j + 34, 176, 14, l + 1, 16);
-		if (te.hasUpgrade(Upgrades.LIQUID_FUEL)){
+		if (te.hasUpgrade(ModObjects.ENERGY_UPGRADE)) {
+			this.mc.getTextureManager().bindTexture(WIDGETS);
+			int k = this.getEnergyStoredScaled(34);
+			this.drawTexturedModalRect(this.guiLeft + 31, this.guiTop + 17, 240, 0, 16, 34);
+			this.drawTexturedModalRect(this.guiLeft + 31, this.guiTop + 17, 240, 34, 16, 34 - k);
+		}
+		if (te.hasUpgrade(ModObjects.LIQUID_FUEL_UPGRADE)){
 			this.mc.getTextureManager().bindTexture(WIDGETS);
 			this.drawTexturedModalRect(this.guiLeft + 73, this.guiTop + 49, 192, 38, 20, 22);
 			this.zLevel++;
@@ -72,15 +78,22 @@ public class GuiBF extends GuiContainer {
 	@Override
 	protected void renderHoveredToolTip(int x, int y) {
 		super.renderHoveredToolTip(x, y);
-		if (te.hasUpgrade(Upgrades.LIQUID_FUEL) && te.getTank().getFluid() != null && this.isPointInRegion(73, 49 + (21 - getFluidStoredScaled(21)), 20, getFluidStoredScaled(21), x, y)) {
+		if (te.hasUpgrade(ModObjects.LIQUID_FUEL_UPGRADE) && te.getTank().getFluid() != null && this.isPointInRegion(73, 49 + (21 - getFluidStoredScaled(21)), 20, getFluidStoredScaled(21), x, y)) {
 			this.drawHoveringText(I18n.format("gui.betterfurnacesreforged.fluid", te.getTank().getFluid().getLocalizedName(), te.getTank().getFluidAmount()), x, y);
+		}else if (te.hasUpgrade(ModObjects.ENERGY_UPGRADE)&& this.isPointInRegion(31,  17, 16, 34, x, y)) {
+			this.drawHoveringText(I18n.format("gui.betterfurnacesreforged.energy", te.getEnergy() / 1000,te.MAX_ENERGY_STORED() / 1000), x, y);
 		}
 	}
 
+	private int getEnergyStoredScaled(int pixels) {
+		int cur = te.getEnergy();
+		int max = te.MAX_ENERGY_STORED();
+		return getPixels(cur, max, pixels);
+	}
 
 	private int getFluidStoredScaled(int pixels) {
 		int cur = te.getTank().getFluidAmount();
-		int max = 4000;
+		int max = te.LiquidCapacity();
 		return getPixels(cur, max, pixels);
 	}
 

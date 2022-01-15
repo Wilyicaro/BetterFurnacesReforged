@@ -6,9 +6,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.FContainerBF;
 import wily.betterfurnaces.tile.TileEntityForge;
-import wily.betterfurnaces.upgrade.Upgrades;
 import wily.betterfurnaces.utils.FluidRenderUtil;
 
 public class GuiForgeBF extends GuiContainer {
@@ -56,13 +56,13 @@ public class GuiForgeBF extends GuiContainer {
 		}
 		int l = this.getCookProgressScaled(24);
 		this.drawTexturedModalRect(this.guiLeft + 80, this.guiTop + 80, 176, 14, l + 1, 16);
-		if (tf.hasUpgrade(Upgrades.ELECTRIC_FUEL)) {
+		if (tf.hasUpgrade(ModObjects.ENERGY_UPGRADE)) {
 			this.mc.getTextureManager().bindTexture(WIDGETS);
 			int k = this.getEnergyStoredScaled(34);
 			this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 62, 240, 0, 16, 34);
 			this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 62, 240, 34, 16, 34 - k);
 		}
-		if (tf.hasUpgrade(Upgrades.LIQUID_FUEL)){
+		if (tf.hasUpgrade(ModObjects.LIQUID_FUEL_UPGRADE)){
 			this.mc.getTextureManager().bindTexture(WIDGETS);
 			this.drawTexturedModalRect(this.guiLeft + 26, this.guiTop + 98, 192, 38, 20, 22);
 			this.zLevel++;
@@ -89,10 +89,10 @@ public class GuiForgeBF extends GuiContainer {
 	@Override
 	protected void renderHoveredToolTip(int x, int y) {
 		super.renderHoveredToolTip(x, y);
-		if (tf.hasUpgrade(Upgrades.LIQUID_FUEL) && tf.getTank().getFluid() != null && this.isPointInRegion(26, 98 + (21 - getFluidStoredScaled(21)), 20, getFluidStoredScaled(21), x, y)) {
+		if (tf.hasUpgrade(ModObjects.LIQUID_FUEL_UPGRADE) && tf.getTank().getFluid() != null && this.isPointInRegion(26, 98 + (21 - getFluidStoredScaled(21)), 20, getFluidStoredScaled(21), x, y)) {
 			this.drawHoveringText(I18n.format("gui.betterfurnacesreforged.fluid", tf.getTank().getFluid().getLocalizedName(), tf.getTank().getFluidAmount()), x, y);
-		} else if (tf.hasUpgrade(Upgrades.ELECTRIC_FUEL) && this.isPointInRegion(8,  62, 16, 34, x, y)) {
-			this.drawHoveringText(I18n.format("gui.betterfurnacesreforged.energy", tf.getEnergy() / 1000), x, y);
+		} else if (tf.hasUpgrade(ModObjects.ENERGY_UPGRADE)&& this.isPointInRegion(8,  62, 16, 34, x, y)) {
+			this.drawHoveringText(I18n.format("gui.betterfurnacesreforged.energy", tf.getEnergy() / 1000,tf.MAX_ENERGY_STORED() / 1000), x, y);
 		}
 	}
 
@@ -104,7 +104,7 @@ public class GuiForgeBF extends GuiContainer {
 
 	private int getFluidStoredScaled(int pixels) {
 		int cur = tf.getTank().getFluidAmount();
-		int max = 8000;
+		int max = tf.LiquidCapacity();
 		return getPixels(cur, max, pixels);
 	}
 

@@ -1,15 +1,17 @@
 package wily.betterfurnaces.inventory;
 
-import wily.betterfurnaces.items.ItemUpDamage;
+import wily.betterfurnaces.items.ItemUpgradeDamage;
 import wily.betterfurnaces.items.ItemUpgrade;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 
 public class SlotUpgrade extends SlotItemHandler {
-
-	public SlotUpgrade(IItemHandler inventory, int index, int x, int y) {
-		super(inventory, index, x, y);
+	TileEntitySmeltingBase te;
+	public SlotUpgrade(TileEntitySmeltingBase te, int index, int x, int y) {
+		super(te.getInventory(), index, x, y);
+		this.te = te;
 	}
 
 	@Override
@@ -17,8 +19,8 @@ public class SlotUpgrade extends SlotItemHandler {
 		return isStackValid(stack);
 	}
 
-	public static boolean isStackValid(ItemStack stack) {
-		return stack.getItem() instanceof ItemUpgrade || stack.getItem() instanceof ItemUpDamage;
+	public boolean isStackValid(ItemStack stack) {
+		return te.getInventory().isItemValid(getSlotIndex(), stack);
 	}
 
 	@Override

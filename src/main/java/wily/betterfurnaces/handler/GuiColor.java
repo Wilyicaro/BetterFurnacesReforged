@@ -1,12 +1,8 @@
 package wily.betterfurnaces.handler;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.audio.Sound;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.*;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
@@ -14,17 +10,15 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
-import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.ModObjects;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import wily.betterfurnaces.net.MessageColorSliderSync;
 
-import java.awt.*;
 import java.io.IOException;
 
 public class GuiColor extends GuiScreen {
@@ -61,6 +55,9 @@ public class GuiColor extends GuiScreen {
         this.buttonList.add(green);
         this.buttonList.add(blue);
     }
+    protected static void sliderPacket(GuiSlider slider, int diff){
+        BetterFurnacesReforged.NETWORK.sendToServer(new MessageColorSliderSync(slider.getValueInt(), diff));
+    }
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
@@ -80,6 +77,9 @@ public class GuiColor extends GuiScreen {
             }
     }
     protected void renderColorFurnace( int mouseX, int mouseY) {
+        if (red.dragging) sliderPacket(red, 1);
+        if (green.dragging) sliderPacket(green, 2);
+        if (blue.dragging) sliderPacket(blue, 3);
         int actualMouseX = mouseX - guiLeft;
         int actualMouseY = mouseY - guiTop;
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -100,8 +100,8 @@ public class GuiColor extends GuiScreen {
                 this.drawHoveringText(ModObjects.EXTREME_FORGE.getLocalizedName(), mouseX, mouseY);
             }
         }
-        ItemStack stack = new ItemStack(ModObjects.COLOR_FURNACE);
-        ItemStack stack1 = new ItemStack(ModObjects.COLOR_FORGE);
+        ItemStack stack = new ItemStack(ModObjects.IRON_FURNACE);
+        ItemStack stack1 = new ItemStack(ModObjects.EXTREME_FORGE);
         GL11.glScalef(4,4,4);
         RenderHelper.enableGUIStandardItemLighting();
         NBTTagCompound nbt;

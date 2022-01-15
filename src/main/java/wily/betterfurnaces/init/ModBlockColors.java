@@ -24,7 +24,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import wily.betterfurnaces.tile.TileEntityForge;
 import wily.betterfurnaces.tile.TileEntitySmeltingBase;
-import wily.betterfurnaces.upgrade.Upgrades;
 
 @SideOnly(Side.CLIENT)
 public class ModBlockColors implements IBlockColor
@@ -41,8 +40,7 @@ public class ModBlockColors implements IBlockColor
     {
         if (worldIn.getTileEntity(pos) instanceof TileEntitySmeltingBase){
             TileEntitySmeltingBase te = (TileEntitySmeltingBase) worldIn.getTileEntity(pos);
-            ItemStack stack = te.getInventory().getStackInSlot(te.UPGRADECOLOR());
-            if (te.hasUpgrade(Upgrades.COLOR) && stack.getTagCompound() != null) {
+            if (te.hasUpgrade(ModObjects.COLOR_UPGRADE) && te.getUpgradeTypeSlotItem(ModObjects.COLOR_UPGRADE).getTagCompound() != null) {
                 return te.hex();
             }
         }

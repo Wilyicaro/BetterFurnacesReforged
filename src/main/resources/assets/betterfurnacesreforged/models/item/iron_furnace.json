@@ -4,5 +4,8 @@
     "top": "betterfurnacesreforged:blocks/iron_top",
     "front": "betterfurnacesreforged:blocks/iron_front",
     "side": "betterfurnacesreforged:blocks/iron_side"
-  }
+  },
+  "overrides": [
+    {"predicate": {"betterfurnacesreforged:empty": 1}, "model": "betterfurnacesreforged:item/color_furnace"}
+  ]
 }

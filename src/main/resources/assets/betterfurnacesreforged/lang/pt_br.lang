@@ -8,6 +8,8 @@ tile.betterfurnacesreforged.netherhot_furnace.name=Fornalha do nether
 tile.betterfurnacesreforged.extreme_furnace.name=Fornalha extrema
 tile.betterfurnacesreforged.extreme_forge.name=Forja extrema
 
+info.betterfurnacesreforged.upgrade_right_click=%s%sClique direito para inserir o upgrade
+info.betterfurnacesreforged.upgrade_shift_right_click=%s%Clique direito segurando SHIFR para aplicar o upgrade
 item.betterfurnacesreforged.ore_processing_upgrade.name=Melhoria do processamento
 item.betterfurnacesreforged.advanced_ore_processing_upgrade.name=Melhoria do processamento avançada
 item.betterfurnacesreforged.liquid_fuel_upgrade.name=Melhoria de combustível líquido
@@ -35,7 +37,7 @@ info.betterfurnacesreforged.kit=Melhora o tier de %s para %s
 info.betterfurnacesreforged.fluid=Usa líquidos combustíveis como combustível
 
 gui.betterfurnacesreforged.fluid=%s: %s mB
-gui.betterfurnacesreforged.energy=%s kFE/32 kFE
+gui.betterfurnacesreforged.energy=%s kFE/&s kFE
 gui.betterfurnacesreforged.done=Concluído
 gui.betterfurnacesreforged.color.red=Vermelho:
 gui.betterfurnacesreforged.color.green=Verde:

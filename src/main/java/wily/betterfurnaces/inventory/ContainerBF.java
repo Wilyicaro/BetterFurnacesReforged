@@ -29,27 +29,9 @@ public class ContainerBF extends Container {
 		this.addSlotToContainer(new SlotFurnaceInput(te.getInventory(), 0, 54, 18));
 		this.addSlotToContainer(new SlotFurnaceFuel(te.getInventory(), 1, 54, 54));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, te.getInventory(), 2, 116, 35));
-		this.addSlotToContainer(new SlotUpgrade(te.getInventory(), 3, 8, 18){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return (new ItemStack(ModObjects.ORE_PROCESSING_UPGRADE, (int) (1)).getItem() == stack.getItem() || new ItemStack(ModObjects.ADVANCED_ORE_PROCESSING_UPGRADE, (int) (1)).getItem() == stack.getItem());
-			}
-
-		});
-		this.addSlotToContainer(new SlotUpgrade(te.getInventory(), 4, 8, 36){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return (new ItemStack(ModObjects.FUEL_EFFICIENCY_UPGRADE, (int) (1)).getItem() == stack.getItem() || new ItemStack(ModObjects.ADVANCED_FUEL_EFFICIENCY_UPGRADE, (int) (1)).getItem() == stack.getItem());
-			}
-
-		});
-		this.addSlotToContainer(new SlotUpgrade(te.getInventory(), 5, 8, 54){
-			@Override
-			public boolean isItemValid (ItemStack stack){
-				return (new ItemStack(ModObjects.LIQUID_FUEL_UPGRADE, (int) (1)).getItem() == stack.getItem() || new ItemStack(ModObjects.COLOR_UPGRADE, (int) (1)).getItem() == stack.getItem());
-			}
-
-		});
+		this.addSlotToContainer(new SlotUpgrade(te, 3, 8, 18));
+		this.addSlotToContainer(new SlotUpgrade(te, 4, 8, 36));
+		this.addSlotToContainer(new SlotUpgrade(te, 5, 8, 54));
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {

@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.util.*;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.inventory.ContainerBF;
+import wily.betterfurnaces.items.ItemUpgrade;
+import wily.betterfurnaces.tile.TileEntityForge;
 import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -61,6 +65,7 @@ public class BlockIronFurnace extends Block {
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(BURNING, false).withProperty(COLORED, false));
 		this.moreFast = moreFast;
 		this.teFunc = teFunc;
+
 	}
 
 	@Override
@@ -148,8 +153,12 @@ public class BlockIronFurnace extends Block {
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity te = world.getTileEntity(pos);
+		ItemStack stack = player.getHeldItem(hand);
+		if ((player.getHeldItem(hand).getItem() instanceof ItemUpgrade)  && !(player.isSneaking())) {
+			return this.interactUpgrade(world, pos, player, hand, stack);
+		}
+
 		if (!world.isRemote && te instanceof TileEntitySmeltingBase && ((TileEntitySmeltingBase) te).isFluid()) {
-			ItemStack stack = player.getHeldItem(hand);
 			FluidStack fs = FluidUtil.getFluidContained(stack);
 			if (fs != null && TileEntitySmeltingBase.getFluidBurnTime(fs) > 0) {
 				FluidActionResult res = FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(world, pos, null), 1000, player, true);
@@ -161,12 +170,47 @@ public class BlockIronFurnace extends Block {
 			}
 		}
 
-		if (!player.isSneaking() && !world.isRemote) {
+		if (!world.isRemote) {
 			player.openGui(BetterFurnacesReforged.INSTANCE, ContainerBF.GUIID, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}
+	private boolean interactUpgrade(World world, BlockPos pos, EntityPlayer player, EnumHand handIn, ItemStack stack) {
+		Item hand = player.getHeldItem(handIn).getItem();
+		if (!(hand instanceof ItemUpgrade)){
+			return false;
+		}
+		if (!(world.getTileEntity(pos) instanceof TileEntitySmeltingBase)) {
+			return false;
+		}
+		TileEntitySmeltingBase te = (TileEntitySmeltingBase) world.getTileEntity(pos);
+		ItemStack newStack = new ItemStack(stack.getItem(), 1);
+		newStack.setTagCompound(stack.getTagCompound());
 
+			if (te.hasUpgradeType((ItemUpgrade) stack.getItem())) {
+				if (!player.isCreative())
+					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), te.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()));
+				else  te.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()).shrink(1);
+			}
+			for (int upg : te.UPGRADES()) {
+				if (te.getInventory().isItemValid(upg, stack) && !stack.isEmpty() && upg != 10) {
+					if (!(te.getInventory().getStackInSlot(upg).isEmpty()) && upg == te.UPGRADES()[te.UPGRADES().length - 1]) {
+						if (!player.isCreative())
+							InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), te.getInventory().getStackInSlot(upg));
+						else te.getInventory().getStackInSlot(upg).shrink(1);
+					}
+					if (te.getInventory().getStackInSlot(upg).isEmpty()) {
+						te.getInventory().setStackInSlot(upg, newStack);
+						if (!player.isCreative()) {
+							player.getHeldItem(handIn).shrink(1);
+						}
+						world.playSound(player, te.getPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.0F, 1.0F);
+					}
+				}
+			}
+		te.update();
+		return false;
+	}
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileEntity te = world.getTileEntity(pos);
