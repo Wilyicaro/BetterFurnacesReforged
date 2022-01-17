@@ -89,7 +89,7 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
         if (getMenu().te.hasUpgrade(Registration.ENERGY.get()) &&
                 (mouseX > getGuiLeft() + 31 && mouseX < getGuiLeft() + 47 && mouseY > getGuiTop() + 17 && mouseY < getGuiTop() + 51))
             this.renderTooltip(matrix, new TextComponent((this.getMenu()).getEnergyStored()/1000 + " kFE/" + ( this.getMenu()).getEnergyMaxStored()/1000 + "kFE"), actualMouseX, actualMouseY);
-        if (getMenu().te.hasUpgrade(Registration.FACTORY.get())) {
+        if (getMenu().te.hasUpgradeType(Registration.FACTORY.get())) {
             if (this.getMenu().showInventoryButtons() && this.getMenu().getRedstoneMode() == 4) {
                 int comSub = this.getMenu().getComSub();
                 int i = comSub > 9 ? 28 : 31;
@@ -245,7 +245,7 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 116, getGuiTop() + 57, 192, 0, 16, 16);
         }
-        if (getMenu().te.hasUpgrade(Registration.FACTORY.get())) {
+        if (getMenu().te.hasUpgradeType(Registration.FACTORY.get())) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             int actualMouseX = mouseX - ((this.width - this.getXSize()) / 2);
             int actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
