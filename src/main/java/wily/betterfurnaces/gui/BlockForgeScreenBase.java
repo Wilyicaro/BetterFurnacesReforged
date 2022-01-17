@@ -149,12 +149,12 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 74 && mouseY <= 87) {
                     List<ITextComponent> list = Lists.newArrayList();
                     list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_top"));
-                    list.add(this.getMenu().getTooltip(1));
+                    list.add(this.getMenu().getTooltip(getMenu().te.getIndexTop()));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 102 && mouseY <= 115) {
                     List<ITextComponent> list = Lists.newArrayList();
                     list.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_bottom"));
-                    list.add(this.getMenu().getTooltip(0));
+                    list.add(this.getMenu().getTooltip(getMenu().te.getIndexBottom()));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 88 && mouseY <= 101) {
                     List<ITextComponent> list = Lists.newArrayList();
@@ -389,7 +389,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
         } else if (setting == 4) {
             this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 74, 42, 157, 14, 14);
         }
-        settings[1] = setting;
+        settings[getMenu().te.getIndexTop()] = setting;
 
         setting = this.getMenu().getSettingBottom();
         if (setting == 0)
@@ -403,7 +403,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
         } else if (setting == 4) {
             this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 102, 42, 157, 14, 14);
         }
-        settings[0] = setting;
+        settings[getMenu().te.getIndexBottom()] = setting;
         setting = this.getMenu().getSettingFront();
         if (setting == 0)
             this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 88, 84, 157, 14, 14);
@@ -542,15 +542,15 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
                 }
                     if (mouseX >= -31 && mouseX <= -18 && mouseY >= 74 && mouseY <= 87) {
                         if (flag) {
-                            sendToServerInverted(this.getMenu().getSettingTop(), 1);
+                            sendToServerInverted(this.getMenu().getSettingTop(), getMenu().te.getIndexTop());
                         } else {
-                            sendToServer(this.getMenu().getSettingTop(), 1);
+                            sendToServer(this.getMenu().getSettingTop(), getMenu().te.getIndexTop());
                         }
                     } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 102 && mouseY <= 115) {
                         if (flag) {
-                            sendToServerInverted(this.getMenu().getSettingBottom(), 0);
+                            sendToServerInverted(this.getMenu().getSettingBottom(), getMenu().te.getIndexBottom());
                         } else {
-                            sendToServer(this.getMenu().getSettingBottom(), 0);
+                            sendToServer(this.getMenu().getSettingBottom(), getMenu().te.getIndexBottom());
                         }
                     } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 88 && mouseY <= 101) {
                         if (isShiftKeyDown()) {

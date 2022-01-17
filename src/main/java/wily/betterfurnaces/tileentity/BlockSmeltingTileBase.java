@@ -114,15 +114,15 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
             @Override
             public void set(int index, int value) {
                 if (hasUpgradeType(Registration.FACTORY.get()))
-                     read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getTag());
+                     read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getOrCreateTag());
                 super.set(index,value);
                 if (hasUpgradeType(Registration.FACTORY.get()))
-                    write(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getTag());
+                    write(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getOrCreateTag());
             }
             @Override
             public int get(int index) {
                 if (hasUpgradeType(Registration.FACTORY.get()))
-                    read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getTag());
+                    read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getOrCreateTag());
                 return super.get(index);
             }
         };
