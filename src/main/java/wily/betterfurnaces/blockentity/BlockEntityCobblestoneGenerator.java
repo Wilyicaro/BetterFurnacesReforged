@@ -224,13 +224,12 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        tag.put("inventory", getInv().serializeNBT());
+    public void saveAdditional(CompoundTag tag) {
         tag.putInt("CobTime", this.cobTime);
         tag.putInt("ResultType", this.resultType);
         tag.putInt("ActualCobTime", this.actualCobTime);
 
-        return super.save(tag);
+        super.saveAdditional(tag);
     }
 
     LazyOptional<? extends IItemHandler>[] invHandlers =

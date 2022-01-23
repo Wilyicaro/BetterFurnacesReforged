@@ -70,9 +70,9 @@ public abstract class BlockEntityInventory extends BlockEntity implements IBlock
 
     @Override
     public CompoundTag getUpdateTag() {
-
         CompoundTag tag = new CompoundTag();
-        return this.save(tag);
+        this.saveAdditional(tag);
+        return tag;
     }
 
 
@@ -167,16 +167,12 @@ public abstract class BlockEntityInventory extends BlockEntity implements IBlock
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.put("inventory", inventory.serializeNBT());
         if (this.name != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
-        return super.save(tag);
-    }
-    @Override
-    public void saveAdditional(CompoundTag tag) {
-        save(tag);
     }
 
     @Override

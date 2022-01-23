@@ -787,8 +787,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        tag.put("inventory", getInv().serializeNBT());
+    public void saveAdditional(CompoundTag tag) {
         tag.putInt("BurnTime", this.furnaceBurnTime);
         tag.putInt("CookTime", this.cookTime);
         tag.putInt("CookTimeTotal", this.totalCookTime);
@@ -801,8 +800,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             compoundnbt.putInt(recipeId.toString(), craftedAmount);
         });
         tag.put("RecipesUsed", compoundnbt);
-
-        return super.save(tag);
+        super.saveAdditional(tag);
     }
 
     protected static int getBurnTime(ItemStack stack) {
