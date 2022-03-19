@@ -91,6 +91,11 @@ public abstract class BlockEntityInventory extends BlockEntity implements IBlock
     }
 
     @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        return IisItemValidForSlot(slot, stack);
+    }
+
+    @Override
     public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
         return IisItemValidForSlot(i, itemStack);
     }

@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -48,6 +49,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ArrayUtils;
 import wily.betterfurnaces.Config;
@@ -359,7 +361,9 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         if (e.isBurning()) {
             --e.furnaceBurnTime;
         }
+
         if (e.hasXPTank()) e.grantStoredRecipeExperience(level, null);
+
         if (!e.hasUpgradeType(Registration.FACTORY.get()) && e instanceof BlockEntityForgeBase && (level.getBlockState(e.getBlockPos()).getValue(BlockForgeBase.SHOW_ORIENTATION))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockForgeBase.SHOW_ORIENTATION, false), 3);
         e.getItem(e.FUEL()).getCapability(CapabilityEnergy.ENERGY).ifPresent(E -> {
             if (e.energyStorage.getEnergyStored() < e.energyStorage.getMaxEnergyStored()) {
@@ -697,15 +701,15 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         return this.furnaceBurnTime > 0;
     }
 
-    Tag<Item> ore = ItemTags.getAllTags().getTag(new ResourceLocation("forge", "ores"));
+    TagKey<Item> ore = ItemTags.create(new ResourceLocation("forge", "ores"));
 
-    Tag<Item> ingot = ItemTags.getAllTags().getTag(new ResourceLocation("forge", "ingots"));
+    TagKey<Item> raw = ItemTags.create(new ResourceLocation("forge", "raw_materials"));
 
     protected boolean isOre(ItemStack input){
-        return (input.is(ore) || input.getItem().getRegistryName().toString().contains("ore"));
+        return (input.is(ore));
     }
     protected boolean isRaw(ItemStack input){
-        return (input.getItem().getRegistryName().toString().contains("raw") && grabRecipe(input).get().getResultItem().is(ingot));
+        return (input.is(raw));
     }
     protected int OreProcessingMultiplier(ItemStack input){
         if (hasUpgradeType(Registration.ORE_PROCESSING.get())){
@@ -817,9 +821,15 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     public static boolean isItemFuel(ItemStack stack) {
         return getBurnTime(stack) > 0;
     }
-
+    SidedInvWrapper invHandler = new
+            SidedInvWrapper (this, null){
+                @Override
+                public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                    return IisItemValidForSlot(slot, stack);
+                }
+            };
     LazyOptional<? extends IItemHandler>[] invHandlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
+            invHandler.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
 
 
 
@@ -987,8 +997,8 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         for (Object2IntMap.Entry<ResourceLocation> entry : this.recipes.object2IntEntrySet()) {
             level.getRecipeManager().byKey(entry.getKey()).ifPresent((h) -> {
                 list.add(h);
-                int amountLiquidXp = Mth.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h).getExperience()) * 5;
                 if (hasXPTank()) {
+                    int amountLiquidXp = Mth.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h).getExperience()) * 5;
                     if (amountLiquidXp >= 1) {
                         xpTank.fill(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(Config.getLiquidXPType()))), amountLiquidXp), IFluidHandler.FluidAction.EXECUTE);
                         recipes.clear();

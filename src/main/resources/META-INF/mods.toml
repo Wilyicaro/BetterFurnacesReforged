@@ -17,7 +17,7 @@ This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, pr
 [[dependencies.betterfurnacesreforged]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.1]"
+    versionRange="[1.18.2]"
     ordering="NONE"
     side="BOTH"
 [[dependencies.betterfurnacesreforged]]

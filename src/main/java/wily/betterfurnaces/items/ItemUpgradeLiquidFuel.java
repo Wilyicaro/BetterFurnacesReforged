@@ -21,12 +21,4 @@ public class ItemUpgradeLiquidFuel extends ItemUpgrade {
     public ItemUpgradeLiquidFuel(Properties properties, String tooltip) {
         super(properties,1, tooltip);
     }
-
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.liquid").setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
-    }
 }

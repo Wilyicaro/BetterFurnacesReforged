@@ -232,27 +232,13 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         super.saveAdditional(tag);
     }
 
-    LazyOptional<? extends IItemHandler>[] invHandlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
-
     @Nonnull
     @Override
     public <
             T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
         if (!this.isRemoved() && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == Direction.DOWN)
-                return invHandlers[0].cast();
-            else if (facing == Direction.UP)
-                return invHandlers[1].cast();
-            else if (facing == Direction.NORTH)
-                return invHandlers[2].cast();
-            else if (facing == Direction.SOUTH)
-                return invHandlers[3].cast();
-            else if (facing == Direction.WEST)
-                return invHandlers[4].cast();
-            else
-                return invHandlers[5].cast();
+            return LazyOptional.of(this::getInv).cast();
         }
         return super.getCapability(capability, facing);
     }
@@ -304,12 +290,12 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
                             if (tile.getBlockState().getBlock().getRegistryName().toString().contains("storagedrawers:")) {
                                 continue;
                             }
-                            for (int i = 0; i < other.getSlots(); i++) {
-                                ItemStack stack = extractItemInternal(OUTPUT, this.getItem(OUTPUT).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
-                                if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
-                                    other.insertItem(i, extractItemInternal(OUTPUT, stack.getCount(), false), false);
-                                }
+                        for (int i = 0; i < other.getSlots(); i++) {
+                            ItemStack stack = inventory.extractItem(OUTPUT, this.getItem(OUTPUT).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
+                            if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
+                                other.insertItem(i, inventory.extractItem(OUTPUT, stack.getCount(), false), false);
                             }
+                        }
                     }
                         }
                     }

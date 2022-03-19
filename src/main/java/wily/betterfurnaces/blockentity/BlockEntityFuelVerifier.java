@@ -128,27 +128,13 @@ public class BlockEntityFuelVerifier extends BlockEntityInventory {
         return getBurnTime(stack) > 0;
     }
 
-    LazyOptional<? extends IItemHandler>[] invHandlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
-
     @Nonnull
     @Override
     public <
-            T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
+            T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
-        if (!this.isRemoved() && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == Direction.DOWN)
-                return invHandlers[0].cast();
-            else if (facing == Direction.UP)
-                return invHandlers[1].cast();
-            else if (facing == Direction.NORTH)
-                return invHandlers[2].cast();
-            else if (facing == Direction.SOUTH)
-                return invHandlers[3].cast();
-            else if (facing == Direction.WEST)
-                return invHandlers[4].cast();
-            else
-                return invHandlers[5].cast();
+        if (!this.isRemoved() && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return LazyOptional.of(this::getInv).cast();
         }
         return super.getCapability(capability, facing);
     }

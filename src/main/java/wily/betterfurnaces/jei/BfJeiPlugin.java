@@ -25,7 +25,6 @@ import wily.betterfurnaces.items.ItemUpgradeTier;
 
 @JeiPlugin
 public class BfJeiPlugin implements IModPlugin {
-
 	@Override
 	public ResourceLocation getPluginUid() {
 		return new ResourceLocation(BetterFurnacesReforged.MOD_ID, "plugin_" + BetterFurnacesReforged.MOD_ID);
