@@ -13,10 +13,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,18 +31,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
-import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemLiquidFuel;
-import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.items.ItemUpgradeMisc;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
+import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.items.ItemUpgrade;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -50,6 +48,7 @@ import java.util.Random;
 public abstract class BlockFurnaceBase extends Block implements EntityBlock {
 
     public static final BooleanProperty COLORED = BooleanProperty.create("colored");
+
 
     public BlockFurnaceBase(Properties properties) {
         super(properties.destroyTime(3f));
@@ -93,12 +92,12 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if ((hand.getItem() instanceof ItemUpgradeMisc || hand.getItem() instanceof ItemOreProcessing || hand.getItem() instanceof ItemFuelEfficiency || hand.getItem() instanceof ItemLiquidFuel) && !(player.isCrouching())) {
+            if (hand.getItem() instanceof ItemUpgrade && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
-            }else if ((te.inventory.get(5).getItem() == new ItemStack(Registration.LIQUID.get()).getItem())  && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() &&  !(player.isCrouching())){
+            }else if ((te.hasUpgrade(Registration.LIQUID.get()) && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && BlockEntitySmeltingBase.isItemFuel(hand) &&  !(player.isCrouching()))){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
                 FluidActionResult res = FluidUtil.tryEmptyContainer(hand, te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get(), 1000, player, true);
-                if (fluid != null && ForgeHooks.getBurnTime(hand, RecipeType.SMELTING) > 0)
+                if (fluid != null)
                     if (res.isSuccess()) {
                         world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
                         if (!player.isCreative()) player.setItemInHand(handIn, res.result);
@@ -112,7 +111,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
 
     private InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!((hand.getItem() instanceof ItemOreProcessing) || (hand.getItem() instanceof ItemFuelEfficiency) || (hand.getItem() instanceof ItemUpgradeMisc) || (hand.getItem() instanceof ItemLiquidFuel))){
+        if (!(hand.getItem() instanceof ItemUpgrade)){
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);
@@ -121,28 +120,27 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
-
-        if (player.getItemInHand(handIn).getItem() instanceof ItemOreProcessing) {
-            if ((!(((Container) te).getItem(3).isEmpty())) && (!player.isCreative())){
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(3));
-            }
-            ((Container) te).setItem(3, newStack);
+        BlockEntitySmeltingBase be = (BlockEntitySmeltingBase) te;
+        if (be.hasUpgradeType((ItemUpgrade) stack.getItem())) {
+            if (!player.isCreative())
+                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()));
+            else  be.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()).shrink(1);
         }
-        if (player.getItemInHand(handIn).getItem() instanceof ItemFuelEfficiency) {
-            if ((!(((Container) te).getItem(4).isEmpty())) && (!player.isCreative())) {
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(4));
+        for (int upg : be.UPGRADES()) {
+            if (be.inventory.isItemValid(upg, stack) && !stack.isEmpty()) {
+                if (!(be.getItem(upg).isEmpty()) && upg == be.UPGRADES()[be.UPGRADES().length - 1]) {
+                    if (!player.isCreative())
+                        Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getItem(upg));
+                    else be.getItem(upg).shrink(1);
+                }
+                if (be.getItem(upg).isEmpty()) {
+                    ((Container) te).setItem(upg, newStack);
+                    if (!player.isCreative()) {
+                        player.getItemInHand(handIn).shrink(1);
+                    }
+                    world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
+                }
             }
-            ((Container) te).setItem(4, newStack);
-        }
-        if (player.getItemInHand(handIn).getItem() instanceof ItemUpgradeMisc || player.getItemInHand(handIn).getItem() instanceof ItemLiquidFuel) {
-            if ((!(((Container) te).getItem(5).isEmpty())) && (!player.isCreative())) {
-                    Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(5));
-            }
-            ((Container) te).setItem(5, stack.copy());
-        }
-        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
-        if (!player.isCreative()) {
-            player.getItemInHand(handIn).shrink(1);
         }
         ((BlockEntitySmeltingBase)te).onUpdateSent();
         return InteractionResult.SUCCESS;
@@ -190,10 +188,6 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         }
     }
 
-    public void onReplaced(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
-
-    }
-
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
@@ -208,17 +202,9 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         }
     }
 
-    public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
-        return true;
-    }
-
     public int getComparatorInputOverride(BlockState state, Level world, BlockPos pos) {
         return AbstractContainerMenu.getRedstoneSignalFromContainer((Container) world.getBlockEntity(pos));
 
-    }
-
-    public RenderShape getRenderType(BlockState p_149645_1_) {
-        return RenderShape.MODEL;
     }
 
     public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {

@@ -21,15 +21,15 @@ public class ClientSide {
         MenuScreens.register(Registration.NETHERHOT_FURNACE_CONTAINER.get(), BlockNetherhotFurnaceScreen::new);
         MenuScreens.register(Registration.EXTREME_FURNACE_CONTAINER.get(), BlockExtremeFurnaceScreen::new);
         MenuScreens.register(Registration.EXTREME_FORGE_CONTAINER.get(), BlockExtremeForgeScreen::new);
-        MenuScreens.register(Registration.COLOR_UPGRADE_CONTAINER.get(), ItemColorScreen::new);
+        MenuScreens.register(Registration.COLOR_UPGRADE_CONTAINER.get(), ItemUpgradeColorScreen::new);
         MenuScreens.register(Registration.COB_GENERATOR_CONTAINER.get(), BlockCobblestoneGeneratorScreen.BlockCobblestoneGeneratorScreenDefinition::new);
         MenuScreens.register(Registration.FUEL_VERIFIER_CONTAINER.get(), BlockFuelVerifierScreen.BlockFuelVerifierScreenDefiniton::new);
-        ItemBlockRenderTypes.setRenderLayer(Registration.IRON_FURNACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.GOLD_FURNACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.DIAMOND_FURNACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.NETHERHOT_FURNACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.EXTREME_FURNACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(Registration.EXTREME_FORGE.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.IRON_FURNACE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.GOLD_FURNACE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.DIAMOND_FURNACE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.NETHERHOT_FURNACE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.EXTREME_FURNACE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(Registration.EXTREME_FORGE.get(), RenderType.cutoutMipped());
         BlockColorsHandler.registerBlockColors();
         ItemColorsHandler.registerItemColors();
         event.enqueueWork(() ->

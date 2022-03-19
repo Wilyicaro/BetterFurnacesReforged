@@ -3,7 +3,6 @@ package wily.betterfurnaces.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,11 +17,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import wily.betterfurnaces.container.BlockFuelVerifierContainer;
 import wily.betterfurnaces.init.Registration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 public class BlockEntityFuelVerifier extends BlockEntityInventory {
 
@@ -41,19 +40,19 @@ public class BlockEntityFuelVerifier extends BlockEntityInventory {
         return "block.betterfurnacesreforged.fuel_verifier";
     }
 
-    public static class BlockEntityFuelVerifierContainer extends wily.betterfurnaces.container.BlockFuelVerifierContainer {
-            public BlockEntityFuelVerifierContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
+    public static class BlockFuelVerifierTileContainer extends BlockFuelVerifierContainer {
+        public BlockFuelVerifierTileContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
             super(Registration.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player);
         }
 
-    public BlockEntityFuelVerifierContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
+        public BlockFuelVerifierTileContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
             super(Registration.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
         }
     }
     public final ContainerData fields = new ContainerData() {
         public int get(int index) {
             if (index == 0)
-            return BlockEntityFuelVerifier.this.burnTime;
+                return BlockEntityFuelVerifier.this.burnTime;
             else return 0;
         }
 
@@ -68,7 +67,7 @@ public class BlockEntityFuelVerifier extends BlockEntityInventory {
     };
     @Override
     public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new BlockEntityFuelVerifierContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
+        return new BlockFuelVerifierTileContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
     public final int[] provides = new int[Direction.values().length];
     private final int[] lastProvides = new int[this.provides.length];
@@ -93,24 +92,26 @@ public class BlockEntityFuelVerifier extends BlockEntityInventory {
         ItemStack fuel = e.getItem(0);
         if (!e.level.isClientSide) {
             if (!(fuel.isEmpty()))
-            e.burnTime = getBurnTime(fuel);
+                e.burnTime = getBurnTime(fuel);
             else e.burnTime = 0;
         }
 
     }
     @Override
     public void load(CompoundTag tag) {
-        ContainerHelper.loadAllItems(tag, this.inventory);
+        if (tag.getCompound("inventory").isEmpty() && !tag.getList("Items",10).isEmpty()) {
+            if (isEmpty())
+                getInv().deserializeNBT(tag);
+        }else
+            getInv().deserializeNBT(tag.getCompound("inventory"));
         this.burnTime = tag.getInt("BurnTime");
         super.load(tag);
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
-        ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("BurnTime", this.burnTime);
-        return tag;
+        return super.save(tag);
     }
 
     protected static int getBurnTime(ItemStack stack) {
@@ -128,31 +129,16 @@ public class BlockEntityFuelVerifier extends BlockEntityInventory {
         return getBurnTime(stack) > 0;
     }
 
-    LazyOptional<? extends IItemHandler>[] invHandlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
-
     @Nonnull
     @Override
     public <
-            T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
+            T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
-        if (!this.isRemoved() && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == Direction.DOWN)
-                return invHandlers[0].cast();
-            else if (facing == Direction.UP)
-                return invHandlers[1].cast();
-            else if (facing == Direction.NORTH)
-                return invHandlers[2].cast();
-            else if (facing == Direction.SOUTH)
-                return invHandlers[3].cast();
-            else if (facing == Direction.WEST)
-                return invHandlers[4].cast();
-            else
-                return invHandlers[5].cast();
+        if (!this.isRemoved() && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return LazyOptional.of(this::getInv).cast();
         }
         return super.getCapability(capability, facing);
     }
-
 
     @Override
     public boolean IisItemValidForSlot(int index, ItemStack stack) {
@@ -162,13 +148,5 @@ public class BlockEntityFuelVerifier extends BlockEntityInventory {
         return false;
     }
 
-    protected boolean doesNeedUpdateSend() {
-        return !Arrays.equals(this.provides, this.lastProvides);
-    }
-
-    public void onUpdateSent() {
-        System.arraycopy(this.provides, 0, this.lastProvides, 0, this.provides.length);
-        this.level.updateNeighborsAt(this.worldPosition, getBlockState().getBlock());
-    }
 
 }

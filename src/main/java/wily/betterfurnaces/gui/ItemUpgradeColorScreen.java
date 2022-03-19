@@ -1,8 +1,6 @@
 package wily.betterfurnaces.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.platform.ScreenManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -21,27 +19,23 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmlclient.gui.widget.Slider;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL46;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemColorUpgrade.ContainerColorUpgrade;
-
-import javax.swing.*;
+import wily.betterfurnaces.items.ItemUpgradeColor.ContainerColorUpgrade;
+import wily.betterfurnaces.network.Messages;
+import wily.betterfurnaces.network.PacketColorSlider;
 
 @OnlyIn(Dist.CLIENT)
-public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
+public class ItemUpgradeColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
     private int buttonstate = 0;
     public Slider red;
     public Slider green;
     public Slider blue;
-    public Button change;
     private Player player;
 
 
-    public ItemColorScreen(ContainerColorUpgrade container, Inventory inv, Component name) {
+    public ItemUpgradeColorScreen(ContainerColorUpgrade container, Inventory inv, Component name) {
         super(container, inv, name);
         player = inv.player;
     }
@@ -59,8 +53,11 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
         this.addRenderableWidget(red);
         this.addRenderableWidget(green);
         this.addRenderableWidget(blue);
-    }
 
+    }
+    protected static void sliderPacket(Slider slider, int diff){
+        Messages.INSTANCE.sendToServer(new PacketColorSlider(slider.getValueInt(), diff));
+    }
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         double actualMouseX = mouseX - getGuiLeft();
@@ -80,6 +77,9 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
     }
     @Override
     protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+        if (red.isHovered() || red.isFocused()) sliderPacket(red, 1);
+        if (green.isHovered() || green.isFocused()) sliderPacket(green, 2);
+        if (blue.isHovered() || blue.isFocused()) sliderPacket(blue, 3);
         int actualMouseX = mouseX - getGuiLeft();
         int actualMouseY = mouseY - getGuiTop();
         RenderSystem.setShaderTexture(0, WIDGETS);
@@ -113,10 +113,11 @@ public class ItemColorScreen extends ItemUpgradeScreen<ContainerColorUpgrade> {
         nbt1.putInt("green", green.getValueInt());
         nbt1.putInt("blue", blue.getValueInt());
         nbt1.putBoolean("colored", true);
+        stack.setTag(nbt);
         if (buttonstate == 0) {
             this.itemRenderer.renderGuiItem(stack, (width / 2 - 8), (this.getGuiTop() - 48));
         }else
-            if (buttonstate == 1)
+        if (buttonstate == 1)
             this.itemRenderer.renderGuiItem(stack1, (width / 2 - 8), (this.getGuiTop() - 48));
     }
 

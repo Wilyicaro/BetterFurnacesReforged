@@ -101,7 +101,7 @@ public class ItemUpgradeTier extends Item {
                 }
                 world.removeBlockEntity(te.getBlockPos());
                 world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                world.setBlock(pos, next.setValue(BlockStateProperties.LIT, te.getBlockState().getValue(BlockStateProperties.LIT)),3);
+                world.setBlock(pos, next.setValue(BlockStateProperties.LIT, te.getBlockState().getValue(BlockStateProperties.LIT)), 3);
                 world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 BlockEntity newTe = world.getBlockEntity(pos);
                 ((Container)newTe).setItem(0, input);

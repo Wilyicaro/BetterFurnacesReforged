@@ -1,8 +1,10 @@
 package wily.betterfurnaces.container;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,17 +22,14 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemColorUpgrade;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemOreProcessing;
-import wily.betterfurnaces.items.ItemUpgradeMisc;
 import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
+import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
+import wily.betterfurnaces.util.DirectionUtil;
 
 
 public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
 
-    protected BlockEntityForgeBase te;
+    public BlockEntityForgeBase te;
     protected ContainerData fields;
     protected Player playerEntity;
     protected IItemHandler playerInventory;
@@ -65,29 +64,13 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
         this.addSlot(new SlotOutput(playerEntity, te, 4, 108, y3));
         this.addSlot(new SlotOutput(playerEntity, te, 5, 126, y3));
         this.addSlot(new SlotOutput(playerEntity, te, 6, 144, y3));
-        this.addSlot(new SlotUpgrade(te, 7, 7, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemOreProcessing);
-            }});
-        this.addSlot(new SlotUpgrade(te, 8, 25, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemFuelEfficiency);
-            }});
-        this.addSlot(new SlotUpgrade(te, 9, 43, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {return (stack.getItem() == Registration.XP.get() && !te.isLiquid());}});
+        this.addSlot(new SlotUpgrade(te, 7, 7, y4));
+        this.addSlot(new SlotUpgrade(te, 8, 25, y4));
+        this.addSlot(new SlotUpgrade(te, 9, 43, y4));
         this.addSlot(new SlotHeater(te, 10, 79, y4));
-        this.addSlot(new SlotUpgrade(te, 11, 115, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {return (stack.getItem() == Registration.FACTORY.get() );}});
-        this.addSlot(new SlotUpgrade(te, 12, 133, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {return (stack.getItem() instanceof ItemColorUpgrade);}});
-        this.addSlot(new SlotUpgrade(te, 13, 151, y4){
-            @Override
-            public boolean mayPlace(ItemStack stack) {return (stack.getItem() instanceof ItemUpgradeMisc);}});
+        this.addSlot(new SlotUpgrade(te, 11, 115, y4));
+        this.addSlot(new SlotUpgrade(te, 12, 133, y4));
+        this.addSlot(new SlotUpgrade(te, 13, 151, y4));
         layoutPlayerInventorySlots(8, 106);
         checkContainerSize(this.te, 14);
         checkContainerDataCount(this.fields, 5);
@@ -115,6 +98,12 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
     @OnlyIn(Dist.CLIENT)
     public boolean getAutoOutput() {
         return this.te.getAutoOutput() == 1;
+    }
+
+    @Override
+    public void slotsChanged(Container p_38868_) {
+        this.broadcastChanges();
+        te.setChanged();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -215,13 +204,17 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
 
         return this.fields.get(0) * pixels / i;
     }
-    public int getFluidStoredScaled(int pixels) {
-        int cur = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getFluidInTank(0).getAmount();
-        int max = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getTankCapacity(0);
+    public int getFluidStoredScaled(int pixels, boolean isXp) {
+        Direction facing = null;
+        if (isXp) facing = DirectionUtil.fromId(te.getIndexFront());
+        int cur = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing).resolve().get().getFluidInTank(0).getAmount();
+        int max = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing).resolve().get().getTankCapacity(0);
         return cur * pixels / max;
     }
-    public FluidStack getFluidStackStored() {
-        return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getFluidInTank(0);
+    public FluidStack getFluidStackStored(boolean isXp) {
+        Direction facing = null;
+        if (isXp) facing = DirectionUtil.fromId(te.getIndexFront());
+        return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing).resolve().get().getFluidInTank(0);
     }
     public int getEnergyStoredScaled(int pixels) {
         int cur = te.getCapability(CapabilityEnergy.ENERGY, null).resolve().get().getEnergyStored();
@@ -246,23 +239,24 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-                if (index < 14) {
-                    if (!this.moveItemStackTo(itemstack1, 14, this.slots.size(), true)) {
+            if (index < 14) {
+                if (!this.moveItemStackTo(itemstack1, 14, this.slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+                slot.onQuickCraft(itemstack1, itemstack);
+            } else if (!this.moveItemStackTo(itemstack1, 0, 14, false)) {
+                if (index < 14 + 27) {
+                    if (!this.moveItemStackTo(itemstack1, 14 + 27, this.slots.size(), true)) {
                         return ItemStack.EMPTY;
                     }
-                    slot.onQuickCraft(itemstack1, itemstack);
-                } else if (!this.moveItemStackTo(itemstack1, 0, 14, false)) {
-                    if (index < 6 + 27) {
-                        if (!this.moveItemStackTo(itemstack1, 6 + 27, this.slots.size(), true)) {
-                            return ItemStack.EMPTY;
-                        }
-                    } else {
-                        if (!this.moveItemStackTo(itemstack1, 14, 14 + 27, false)) {
-                            return ItemStack.EMPTY;
-                        }
+                } else {
+                    if (!this.moveItemStackTo(itemstack1, 14, 14 + 27, false)) {
+                        return ItemStack.EMPTY;
                     }
-                    return ItemStack.EMPTY;
+                }
+                return ItemStack.EMPTY;
             }
+
             if (itemstack1.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {
@@ -307,9 +301,9 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
     protected boolean hasRecipe(ItemStack stack) {
         ItemStack upgrade = this.getItems().get(3);
 
-            if (this.recipeType != RecipeType.SMELTING) {
-                this.recipeType = RecipeType.SMELTING;
-            }
+        if (this.recipeType != RecipeType.SMELTING) {
+            this.recipeType = RecipeType.SMELTING;
+        }
         return this.world.getRecipeManager().getRecipeFor((RecipeType)this.recipeType, new SimpleContainer(stack), this.world).isPresent();
     }
 }

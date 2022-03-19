@@ -4,7 +4,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
+import net.minecraftforge.fmllegacy.hooks.BasicEventHooks;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 
 public class SlotOutput extends Slot {
@@ -12,15 +12,12 @@ public class SlotOutput extends Slot {
     private final Player player;
     private int removeCount;
     private BlockEntitySmeltingBase te;
-    private BlockEntityForgeBase tf;
 
     public SlotOutput(Player player, Container te, int slotIndex, int xPosition, int yPosition) {
         super(te, slotIndex, xPosition, yPosition);
         this.player = player;
         if (te instanceof BlockEntitySmeltingBase) {
             this.te = (BlockEntitySmeltingBase) te;
-        }else if (te instanceof BlockEntityForgeBase) {
-            this.tf = (BlockEntityForgeBase) te;
         }
     }
 
@@ -50,14 +47,11 @@ public class SlotOutput extends Slot {
     protected void onQuickCraft(ItemStack stack, int p_75210_2_) {
         stack.onCraftedBy(this.player.level, this.player, this.removeCount);
         if (!this.player.level.isClientSide && this.te instanceof BlockEntitySmeltingBase) {
-            ((BlockEntitySmeltingBase)this.te).unlockRecipes(this.player);
-        }
-        if (!this.player.level.isClientSide && this.tf instanceof BlockEntityForgeBase) {
-            ((BlockEntityForgeBase)this.tf).unlockRecipes(this.player);
+            (te).unlockRecipes(this.player);
         }
 
         this.removeCount = 0;
-        net.minecraftforge.fmllegacy.hooks.BasicEventHooks.firePlayerSmeltedEvent(this.player, stack);
+        BasicEventHooks.firePlayerSmeltedEvent(this.player, stack);
     }
 
     /**

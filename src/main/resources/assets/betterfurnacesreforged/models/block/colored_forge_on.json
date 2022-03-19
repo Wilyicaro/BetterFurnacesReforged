@@ -1,5 +1,5 @@
 {
-  "parent": "betterfurnacesreforged:custom/extremeforgemodelcolored",
+  "parent": "betterfurnacesreforged:block/forge_colored",
   "textures": {
     "particle": "betterfurnacesreforged:blocks/extreme_top",
     "front": "betterfurnacesreforged:blocks/colored_forge_front",

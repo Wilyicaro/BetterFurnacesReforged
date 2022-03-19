@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -16,17 +15,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import wily.betterfurnaces.blocks.BlockCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemOreProcessing;
+import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
+import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
@@ -46,11 +45,11 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
     }
 
     public static class BlockCobblestoneGeneratorContainer extends wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer {
-            public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
+        public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
             super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player);
         }
 
-    public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
+        public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
             super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
         }
     }
@@ -58,7 +57,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         public int get(int index) {
 
             if (index == 0)
-            return BlockEntityCobblestoneGenerator.this.cobTime;
+                return BlockEntityCobblestoneGenerator.this.cobTime;
             if (index == 1)
                 return BlockEntityCobblestoneGenerator.this.resultType;
             if (index == 2)
@@ -68,7 +67,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
         public void set(int index, int value) {
             if (index == 0)
-            BlockEntityCobblestoneGenerator.this.cobTime = value;
+                BlockEntityCobblestoneGenerator.this.cobTime = value;
             if (index == 1)
                 BlockEntityCobblestoneGenerator.this.resultType = value;
             if (index == 2)
@@ -130,25 +129,23 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
         boolean can1 = (output.isEmpty());
         boolean can3 = (output.getItem() == e.getResult().getItem());
-        if (e.cobGen() > 0){
-            e.forceUpdateAllStates();
-        }
+        e.forceUpdateAllStates();
         if ((e.cobGen() == 3) || e.cobTime > 0 && e.cobTime < e.actualCobTime) {
             if ((can && can3 )|| can1)
-            ++e.cobTime;
+                ++e.cobTime;
         }
         if (!e.level.isClientSide) {
             if (!output.isEmpty()) e.AutoIO();
             if ((e.cobTime >= e.getCobTime() && ((can  && can3)|| can1))){
                 if (can1) {
-                    e.inventory.set(OUTPUT, e.getResult());
-                    if (upgrade1.getItem() instanceof ItemOreProcessing) {
+                    e.getInv().setStackInSlot(OUTPUT, e.getResult());
+                    if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing) {
                         e.breakDurabilityItem(upgrade1);
                     }
                 }else {
                     if (can && can3) {
                         output.grow(e.getResult().getCount());
-                        if (upgrade1.getItem() instanceof ItemOreProcessing) {
+                        if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing) {
                             e.breakDurabilityItem(upgrade1);
                         }
                     }
@@ -162,8 +159,8 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
     }
     protected int cobGen(){
-        ItemStack input = this.inventory.get(0);
-        ItemStack input1 = this.inventory.get(1);
+        ItemStack input = this.getInv().getStackInSlot(0);
+        ItemStack input1 = this.getInv().getStackInSlot(1);
         if (input.getItem() == Items.LAVA_BUCKET && input1.isEmpty()){
             return 1;
         }else if (input1.getItem() == Items.WATER_BUCKET && input.isEmpty()){
@@ -173,18 +170,18 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         }else return 0;
     }
     protected int getCobTime(){
-        ItemStack upgrade = this.inventory.get(UPGRADE);
+        ItemStack upgrade = this.getInv().getStackInSlot(UPGRADE);
         if (upgrade.isEmpty() && resultType < 3){
             return 80;
-        }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType < 3){
+        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType < 3){
             return 40;
         }else if (upgrade.isEmpty() && resultType == 3){
             return 150;
-        }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType == 3){
+        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 3){
             return 75;
         }else if (upgrade.isEmpty() && resultType == 4){
             return 600;
-        }else if (upgrade.getItem() instanceof ItemFuelEfficiency && resultType == 4){
+        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 4){
             return 300;
         }else return 0;
     }
@@ -196,45 +193,44 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         else if (resultType == 4) result = new ItemStack(Items.OBSIDIAN);
         else result = new ItemStack(Items.COBBLESTONE);
         result.setCount(getResultCount());
-                return result;
+        return result;
     }
     protected int getResultCount(){
         ItemStack upgrade1 = this.getItem(4);
-        if (upgrade1.getItem() instanceof ItemOreProcessing)
+        if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing)
             return 2;
         else return 1;
     }
     protected boolean hasLava() {
-        ItemStack input = this.inventory.get(0);
+        ItemStack input = this.getInv().getStackInSlot(0);
         return (input.getItem() == Items.WATER_BUCKET);
     }
     protected boolean hasWater() {
-        ItemStack input = this.inventory.get(1);
+        ItemStack input = this.getInv().getStackInSlot(1);
         return (input.getItem() == Items.WATER_BUCKET);
     }
     @Override
     public void load(CompoundTag tag) {
-        ContainerHelper.loadAllItems(tag, this.inventory);
+        super.load(tag);
+        if (tag.getCompound("inventory").isEmpty() && !tag.getList("Items",10).isEmpty()) {
+            if (isEmpty())
+                getInv().deserializeNBT(tag);
+        }else
+            getInv().deserializeNBT(tag.getCompound("inventory"));
         this.cobTime = tag.getInt("CobTime");
         this.resultType = tag.getInt("ResultType");
         this.actualCobTime = tag.getInt("ActualCobTime");
 
-        super.load(tag);
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
-        ContainerHelper.saveAllItems(tag, this.inventory);
         tag.putInt("CobTime", this.cobTime);
         tag.putInt("ResultType", this.resultType);
         tag.putInt("ActualCobTime", this.actualCobTime);
-        return tag;
+
+        return super.save(tag);
     }
-
-
-    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] invHandlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
 
     @Nonnull
     @Override
@@ -242,83 +238,44 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
             T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
         if (!this.isRemoved() && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == Direction.DOWN)
-                return invHandlers[0].cast();
-            else if (facing == Direction.UP)
-                return invHandlers[1].cast();
-            else if (facing == Direction.NORTH)
-                return invHandlers[2].cast();
-            else if (facing == Direction.SOUTH)
-                return invHandlers[3].cast();
-            else if (facing == Direction.WEST)
-                return invHandlers[4].cast();
-            else
-                return invHandlers[5].cast();
+         return LazyOptional.of(this::getInv).cast();
         }
         return super.getCapability(capability, facing);
     }
-    @Nonnull
-    private ItemStack extractItemInternal(int slot, int amount, boolean simulate) {
-        if (amount == 0)
-            return ItemStack.EMPTY;
 
-        ItemStack existing = this.getItem(slot);
-
-        if (existing.isEmpty())
-            return ItemStack.EMPTY;
-
-        int toExtract = Math.min(amount, existing.getMaxStackSize());
-
-        if (existing.getCount() <= toExtract) {
-            if (!simulate) {
-                this.setItem(slot, ItemStack.EMPTY);
-                this.setChanged();
-                return existing;
-            } else {
-                return existing.copy();
-            }
-        } else {
-            if (!simulate) {
-                this.setItem(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
-                this.setChanged();
-            }
-
-            return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
-        }
-    }
     private void AutoIO(){
         for (Direction dir : Direction.values()) {
             BlockEntity tile = level.getBlockEntity(worldPosition.offset(dir.getNormal()));
             if (tile == null) {
                 continue;
             }
-                if (tile != null) {
-                    IItemHandler other = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).map(other1 -> other1).orElse(null);
+            if (tile != null) {
+                IItemHandler other = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).map(other1 -> other1).orElse(null);
 
-                    if (other == null) {
+                if (other == null) {
+                    continue;
+                }
+                if (other != null) {
+                    if (this.getItem(OUTPUT).isEmpty()) {
                         continue;
                     }
-                    if (other != null) {
-                            if (this.getItem(OUTPUT).isEmpty()) {
-                                continue;
-                            }
-                            if (tile.getBlockState().getBlock().getRegistryName().toString().contains("storagedrawers:")) {
-                                continue;
-                            }
-                            for (int i = 0; i < other.getSlots(); i++) {
-                                ItemStack stack = extractItemInternal(OUTPUT, this.getItem(OUTPUT).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
-                                if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
-                                    other.insertItem(i, extractItemInternal(OUTPUT, stack.getCount(), false), false);
-                                }
-                            }
+                    if (tile.getBlockState().getBlock().getRegistryName().toString().contains("storagedrawers:")) {
+                        continue;
                     }
+                    for (int i = 0; i < other.getSlots(); i++) {
+                        ItemStack stack = inventory.extractItem(OUTPUT, this.getItem(OUTPUT).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
+                        if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
+                            other.insertItem(i, inventory.extractItem(OUTPUT, stack.getCount(), false), false);
                         }
                     }
                 }
+            }
+        }
+    }
 
     @Override
     public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        if (index == OUTPUT || index == 3) {
+        if (index == OUTPUT) {
             return false;
         }
         if (index == INPUT) {
@@ -338,10 +295,6 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
         }
         return false;
-    }
-
-    protected boolean doesNeedUpdateSend() {
-        return !Arrays.equals(this.provides, this.lastProvides);
     }
 
     public void onUpdateSent() {

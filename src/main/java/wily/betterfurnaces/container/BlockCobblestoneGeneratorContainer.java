@@ -14,10 +14,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemFuelEfficiency;
-import wily.betterfurnaces.items.ItemOreProcessing;
 import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
+import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
+import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 
 
 public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {
@@ -59,13 +59,13 @@ public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {
         this.addSlot(new SlotUpgrade(te, 3, 8, 18){
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemFuelEfficiency);
+                return ( stack.getItem() instanceof ItemUpgradeFuelEfficiency);
             }
         });
         this.addSlot(new SlotUpgrade(te, 4, 8, 36){
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return ( stack.getItem() instanceof ItemOreProcessing);
+                return ( stack.getItem() instanceof ItemUpgradeOreProcessing);
             }
         });
         layoutPlayerInventorySlots(8, 84);
@@ -97,18 +97,18 @@ public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (index < 4) {
-                if (!this.moveItemStackTo(itemstack1, 6, this.slots.size(), true)) {
+            if (index < 5) {
+                if (!this.moveItemStackTo(itemstack1, 5, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickCraft(itemstack1, itemstack);
-            } else if (!this.moveItemStackTo(itemstack1, 0, 6, false)) {
-                if (index < 4 + 27) {
-                    if (!this.moveItemStackTo(itemstack1, 6 + 27, this.slots.size(), true)) {
+            } else if (!this.moveItemStackTo(itemstack1, 0, 5, false)) {
+                if (index < 5 + 27) {
+                    if (!this.moveItemStackTo(itemstack1, 5 + 27, this.slots.size(), true)) {
                         return ItemStack.EMPTY;
                     }
                 } else {
-                    if (!this.moveItemStackTo(itemstack1, 6, 6 + 27, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 5, 5 + 27, false)) {
                         return ItemStack.EMPTY;
                     }
                 }

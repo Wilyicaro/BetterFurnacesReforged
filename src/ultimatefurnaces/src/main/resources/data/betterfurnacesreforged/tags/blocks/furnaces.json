@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#betterfurnacesreforged:furnaces/copper",
+    "#betterfurnacesreforged:furnaces/graphite",
+    "#betterfurnacesreforged:furnaces/amethyst",
+    "#betterfurnacesreforged:furnaces/platinum",
+    "#betterfurnacesreforged:furnaces/ultimate"
+  ]
+}

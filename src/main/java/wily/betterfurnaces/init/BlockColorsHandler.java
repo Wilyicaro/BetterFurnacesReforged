@@ -7,7 +7,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import wily.betterfurnaces.blockentity.BlockEntityForgeBase;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 
 import javax.annotation.Nullable;
@@ -18,7 +17,6 @@ public class BlockColorsHandler implements BlockColor {
     @SubscribeEvent
     public static void registerBlockColors() {
         System.out.println("Registering block color handler");
-
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.IRON_FURNACE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.GOLD_FURNACE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.DIAMOND_FURNACE.get());
@@ -31,8 +29,7 @@ public class BlockColorsHandler implements BlockColor {
     public int getColor(BlockState blockState, @Nullable BlockAndTintGetter iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
         if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof BlockEntitySmeltingBase) {
             BlockEntitySmeltingBase te = (BlockEntitySmeltingBase) iBlockDisplayReader.getBlockEntity(blockPos);
-            ItemStack stack = te.inventory.get(te.UPGRADECOLOR());
-            if (stack.getItem() == Registration.COLOR.get() && (stack.getTag() != null)) {
+            if (te.hasUpgrade(Registration.COLOR.get()) && (te.getUpgradeSlotItem(Registration.COLOR.get()).getTag() != null)) {
                 return te.hex();
             }
         }
