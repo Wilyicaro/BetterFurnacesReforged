@@ -17,9 +17,11 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.blocks.BlockCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
@@ -172,21 +174,20 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
             return 3;
         }else return 0;
     }
-    protected int getCobTime(){
+    protected int FuelEfficiencyMultiplier(){
         ItemStack upgrade = this.inventory.get(UPGRADE);
-        if (upgrade.isEmpty() && resultType < 3){
-            return 80;
-        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType < 3){
-            return 40;
-        }else if (upgrade.isEmpty() && resultType == 3){
-            return 150;
-        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 3){
-            return 75;
-        }else if (upgrade.isEmpty() && resultType == 4){
-            return 600;
-        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 4){
-            return 300;
-        }else return 0;
+        if (!upgrade.isEmpty() && upgrade.getItem() instanceof ItemUpgradeFuelEfficiency) return 2;
+        return 1;
+
+    }
+    protected int getCobTime(){
+        if (resultType < 3){
+            return 80 / FuelEfficiencyMultiplier();
+        }else if (resultType == 3){
+            return 150 / FuelEfficiencyMultiplier();
+        }else if (resultType == 4){
+            return 600 / FuelEfficiencyMultiplier();
+        } else return resultType = 1;
     }
     protected ItemStack getResult(){
         ItemStack result;
@@ -233,27 +234,13 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
     }
 
 
-    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] invHandlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
-
     @Nonnull
     @Override
     public <
             T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
         if (!this.isRemoved() && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == Direction.DOWN)
-                return invHandlers[0].cast();
-            else if (facing == Direction.UP)
-                return invHandlers[1].cast();
-            else if (facing == Direction.NORTH)
-                return invHandlers[2].cast();
-            else if (facing == Direction.SOUTH)
-                return invHandlers[3].cast();
-            else if (facing == Direction.WEST)
-                return invHandlers[4].cast();
-            else
-                return invHandlers[5].cast();
+            return LazyOptional.of(() -> inventory).cast();
         }
         return super.getCapability(capability, facing);
     }

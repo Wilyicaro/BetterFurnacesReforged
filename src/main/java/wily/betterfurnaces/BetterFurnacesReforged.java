@@ -25,7 +25,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "173";
+    public static final String VERSION = "174";
     public static final String MC_VERSION = "1.16.5";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -50,7 +50,7 @@ public class BetterFurnacesReforged
         if (Config.checkUpdates.get()) {
             new UpCheck();
         } else {
-            this.LOGGER.warn("You have disabled BetterFurnace's Update Checker, to re-enable: change the value of Update Checker in .minecraft->config->ironfurnaces-client.toml to 'true'.");
+            this.LOGGER.warn("You have disabled BetterFurnace's Update Checker, to re-enable: change the value of Update Checker in .minecraft->config->betterfurnacesreforged-client.toml to 'true'.");
         }
 
         Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + "-client.toml"));

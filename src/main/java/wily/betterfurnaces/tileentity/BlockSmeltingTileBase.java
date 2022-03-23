@@ -182,7 +182,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
        return (hasUpgrade(Registration.LIQUID.get()));
     }
     public boolean hasXPTank() {
-        return ((hasUpgrade(Registration.XP.get())));
+        return (hasUpgrade(Registration.XP.get()) && ItemUpgradeXpTank.isWorking());
     }
     private boolean isEnergy() {
         return ((hasUpgrade(Registration.ENERGY.get())) && energyStorage.getEnergyStored() >= EnergyUse());

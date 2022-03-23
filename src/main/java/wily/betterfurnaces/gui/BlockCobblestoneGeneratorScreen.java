@@ -27,7 +27,6 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
     PlayerInventory playerInv;
     ITextComponent name;
-    private int buttonstate = 1;
 
     public boolean add_button;
     public boolean sub_button;
@@ -68,13 +67,13 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
 
     private void addTooltips(MatrixStack matrix, int mouseX, int mouseY) {
         if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
-            if (buttonstate == 1) {
+            if (getMenu().getButtonstate() == 1) {
                 this.renderTooltip(matrix, Blocks.COBBLESTONE.getName(), mouseX, mouseY);
-            } else if (buttonstate == 2) {
+            } else if (getMenu().getButtonstate() == 2) {
                 this.renderTooltip(matrix, Blocks.STONE.getName(), mouseX, mouseY);
-            } else if (buttonstate == 3) {
+            } else if (getMenu().getButtonstate() == 3) {
                 this.renderTooltip(matrix, Blocks.BLACKSTONE.getName(), mouseX, mouseY);
-            } else if (buttonstate == 4) {
+            } else if (getMenu().getButtonstate() == 4) {
                 this.renderTooltip(matrix, Blocks.OBSIDIAN.getName(), mouseX, mouseY);
             }
         }
@@ -90,23 +89,23 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
         int relY = (this.height - this.getYSize()) / 2;
         this.blit(matrix, relX, relY, 0, 0, this.getXSize(), this.getYSize());
         this.minecraft.getTextureManager().bind(WIDGETS);
-        if (buttonstate == 1)
+        if (getMenu().getButtonstate() == 1)
             this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 42, 0, 14, 14);
-        if (buttonstate == 2)
+        if (getMenu().getButtonstate() == 2)
             this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 42, 14, 14, 14);
-        if (buttonstate == 3)
+        if (getMenu().getButtonstate() == 3)
             this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 42, 28, 14, 14);
-        if (buttonstate == 4)
+        if (getMenu().getButtonstate() == 4)
             this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 70, 0, 14, 14);
 
         if (actualMouseX>= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39){
-            if (buttonstate == 1)
+            if (getMenu().getButtonstate() == 1)
                 this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 56, 0, 14, 14);
-            if (buttonstate == 2)
+            if (getMenu().getButtonstate() == 2)
                 this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 56, 14, 14, 14);
-            if (buttonstate == 3)
+            if (getMenu().getButtonstate() == 3)
                 this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 56, 28, 14, 14);
-            if (buttonstate == 4)
+            if (getMenu().getButtonstate() == 4)
                 this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 84, 0, 14, 14);
         }
         int i;
@@ -124,8 +123,6 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
         Minecraft.getInstance().getTextureManager().bind(GUI);
         this.blit(matrix, getGuiLeft() + 58, getGuiTop() + 44, 176, 0, 17, 12);
         this.blit(matrix, getGuiLeft() + 101, getGuiTop() + 44, 176, 12, 17, 12);
-        if (buttonstate != getMenu().getButtonstate())
-            buttonstate = getMenu().getButtonstate();
 
     }
 
@@ -135,17 +132,10 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
         double actualMouseX = mouseX - getGuiLeft();
         double actualMouseY = mouseY - getGuiTop();
         if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39) {
-            if (buttonstate == 1) {
-                buttonstate = 2;
-            } else if (buttonstate == 2) {
-                buttonstate = 3;
-            } else if (buttonstate == 3) {
-                buttonstate = 4;
-            } else if (buttonstate == 4) {
-                buttonstate = 1;
-            }
             Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
-            Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos(), buttonstate));
+            if (getMenu().getButtonstate() >= 1 &&  getMenu().getButtonstate() <= 3)
+            Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos(), getMenu().getButtonstate() + 1));
+            else Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos(), 1));
         }
 
         return super.mouseClicked(mouseX, mouseY, button);

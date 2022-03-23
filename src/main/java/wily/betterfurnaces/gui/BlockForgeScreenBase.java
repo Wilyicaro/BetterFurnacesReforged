@@ -106,13 +106,13 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
         int actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
         this.minecraft.font.draw(matrix, invname, this.getXSize() / 2 - this.minecraft.font.width(invname.getString()) / 2, this.getYSize() - 112, 4210752);
         this.minecraft.font.draw(matrix, name, 7 + this.getXSize() / 2 - this.minecraft.font.width(name.getString()) / 2, 26, 4210752);
-        if (getMenu().te.hasUpgrade(Registration.LIQUID.get()) &&
+        if (getMenu().te.isLiquid() &&
                 (mouseX > getGuiLeft() + 26 && mouseX < getGuiLeft() + 45 && mouseY > getGuiTop() + 98 && mouseY < getGuiTop() + 128))
             this.renderTooltip(matrix, new StringTextComponent(((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(false).getDisplayName().getString() + ": " +((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(false).getAmount() + " mB"), actualMouseX, actualMouseY);
         if (getMenu().te.hasUpgrade(Registration.ENERGY.get()) &&
                 (mouseX > getGuiLeft() + 8 && mouseX < getGuiLeft() + 24 && mouseY > getGuiTop() + 62 && mouseY < getGuiTop() + 96))
             this.renderTooltip(matrix, new StringTextComponent(((BlockForgeContainerBase) this.getMenu()).getEnergyStored()/1000 + " kFE/" + ((BlockForgeContainerBase) this.getMenu()).getEnergyMaxStored()/1000 + "kFE"), actualMouseX, actualMouseY);
-        if (getMenu().te.hasUpgrade(Registration.XP.get()) &&
+        if (getMenu().te.hasXPTank() &&
                 (mouseX > getGuiLeft() + 126 && mouseX < getGuiLeft() + 142 && mouseY > getGuiTop() + 102 && mouseY < getGuiTop() + 118))
             this.renderTooltip(matrix, new StringTextComponent(this.getMenu().getFluidStackStored(true).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(true).getAmount() + " mB"), actualMouseX, actualMouseY);
 
@@ -237,7 +237,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
             this.blit(matrix, getGuiLeft() + 8, getGuiTop() + 62, 240, 0, 16, 34);
             this.blit(matrix, getGuiLeft() + 8, getGuiTop() + 62, 240, 34, 16, 34-i);
         }
-        if (getMenu().te.hasUpgrade(Registration.LIQUID.get())){
+        if (getMenu().te.isLiquid()){
             Minecraft.getInstance().getTextureManager().bind(WIDGETS);
             this.blit(matrix, getGuiLeft() + 26, getGuiTop() + 98, 192, 38, 20, 22);
             FluidStack fluid =  ((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(false);
@@ -255,7 +255,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
             Minecraft.getInstance().getTextureManager().bind(WIDGETS);
             this.blit(matrix, getGuiLeft() + 26, getGuiTop() + 98, 192, 16, 20, 22);
         }
-        if (getMenu().te.hasUpgrade(Registration.XP.get())) {
+        if (getMenu().te.hasXPTank()) {
             Minecraft.getInstance().getTextureManager().bind(WIDGETS);
             this.blit(matrix, getGuiLeft() + 126, getGuiTop() + 102, 208, 0, 16, 16);
             FluidStack fluid =  ((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(true);
