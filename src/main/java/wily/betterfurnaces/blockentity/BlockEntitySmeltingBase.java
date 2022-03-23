@@ -159,7 +159,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         return recipe;
     }
     public boolean hasXPTank() {
-        return hasUpgrade(Registration.XP.get());
+        return hasUpgrade(Registration.XP.get()) && ItemUpgradeXpTank.isWorking();
     }
     public boolean hasEnder() {
         return (hasUpgradeType(Registration.FUEL.get()));

@@ -26,7 +26,11 @@ public class ItemUpgradeXpTank extends ItemUpgrade {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!ModList.get().isLoaded(Config.getLiquidXPMod()))
+        if (!isWorking())
             tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.isworking").setStyle(Style.EMPTY.applyFormat((ChatFormatting.RED))));
     }
+    public static boolean  isWorking(){
+        return ModList.get().isLoaded(Config.getLiquidXPMod());
+    }
+
 }

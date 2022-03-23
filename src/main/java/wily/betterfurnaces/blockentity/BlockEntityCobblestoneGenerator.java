@@ -169,21 +169,20 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
             return 3;
         }else return 0;
     }
+    protected int FuelEfficiencyMultiplier(){
+        ItemStack upgrade = this.inventory.getStackInSlot(UPGRADE);
+        if (!upgrade.isEmpty() && upgrade.getItem() instanceof ItemUpgradeFuelEfficiency) return 2;
+        return 1;
+
+    }
     protected int getCobTime(){
-        ItemStack upgrade = this.getInv().getStackInSlot(UPGRADE);
-        if (upgrade.isEmpty() && resultType < 3){
-            return 80;
-        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType < 3){
-            return 40;
-        }else if (upgrade.isEmpty() && resultType == 3){
-            return 150;
-        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 3){
-            return 75;
-        }else if (upgrade.isEmpty() && resultType == 4){
-            return 600;
-        }else if (upgrade.getItem() instanceof ItemUpgradeFuelEfficiency && resultType == 4){
-            return 300;
-        }else return 0;
+        if (resultType < 3){
+            return 80 / FuelEfficiencyMultiplier();
+        }else if (resultType == 3){
+            return 150 / FuelEfficiencyMultiplier();
+        }else if (resultType == 4){
+            return 600 / FuelEfficiencyMultiplier();
+        } else return resultType = 1;
     }
     protected ItemStack getResult(){
         ItemStack result;
@@ -241,35 +240,6 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
             return LazyOptional.of(this::getInv).cast();
         }
         return super.getCapability(capability, facing);
-    }
-    @Nonnull
-    private ItemStack extractItemInternal(int slot, int amount, boolean simulate) {
-        if (amount == 0)
-            return ItemStack.EMPTY;
-
-        ItemStack existing = this.getItem(slot);
-
-        if (existing.isEmpty())
-            return ItemStack.EMPTY;
-
-        int toExtract = Math.min(amount, existing.getMaxStackSize());
-
-        if (existing.getCount() <= toExtract) {
-            if (!simulate) {
-                this.setItem(slot, ItemStack.EMPTY);
-                this.setChanged();
-                return existing;
-            } else {
-                return existing.copy();
-            }
-        } else {
-            if (!simulate) {
-                this.setItem(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
-                this.setChanged();
-            }
-
-            return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
-        }
     }
     private void AutoIO(){
         for (Direction dir : Direction.values()) {

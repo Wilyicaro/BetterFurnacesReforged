@@ -117,7 +117,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
             }
             this.addTooltips(matrix, actualMouseX, actualMouseY);
         }
-        if (getMenu().te.hasUpgrade(Registration.XP.get()) &&
+        if (getMenu().te.hasXPTank() &&
                 (mouseX > getGuiLeft() + 126 && mouseX < getGuiLeft() + 142 && mouseY > getGuiTop() + 102 && mouseY < getGuiTop() + 118))
             this.renderTooltip(matrix, new TextComponent(this.getMenu().getFluidStackStored(true).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(true).getAmount() + " mB"), actualMouseX, actualMouseY);
 
@@ -239,7 +239,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
             this.blit(matrix, getGuiLeft() + 8, getGuiTop() + 62, 240, 0, 16, 34);
             this.blit(matrix, getGuiLeft() + 8, getGuiTop() + 62, 240, 34, 16, 34-i);
         }
-        if (getMenu().te.hasUpgrade(Registration.LIQUID.get())){
+        if (getMenu().te.isLiquid()){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 26, getGuiTop() + 98, 192, 38, 20, 22);
             FluidStack fluid =  ((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(false);
@@ -257,7 +257,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 26, getGuiTop() + 98, 192, 16, 20, 22);
         }
-        if (this.getMenu().te.hasUpgrade(Registration.XP.get())){
+        if (this.getMenu().te.hasXPTank()){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 126, getGuiTop() + 102, 208, 0, 16, 16);
             FluidStack fluid =  ((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(true);

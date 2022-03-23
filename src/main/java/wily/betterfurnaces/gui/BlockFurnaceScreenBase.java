@@ -83,7 +83,7 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
         int actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
         this.minecraft.font.draw(matrix, this.playerInv.getDisplayName(), 7, this.getYSize() - 93, 4210752);
         this.minecraft.font.draw(matrix, name, 7 + this.getXSize() / 2 - this.minecraft.font.width(name.getString()) / 2, 6, 4210752);
-        if (getMenu().te.hasUpgrade(Registration.LIQUID.get()) &&
+        if (getMenu().te.isLiquid() &&
                 (mouseX > getGuiLeft() + 73 && mouseX < getGuiLeft() + 92 && mouseY > getGuiTop() + 49 && mouseY < getGuiTop() + 70))
             this.renderTooltip(matrix, new TextComponent(this.getMenu().getFluidStackStored(false).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(false).getAmount() + " mB"), actualMouseX, actualMouseY);
         if (getMenu().te.hasUpgrade(Registration.ENERGY.get()) &&
@@ -97,7 +97,7 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
             }
             this.addTooltips(matrix, actualMouseX, actualMouseY);
         }
-        if (getMenu().te.hasUpgrade(Registration.XP.get()) &&
+        if (getMenu().te.hasXPTank() &&
                 (mouseX > getGuiLeft() + 116 && mouseX < getGuiLeft() + 132 && mouseY > getGuiTop() + 57 && mouseY < getGuiTop() + 73))
             this.renderTooltip(matrix, new TextComponent(this.getMenu().getFluidStackStored(true).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(true).getAmount() + " mB"), actualMouseX, actualMouseY);
 
@@ -216,7 +216,7 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
             this.blit(matrix, getGuiLeft() + 31, getGuiTop() + 17, 240, 0, 16, 34);
             this.blit(matrix, getGuiLeft() + 31, getGuiTop() + 17, 240, 34, 16, 34-i);
         }
-        if (getMenu().te.hasUpgrade(Registration.LIQUID.get())){
+        if (getMenu().te.isLiquid()){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 73, getGuiTop() + 49, 192, 38, 20, 22);
             FluidStack fluid =  ((BlockFurnaceContainerBase) this.getMenu()).getFluidStackStored(false);
@@ -231,7 +231,7 @@ public abstract class BlockFurnaceScreenBase<T extends BlockFurnaceContainerBase
             this.blit(matrix, getGuiLeft() + 73, getGuiTop() + 49, 192, 16, 20, 22);
         }
 
-        if (this.getMenu().te.hasUpgrade(Registration.XP.get())) {
+        if (this.getMenu().te.hasXPTank()) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + 116, getGuiTop() + 57, 208, 0, 16, 16);
             FluidStack fluid =  this.getMenu().getFluidStackStored(true);
