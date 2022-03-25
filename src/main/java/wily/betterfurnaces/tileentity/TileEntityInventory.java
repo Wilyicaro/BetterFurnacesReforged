@@ -74,7 +74,9 @@ public abstract class TileEntityInventory extends TileEntity implements ITileInv
     public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
         return IisItemValidForSlot(i, itemStack);
     }
-
+    public void updateBlockState(){
+        level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);
+    }
     @Override
     public boolean canTakeItemThroughFace(int i, ItemStack itemStack, Direction direction) {
         return IcanExtractItem(i, itemStack, direction);

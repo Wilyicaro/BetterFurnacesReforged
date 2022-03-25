@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": {
+      "item": "betterfurnacesreforged:color_upgrade"
+    },
+    "title": {
+      "translate": "advancements.colortime.title"
+    },
+    "description": {
+      "translate": "advancements.colortime.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "colortime": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": {
+          "block": {
+            "tag": "betterfurnacesreforged:furnaces"
+          }
+        },
+        "item": {
+          "items": ["betterfurnacesreforged:color_upgrade"]
+        }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 1
+  },
+  "parent": "betterfurnacesreforged:overcooked"
+}

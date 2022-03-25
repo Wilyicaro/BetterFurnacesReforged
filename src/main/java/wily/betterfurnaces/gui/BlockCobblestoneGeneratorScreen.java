@@ -8,6 +8,7 @@ import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
@@ -18,10 +19,11 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketCobButton;
+import wily.betterfurnaces.tileentity.BlockCobblestoneGeneratorTile;
 import wily.betterfurnaces.util.FluidRenderUtil;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestoneGeneratorContainer> extends ContainerScreen<T> {
+public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestoneGeneratorContainer> extends BlockInventoryScreen<T> {
 
     public ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/cobblestone_generator_gui.png");
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
@@ -67,15 +69,8 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
 
     private void addTooltips(MatrixStack matrix, int mouseX, int mouseY) {
         if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
-            if (getMenu().getButtonstate() == 1) {
-                this.renderTooltip(matrix, Blocks.COBBLESTONE.getName(), mouseX, mouseY);
-            } else if (getMenu().getButtonstate() == 2) {
-                this.renderTooltip(matrix, Blocks.STONE.getName(), mouseX, mouseY);
-            } else if (getMenu().getButtonstate() == 3) {
-                this.renderTooltip(matrix, Blocks.BLACKSTONE.getName(), mouseX, mouseY);
-            } else if (getMenu().getButtonstate() == 4) {
-                this.renderTooltip(matrix, Blocks.OBSIDIAN.getName(), mouseX, mouseY);
-            }
+            if (BlockCobblestoneGeneratorTile.recipes == null) this.renderTooltip(matrix, ItemStack.EMPTY, mouseX, mouseY);
+            else this.renderTooltip(matrix, getMenu().te.recipes.get(getMenu().te.resultType).getResultItem(), mouseX, mouseY);
         }
     }
 
@@ -88,26 +83,11 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
         int relX = (this.width - this.getXSize()) / 2;
         int relY = (this.height - this.getYSize()) / 2;
         this.blit(matrix, relX, relY, 0, 0, this.getXSize(), this.getYSize());
+        renderGuiItem(getMenu().te.recipes.get(getMenu().te.resultType).getResultItem(),getGuiLeft() + 80, getGuiTop() + 24, 0.75F, 0.75F);
         this.minecraft.getTextureManager().bind(WIDGETS);
-        if (getMenu().getButtonstate() == 1)
-            this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 42, 0, 14, 14);
-        if (getMenu().getButtonstate() == 2)
-            this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 42, 14, 14, 14);
-        if (getMenu().getButtonstate() == 3)
-            this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 42, 28, 14, 14);
-        if (getMenu().getButtonstate() == 4)
-            this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 70, 0, 14, 14);
-
         if (actualMouseX>= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39){
-            if (getMenu().getButtonstate() == 1)
-                this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 56, 0, 14, 14);
-            if (getMenu().getButtonstate() == 2)
-                this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 56, 14, 14, 14);
-            if (getMenu().getButtonstate() == 3)
-                this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 56, 28, 14, 14);
-            if (getMenu().getButtonstate() == 4)
-                this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 84, 0, 14, 14);
-        }
+            this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 98, 157, 14, 14);
+        } else this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 84, 157, 14, 14);
         int i;
         i = ((BlockCobblestoneGeneratorContainer) this.getMenu()).getCobTimeScaled(16);
         if (i > 0) {
@@ -133,9 +113,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
         double actualMouseY = mouseY - getGuiTop();
         if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39) {
             Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
-            if (getMenu().getButtonstate() >= 1 &&  getMenu().getButtonstate() <= 3)
-            Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos(), getMenu().getButtonstate() + 1));
-            else Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos(), 1));
+            Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos()));
         }
 
         return super.mouseClicked(mouseX, mouseY, button);

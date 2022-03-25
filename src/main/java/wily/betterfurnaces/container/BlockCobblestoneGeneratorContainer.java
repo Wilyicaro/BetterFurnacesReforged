@@ -27,7 +27,7 @@ import wily.betterfurnaces.tileentity.BlockCobblestoneGeneratorTile;
 
 public class BlockCobblestoneGeneratorContainer extends Container {
 
-    protected BlockCobblestoneGeneratorTile te;
+    public BlockCobblestoneGeneratorTile te;
     protected IIntArray fields;
     protected PlayerEntity playerEntity;
     protected IItemHandler playerInventory;

@@ -1,0 +1,7 @@
+{
+  "type": "betterfurnacesreforged:rock_generating",
+  "result": {
+    "item": "minecraft:blackstone"
+  },
+  "duration": 150
+}
