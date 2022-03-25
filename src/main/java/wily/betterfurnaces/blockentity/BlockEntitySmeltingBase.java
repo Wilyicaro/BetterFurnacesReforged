@@ -288,7 +288,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         protected void onContentsChanged() {
             super.onContentsChanged();
             setChanged();
-            level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);
+            updateBlockState();
         }
     };
     protected final FluidTank xpTank = new FluidTank(2000, xp -> (ModList.get().isLoaded(Config.getLiquidXPMod()) && xp.getFluid().getRegistryName().toString().equals(Config.getLiquidXPType()))){
@@ -296,7 +296,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         protected void onContentsChanged() {
             super.onContentsChanged();
             setChanged();
-            level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);
+            updateBlockState();
         }
     };
     private final ForgeEnergyStorage energyStorage = new ForgeEnergyStorage(this,0,EnergyCapacity()) {
@@ -305,7 +305,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             int retval = super.receiveEnergy(maxReceive, simulate);
             if (!simulate) {
                 setChanged();
-                level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);
+                updateBlockState();
             }
             return retval;
         }
@@ -315,7 +315,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             int retval = super.extractEnergy(maxExtract, simulate);
             if (!simulate) {
                 setChanged();
-                level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);
+                updateBlockState();
             }
             return retval;
         }

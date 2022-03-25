@@ -30,8 +30,7 @@
   "block.betterfurnacesreforged.iron_furnace": "Fornalha de ferro",
   "block.betterfurnacesreforged.netherhot_conductor_block": "Bloco condutor do calor do nether",
   "block.betterfurnacesreforged.netherhot_furnace": "Fornalha do nether",
-  
-  "description.betterfurnacesreforged.cobblestone_generator": "Gera pedregulho, pedra, pedra negra ou obsidian a partir da opção escolhida na GUI. Coloque um balde de lava e um balde de água nos respectivos slots para começar a gerar. Podem ser utilizadas as melhorias de Processamento de Minérios para duplicar o resultado, e o de Eficiência de Combustível para diminuir pela metade o tempo de geração",
+
   "description.betterfurnacesreforged.fuel_verifier": "Apenas mostra a quantidade que cada combustível é capaz de derreter(Inútil)",
   
   "gui.betterfurnacesreforged.color.blue": "Azul: ",

@@ -30,8 +30,7 @@
   "block.betterfurnacesreforged.iron_furnace": "Iron Furnace",
   "block.betterfurnacesreforged.netherhot_conductor_block": "Netherhot Conduter Block",
   "block.betterfurnacesreforged.netherhot_furnace": "Netherhot Furnace",
-  
-  "description.betterfurnacesreforged.cobblestone_generator": "Generates cobblestone, stone, blackstone or obsidian from the option chosen in the GUI. Place a bucket of lava and a bucket of water in their respective slots to start generating. Ore Processing upgrade can be used to double the result and fuel efficiency to cut generation time in half",
+
   "description.betterfurnacesreforged.fuel_verifier": "It only shows how much each fuel is capable of melting (Useless)",
   
   "gui.betterfurnacesreforged.color.blue": "Blue: ",

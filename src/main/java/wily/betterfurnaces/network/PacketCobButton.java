@@ -13,30 +13,23 @@ public class PacketCobButton {
 	private int x;
 	private int y;
 	private int z;
-	private int index;
-	private int set;
 
 	public PacketCobButton(ByteBuf buf) {
 		x = buf.readInt();
 		y = buf.readInt();
 		z = buf.readInt();
-		index = buf.readInt();
-		set = buf.readInt();
 	}
 
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
-		buf.writeInt(index);
-		buf.writeInt(set);
 	}
 
-	public PacketCobButton(BlockPos pos, int index) {
+	public PacketCobButton(BlockPos pos) {
 		this.x = pos.getX();
 		this.y = pos.getY();
 		this.z = pos.getZ();
-		this.index = index;
 	}
 
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
@@ -45,8 +38,7 @@ public class PacketCobButton {
 			BlockPos pos = new BlockPos(x, y, z);
 			BlockEntityCobblestoneGenerator te = (BlockEntityCobblestoneGenerator) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
-				te.resultType = index;
-				te.getLevel().markAndNotifyBlock(pos, player.getLevel().getChunkAt(pos), te.getLevel().getBlockState(pos).getBlock().defaultBlockState(), te.getLevel().getBlockState(pos), 2, 3);
+				te.changeRecipe(true);
 				te.setChanged();
 			}
 		});

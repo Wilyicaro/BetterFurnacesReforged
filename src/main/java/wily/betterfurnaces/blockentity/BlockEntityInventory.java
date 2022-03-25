@@ -67,7 +67,9 @@ public abstract class BlockEntityInventory extends BlockEntity implements IBlock
         this.setChanged();
         level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), level.getBlockState(worldPosition).getBlock().defaultBlockState(), level.getBlockState(worldPosition), 2, 3);
     }
-
+    public void updateBlockState(){
+        level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);
+    }
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();

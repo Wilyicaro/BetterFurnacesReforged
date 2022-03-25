@@ -35,6 +35,7 @@ import java.util.List;
 public abstract class BlockCobblestoneGenerator extends Block implements EntityBlock {
     public static final String COBBLESTONE_GENERATOR = "cobblestone_generator";
 
+
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final IntegerProperty TYPE = IntegerProperty.create("state", 0, 3);
 

@@ -1,6 +1,10 @@
 package wily.betterfurnaces;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -17,6 +21,7 @@ import wily.betterfurnaces.init.ClientSide;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
+import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(BetterFurnacesReforged.MOD_ID)
@@ -25,7 +30,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "100";
+    public static final String VERSION = "110";
     public static final String MC_VERSION = "1.18.2";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -56,6 +61,18 @@ public class BetterFurnacesReforged
         Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + "-client.toml"));
         Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + ".toml"));
 
+    }
+    private static <T extends Recipe<?>> RecipeType<T> recipeRegister(final String key) {
+        return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(MOD_ID, key), new RecipeType<T>() {
+            @Override
+            public String toString() {
+                return key;
+            }
+        });
+    }
+    @SubscribeEvent
+    public static void registerRecipes(RegistryEvent.Register<Block> ev) {
+        CobblestoneGeneratorRecipes.TYPE = recipeRegister("rock_generating");
     }
 
     @SubscribeEvent

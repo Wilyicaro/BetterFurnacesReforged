@@ -22,12 +22,11 @@ import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 
 public class BlockCobblestoneGeneratorContainer extends AbstractContainerMenu {
 
-    protected BlockEntityCobblestoneGenerator te;
+    public BlockEntityCobblestoneGenerator te;
     protected ContainerData fields;
     protected Player playerEntity;
     protected IItemHandler playerInventory;
     protected final Level world;
-    private RecipeType<? extends AbstractCookingRecipe> recipeType;
 
     public BlockCobblestoneGeneratorContainer(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
         this(containerType, windowId, world, pos, playerInventory, player, new SimpleContainerData(3));
