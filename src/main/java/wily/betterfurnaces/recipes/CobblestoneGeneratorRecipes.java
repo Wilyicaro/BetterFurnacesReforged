@@ -27,6 +27,7 @@ public class CobblestoneGeneratorRecipes implements Recipe<Container> {
     public ResourceLocation recipeId;
     private final HashMap<Ingredient, Integer> ingredients = new LinkedHashMap<>();
     public Ingredient result;
+    public int resultCount;
     public int duration;
     public CobblestoneGeneratorRecipes(ResourceLocation recipeId) {
         this.recipeId = recipeId;
@@ -80,7 +81,10 @@ public class CobblestoneGeneratorRecipes implements Recipe<Container> {
         @Override
         public CobblestoneGeneratorRecipes fromJson(ResourceLocation recipeId, JsonObject json) {
             CobblestoneGeneratorRecipes recipe = new CobblestoneGeneratorRecipes(recipeId);
+
             JsonObject ingredient = GsonHelper.getAsJsonObject(json, "result");
+            recipe.resultCount = GsonHelper.getAsInt(ingredient, "count", 1);
+
             recipe.result = Ingredient.fromJson(json.get("result"));
             recipe.duration = GsonHelper.getAsInt(json, "duration", 600);
 
@@ -93,19 +97,16 @@ public class CobblestoneGeneratorRecipes implements Recipe<Container> {
             CobblestoneGeneratorRecipes recipe = new CobblestoneGeneratorRecipes(recipeId);
             recipe.result = Ingredient.fromNetwork(buffer);
             recipe.duration = buffer.readInt();
+            recipe.resultCount = buffer.readInt();
             return recipe;
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buffer, CobblestoneGeneratorRecipes recipe) {
 
-            buffer.writeByte(recipe.ingredients.size());
-            recipe.ingredients.forEach((ingredient, count) -> {
-                ingredient.toNetwork(buffer);
-                buffer.writeByte(count);
-            });
             recipe.result.toNetwork(buffer);
             buffer.writeInt(recipe.duration);
+            buffer.writeInt(recipe.resultCount);
 
         }
     }
