@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.blocks.BlockCobblestoneGenerator;
@@ -127,11 +128,11 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
         }
     }
     public void initRecipes() {
-        recipes = Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.TYPE);
+        recipes = Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(Registration.COB_GENERATION_RECIPE);
     }
     public void setRecipe(int index) {
         if (level != null) {
-            this.recipe = Optional.ofNullable(recipes).orElse(level.getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.TYPE)).get(index);
+            this.recipe = Optional.ofNullable(recipes).orElse(level.getRecipeManager().getAllRecipesFor(Registration.COB_GENERATION_RECIPE)).get(index);
         }
     }
     public void changeRecipe(boolean next) {
@@ -258,14 +259,14 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
         return tag;
     }
 
-
     @Nonnull
     @Override
     public <
             T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
         if (!this.isRemoved() && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return LazyOptional.of(() -> inventory).cast();
+            InvWrapper inv = new InvWrapper(this);
+            return LazyOptional.of(() -> inv ).cast();
         }
         return super.getCapability(capability, facing);
     }

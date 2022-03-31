@@ -30,7 +30,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "180";
+    public static final String VERSION = "181";
     public static final String MC_VERSION = "1.16.5";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -61,18 +61,6 @@ public class BetterFurnacesReforged
         Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + "-client.toml"));
         Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + ".toml"));
 
-    }
-    private static <T extends IRecipe<?>> IRecipeType<T> recipeRegister(final String key) {
-        return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(MOD_ID, key), new IRecipeType<T>() {
-            @Override
-            public String toString() {
-                return key;
-            }
-        });
-    }
-    @SubscribeEvent
-    public static void registerRecipes(RegistryEvent.Register<Block> ev) {
-        CobblestoneGeneratorRecipes.TYPE = recipeRegister("rock_generating");
     }
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event)

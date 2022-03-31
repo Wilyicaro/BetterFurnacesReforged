@@ -15,6 +15,7 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import wily.betterfurnaces.init.Registration;
 
 
 import javax.annotation.Nullable;
@@ -25,7 +26,6 @@ import java.util.Map;
 public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
     public static final Serializer SERIALIZER = new Serializer();
 
-    public static IRecipeType<CobblestoneGeneratorRecipes> TYPE;
     public ResourceLocation recipeId;
     private final HashMap<Ingredient, Integer> ingredients = new LinkedHashMap<>();
     public Ingredient result;
@@ -33,6 +33,11 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
     public CobblestoneGeneratorRecipes(ResourceLocation recipeId) {
         this.recipeId = recipeId;
     }
+
+    public CobblestoneGeneratorRecipes() {
+
+    }
+
     public int getDuration() {
         return duration;
     }
@@ -82,7 +87,6 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
         @Override
         public CobblestoneGeneratorRecipes fromJson(ResourceLocation recipeId, JsonObject json) {
             CobblestoneGeneratorRecipes recipe = new CobblestoneGeneratorRecipes(recipeId);
-            JsonObject ingredient = JSONUtils.getAsJsonObject(json, "result");
             recipe.result = Ingredient.fromJson(json.get("result"));
             recipe.duration = JSONUtils.getAsInt(json, "duration", 600);
 
@@ -101,11 +105,6 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
         @Override
         public void toNetwork(PacketBuffer buffer, CobblestoneGeneratorRecipes recipe) {
 
-            buffer.writeByte(recipe.ingredients.size());
-            recipe.ingredients.forEach((ingredient, count) -> {
-                ingredient.toNetwork(buffer);
-                buffer.writeByte(count);
-            });
             recipe.result.toNetwork(buffer);
             buffer.writeInt(recipe.duration);
 
@@ -113,10 +112,10 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
     }
         @Override
     public IRecipeSerializer<?> getSerializer() {
-        return SERIALIZER;
+        return Registration.COB_GENERATION_SERIALIZER.get();
     }
     @Override
     public IRecipeType<?> getType() {
-        return TYPE;
+        return Registration.COB_GENERATION_RECIPE;
     }
 }
