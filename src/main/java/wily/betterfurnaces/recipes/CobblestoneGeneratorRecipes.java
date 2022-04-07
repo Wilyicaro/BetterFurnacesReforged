@@ -29,6 +29,7 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
     public ResourceLocation recipeId;
     private final HashMap<Ingredient, Integer> ingredients = new LinkedHashMap<>();
     public Ingredient result;
+    public int resultCount;
     public int duration;
     public CobblestoneGeneratorRecipes(ResourceLocation recipeId) {
         this.recipeId = recipeId;
@@ -88,6 +89,10 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
         public CobblestoneGeneratorRecipes fromJson(ResourceLocation recipeId, JsonObject json) {
             CobblestoneGeneratorRecipes recipe = new CobblestoneGeneratorRecipes(recipeId);
             recipe.result = Ingredient.fromJson(json.get("result"));
+
+            JsonObject ingredient = JSONUtils.getAsJsonObject(json, "result");
+            recipe.resultCount = JSONUtils.getAsInt(ingredient, "count", 1);
+
             recipe.duration = JSONUtils.getAsInt(json, "duration", 600);
 
             return recipe;
@@ -99,6 +104,7 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
             CobblestoneGeneratorRecipes recipe = new CobblestoneGeneratorRecipes(recipeId);
             recipe.result = Ingredient.fromNetwork(buffer);
             recipe.duration = buffer.readInt();
+            recipe.resultCount = buffer.readInt();
             return recipe;
         }
 
@@ -107,6 +113,7 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
 
             recipe.result.toNetwork(buffer);
             buffer.writeInt(recipe.duration);
+            buffer.writeInt(recipe.resultCount);
 
         }
     }

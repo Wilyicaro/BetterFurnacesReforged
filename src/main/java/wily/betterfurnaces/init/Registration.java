@@ -177,6 +177,8 @@ public class Registration {
     public static final RegistryObject<ItemUpgradeLiquidFuel> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new ItemUpgradeLiquidFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"liquid"));
     public static final RegistryObject<ItemUpgradeEnergyFuel> ENERGY = ITEMS.register("energy_upgrade", () -> new ItemUpgradeEnergyFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"energy"));
     public static final RegistryObject<ItemUpgradeXpTank> XP = ITEMS.register("xp_tank_upgrade", () -> new ItemUpgradeXpTank(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"xp"));
+    public static final RegistryObject<ItemUpgradeType> BLAST = ITEMS.register("blasting_upgrade", () -> new ItemUpgradeType(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"blasting"));
+    public static final RegistryObject<ItemUpgradeType> SMOKE = ITEMS.register("smoking_upgrade", () -> new ItemUpgradeType(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"smoking"));
 
 
     public static void registerBlocks(RegistryEvent.Register<Block> event)

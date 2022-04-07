@@ -1,6 +1,7 @@
 package wily.betterfurnaces.blocks;
 
 import net.minecraft.block.*;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -29,6 +30,10 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,6 +45,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.*;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
@@ -186,6 +192,17 @@ public abstract class BlockForgeBase extends Block implements IWaterLoggable {
         te.onUpdateSent();
         return ActionResultType.SUCCESS;
     }
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+
+        if (stack.getOrCreateTag().getInt("type") == 1)
+            tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.BLAST.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((TextFormatting.DARK_RED))));
+        else if (stack.getOrCreateTag().getInt("type") == 2)
+            tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.SMOKE.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((TextFormatting.DARK_RED))));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    }
+
     private void interactWith(World world, BlockPos pos, PlayerEntity player) {
         TileEntity tileEntity = world.getBlockEntity(pos);
         if (tileEntity instanceof INamedContainerProvider) {

@@ -54,6 +54,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.BlockForgeBase;
+import wily.betterfurnaces.blocks.BlockFurnaceBase;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.*;
@@ -141,7 +142,24 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
         return grabRecipe(stack).isPresent();
     }
 
-    private LRUCache<Item, Optional<AbstractCookingRecipe>> getCache() {
+    protected LRUCache<Item, Optional<AbstractCookingRecipe>> getCache() {
+
+        if (hasUpgrade(Registration.BLAST.get())) {
+            if (this.recipeType != IRecipeType.BLASTING) {
+                this.recipeType = IRecipeType.BLASTING;
+            }
+        }
+        if (hasUpgrade(Registration.SMOKE.get())){
+            if (this.recipeType != IRecipeType.SMOKING) {
+                this.recipeType = IRecipeType.SMOKING;
+            }
+        }
+        if (!((hasUpgrade(Registration.SMOKE.get()))) && !((hasUpgrade(Registration.BLAST.get()))))
+        {
+            if (this.recipeType != IRecipeType.SMELTING) {
+                this.recipeType = IRecipeType.SMELTING;
+            }
+        }
         if (this.recipeType == IRecipeType.BLASTING) {
             return blasting_cache;
         }
@@ -151,20 +169,9 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
         return cache;
     }
 
-    private Optional<AbstractCookingRecipe> grabRecipe() {
-        Item item = getItem(FINPUT()).getItem();
-        if (item instanceof AirItem)
-        {
-            return Optional.empty();
-        }
-        Optional<AbstractCookingRecipe> recipe = getCache().get(item);
-        if (recipe == null) {
-            recipe = this.level.getRecipeManager().getRecipeFor((IRecipeType<AbstractCookingRecipe>) this.recipeType, this, this.level);
-            getCache().put(item, recipe);
-        }
-        return recipe;
+    private Optional<AbstractCookingRecipe> getRecipe(ItemStack stack, IRecipeType recipeType) {
+        return this.level.getRecipeManager().getRecipeFor((IRecipeType<AbstractCookingRecipe>) recipeType, new Inventory(stack), this.level);
     }
-
     private Optional<AbstractCookingRecipe> grabRecipe(ItemStack stack) {
         Item item = stack.getItem();
         if (item instanceof AirItem)
@@ -173,7 +180,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
         }
         Optional<AbstractCookingRecipe> recipe = getCache().get(item);
         if (recipe == null) {
-            recipe = this.level.getRecipeManager().getRecipeFor((IRecipeType<AbstractCookingRecipe>) this.recipeType, new Inventory(stack), this.level);
+            recipe = getRecipe(stack, this.recipeType);
             getCache().put(item, recipe);
         }
         return recipe;
@@ -204,10 +211,11 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
     }
 
     protected int getSpeed() {
+        ItemStack stack = getItem(FINPUT());
         int i = getCookTimeConfig().get();
-        int j = getFromCache(getCache(), getItem(FINPUT()).getItem());
+        int j = getFromCache(getCache(), stack.getItem());
         if (j == 0) {
-            Optional<AbstractCookingRecipe> recipe = grabRecipe();
+            Optional<AbstractCookingRecipe> recipe = grabRecipe(stack);
             j = !recipe.isPresent() ? -1 : recipe.orElse(null).getCookingTime();
             getCache().put(this.getItem(FINPUT()).getItem(), recipe);
 
@@ -221,8 +229,6 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
         } else {
             return i;
         }
-
-
     }
 
     public ForgeConfigSpec.IntValue getCookTimeConfig() {
@@ -393,8 +399,24 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
             level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockIronFurnace.COLORED, true), 3);
         }else level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockIronFurnace.COLORED, false), 3);
 
-        if (this.recipeType != IRecipeType.SMELTING) {
-                this.recipeType = IRecipeType.SMELTING;
+        if (hasUpgrade(Registration.BLAST.get())) {
+            if (recipeType != IRecipeType.BLASTING) {
+                recipeType = IRecipeType.BLASTING;
+                if (!isForge())
+                    level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockFurnaceBase.TYPE, 1), 3);
+            }
+        } else if (hasUpgrade(Registration.SMOKE.get())) {
+            if (recipeType != IRecipeType.SMOKING) {
+                recipeType = IRecipeType.SMOKING;
+                if (!isForge())
+                    level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockFurnaceBase.TYPE, 2), 3);
+            }
+        } else {
+            if (recipeType != IRecipeType.SMELTING) {
+                recipeType = IRecipeType.SMELTING;
+                if (!isForge())
+                    level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockFurnaceBase.TYPE, 0), 3);
+            }
         }
 
         if (!this.level.isClientSide) {
@@ -843,10 +865,9 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                 this.inventory.set(FUEL(), new ItemStack(Items.WATER_BUCKET));
             }
             if (ModList.get().isLoaded("pmmo")) {
-                FurnaceHandler.handleSmelted(itemstack, itemstack2, level, worldPosition, 0);
-                if (this.recipeType == IRecipeType.SMOKING) {
+                if (getRecipe(itemstack, IRecipeType.SMOKING).isPresent()) {
                     FurnaceHandler.handleSmelted(itemstack, itemstack2, level, worldPosition, 1);
-                }
+                }else FurnaceHandler.handleSmelted(itemstack, itemstack2, level, worldPosition, 0);
             }
             itemstack.shrink(1);
         }

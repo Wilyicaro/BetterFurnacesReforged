@@ -3,6 +3,7 @@ package wily.betterfurnaces.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.stats.Stats;
@@ -23,6 +25,10 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,10 +40,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
-import wily.betterfurnaces.items.ItemUpgradeLiquidFuel;
-import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 
@@ -49,10 +53,12 @@ import java.util.Random;
 public abstract class BlockFurnaceBase extends Block {
 
     public static final BooleanProperty COLORED = BooleanProperty.create("colored");
+    // 0= Furnace, 1= Blast Furnace, 2= Smoker
+    public static final IntegerProperty TYPE = IntegerProperty.create("type",0,3);
 
     public BlockFurnaceBase(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.LIT, false).setValue(COLORED,false));
+        this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.LIT, false).setValue(COLORED,false).setValue(TYPE,0));
     }
 
     @Nullable
@@ -92,6 +98,17 @@ public abstract class BlockFurnaceBase extends Block {
             }
             te.totalCookTime = te.getCookTimeConfig().get();
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+
+        if (stack.getOrCreateTag().getInt("type") == 1)
+            tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.BLAST.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((TextFormatting.DARK_RED))));
+        else if (stack.getOrCreateTag().getInt("type") == 2)
+            tooltip.add(new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.SMOKE.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((TextFormatting.DARK_RED))));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
     @Override
@@ -167,33 +184,60 @@ public abstract class BlockFurnaceBase extends Block {
     @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState state, World world, BlockPos pos, Random rand) {
         if (state.getValue(BlockStateProperties.LIT)) {
-            if (world.getBlockEntity(pos) == null)
-            {
-                return;
+            if (state.getValue(TYPE) == 0) {
+                if (world.getBlockEntity(pos) == null) {
+                    return;
+                }
+                if (!(world.getBlockEntity(pos) instanceof BlockSmeltingTileBase)) {
+                    return;
+                }
+                {
+                    double d0 = (double) pos.getX() + 0.5D;
+                    double d1 = (double) pos.getY();
+                    double d2 = (double) pos.getZ() + 0.5D;
+                    if (rand.nextDouble() < 0.1D) {
+                        world.playLocalSound(d0, d1, d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+
+                    }
+
+                    Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+                    Direction.Axis direction$axis = direction.getAxis();
+                    double d3 = 0.52D;
+                    double d4 = rand.nextDouble() * 0.6D - 0.3D;
+                    double d5 = direction$axis == Direction.Axis.X ? (double) direction.getStepX() * 0.52D : d4;
+                    double d6 = rand.nextDouble() * 6.0D / 16.0D;
+                    double d7 = direction$axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52D : d4;
+                    world.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
+                    world.addParticle(ParticleTypes.FLAME, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
+
+                }
             }
-            if (!(world.getBlockEntity(pos) instanceof BlockSmeltingTileBase))
-            {
-                return;
-            }
-            {
+            if (state.getValue(TYPE) == 2) {
                 double d0 = (double) pos.getX() + 0.5D;
                 double d1 = (double) pos.getY();
                 double d2 = (double) pos.getZ() + 0.5D;
                 if (rand.nextDouble() < 0.1D) {
-                    world.playLocalSound(d0, d1, d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-
+                    world.playLocalSound(d0, d1, d2, SoundEvents.SMOKER_SMOKE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
                 }
 
-                Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+                world.addParticle(ParticleTypes.SMOKE, d0, d1 + 1.1D, d2, 0.0D, 0.0D, 0.0D);
+            }
+            if (state.getValue(TYPE) == 1) {
+                double d0 = (double) pos.getX() + 0.5D;
+                double d1 = (double) pos.getY();
+                double d2 = (double) pos.getZ() + 0.5D;
+                if (rand.nextDouble() < 0.1D) {
+                    world.playLocalSound(d0, d1, d2, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                }
+
+                Direction direction = (Direction) state.getValue(BlockStateProperties.HORIZONTAL_FACING);
                 Direction.Axis direction$axis = direction.getAxis();
                 double d3 = 0.52D;
                 double d4 = rand.nextDouble() * 0.6D - 0.3D;
                 double d5 = direction$axis == Direction.Axis.X ? (double) direction.getStepX() * 0.52D : d4;
-                double d6 = rand.nextDouble() * 6.0D / 16.0D;
+                double d6 = rand.nextDouble() * 9.0D / 16.0D;
                 double d7 = direction$axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52D : d4;
                 world.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
-                world.addParticle(ParticleTypes.FLAME, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
-
             }
         }
     }
@@ -286,7 +330,7 @@ public abstract class BlockFurnaceBase extends Block {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.LIT, COLORED);
+        builder.add(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.LIT, COLORED, TYPE);
     }
 
 }

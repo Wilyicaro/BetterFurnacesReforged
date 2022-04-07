@@ -16,6 +16,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.fluid.Fluids;
@@ -44,7 +45,7 @@ import java.util.ArrayList;
 public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public ResourceLocation getPluginUid() {
-		return new ResourceLocation(BetterFurnacesReforged.MOD_ID, "plugin_" + BetterFurnacesReforged.MOD_ID);
+		return new ResourceLocation(BetterFurnacesReforged.MOD_ID, "_plugin");
 	}
 	@Override
 	public void registerAdvanced(IAdvancedRegistration registration) {
@@ -54,21 +55,25 @@ public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
 		if (Config.enableJeiPlugin.get() && Config.enableJeiCatalysts.get()) {
+			Block[] stack = {Registration.IRON_FURNACE.get(), Registration.GOLD_FURNACE.get(), Registration.DIAMOND_FURNACE.get(), Registration.NETHERHOT_FURNACE.get(), Registration.EXTREME_FURNACE.get(), Registration.EXTREME_FORGE.get()};
+
+			for (Block i : stack) {
+				ItemStack smelting = new ItemStack(i);
+				registry.addRecipeCatalyst(smelting, VanillaRecipeCategoryUid.FURNACE);
+
+				registry.addRecipeCatalyst(smelting, VanillaRecipeCategoryUid.FUEL);
+
+				ItemStack blasting = smelting.copy();
+				blasting.getOrCreateTag().putInt("type", 1);
+				registry.addRecipeCatalyst(blasting, VanillaRecipeCategoryUid.BLASTING);
+
+				ItemStack smoking = smelting.copy();
+				smoking.getOrCreateTag().putInt("type", 2);
+				registry.addRecipeCatalyst(smoking, VanillaRecipeCategoryUid.SMOKING);
+
+			}
+
 			registry.addRecipeCatalyst(new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), CobblestoneGeneratorCategory.Uid);
-			registry.addRecipeCatalyst(new ItemStack(Registration.IRON_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.GOLD_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.DIAMOND_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.NETHERHOT_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.EXTREME_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.EXTREME_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
-
-			registry.addRecipeCatalyst(new ItemStack(Registration.IRON_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.GOLD_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.DIAMOND_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.NETHERHOT_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.EXTREME_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.EXTREME_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
-
 
 		}
 	}
@@ -118,7 +123,7 @@ public class BfJeiPlugin implements IModPlugin {
 		protected IDrawable lava_overlay;
 		protected IDrawable water_overlay;
 
-		protected final IGuiHelper guiHelper;
+		protected IGuiHelper guiHelper;
 		public static final ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/cobblestone_generator_gui.png");
 
 		public CobblestoneGeneratorCategory(IGuiHelper guiHelper) {
@@ -181,9 +186,9 @@ public class BfJeiPlugin implements IModPlugin {
 			stacks.set(0, iIngredients.getInputs(VanillaTypes.ITEM).get(0));
 			stacks.set(1, iIngredients.getInputs(VanillaTypes.ITEM).get(1));
 			// ...
-			this.lava_anim = guiHelper.drawableBuilder(GUI, 176, 24, 17, 12).buildAnimated(recipe.getDuration(), IDrawableAnimated.StartDirection.LEFT, false);
+			this.lava_anim = guiHelper.drawableBuilder(GUI, 176, 24, 17, 12).buildAnimated(recipe.duration, IDrawableAnimated.StartDirection.LEFT, false);
 			this.lava_overlay = guiHelper.createDrawable(GUI, 176, 0, 17, 12);
-			this.water_anim = guiHelper.drawableBuilder(GUI, 176, 36, 17, 12).buildAnimated(recipe.getDuration(), IDrawableAnimated.StartDirection.RIGHT, false);
+			this.water_anim = guiHelper.drawableBuilder(GUI, 176, 36, 17, 12).buildAnimated(recipe.duration, IDrawableAnimated.StartDirection.RIGHT, false);
 			this.water_overlay = guiHelper.createDrawable(GUI, 176, 12, 17, 12);
 		}
 	}
