@@ -58,10 +58,13 @@
   "item.betterfurnacesreforged.raw_ore_processing_upgrade": "Raw Ore Processing Upgrade",
   "item.betterfurnacesreforged.redstone_signal_upgrade": "Redstone Signal Upgrade",
   "item.betterfurnacesreforged.xp_tank_upgrade": "XP Tank Upgrade",
+  "item.betterfurnacesreforged.blasting_upgrade": "Blasting Upgrade",
+  "item.betterfurnacesreforged.smoking_upgrade": "Smoking Upgrade",
   
   "itemGroup.betterfurnacesreforged": "Better Furnaces Reforged",
   
   "tooltip.betterfurnacesreforged.for_details": " for Details.",
+  "tooltip.betterfurnacesreforged.furnace.only": "Only if it has a %s",
   "tooltip.betterfurnacesreforged.gui_auto_input": "Auto Input",
   "tooltip.betterfurnacesreforged.gui_auto_output": "Auto Output",
   "tooltip.betterfurnacesreforged.gui_back": "Back",
@@ -107,6 +110,8 @@
   "tooltip.betterfurnacesreforged.upgrade.redstone": "Modifies furnace/forge operation from redstone signal",
   "tooltip.betterfurnacesreforged.upgrade.tier": "Upgrade furnace from %s to %s",
   "tooltip.betterfurnacesreforged.upgrade.xp": "Turns the resulting xp from the furnace/forge into a liquid xp in a created tank",
+  "tooltip.betterfurnacesreforged.upgrade.smoking": "Changes furnace type to smoker",
+  "tooltip.betterfurnacesreforged.upgrade.blasting": "Changes furnace type to blast furnace",
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Right-click to insert upgrade",
   "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Right-click holding shift to insert tier upgrade"
 }

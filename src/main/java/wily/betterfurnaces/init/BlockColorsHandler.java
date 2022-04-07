@@ -16,7 +16,7 @@ public class BlockColorsHandler implements BlockColor {
 
     @SubscribeEvent
     public static void registerBlockColors() {
-        System.out.println("Registering block color handler");
+        System.out.println("Starting Better Furnaces BlockColorsHandler");
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.IRON_FURNACE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.GOLD_FURNACE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, Registration.DIAMOND_FURNACE.get());

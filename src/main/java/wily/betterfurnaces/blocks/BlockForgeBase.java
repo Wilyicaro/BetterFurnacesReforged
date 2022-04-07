@@ -1,8 +1,12 @@
 package wily.betterfurnaces.blocks;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -13,6 +17,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.BlockGetter;
@@ -43,6 +49,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.network.NetworkHooks;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.*;
@@ -105,6 +112,17 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
             te.totalCookTime = te.getCookTimeConfig().get();
             te.placeConfig();
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+
+        if (stack.getOrCreateTag().getInt("type") == 1)
+            tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.BLAST.get()).getDisplayName()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
+        else if (stack.getOrCreateTag().getInt("type") == 2)
+            tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.SMOKE.get()).getDisplayName()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
     @Override

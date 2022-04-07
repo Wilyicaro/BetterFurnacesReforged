@@ -22,14 +22,20 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
+import wily.betterfurnaces.blocks.BlockFurnaceBase;
 import wily.betterfurnaces.gui.*;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemUpgradeTier;
@@ -44,7 +50,7 @@ import java.util.ArrayList;
 public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public ResourceLocation getPluginUid() {
-		return new ResourceLocation(BetterFurnacesReforged.MOD_ID, "plugin_" + BetterFurnacesReforged.MOD_ID);
+		return new ResourceLocation(BetterFurnacesReforged.MOD_ID, "_plugin");
 	}
 	@Override
 	public void registerAdvanced(IAdvancedRegistration registration) {
@@ -54,21 +60,25 @@ public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
 		if (Config.enableJeiPlugin.get() && Config.enableJeiCatalysts.get()) {
+			Block[] stack = {Registration.IRON_FURNACE.get(), Registration.GOLD_FURNACE.get(), Registration.DIAMOND_FURNACE.get(), Registration.NETHERHOT_FURNACE.get(), Registration.EXTREME_FURNACE.get(), Registration.EXTREME_FORGE.get()};
+
+			for (Block i : stack) {
+				ItemStack smelting = new ItemStack(i);
+				registry.addRecipeCatalyst(smelting, VanillaRecipeCategoryUid.FURNACE);
+
+				registry.addRecipeCatalyst(smelting, VanillaRecipeCategoryUid.FUEL);
+
+				ItemStack blasting = smelting.copy();
+				blasting.getOrCreateTag().putInt("type", 1);
+				registry.addRecipeCatalyst(blasting, VanillaRecipeCategoryUid.BLASTING);
+
+				ItemStack smoking = smelting.copy();
+				smoking.getOrCreateTag().putInt("type", 2);
+				registry.addRecipeCatalyst(smoking, VanillaRecipeCategoryUid.SMOKING);
+
+			}
+
 			registry.addRecipeCatalyst(new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), CobblestoneGeneratorCategory.Uid);
-			registry.addRecipeCatalyst(new ItemStack(Registration.IRON_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.GOLD_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.DIAMOND_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.NETHERHOT_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.EXTREME_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeCatalyst(new ItemStack(Registration.EXTREME_FORGE.get()), VanillaRecipeCategoryUid.FURNACE);
-
-			registry.addRecipeCatalyst(new ItemStack(Registration.IRON_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.GOLD_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.DIAMOND_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.NETHERHOT_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.EXTREME_FURNACE.get()), VanillaRecipeCategoryUid.FUEL);
-			registry.addRecipeCatalyst(new ItemStack(Registration.EXTREME_FORGE.get()), VanillaRecipeCategoryUid.FUEL);
-
 
 		}
 	}
@@ -129,7 +139,7 @@ public class BfJeiPlugin implements IModPlugin {
 
 		@Override
 		public void draw(CobblestoneGeneratorRecipes recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-			GuiUtil.renderScaled(stack,  (float) recipe.duration / 2 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
+			GuiUtil.renderScaled(stack,  (float) recipe.duration / 20 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
 			PoseStack newStack = stack;
 			FluidRenderUtil.renderTiledFluid(stack,null, 12, 23, 17,12,new FluidStack(Fluids.LAVA, 1000), false);
 			FluidRenderUtil.renderTiledFluid(stack,null, 55, 23, 17,12,new FluidStack(Fluids.WATER, 1000), true);

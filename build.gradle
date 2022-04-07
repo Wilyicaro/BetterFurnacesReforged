@@ -70,7 +70,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
     compileOnly fg.deobf("curse.maven:project-mmo-${pmmo_version}")
-    //runtimeOnly fg.deobf("curse.maven:project-mmo-${pmmo_version}")
+    // runtimeOnly fg.deobf("curse.maven:project-mmo-${pmmo_version}")
 
 
 }

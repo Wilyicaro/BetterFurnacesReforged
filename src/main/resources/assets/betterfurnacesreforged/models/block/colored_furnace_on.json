@@ -1,9 +1,0 @@
-{
-  "parent": "betterfurnacesreforged:block/color_orientable",
-  "textures": {
-    "top": "betterfurnacesreforged:blocks/colored_top",
-    "side": "betterfurnacesreforged:blocks/colored_side",
-    "front": "betterfurnacesreforged:blocks/colored_front",
-    "overlay": "betterfurnacesreforged:blocks/frontactive"
-  }
-}

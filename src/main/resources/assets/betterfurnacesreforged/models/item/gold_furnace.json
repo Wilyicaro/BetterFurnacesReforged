@@ -1,22 +1,9 @@
 {
-  "parent": "betterfurnacesreforged:block/gold_furnace",
-  "display": {
-    "thirdperson": {
-      "rotation": [
-        10,
-        -45,
-        170
-      ],
-      "translation": [
-        0,
-        1.5,
-        -2.75
-      ],
-      "scale": [
-        0.375,
-        0.375,
-        0.375
-      ]
-    }
+  "parent": "betterfurnacesreforged:block/bforientable_inventory",
+  "textures": {
+    "top": "betterfurnacesreforged:blocks/gold_top",
+    "side": "betterfurnacesreforged:blocks/gold_side",
+    "front": "betterfurnacesreforged:blocks/gold_front",
+    "overlay": "betterfurnacesreforged:blocks/front"
   }
 }

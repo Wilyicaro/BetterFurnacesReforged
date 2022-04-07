@@ -1,6 +1,7 @@
 package wily.betterfurnaces.blockentity;
 
 import com.google.common.collect.Lists;
+import harmonised.pmmo.events.FurnaceHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -98,6 +99,8 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     public FurnaceSettings furnaceSettings;
 
     private LRUCache<Item, Optional<AbstractCookingRecipe>> cache = LRUCache.newInstance(Config.cache_capacity.get());
+    protected LRUCache<Item, Optional<AbstractCookingRecipe>> blasting_cache = LRUCache.newInstance(Config.cache_capacity.get());
+    protected LRUCache<Item, Optional<AbstractCookingRecipe>> smoking_cache = LRUCache.newInstance(Config.cache_capacity.get());
 
     public Direction facing(){
         return this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
@@ -141,8 +144,36 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         return grabRecipe(stack).isPresent();
     }
 
-    private LRUCache<Item, Optional<AbstractCookingRecipe>> getCache() {
+    protected LRUCache<Item, Optional<AbstractCookingRecipe>> getCache() {
+
+        if (hasUpgrade(Registration.BLAST.get())) {
+            if (this.recipeType != RecipeType.BLASTING) {
+                this.recipeType = RecipeType.BLASTING;
+            }
+        }
+        if (hasUpgrade(Registration.SMOKE.get())){
+            if (this.recipeType != RecipeType.SMOKING) {
+                this.recipeType = RecipeType.SMOKING;
+            }
+        }
+        if (!((hasUpgrade(Registration.SMOKE.get()))) && !((hasUpgrade(Registration.BLAST.get()))))
+        {
+            if (this.recipeType != RecipeType.SMELTING) {
+                this.recipeType = RecipeType.SMELTING;
+            }
+        }
+        if (this.recipeType == RecipeType.BLASTING) {
+            return blasting_cache;
+        }
+        if (this.recipeType == RecipeType.SMOKING) {
+            return smoking_cache;
+        }
         return cache;
+    }
+
+
+    private Optional<AbstractCookingRecipe> getRecipe(ItemStack stack, RecipeType recipeType) {
+        return this.level.getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.level);
     }
 
     private Optional<AbstractCookingRecipe> grabRecipe(ItemStack stack) {
@@ -153,7 +184,7 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         }
         Optional<AbstractCookingRecipe> recipe = getCache().get(item);
         if (recipe == null) {
-            recipe = this.level.getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) this.recipeType, new SimpleContainer(stack), this.level);
+            recipe = getRecipe(stack, recipeType);
             getCache().put(item, recipe);
         }
         return recipe;
@@ -188,10 +219,11 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
     }
 
     protected int getSpeed() {
+        ItemStack stack = getItem(FINPUT());
         int i = getCookTimeConfig().get();
-        int j = getFromCache(getCache(), getItem(FINPUT()).getItem());
+        int j = getFromCache(getCache(), stack.getItem());
         if (j == 0) {
-            Optional<AbstractCookingRecipe> recipe = grabRecipe(getItem(FINPUT()));
+            Optional<AbstractCookingRecipe> recipe = grabRecipe(stack);
             j = !recipe.isPresent() ? -1 : recipe.orElse(null).getCookingTime();
             getCache().put(this.getItem(FINPUT()).getItem(), recipe);
 
@@ -205,8 +237,6 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         } else {
             return i;
         }
-
-
     }
 
     public ForgeConfigSpec.IntValue getCookTimeConfig() {
@@ -374,8 +404,25 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
             if (!(level.getBlockState(e.getBlockPos()).getValue(BlockFurnaceBase.COLORED)))
                 level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockFurnaceBase.COLORED, true), 3);
         } else if ((level.getBlockState(e.getBlockPos()).getValue(BlockFurnaceBase.COLORED))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockFurnaceBase.COLORED, false), 3);
-        if (e.recipeType != RecipeType.SMELTING) {
-            e.recipeType = RecipeType.SMELTING;
+
+        if (e.hasUpgrade(Registration.BLAST.get())) {
+            if (e.recipeType != RecipeType.BLASTING) {
+                e.recipeType = RecipeType.BLASTING;
+                if (!e.isForge())
+                    level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockFurnaceBase.TYPE, 1), 3);
+            }
+        } else if (e.hasUpgrade(Registration.SMOKE.get())) {
+            if (e.recipeType != RecipeType.SMOKING) {
+                e.recipeType = RecipeType.SMOKING;
+                if (!e.isForge())
+                    level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockFurnaceBase.TYPE, 2), 3);
+            }
+        } else {
+            if (e.recipeType != RecipeType.SMELTING) {
+                e.recipeType = RecipeType.SMELTING;
+                if (!e.isForge())
+                    level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(BlockFurnaceBase.TYPE, 0), 3);
+            }
         }
 
         if (!e.level.isClientSide) {
@@ -763,6 +810,11 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
             if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.getInv().getStackInSlot(FUEL()).isEmpty() && this.getInv().getStackInSlot(FUEL()).getItem() == Items.BUCKET) {
                 this.getInv().setStackInSlot(FUEL(), new ItemStack(Items.WATER_BUCKET));
+            }
+            if (ModList.get().isLoaded("pmmo")) {
+                if (getRecipe(itemstack, RecipeType.SMOKING).isPresent()) {
+                    FurnaceHandler.handleSmelted(itemstack, itemstack2, level, worldPosition, 1);
+                }else FurnaceHandler.handleSmelted(itemstack, itemstack2, level, worldPosition, 0);
             }
             itemstack.shrink(1);
         }

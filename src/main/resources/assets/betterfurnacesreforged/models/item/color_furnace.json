@@ -1,32 +1,9 @@
 {
-  "parent": "betterfurnacesreforged:block/color_orientable",
+  "parent": "betterfurnacesreforged:block/color_orientable_inventory",
   "textures": {
     "top": "betterfurnacesreforged:blocks/colored_top",
     "front": "betterfurnacesreforged:blocks/colored_front",
     "side": "betterfurnacesreforged:blocks/colored_side",
     "overlay": "betterfurnacesreforged:blocks/front"
-  },
-  "display": {
-    "thirdperson": {
-      "rotation": [
-        10,
-        -45,
-        170
-      ],
-      "translation": [
-        0,
-        1.5,
-        -2.75
-      ],
-      "scale": [
-        0.345,
-        0.345,
-        0.345
-      ]
-    },
-    "gui": {
-      "rotation": [30, 225, 0],
-      "scale": [2.5, 2.5, 2.5]
-    }
   }
 }

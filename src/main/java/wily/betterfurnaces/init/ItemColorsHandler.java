@@ -11,7 +11,7 @@ public class ItemColorsHandler implements ItemColor {
 
     @SubscribeEvent
     public static void registerItemColors() {
-        System.out.println("Registering item color handler");
+        System.out.println("Starting Better Furnaces ItemColorsHandler");
         Minecraft.getInstance().getItemColors().register(COLOR, Registration.EXTREME_FURNACE_ITEM.get());
         Minecraft.getInstance().getItemColors().register(COLOR, Registration.EXTREME_FORGE_ITEM.get());
     }

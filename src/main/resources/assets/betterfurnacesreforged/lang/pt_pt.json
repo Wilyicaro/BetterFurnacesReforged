@@ -58,8 +58,11 @@
   "item.betterfurnacesreforged.raw_ore_processing_upgrade": "Melhoria do processamento de minérios brutos",
   "item.betterfurnacesreforged.redstone_signal_upgrade": "Melhoria de sinal de redstone",
   "item.betterfurnacesreforged.xp_tank_upgrade": "Melhoria de tanque de XP",
+  "item.betterfurnacesreforged.blasting_upgrade": "Melhoria de alto-forno",
+  "item.betterfurnacesreforged.smoking_upgrade": "Melhoria de defumação",
   
   "tooltip.betterfurnacesreforged.for_details": " para detalhes.",
+  "tooltip.betterfurnacesreforged.furnace.only": "Somente se estiver com %s",
   "tooltip.betterfurnacesreforged.gui_auto_input": "Entrada automática",
   "tooltip.betterfurnacesreforged.gui_auto_output": "Saída automática",
   "tooltip.betterfurnacesreforged.gui_back": "Atrás",
@@ -105,6 +108,8 @@
   "tooltip.betterfurnacesreforged.upgrade.redstone": "Modifica o funcionamente da fornalha/forja a partir do sinal de redstone",
   "tooltip.betterfurnacesreforged.upgrade.tier": "Melhora a fornalha de %s para %s",
   "tooltip.betterfurnacesreforged.upgrade.xp": "Transforma o xp resultante da fornalha/forja em um XP líquido no tanque criado",
+  "tooltip.betterfurnacesreforged.upgrade.smoking": "Muda o tipo da fornalha para defumador",
+  "tooltip.betterfurnacesreforged.upgrade.blasting": "Muda o tipo da fornalha para alto-forno",
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Clique direito para inserir o upgrade",
   "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Clique direito segurando SHIFT para aplicar o upgrade"
 
