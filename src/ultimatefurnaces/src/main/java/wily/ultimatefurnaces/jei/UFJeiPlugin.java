@@ -9,8 +9,6 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -34,7 +32,7 @@ public class UFJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         ItemUpgradeTier[] up = {RegistrationUF.COPPER_UPGRADE.get(), RegistrationUF.STEEL_UPGRADE.get(),RegistrationUF.AMETHYST_UPGRADE.get(),RegistrationUF.PLATINUM_UPGRADE.get(),RegistrationUF.ULTIMATE_UPGRADE.get(), RegistrationUF.IRON_UPGRADE.get()};
         for(ItemUpgradeTier i : up)
-            addDescription(registration, new ItemStack(i), new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
+            addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
     }
 
     @Override

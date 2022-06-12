@@ -2,7 +2,6 @@ package wily.ultimatefurnaces;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -37,17 +36,5 @@ public class UltimateFurnaces
         MOD_EVENT_BUS.register(RegistrationUF.class);
         RegistrationUF.init();
 
-    }
-
-    @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> event)
-    {
-        RegistrationUF.registerBlocks(event);
-    }
-
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
-        RegistrationUF.registerItems(event);
     }
 }

@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -165,12 +164,5 @@ public class RegistrationUF {
     public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeUltimate> ULTIMATE_UPGRADE = ITEMS.register("ultimate_upgrade", () -> new ItemUpgradeUltimate(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
     public static final RegistryObject<ItemUpgradeOreProcessing> UORE_PROCESSING = ITEMS.register("ultimate_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP),4,true,true));
-
-    public static void registerBlocks(RegistryEvent.Register<Block> event)
-    {
-    }
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
-    }
 
 }
