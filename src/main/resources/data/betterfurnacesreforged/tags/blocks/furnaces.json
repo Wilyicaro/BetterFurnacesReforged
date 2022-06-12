@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#betterfurnacesreforged:furnaces/iron",
+    "#betterfurnacesreforged:furnaces/gold",
+    "#betterfurnacesreforged:furnaces/diamond",
+    "#betterfurnacesreforged:furnaces/netherhot",
+    "#betterfurnacesreforged:furnaces/extreme"
+  ]
+}

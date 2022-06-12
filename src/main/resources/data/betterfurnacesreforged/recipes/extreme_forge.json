@@ -1,0 +1,42 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "1": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "2": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:extreme_furnace"
+    },
+    "5": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "6": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "7": {
+      "tag": "minecraft:soul_fire_base_blocks"
+    },
+    "8": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:extreme_forge",
+    "count": 1
+  }
+}

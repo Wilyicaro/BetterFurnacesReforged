@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "ultimatefurnaces_bfr:copper_furnace",
+    "ultimatefurnaces_bfr:ultimate_furnace",
+    "ultimatefurnaces_bfr:copper_forge",
+    "ultimatefurnaces_bfr:iron_forge",
+    "ultimatefurnaces_bfr:gold_forge",
+    "ultimatefurnaces_bfr:diamond_forge",
+    "ultimatefurnaces_bfr:netherhot_forge",
+    "ultimatefurnaces_bfr:ultimate_forge"
+
+  ]
+}

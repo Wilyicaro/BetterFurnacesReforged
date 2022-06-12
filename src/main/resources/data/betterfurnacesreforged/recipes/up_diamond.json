@@ -1,0 +1,42 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "tag": "forge:glass"
+    },
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "tag": "forge:glass"
+    },
+    "3": {
+      "item": "minecraft:diamond"
+    },
+    "4": {
+      "item": "minecraft:gold_ingot"
+    },
+    "5": {
+      "item": "minecraft:diamond"
+    },
+    "6": {
+      "tag": "forge:glass"
+    },
+    "7": {
+      "item": "minecraft:diamond"
+    },
+    "8": {
+      "tag": "forge:glass"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:diamond_upgrade",
+    "count": 1
+  }
+}
