@@ -12,6 +12,9 @@ public class BlockColorsHandlerUF extends BlockColorsHandler {
     public static void registerBlockColors() {
         System.out.println("Registering block color handler");
         Minecraft.getInstance().getBlockColors().register(COLOR, RegistrationUF.COPPER_FURNACE.get());
+        Minecraft.getInstance().getBlockColors().register(COLOR, RegistrationUF.STEEL_FURNACE.get());
+        Minecraft.getInstance().getBlockColors().register(COLOR, RegistrationUF.AMETHYST_FURNACE.get());
+        Minecraft.getInstance().getBlockColors().register(COLOR, RegistrationUF.PLATINUM_FURNACE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, RegistrationUF.ULTIMATE_FURNACE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, RegistrationUF.COPPER_FORGE.get());
         Minecraft.getInstance().getBlockColors().register(COLOR, RegistrationUF.IRON_FORGE.get());

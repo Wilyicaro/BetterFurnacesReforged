@@ -21,11 +21,6 @@ public class BlockEntityGoldFurnace extends BlockEntitySmeltingBase {
     }
 
     @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.gold_furnace";
-    }
-
-    @Override
     public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new BlockGoldFurnaceContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }

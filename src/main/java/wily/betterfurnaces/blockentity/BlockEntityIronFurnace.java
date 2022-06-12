@@ -21,11 +21,6 @@ public class BlockEntityIronFurnace extends BlockEntitySmeltingBase {
     }
 
     @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.iron_furnace";
-    }
-
-    @Override
     public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new BlockIronFurnaceContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }

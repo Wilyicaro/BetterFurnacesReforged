@@ -32,8 +32,7 @@ public class UFJeiPlugin implements IModPlugin {
     }
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        addDescription(registration, new ItemStack(RegistrationUF.ULTIMATE_UPGRADE.get()), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ultore"), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable"));
-        ItemUpgradeTier[] up = {RegistrationUF.COPPER_UPGRADE.get(), RegistrationUF.ULTIMATE_UPGRADE.get(), RegistrationUF.IRON_UPGRADE.get()};
+        ItemUpgradeTier[] up = {RegistrationUF.COPPER_UPGRADE.get(), RegistrationUF.STEEL_UPGRADE.get(),RegistrationUF.AMETHYST_UPGRADE.get(),RegistrationUF.PLATINUM_UPGRADE.get(),RegistrationUF.ULTIMATE_UPGRADE.get(), RegistrationUF.IRON_UPGRADE.get()};
         for(ItemUpgradeTier i : up)
             addDescription(registration, new ItemStack(i), new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
     }

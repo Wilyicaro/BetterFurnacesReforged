@@ -34,9 +34,12 @@ public class Config {
     public static ForgeConfigSpec.IntValue furnaceXPDropValue2;
 
     public static ForgeConfigSpec.IntValue copperTierSpeed;
+    public static ForgeConfigSpec.IntValue steelTierSpeed;
     public static ForgeConfigSpec.IntValue ironTierSpeed;
+    public static ForgeConfigSpec.IntValue amethystTierSpeed;
     public static ForgeConfigSpec.IntValue goldTierSpeed;
     public static ForgeConfigSpec.IntValue diamondTierSpeed;
+    public static ForgeConfigSpec.IntValue platinumTierSpeed;
     public static ForgeConfigSpec.IntValue netherhotTierSpeed;
     public static ForgeConfigSpec.IntValue extremeTierSpeed;
     public static ForgeConfigSpec.IntValue ultimateTierSpeed;
@@ -117,24 +120,36 @@ public class Config {
                 .defineInRange("recipe_cache", 10, 1, 100);
 
         copperTierSpeed = CLIENT_BUILDER
-                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 120(Only work with Ultimate Furnaces addon)")
+                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 175(Only work with Ultimate Furnaces addon)")
                 .defineInRange("copper_tier.speed", 175, 2, 72000);
 
         ironTierSpeed = CLIENT_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 150")
                 .defineInRange("iron_tier.speed", 150, 2, 72000);
 
+        steelTierSpeed = CLIENT_BUILDER
+                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 125(Only work with Ultimate Furnaces addon)")
+                .defineInRange("steel_tier.speed", 125, 2, 72000);
+
         goldTierSpeed = CLIENT_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 100")
                 .defineInRange("gold_tier.speed", 100, 2, 72000);
 
+        amethystTierSpeed = CLIENT_BUILDER
+                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 75(Only work with Ultimate Furnaces addon)")
+                .defineInRange("amethyst_tier.speed", 75, 2, 72000);
+
         diamondTierSpeed = CLIENT_BUILDER
-                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 80")
-                .defineInRange("diamond_tier.speed", 80, 2, 72000);
+                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 50")
+                .defineInRange("diamond_tier.speed", 50, 2, 72000);
+
+        platinumTierSpeed = CLIENT_BUILDER
+                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 25(Only work with Ultimate Furnaces addon)")
+                .defineInRange("platinum_tier.speed", 25, 2, 72000);
 
         netherhotTierSpeed = CLIENT_BUILDER
-                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 20")
-                .defineInRange("netherhot_tier.speed", 20, 2, 72000);
+                .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 8")
+                .defineInRange("netherhot_tier.speed", 8, 2, 72000);
 
         extremeTierSpeed = CLIENT_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 4")
@@ -145,11 +160,11 @@ public class Config {
                 .defineInRange("ultimate_tier.speed", 1, 1, 72000);
 
         furnaceXPDropValue = CLIENT_BUILDER
-                .comment(" This value indicates when the furnace should 'overload' and spit out the xp stored. \n Default: 10, Recipes")
+                .comment(" This value indicates when the furnace or forge should 'overload' and spit out the xp stored. \n Default: 10, Recipes")
                 .defineInRange("furnace_xp_drop.value", 10, 1, 500);
 
         furnaceXPDropValue2 = CLIENT_BUILDER
-                .comment(" This value indicates when the furnace should 'overload' and spit out the xp stored. \n Default: 100000, Single recipe uses")
+                .comment(" This value indicates when the furnace or forge should 'overload' and spit out the xp stored. \n Default: 100000, Single recipe uses")
                 .defineInRange("furnace_xp_drop.value_two", 100000, 1, 1000000);
 
         xpFluidType = CLIENT_BUILDER

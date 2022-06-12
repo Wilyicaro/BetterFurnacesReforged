@@ -21,11 +21,6 @@ public class BlockEntityNetherhotFurnace extends BlockEntitySmeltingBase {
     }
 
     @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.netherhot_furnace";
-    }
-
-    @Override
     public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new BlockNetherhotFurnaceContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }

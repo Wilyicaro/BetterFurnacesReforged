@@ -6,6 +6,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+import wily.betterfurnaces.BetterFurnacesReforged;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,7 +86,7 @@ public abstract class BlockEntityInventory extends BlockEntity implements IBlock
 
     @Override
     public Component getName() {
-        return (this.name != null ? this.name : new TranslatableComponent(IgetName()));
+        return (this.name != null ? this.name : new TextComponent(IgetName()));
     }
 
     @Override
@@ -189,6 +191,11 @@ public abstract class BlockEntityInventory extends BlockEntity implements IBlock
         } else {
             return !(playerEntity.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) > 64.0D);
         }
+    }
+
+    @Override
+    public String IgetName() {
+        return getBlockState().getBlock().getName().getString();
     }
 
     @Override

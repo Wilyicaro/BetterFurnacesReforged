@@ -1,22 +1,9 @@
 {
-  "parent": "ultimatefurnaces_bfr:block/copper_furnace",
-  "display": {
-    "thirdperson": {
-      "rotation": [
-        10,
-        -45,
-        170
-      ],
-      "translation": [
-        0,
-        1.5,
-        -2.75
-      ],
-      "scale": [
-        0.375,
-        0.375,
-        0.375
-      ]
-    }
+  "parent": "betterfurnacesreforged:block/bforientable_inventory",
+  "textures": {
+    "top": "ultimatefurnaces_bfr:blocks/copper_top",
+    "side": "ultimatefurnaces_bfr:blocks/copper_side",
+    "front": "ultimatefurnaces_bfr:blocks/copper_front",
+    "overlay": "betterfurnacesreforged:blocks/front"
   }
 }

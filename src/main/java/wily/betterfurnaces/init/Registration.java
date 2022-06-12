@@ -168,14 +168,5 @@ public class Registration {
     public static final RegistryObject<ItemUpgradeType> BLAST = ITEMS.register("blasting_upgrade", () -> new ItemUpgradeType(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"blasting"));
     public static final RegistryObject<ItemUpgradeType> SMOKE = ITEMS.register("smoking_upgrade", () -> new ItemUpgradeType(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"smoking"));
 
-    public static void registerBlocks(RegistryEvent.Register<Block> event)
-    {
-    }
-
-
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
-    }
-
 
 }

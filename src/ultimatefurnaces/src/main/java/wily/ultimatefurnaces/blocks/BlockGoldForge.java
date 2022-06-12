@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import wily.betterfurnaces.blocks.BlockForgeBase;
 import wily.ultimatefurnaces.init.RegistrationUF;
-import wily.ultimatefurnaces.blockentity.BlockGoldForgeTile;
+import wily.ultimatefurnaces.blockentity.BlockEntityGoldForge;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +23,7 @@ public class BlockGoldForge extends BlockForgeBase {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new BlockGoldForgeTile(p_153215_, p_153216_);
+        return new BlockEntityGoldForge(p_153215_, p_153216_);
     }
 
     @Nullable

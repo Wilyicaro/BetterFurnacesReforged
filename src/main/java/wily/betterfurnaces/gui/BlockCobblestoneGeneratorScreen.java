@@ -30,9 +30,6 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
     Component name;
     CobblestoneGeneratorRecipes recipe;
 
-    public boolean add_button;
-    public boolean sub_button;
-
     public BlockCobblestoneGeneratorScreen(T t, Inventory inv, Component name) {
         super(t, inv, name);
         playerInv = inv;

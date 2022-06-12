@@ -108,7 +108,7 @@
   "tooltip.betterfurnacesreforged.upgrade.quadruple": "Quadruple",
   "tooltip.betterfurnacesreforged.upgrade.raw": "raw ore",
   "tooltip.betterfurnacesreforged.upgrade.redstone": "Modifies furnace/forge operation from redstone signal",
-  "tooltip.betterfurnacesreforged.upgrade.tier": "Upgrade furnace from %s to %s",
+  "tooltip.betterfurnacesreforged.upgrade.tier": "Upgrade tier from %s to %s",
   "tooltip.betterfurnacesreforged.upgrade.xp": "Turns the resulting xp from the furnace/forge into a liquid xp in a created tank",
   "tooltip.betterfurnacesreforged.upgrade.smoking": "Changes furnace type to smoker",
   "tooltip.betterfurnacesreforged.upgrade.blasting": "Changes furnace type to blast furnace",

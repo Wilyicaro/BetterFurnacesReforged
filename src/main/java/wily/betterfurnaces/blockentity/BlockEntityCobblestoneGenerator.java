@@ -46,11 +46,6 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         return false;
     }
 
-    @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.cobblestone_generator";
-    }
-
     public static class BlockCobblestoneGeneratorContainer extends wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer {
             public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
             super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player);
@@ -214,7 +209,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
     }
     protected ItemStack getResult(){
         ItemStack result;
-        if (recipe != null) result = new ItemStack(recipe.getResultItem().getItem());
+        if (recipe != null) result = new ItemStack(recipes.get(resultType).getResultItem().getItem());
         else result = new ItemStack(Items.COBBLESTONE);
         result.setCount(getResultCount());
         return result;

@@ -30,7 +30,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "120";
+    public static final String VERSION = "121";
     public static final String MC_VERSION = "1.18.2";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -73,17 +73,5 @@ public class BetterFurnacesReforged
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<Block> ev) {
         CobblestoneGeneratorRecipes.TYPE = recipeRegister("rock_generating");
-    }
-
-    @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> event)
-    {
-        Registration.registerBlocks(event);
-    }
-
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
-        Registration.registerItems(event);
     }
 }
