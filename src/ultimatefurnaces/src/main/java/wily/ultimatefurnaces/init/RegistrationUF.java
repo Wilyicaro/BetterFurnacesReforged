@@ -166,11 +166,4 @@ public class RegistrationUF {
 
     public static final RegistryObject<ItemUpgradeOreProcessing> UORE_PROCESSING = ITEMS.register("ultimate_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP),4,true,true));
 
-    public static void registerBlocks(RegistryEvent.Register<Block> event)
-    {
-    }
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
-    }
-
 }

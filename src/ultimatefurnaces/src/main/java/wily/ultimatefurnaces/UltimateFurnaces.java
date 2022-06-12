@@ -39,15 +39,4 @@ public class UltimateFurnaces
 
     }
 
-    @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> event)
-    {
-        RegistrationUF.registerBlocks(event);
-    }
-
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
-        RegistrationUF.registerItems(event);
-    }
 }
