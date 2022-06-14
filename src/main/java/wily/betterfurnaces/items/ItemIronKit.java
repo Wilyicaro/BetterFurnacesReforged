@@ -2,6 +2,8 @@ package wily.betterfurnaces.items;
 
 import java.util.List;
 
+import net.minecraft.util.text.TextFormatting;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
 import wily.betterfurnaces.init.ModObjects;
 import net.minecraft.block.BlockFurnace;
@@ -39,6 +41,7 @@ public final class ItemIronKit extends ItemKit {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		tooltip.add(I18n.format("info." + BetterFurnacesReforged.MODID+ ".upgrade_shift_right_click", TextFormatting.GOLD,TextFormatting.ITALIC));
 		tooltip.add(I18n.format("info.betterfurnacesreforged.kit", Blocks.FURNACE.getLocalizedName(), ModObjects.IRON_FURNACE.getLocalizedName()));
 	}
 

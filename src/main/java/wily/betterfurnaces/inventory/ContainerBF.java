@@ -1,9 +1,7 @@
 package wily.betterfurnaces.inventory;
 
-import javax.annotation.Nullable;
 
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.net.MessageSync;
 import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +11,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
+
+import javax.annotation.Nullable;
 
 public class ContainerBF extends Container {
 	public static int GUIID = 1;
@@ -26,8 +26,8 @@ public class ContainerBF extends Container {
 
 	public ContainerBF(InventoryPlayer playerInv, TileEntitySmeltingBase te) {
 		this.te = te;
-		this.addSlotToContainer(new SlotFurnaceInput(te.getInventory(), 0, 54, 18));
-		this.addSlotToContainer(new SlotFurnaceFuel(te.getInventory(), 1, 54, 54));
+		this.addSlotToContainer(new SlotInput(te.getInventory(), 0, 54, 18));
+		this.addSlotToContainer(new SlotFuel(te.getInventory(), 1, 54, 54));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, te.getInventory(), 2, 116, 35));
 		this.addSlotToContainer(new SlotUpgrade(te, 3, 8, 18));
 		this.addSlotToContainer(new SlotUpgrade(te, 4, 8, 36));

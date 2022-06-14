@@ -10,15 +10,15 @@ import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 
-public class SlotFurnaceHeater extends SlotItemHandler {
+public class SlotHeater extends SlotItemHandler {
 	TileEntitySmeltingBase te;
-	public SlotFurnaceHeater(TileEntitySmeltingBase te, int slotIndex, int xPosition, int yPosition) {
+	public SlotHeater(TileEntitySmeltingBase te, int slotIndex, int xPosition, int yPosition) {
 		super(te.getInventory(), slotIndex, xPosition, yPosition);
 		this.te = te;
 	}
 	@Override
 	public boolean isItemValid(ItemStack stack) {
-		return stack.getItem() instanceof ItemUpgrade  && !te.hasUpgradeType((ItemUpgrade) stack.getItem());
+		return stack.getItem() instanceof ItemUpgrade  && ((ItemUpgrade) stack.getItem()).upgradeType == 1;
 	}
 
 }

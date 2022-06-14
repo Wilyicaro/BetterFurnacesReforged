@@ -43,6 +43,11 @@ gui.betterfurnacesreforged.color.red=Red:
 gui.betterfurnacesreforged.color.green=Green:
 gui.betterfurnacesreforged.color.blue=Blue:
 
+update.betterfurnacesreforged.buttons=[{"text":"[✓]","color":"green"},{"text":"Click for Download","color":"aqua","clickEvent":{"action":"open_url","value":"%s"}},{"text":"]","color":"none"}]
+update.betterfurnacesreforged.failed=[{"text":"The Update Check for "},{"text":"BetterFurnaces Reforged ","color":"blue"},{"text":"failed! Check Logs for more Info!","color":"none"}]
+update.betterfurnacesreforged.speech=[{"text":"There is an Update for "},{"text":"BetterFurnaces Reforged ","color":"dark_aqua"},{"text":"available!","color":"none"}]
+update.betterfurnacesreforged.version=[{"text":"Current Version: "},{"text":"%s","color":"dark_red"},{"text":", newest Version: ","color":"none"},{"text":"%s","color":"dark_green"}]
+
 advancements.betterfurnacesreforged.dupeores.title=Is this allowed?
 advancements.betterfurnacesreforged.dupeores.descr=Craft a Ore Processing Upgrade to double your ores
 advancements.betterfurnacesreforged.forges.title=Better than Furnaces

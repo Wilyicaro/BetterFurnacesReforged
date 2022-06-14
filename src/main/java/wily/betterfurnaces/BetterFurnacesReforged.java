@@ -1,5 +1,6 @@
 package wily.betterfurnaces;
 
+import wily.betterfurnaces.cfup.UpCheck;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +32,8 @@ import net.minecraftforge.fml.relauncher.Side;
 public class BetterFurnacesReforged {
 	public static final String MODID = "betterfurnacesreforged";
 	public static final String MODNAME = "BetterFurnaces Reforged";
-	public static final String VERSION = "1.4.5";
+	public static final String VERSION = "1.5.1";
+	public static final String MC_VERSION = "1.12.2";
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	public static Object2IntMap<String> FLUID_FUELS = new Object2IntOpenHashMap<>();
@@ -45,6 +47,7 @@ public class BetterFurnacesReforged {
 		NETWORK.registerMessage(MessageSync.Handler.class, MessageSync.class, 0, Side.CLIENT);
 		NETWORK.registerMessage(MessageColorSliderSync.Handler.class, MessageColorSliderSync.class, 1, Side.SERVER);
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
+		boolean checkUpdates = cfg.getBoolean("checkUpdates", "updates", true,"true = check for updates, false = don't check for updates.", "en-US");
 		String[] fuels = cfg.getStringList("Fluid Fuels", "general", new String[] { "lava@20" }, "A list of fluid fuels, in the format name@time, where time is burn ticks per millibucket.");
 		for (String s : fuels) {
 			String[] split = s.split("@");
@@ -58,6 +61,11 @@ public class BetterFurnacesReforged {
 				LOGGER.info("Ignoring invalid fluid fuel config entry {}!", s);
 				continue;
 			}
+		}
+		if (checkUpdates) {
+			new UpCheck();
+		} else {
+			this.LOGGER.warn("You have disabled BetterFurnace's Update Checker, to re-enable: change the value of Update Checker in .minecraft->config->betterfurnacesreforged-client.toml to 'true'.");
 		}
 		if (cfg.hasChanged()) cfg.save();
 	}

@@ -7,10 +7,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraftforge.fluids.FluidUtil;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.init.ModObjects;
-import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.net.MessageSync;
 import wily.betterfurnaces.tile.TileEntityForge;
 
@@ -28,10 +25,10 @@ public class FContainerBF extends Container {
 
 	public FContainerBF(InventoryPlayer playerInv, TileEntityForge tf) {
 		this.tf = tf;
-		this.addSlotToContainer(new SlotFurnaceInput(tf.getInventory(), 0, 27, 62));
-		this.addSlotToContainer(new SlotFurnaceInput(tf.getInventory(), 1, 45, 62));
-		this.addSlotToContainer(new SlotFurnaceInput(tf.getInventory(), 2, 63, 62));
-		this.addSlotToContainer(new SlotFurnaceFuel(tf.getInventory(), 3, 8, 100));
+		this.addSlotToContainer(new SlotInput(tf.getInventory(), 0, 27, 62));
+		this.addSlotToContainer(new SlotInput(tf.getInventory(), 1, 45, 62));
+		this.addSlotToContainer(new SlotInput(tf.getInventory(), 2, 63, 62));
+		this.addSlotToContainer(new SlotFuel(tf.getInventory(), 3, 8, 100));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 4, 108, 80));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 5, 126, 80));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 6, 144, 80));
@@ -41,7 +38,7 @@ public class FContainerBF extends Container {
 		this.addSlotToContainer(new SlotUpgrade(tf, 7, 7, 5));
 		this.addSlotToContainer(new SlotUpgrade(tf, 8, 25, 5));
 		this.addSlotToContainer(new SlotUpgrade(tf, 9, 43, 5));
-		this.addSlotToContainer(new SlotFurnaceHeater(tf, 10, 79, 5));
+		this.addSlotToContainer(new SlotHeater(tf, 10, 79, 5));
 		int si;
 		int sj;
 		for (si = 0; si < 3; ++si)

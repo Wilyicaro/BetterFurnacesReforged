@@ -3,6 +3,7 @@ package wily.betterfurnaces.tile;
 import java.nio.charset.StandardCharsets;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.logging.LogManager;
 
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.NetworkManager;
@@ -11,12 +12,11 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fml.common.Mod;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockIronFurnace;
 import wily.betterfurnaces.init.ModObjects;
-import wily.betterfurnaces.inventory.SlotFurnaceFuel;
-import wily.betterfurnaces.inventory.SlotFurnaceInput;
+import wily.betterfurnaces.inventory.SlotFuel;
+import wily.betterfurnaces.inventory.SlotInput;
 import wily.betterfurnaces.items.ItemUpgrade;
 import wily.betterfurnaces.utils.MutableEnergyStorage;
 import wily.betterfurnaces.utils.OreProcessingRegistry;
@@ -70,10 +70,9 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		};
 		@Override
 		public boolean isItemValid(int slot, ItemStack stack) {
-			for (int i: INPUTS())
-			if (slot == i) return SlotFurnaceInput.isStackValid(stack);
-			if (slot == FUEL()) return SlotFurnaceFuel.isStackValid(stack);
-			if (slot >= UPGRADES()[0]) return (stack.getItem() instanceof ItemUpgrade && (((ItemUpgrade) stack.getItem()).upgradeType > 1 || ((ItemUpgrade) stack.getItem()).upgradeType == 1 && !(UPGRADES().length > 3)) && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem()));
+			if (slot >= FINPUT() && slot <= LINPUT()) return SlotInput.isStackValid(stack);
+			if (slot == FUEL()) return SlotFuel.isStackValid(stack);
+			if (slot >= UPGRADES()[0]) return (stack.getItem() instanceof ItemUpgrade && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem()));
 		return false;
 		};
 	};
@@ -182,8 +181,9 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 			}
 		}
 
-		ItemStack fuel = ItemStack.EMPTY;
-		if (!this.isBurning() && (isAltFuel() || !(fuel = inv.getStackInSlot(FUEL())).isEmpty())) {
+		ItemStack fuel = inv.getStackInSlot(FUEL());
+
+		if (!this.isBurning() && (isAltFuel() || !fuel.isEmpty())) {
 			if (canSmelts()) burnFuel(fuel, false);
 		}
 
@@ -201,7 +201,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 			else currentCookTime = 0;
 		}
 
-		if (!this.isBurning() && (isAltFuel() || !(fuel = inv.getStackInSlot(FUEL())).isEmpty())) {
+		if (!this.isBurning() && (isAltFuel() || !fuel.isEmpty())) {
 			if (canSmelts()) burnFuel(fuel, wasBurning);
 		}
 
@@ -229,7 +229,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	 */
 	protected void burnFuel(ItemStack fuel, boolean burnedThisTick) {
 		boolean Energy = energy.getEnergyStored() >= getEnergyUse();
-		boolean Liquid = isFluid() && tank.getFluidAmount() > 1;
+		boolean Liquid = tank.getFluidAmount() > 1;
 		if (isEnergy() && Energy) {
 			fuelLength = (burnTime = energy.getEnergyStored() >= getEnergyUse() ? 1 : 0);
 			for (int a : INPUTS())
@@ -237,7 +237,8 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		} else if (isFluid() && Liquid) {
 			fuelLength = burnTime = getFluidBurnTime(tank.getFluid());
 			if (this.isBurning()) tank.getFluid().amount--;
-		}else if ((Energy && isEnergy()) || (isFluid() && Liquid) || (!isEnergy() && !isFluid()) ){
+		} else if ((isEnergy() && !Energy) || (isFluid() && !Liquid) || (!isEnergy() && !isFluid()) ){
+
 			fuelLength = burnTime = getItemBurnTime(fuel) * getDefaultCookTime() / 200;
 			if (this.isBurning()) {
 				Item item = fuel.getItem();
@@ -245,6 +246,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 				if (fuel.isEmpty()) inv.setStackInSlot(FUEL(), item.getContainerItem(fuel));
 			}
 		}
+
 		if (hasUpgrade(ModObjects.FUEL_EFFICIENCY_UPGRADE)) {
 			ItemStack ender = getUpgradeSlotItem(ModObjects.FUEL_EFFICIENCY_UPGRADE);
 			if (ender.attemptDamageItem((int) 1, new Random(), null)) {
@@ -257,7 +259,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		markDirty();
 	}
 
-	/**
+	/**tB
 	 * @return If the current item in the input slot can be smelted.
 	 */
 	protected boolean canSmelt(int i, int o) {
@@ -375,7 +377,6 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	 * @return The burn time for this fuel, or 0, if this is an electric furnace.
 	 */
 	public int getItemBurnTime(ItemStack stack) {
-		if (isAltFuel()) return 0;
 		return TileEntityFurnace.getItemBurnTime(stack) * (hasUpgradeType(ModObjects.FUEL_EFFICIENCY_UPGRADE) ? 2 : 1);
 	}
 	public int getEnergy() {
@@ -435,7 +436,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	}
 
 	public boolean isAltFuel() {
-		return isFluid();
+		return isFluid() || isEnergy();
 	}
 
 	public ItemStackHandler getInventory() {

@@ -6,9 +6,9 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class  SlotFurnaceInput extends SlotItemHandler {
+public class SlotInput extends SlotItemHandler {
 
-	public SlotFurnaceInput(IItemHandler inventoryIn, int slotIndex, int xPosition, int yPosition) {
+	public SlotInput(IItemHandler inventoryIn, int slotIndex, int xPosition, int yPosition) {
 		super(inventoryIn, slotIndex, xPosition, yPosition);
 	}
 
