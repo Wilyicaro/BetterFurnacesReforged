@@ -43,6 +43,11 @@ gui.betterfurnacesreforged.color.red=Vermelho:
 gui.betterfurnacesreforged.color.green=Verde:
 gui.betterfurnacesreforged.color.blue=Azul:
 
+update.betterfurnacesreforged.buttons=[{"text":"[✓]","color":"green"}{"text":"Clique para fazer Download","color":"aqua","clickEvent":{"action":"open_url","value":"%s"}},{"text":"]","color":"none"}]
+update.betterfurnacesreforged.failed=[{"text":"O gerenciador de updates do "},{"text":"BetterFurnaces Reforged ","color":"blue"},{"text":"falhou! Observe os Logs para mais informações!","color":"none"}]
+update.betterfurnacesreforged.speech=[{"text":"Há um update disponível para "},{"text":"BetterFurnaces Reforged ","color":"dark_aqua"},{"text":"!","color":"none"}]
+update.betterfurnacesreforged.version=[{"text":"Versão atual: "},{"text":"%s","color":"dark_red"},{"text":", Nova versão: ","color":"none"},{"text":"%s","color":"dark_green"}]
+
 advancements.betterfurnacesreforged.dupeores.title=Isto não é trapacear?
 advancements.betterfurnacesreforged.dupeores.descr=Faça uma Melhoria do Processamento de Minérios avançada para duplicar seus minérios
 advancements.betterfurnacesreforged.forges.title=Melhor que Fornalhas
@@ -51,5 +56,5 @@ advancements.betterfurnaces.overcooked.title=Overcooked
 advancements.betterfurnaces.overcooked.descr=Faça sua primeira fornalha de ferro
 advancements.betterfurnacesreforged.thebestfurnace.title=Faça uma fornalha extrema, a melhor fornalha do jogo
 advancements.betterfurnacesreforged.thebestfurnace.descr=A melhor fornalha
-advancements.betterfurnacesreforged.colortime.title=Time to Color!
-advancements.betterfurnacesreforged.colortime.descr=Craft a Color Upgrade to color your furnaces
+advancements.betterfurnacesreforged.colortime.title=Tempo de colorir!
+advancements.betterfurnacesreforged.colortime.descr=Faça uma Melhoria de cor para colorir sua fornalha
