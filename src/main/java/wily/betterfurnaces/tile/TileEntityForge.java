@@ -25,7 +25,7 @@ public class TileEntityForge extends TileEntitySmeltingBase {
 	@Override
 	public int LiquidCapacity() {return 8000;}
 	@Override
-	public int MAX_FE_TRANSFER(){ return 6000;}
+	public int MAX_FE_TRANSFER(){ return 14000;}
 	@Override
 	public int MAX_ENERGY_STORED(){ return 64000;}
 	@Override

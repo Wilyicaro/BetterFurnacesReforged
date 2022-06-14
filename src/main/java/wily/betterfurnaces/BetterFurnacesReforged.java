@@ -32,11 +32,10 @@ import net.minecraftforge.fml.relauncher.Side;
 public class BetterFurnacesReforged {
 	public static final String MODID = "betterfurnacesreforged";
 	public static final String MODNAME = "BetterFurnaces Reforged";
-	public static final String VERSION = "1.5.1";
+	public static final String VERSION = "151";
 	public static final String MC_VERSION = "1.12.2";
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
-	public static Object2IntMap<String> FLUID_FUELS = new Object2IntOpenHashMap<>();
 	@Instance
 	public static BetterFurnacesReforged INSTANCE;
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel("betterfurnaces");
@@ -48,20 +47,6 @@ public class BetterFurnacesReforged {
 		NETWORK.registerMessage(MessageColorSliderSync.Handler.class, MessageColorSliderSync.class, 1, Side.SERVER);
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		boolean checkUpdates = cfg.getBoolean("checkUpdates", "updates", true,"true = check for updates, false = don't check for updates.", "en-US");
-		String[] fuels = cfg.getStringList("Fluid Fuels", "general", new String[] { "lava@20" }, "A list of fluid fuels, in the format name@time, where time is burn ticks per millibucket.");
-		for (String s : fuels) {
-			String[] split = s.split("@");
-			if (split.length != 2) {
-				LOGGER.info("Ignoring invalid fluid fuel config entry {}!", s);
-				continue;
-			}
-			try {
-				FLUID_FUELS.put(split[0], Integer.parseInt(split[1]));
-			} catch (NumberFormatException e) {
-				LOGGER.info("Ignoring invalid fluid fuel config entry {}!", s);
-				continue;
-			}
-		}
 		if (checkUpdates) {
 			new UpCheck();
 		} else {

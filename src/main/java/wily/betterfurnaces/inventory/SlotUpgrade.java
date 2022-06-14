@@ -17,7 +17,7 @@ public class SlotUpgrade extends SlotItemHandler {
 
 	@Override
 	public boolean isItemValid(ItemStack stack) {
-		return isStackValid(stack) && (((ItemUpgrade) stack.getItem()).upgradeType != 1 && te instanceof TileEntityForge);
+		return isStackValid(stack) || (((ItemUpgrade) stack.getItem()).upgradeType != 1 && te instanceof TileEntityForge);
 	}
 
 	public boolean isStackValid(ItemStack stack) {

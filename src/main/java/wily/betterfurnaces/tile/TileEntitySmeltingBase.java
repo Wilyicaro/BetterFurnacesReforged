@@ -9,6 +9,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
@@ -58,7 +59,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	public int[] INPUTS(){ return new int[]{0};}
 	public int[] OUTPUTS(){ return new int[]{2};}
 	public int LiquidCapacity() {return 4000;}
-	public int MAX_FE_TRANSFER(){ return 1800;}
+	public int MAX_FE_TRANSFER(){ return 2400;}
 	public int MAX_ENERGY_STORED(){ return 16000;}
 	public int invsize(){ return 6;}
 
@@ -235,8 +236,8 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 			for (int a : INPUTS())
 			if (this.isBurning()) energy.extractEnergy(getEnergyUse() * (hasUpgradeType(ModObjects.ORE_PROCESSING_UPGRADE) && isOre(inv.getStackInSlot(a)) ? 2 : 1), false);
 		} else if (isFluid() && Liquid) {
-			fuelLength = burnTime = getFluidBurnTime(tank.getFluid());
-			if (this.isBurning()) tank.getFluid().amount--;
+			fuelLength = burnTime = getFluidBurnTime(tank.getFluid()) * (hasUpgradeType(ModObjects.FUEL_EFFICIENCY_UPGRADE) ? 2 : 1) * getDefaultCookTime() / 20000;
+			if (this.isBurning()) tank.drain(10, true);
 		} else if ((isEnergy() && !Energy) || (isFluid() && !Liquid) || (!isEnergy() && !isFluid()) ){
 
 			fuelLength = burnTime = getItemBurnTime(fuel) * getDefaultCookTime() / 200;
@@ -532,7 +533,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	 * Returns the burn time for a single mB of a given fluid.
 	 */
 	public static int getFluidBurnTime(FluidStack stack) {
-		return stack == null ? 0 : BetterFurnacesReforged.FLUID_FUELS.getInt(stack.getFluid().getName());
+		return stack == null ? 0 : TileEntityFurnace.getItemBurnTime(FluidUtil.getFilledBucket(stack));
 	}
 
 	public FluidTank getTank() {
