@@ -27,7 +27,7 @@ public class ContainerBF extends Container {
 	public ContainerBF(InventoryPlayer playerInv, TileEntitySmeltingBase te) {
 		this.te = te;
 		this.addSlotToContainer(new SlotInput(te.getInventory(), 0, 54, 18));
-		this.addSlotToContainer(new SlotFuel(te.getInventory(), 1, 54, 54));
+		this.addSlotToContainer(new SlotFuel(te, 1, 54, 54));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, te.getInventory(), 2, 116, 35));
 		this.addSlotToContainer(new SlotUpgrade(te, 3, 8, 18));
 		this.addSlotToContainer(new SlotUpgrade(te, 4, 8, 36));

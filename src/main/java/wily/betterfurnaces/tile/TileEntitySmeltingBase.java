@@ -11,6 +11,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -72,7 +73,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		@Override
 		public boolean isItemValid(int slot, ItemStack stack) {
 			if (slot >= FINPUT() && slot <= LINPUT()) return SlotInput.isStackValid(stack);
-			if (slot == FUEL()) return SlotFuel.isStackValid(stack);
+			if (slot == FUEL()) return SlotFuel.isStackValid( TileEntitySmeltingBase.this, stack);
 			if (slot >= UPGRADES()[0]) return (stack.getItem() instanceof ItemUpgrade && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem()));
 		return false;
 		};
@@ -180,6 +181,11 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY_LAVA, SoundCategory.PLAYERS, 0.6F, 0.8F);
 				inv.setStackInSlot(FUEL(), fill.result);
 			}
+		}
+		if (inv.getStackInSlot(FUEL()).hasCapability(CapabilityEnergy.ENERGY, null) && energy.getEnergyStored() < energy.getMaxEnergyStored()){
+			IEnergyStorage energyFuel = inv.getStackInSlot(FUEL()).getCapability(CapabilityEnergy.ENERGY, null);
+			energyFuel.extractEnergy(energy.receiveEnergy(energyFuel.getEnergyStored(), false), false);
+
 		}
 
 		ItemStack fuel = inv.getStackInSlot(FUEL());

@@ -28,7 +28,7 @@ public class FContainerBF extends Container {
 		this.addSlotToContainer(new SlotInput(tf.getInventory(), 0, 27, 62));
 		this.addSlotToContainer(new SlotInput(tf.getInventory(), 1, 45, 62));
 		this.addSlotToContainer(new SlotInput(tf.getInventory(), 2, 63, 62));
-		this.addSlotToContainer(new SlotFuel(tf.getInventory(), 3, 8, 100));
+		this.addSlotToContainer(new SlotFuel(tf, 3, 8, 100));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 4, 108, 80));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 5, 126, 80));
 		this.addSlotToContainer(new SlotFurnaceOutput(playerInv.player, tf.getInventory(), 6, 144, 80));
