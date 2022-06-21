@@ -3,6 +3,8 @@ package wily.betterfurnaces.recipes;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import mezz.jei.api.constants.ModIds;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -15,10 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.init.Registration;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CobblestoneGeneratorRecipes implements Recipe<Container> {
     public static final CobblestoneGeneratorRecipes.Serializer SERIALIZER = new CobblestoneGeneratorRecipes.Serializer();
@@ -30,6 +30,13 @@ public class CobblestoneGeneratorRecipes implements Recipe<Container> {
     public int duration;
     public CobblestoneGeneratorRecipes(ResourceLocation recipeId) {
         this.recipeId = recipeId;
+    }
+    public static List<CobblestoneGeneratorRecipes> getRecipes( RecipeType<?> type) {
+        Level world = Minecraft.getInstance().level;
+        Collection<Recipe<?>> recipes = world.getRecipeManager().getRecipes();
+        return (List)recipes.stream().filter((iRecipe) -> {
+            return iRecipe.getType() == type;
+        }).collect(Collectors.toList());
     }
     public int getDuration() {
         return duration;

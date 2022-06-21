@@ -6,6 +6,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -52,6 +53,8 @@ public class Registration {
 
     public static final RegistryObject<RecipeSerializer<CobblestoneGeneratorRecipes>> COB_GENERATION_SEREALIZER = RECIPES_SEREALIZERS.register("rock_generating", () -> CobblestoneGeneratorRecipes.SERIALIZER);
 
+    public static final mezz.jei.api.recipe.RecipeType<CobblestoneGeneratorRecipes> ROCK_GENERATING_JEI =
+            mezz.jei.api.recipe.RecipeType.create(BetterFurnacesReforged.MOD_ID, "rock_generating", CobblestoneGeneratorRecipes.class);
     public static final RegistryObject<RecipeType<CobblestoneGeneratorRecipes>> ROCK_GENERATING_RECIPE = RECIPES.register("rock_generating", () -> new RecipeType<>() {});
 
     public static final RegistryObject<BlockIronFurnace> IRON_FURNACE = BLOCKS.register(BlockIronFurnace.IRON_FURNACE, () -> new BlockIronFurnace(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));

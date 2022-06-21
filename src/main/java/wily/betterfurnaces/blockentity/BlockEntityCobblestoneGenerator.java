@@ -158,10 +158,16 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
         boolean can1 = (output.isEmpty());
         boolean can3 = (output.getItem() == e.getResult().getItem());
-            e.forceUpdateAllStates();
-               if ((e.cobGen() == 3) || e.cobTime > 0 && e.cobTime < e.actualCobTime) {
+        boolean active = true;
+        for (Direction side : Direction.values()) {
+            if (level.getSignal(worldPosition.offset(side.getNormal()), side) > 0) {
+                active = false;
+            }
+        }
+               if (((e.cobGen() == 3) || e.cobTime > 0 && e.cobTime < e.actualCobTime) && active) {
             if ((can && can3 )|| can1)
             ++e.cobTime;
+                   e.forceUpdateAllStates();
         }
         if (!e.level.isClientSide) {
             if (!output.isEmpty()) e.AutoIO();

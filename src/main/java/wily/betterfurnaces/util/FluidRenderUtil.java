@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -29,10 +30,10 @@ public class FluidRenderUtil {
 
     public static TextureAtlasSprite fluidSprite(FluidStack fluid, boolean hasColor){
         TextureAtlasSprite fluidSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-                .apply(fluid.getFluid().getAttributes().getStillTexture(fluid)
+                .apply(RenderProperties.get(fluid.getFluid()).getStillTexture()
                 );
         if (hasColor){
-            int color = fluid.getFluid().getAttributes().getColor();
+            int color = RenderProperties.get(fluid.getFluid()).getColorTint();
             float a = ((color & 0xFF000000) >> 24) / 255F;
             a = a <= 0.001F ? 1 : a;
             float r = ((color & 0xFF0000) >> 16) / 255F;

@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "ultimatefurnaces_bfr:amethyst_furnace",
+    "ultimatefurnaces_bfr:platinum_furnace",
     "ultimatefurnaces_bfr:gold_forge",
     "ultimatefurnaces_bfr:diamond_forge",
     "ultimatefurnaces_bfr:netherhot_forge"

@@ -16,6 +16,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IFluidTypeRenderProperties;
+import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.textures.ForgeTextureMetadata;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -243,11 +246,7 @@ public abstract class BlockForgeScreenBase<T extends BlockForgeContainerBase> ex
             FluidStack fluid =  ((BlockForgeContainerBase) this.getMenu()).getFluidStackStored(false);
             i = ((BlockForgeContainerBase) this.getMenu()).getFluidStoredScaled(21,false);
             if (i > 0) {
-                TextureAtlasSprite fluidSprite = this.minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-                        .apply(fluid.getFluid().getAttributes().getStillTexture(fluid)
-                        );
-                RenderSystem.setShaderTexture(0, fluidSprite.atlas().location());
-                this.blit(matrix, this.getGuiLeft() + 26, this.getGuiTop() + 98, this.getBlitOffset(), 20, 22, fluidSprite);
+                FluidRenderUtil.renderTiledFluid(matrix, this, 26, 98, 20, 22, fluid, false);
                 RenderSystem.setShaderTexture(0, WIDGETS);
                 this.blit(matrix, getGuiLeft() + 26, getGuiTop() + 98, 192, 38, 20, 22-i);
 
