@@ -32,7 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class BetterFurnacesReforged {
 	public static final String MODID = "betterfurnacesreforged";
 	public static final String MODNAME = "BetterFurnaces Reforged";
-	public static final String VERSION = "151";
+	public static final String VERSION = "152";
 	public static final String MC_VERSION = "1.12.2";
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
