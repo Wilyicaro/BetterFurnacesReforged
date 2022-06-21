@@ -51,7 +51,7 @@ public abstract class BlockFurnaceContainerBase extends AbstractContainerMenu {
         this.addDataSlots(this.fields);
 
         this.addSlot(new SlotInput(te, 0, 54, 18));
-        this.addSlot(new SlotFuel(this.te, 1, 54, 54));
+        this.addSlot(new SlotFuel(te, 1, 54, 54));
         this.addSlot(new SlotOutput(playerEntity, te, 2, 116, 35));
         this.addSlot(new SlotUpgrade(te, 3, 8, 18));
         this.addSlot(new SlotUpgrade(te, 4, 8, 36));

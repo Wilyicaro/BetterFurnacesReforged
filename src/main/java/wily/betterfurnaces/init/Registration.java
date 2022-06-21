@@ -49,7 +49,8 @@ public class Registration {
     }
 
     public static final RegistryObject<RecipeSerializer<CobblestoneGeneratorRecipes>> COB_GENERATION_SEREALIZER = RECIPES.register("rock_generating", () -> CobblestoneGeneratorRecipes.SERIALIZER);
-
+    public static final mezz.jei.api.recipe.RecipeType<CobblestoneGeneratorRecipes> ROCK_GENERATING_JEI =
+            mezz.jei.api.recipe.RecipeType.create(BetterFurnacesReforged.MOD_ID, "rock_generating", CobblestoneGeneratorRecipes.class);
     public static final RegistryObject<BlockIronFurnace> IRON_FURNACE = BLOCKS.register(BlockIronFurnace.IRON_FURNACE, () -> new BlockIronFurnace(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
     public static final RegistryObject<Item> IRON_FURNACE_ITEM = ITEMS.register(BlockIronFurnace.IRON_FURNACE, () -> new BlockItem(IRON_FURNACE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
     public static final RegistryObject<BlockEntityType<BlockEntityIronFurnace>> IRON_FURNACE_TILE = TILES.register(BlockIronFurnace.IRON_FURNACE, () -> BlockEntityType.Builder.of(BlockEntityIronFurnace::new, IRON_FURNACE.get()).build(null));
