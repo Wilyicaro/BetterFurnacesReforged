@@ -62,15 +62,17 @@ public class ItemUpgradeTier extends Item {
             BlockEntity te = world.getBlockEntity(pos);
             BlockPlaceContext ctx2 = new BlockPlaceContext(ctx);
             if (te instanceof FurnaceBlockEntity || te instanceof BlockEntitySmeltingBase) {
-                int cooktime = 0;
+                int cooktime = te.serializeNBT().getInt("CookTime");
+                int cooktimetotal = te.serializeNBT().getInt("CookTimeTotal");
                 int currentItemBurnTime = 0;
-                int furnaceBurnTime = 0;
+                int furnaceBurnTime = te.serializeNBT().getInt("BurnTime");
                 int show = 0;
                 int[] settings = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
                 if (te instanceof BlockEntitySmeltingBase) {
                     furnaceBurnTime = ((BlockEntitySmeltingBase) te).fields.get(0);
                     currentItemBurnTime = ((BlockEntitySmeltingBase) te).fields.get(1);
                     cooktime = ((BlockEntitySmeltingBase) te).fields.get(2);
+                    cooktimetotal = ((BlockEntitySmeltingBase) te).fields.get(3);
                     show = ((BlockEntitySmeltingBase) te).fields.get(4);
                     for (int i = 0; i < ((BlockEntitySmeltingBase) te).furnaceSettings.size(); i++)
                     {
@@ -102,15 +104,15 @@ public class ItemUpgradeTier extends Item {
                 world.setBlock(pos, next.setValue(BlockStateProperties.LIT, te.getBlockState().getValue(BlockStateProperties.LIT)), 3);
                 world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 BlockEntity newTe = world.getBlockEntity(pos);
+                newTe.deserializeNBT(te.serializeNBT());
                 ((Container)newTe).setItem(0, input);
                 ((Container)newTe).setItem(1, fuel);
                 ((Container)newTe).setItem(2, output);
-                newTe.deserializeNBT(te.serializeNBT());
                 if (newTe instanceof BlockEntitySmeltingBase) {
                     ((Container)newTe).setItem(3, upgrade);
                     ((Container)newTe).setItem(4, upgrade1);
                     ((Container)newTe).setItem(5, upgrade2);
-                    ((BlockEntitySmeltingBase)newTe).fields.set(0, furnaceBurnTime);
+                    ((BlockEntitySmeltingBase)newTe).fields.set(0, furnaceBurnTime * ((BlockEntitySmeltingBase) newTe).getCookTime() / cooktimetotal);
                     ((BlockEntitySmeltingBase)newTe).fields.set(1, currentItemBurnTime);
                     ((BlockEntitySmeltingBase)newTe).fields.set(2, cooktime);
                     ((BlockEntitySmeltingBase)newTe).fields.set(4, show);

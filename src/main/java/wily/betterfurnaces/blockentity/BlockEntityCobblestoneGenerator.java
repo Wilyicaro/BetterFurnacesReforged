@@ -3,8 +3,10 @@ package wily.betterfurnaces.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -15,6 +17,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -48,11 +52,11 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
     }
 
     public static class BlockCobblestoneGeneratorContainer extends wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer {
-            public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
+        public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
             super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player);
         }
 
-    public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
+        public BlockCobblestoneGeneratorContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
             super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
         }
     }
@@ -60,7 +64,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         public int get(int index) {
 
             if (index == 0)
-            return BlockEntityCobblestoneGenerator.this.cobTime;
+                return BlockEntityCobblestoneGenerator.this.cobTime;
             if (index == 1)
                 return BlockEntityCobblestoneGenerator.this.resultType;
             if (index == 2)
@@ -70,7 +74,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
         public void set(int index, int value) {
             if (index == 0)
-            BlockEntityCobblestoneGenerator.this.cobTime = value;
+                BlockEntityCobblestoneGenerator.this.cobTime = value;
             if (index == 1)
                 BlockEntityCobblestoneGenerator.this.resultType = value;
             if (index == 2)
@@ -126,8 +130,8 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
             this.recipe = Objects.requireNonNullElseGet(recipes, () -> level.getRecipeManager().getAllRecipesFor(Registration.ROCK_GENERATING_RECIPE.get())).get(index);
         }
     }
-    public void changeRecipe(boolean next) {
-        if (recipes != null) {
+    public void changeRecipe(boolean next, boolean onlyUpdate) {
+        if (recipes != null && !onlyUpdate) {
             int newIndex = resultType + (next ? 1 : -1);
             if (newIndex > recipes.size() - 1) newIndex = 0;
             if (newIndex < 0) newIndex = recipes.size() - 1;
@@ -137,6 +141,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
             this.updateBlockState();
         }
+        initRecipes();
     }
     public static void tick(Level level, BlockPos worldPosition, BlockState blockState, BlockEntityCobblestoneGenerator e) {
         if (e.actualCobTime != e.getCobTime()){
@@ -155,19 +160,19 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         ItemStack output = e.getItem(2);
         ItemStack upgrade = e.getItem(3);
         ItemStack upgrade1 = e.getItem(4);
-        boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
-        boolean can1 = (output.isEmpty());
-        boolean can3 = (output.getItem() == e.getResult().getItem());
         boolean active = true;
         for (Direction side : Direction.values()) {
             if (level.getSignal(worldPosition.offset(side.getNormal()), side) > 0) {
                 active = false;
             }
         }
-               if (((e.cobGen() == 3) || e.cobTime > 0 && e.cobTime < e.actualCobTime) && active) {
+        boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
+        boolean can1 = (output.isEmpty());
+        boolean can3 = (output.getItem() == e.getResult().getItem());
+        e.forceUpdateAllStates();
+        if (((e.cobGen() == 3) || e.cobTime > 0 && e.cobTime < e.actualCobTime) && active) {
             if ((can && can3 )|| can1)
-            ++e.cobTime;
-                   e.forceUpdateAllStates();
+                ++e.cobTime;
         }
         if (!e.level.isClientSide) {
             if (!output.isEmpty()) e.AutoIO();
@@ -242,12 +247,14 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
             if (isEmpty())
                 getInv().deserializeNBT(tag);
         }else
-        getInv().deserializeNBT(tag.getCompound("inventory"));
+            getInv().deserializeNBT(tag.getCompound("inventory"));
         this.cobTime = tag.getInt("CobTime");
         this.resultType = tag.getInt("ResultType");
         this.actualCobTime = tag.getInt("ActualCobTime");
 
     }
+
+
 
     @Override
     public void saveAdditional(CompoundTag tag) {
@@ -274,29 +281,29 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
             if (tile == null) {
                 continue;
             }
-                if (tile != null) {
-                    IItemHandler other = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).map(other1 -> other1).orElse(null);
+            if (tile != null) {
+                IItemHandler other = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).map(other1 -> other1).orElse(null);
 
-                    if (other == null) {
+                if (other == null) {
+                    continue;
+                }
+                if (other != null) {
+                    if (this.getItem(OUTPUT).isEmpty()) {
                         continue;
                     }
-                    if (other != null) {
-                            if (this.getItem(OUTPUT).isEmpty()) {
-                                continue;
-                            }
-                            if (ForgeRegistries.BLOCKS.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
-                                continue;
-                            }
-                        for (int i = 0; i < other.getSlots(); i++) {
-                            ItemStack stack = inventory.extractItem(OUTPUT, this.getItem(OUTPUT).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
-                            if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
-                                other.insertItem(i, inventory.extractItem(OUTPUT, stack.getCount(), false), false);
-                            }
-                        }
+                    if (ForgeRegistries.BLOCKS.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
+                        continue;
                     }
+                    for (int i = 0; i < other.getSlots(); i++) {
+                        ItemStack stack = inventory.extractItem(OUTPUT, this.getItem(OUTPUT).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
+                        if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
+                            other.insertItem(i, inventory.extractItem(OUTPUT, stack.getCount(), false), false);
                         }
                     }
                 }
+            }
+        }
+    }
 
     @Override
     public boolean IisItemValidForSlot(int index, ItemStack stack) {

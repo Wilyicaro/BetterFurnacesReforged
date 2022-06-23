@@ -25,6 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
@@ -37,6 +38,7 @@ import wily.betterfurnaces.items.ItemUpgradeTier;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.GuiUtil;
+import wily.betterfurnaces.util.RecipeUtil;
 
 @JeiPlugin
 public class BfJeiPlugin implements IModPlugin {
@@ -88,7 +90,8 @@ public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		Level world = Minecraft.getInstance().level;
-		registration.addRecipes(Registration.ROCK_GENERATING_JEI, CobblestoneGeneratorRecipes.getRecipes(Registration.ROCK_GENERATING_RECIPE.get()));
+		RecipeManager recipeManager = world.getRecipeManager();
+		registration.addRecipes(Registration.ROCK_GENERATING_JEI, RecipeUtil.getRecipes(recipeManager, Registration.ROCK_GENERATING_RECIPE.get()));
 		ItemUpgradeTier[] up = {Registration.IRON_UPGRADE.get(), Registration.GOLD_UPGRADE.get(), Registration.DIAMOND_UPGRADE.get(), Registration.NETHERHOT_UPGRADE.get(), Registration.EXTREME_UPGRADE.get()};
 		for (ItemUpgradeTier i : up)
 			addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
