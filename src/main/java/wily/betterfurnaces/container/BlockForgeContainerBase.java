@@ -297,13 +297,4 @@ public abstract class BlockForgeContainerBase extends AbstractContainerMenu {
         topRow += 58;
         addSlotRange(playerInventory, 0, leftCol, topRow, 9, 18);
     }
-
-    protected boolean hasRecipe(ItemStack stack) {
-        ItemStack upgrade = this.getItems().get(3);
-
-            if (this.recipeType != RecipeType.SMELTING) {
-                this.recipeType = RecipeType.SMELTING;
-            }
-        return this.world.getRecipeManager().getRecipeFor((RecipeType)this.recipeType, new SimpleContainer(stack), this.world).isPresent();
-    }
 }

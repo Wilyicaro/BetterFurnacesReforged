@@ -16,10 +16,14 @@ import net.minecraftforge.fluids.FluidStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
 import wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer;
+import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
-import wily.betterfurnaces.network.PacketCobButton;
+import wily.betterfurnaces.network.PacketCobblestoneRecipeUpdate;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.util.FluidRenderUtil;
+
+import java.util.List;
+import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestoneGeneratorContainer> extends BlockInventoryScreen<T> {
@@ -28,7 +32,11 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/widgets.png");
     Inventory playerInv;
     Component name;
-    CobblestoneGeneratorRecipes recipe;
+
+    private List<CobblestoneGeneratorRecipes> recipes(){
+        Messages.INSTANCE.sendToServer(new PacketCobblestoneRecipeUpdate(this.getMenu().getPos(), true));
+        return  BlockEntityCobblestoneGenerator.recipes == null ?  Objects.requireNonNull(getMenu().te.getLevel().getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.TYPE)) : BlockEntityCobblestoneGenerator.recipes;
+    }
 
     public BlockCobblestoneGeneratorScreen(T t, Inventory inv, Component name) {
         super(t, inv, name);
@@ -38,9 +46,9 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
     public static class BlockCobblestoneGeneratorScreenDefinition extends  BlockCobblestoneGeneratorScreen<BlockCobblestoneGeneratorContainer>{
         public BlockCobblestoneGeneratorScreenDefinition(BlockCobblestoneGeneratorContainer container, Inventory inv, Component name) {
             super(container, inv, name);
+
         }
     }
-
     @Override
     public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrix);
@@ -66,8 +74,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
 
     private void addTooltips(PoseStack matrix, int mouseX, int mouseY) {
         if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
-            if (BlockEntityCobblestoneGenerator.recipes == null) this.renderTooltip(matrix, ItemStack.EMPTY, mouseX, mouseY);
-            else this.renderTooltip(matrix, getMenu().te.recipes.get(getMenu().te.resultType).getResultItem(), mouseX, mouseY);
+           this.renderTooltip(matrix, recipes().get(getMenu().te.resultType).getResultItem(), mouseX, mouseY);
         }
     }
 
@@ -80,7 +87,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
         int relX = (this.width - this.getXSize()) / 2;
         int relY = (this.height - this.getYSize()) / 2;
         this.blit(matrix, relX, relY, 0, 0, this.getXSize(), this.getYSize());
-        renderGuiItem(getMenu().te.recipes.get(getMenu().te.resultType).getResultItem(),getGuiLeft() + 80, getGuiTop() + 24, 0.75F, 0.75F);
+        renderGuiItem(recipes().get(getMenu().te.resultType).getResultItem(),getGuiLeft() + 80, getGuiTop() + 24, 0.75F, 0.75F);
         RenderSystem.setShaderTexture(0, WIDGETS);
             if (actualMouseX>= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39){
                 this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 98, 157, 14, 14);
@@ -108,7 +115,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
         double actualMouseY = mouseY - getGuiTop();
         if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39) {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
-            Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos()));
+            Messages.INSTANCE.sendToServer(new PacketCobblestoneRecipeUpdate(this.getMenu().getPos(), false));
         }
 
         return super.mouseClicked(mouseX, mouseY, button);

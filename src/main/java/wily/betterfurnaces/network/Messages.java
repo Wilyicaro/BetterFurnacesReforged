@@ -28,10 +28,10 @@ public class Messages {
                 PacketShowSettingsButton::new,
                 PacketShowSettingsButton::handle);
 
-        INSTANCE.registerMessage(nextID(), PacketCobButton.class,
-                PacketCobButton::toBytes,
-                PacketCobButton::new,
-                PacketCobButton::handle);
+        INSTANCE.registerMessage(nextID(), PacketCobblestoneRecipeUpdate.class,
+                PacketCobblestoneRecipeUpdate::toBytes,
+                PacketCobblestoneRecipeUpdate::new,
+                PacketCobblestoneRecipeUpdate::handle);
 
         INSTANCE.registerMessage(nextID(), PacketOrientationButton.class,
                 PacketOrientationButton::toBytes,

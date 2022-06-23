@@ -3,8 +3,10 @@ package wily.betterfurnaces.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -15,10 +17,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import wily.betterfurnaces.blocks.BlockCobblestoneGenerator;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
@@ -125,8 +130,8 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
             this.recipe = Objects.requireNonNullElseGet(recipes, () -> level.getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.TYPE)).get(index);
         }
     }
-    public void changeRecipe(boolean next) {
-        if (recipes != null) {
+    public void changeRecipe(boolean next, boolean onlyUpdate) {
+        if (recipes != null && !onlyUpdate) {
             int newIndex = resultType + (next ? 1 : -1);
             if (newIndex > recipes.size() - 1) newIndex = 0;
             if (newIndex < 0) newIndex = recipes.size() - 1;
@@ -136,6 +141,7 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
 
             this.updateBlockState();
         }
+        initRecipes();
     }
     public static void tick(Level level, BlockPos worldPosition, BlockState blockState, BlockEntityCobblestoneGenerator e) {
         if (e.actualCobTime != e.getCobTime()){
@@ -154,11 +160,17 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         ItemStack output = e.getItem(2);
         ItemStack upgrade = e.getItem(3);
         ItemStack upgrade1 = e.getItem(4);
+        boolean active = true;
+        for (Direction side : Direction.values()) {
+            if (level.getSignal(worldPosition.offset(side.getNormal()), side) > 0) {
+                active = false;
+            }
+        }
         boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
         boolean can1 = (output.isEmpty());
         boolean can3 = (output.getItem() == e.getResult().getItem());
             e.forceUpdateAllStates();
-               if ((e.cobGen() == 3) || e.cobTime > 0 && e.cobTime < e.actualCobTime) {
+               if (((e.cobGen() == 3) || e.cobTime > 0 && e.cobTime < e.actualCobTime) && active) {
             if ((can && can3 )|| can1)
             ++e.cobTime;
         }
@@ -241,6 +253,8 @@ public class BlockEntityCobblestoneGenerator extends BlockEntityInventory {
         this.actualCobTime = tag.getInt("ActualCobTime");
 
     }
+
+
 
     @Override
     public void saveAdditional(CompoundTag tag) {

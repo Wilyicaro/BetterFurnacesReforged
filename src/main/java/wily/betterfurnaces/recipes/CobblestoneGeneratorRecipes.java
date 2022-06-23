@@ -53,13 +53,6 @@ public class CobblestoneGeneratorRecipes implements Recipe<Container> {
     public boolean canCraftInDimensions(int p_43999_, int p_44000_) {
         return true;
     }
-    public static List<CobblestoneGeneratorRecipes> getRecipes( RecipeType<?> type) {
-        Level world = Minecraft.getInstance().level;
-        Collection<Recipe<?>> recipes = world.getRecipeManager().getRecipes();
-        return (List)recipes.stream().filter((iRecipe) -> {
-            return iRecipe.getType() == type;
-        }).collect(Collectors.toList());
-    }
     @Override
     public ItemStack getResultItem() {
         return result.getItems()[0];

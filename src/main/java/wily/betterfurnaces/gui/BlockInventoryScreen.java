@@ -10,27 +10,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
-import wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer;
-import wily.betterfurnaces.network.Messages;
-import wily.betterfurnaces.network.PacketCobButton;
-import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
-import wily.betterfurnaces.util.FluidRenderUtil;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class BlockInventoryScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
