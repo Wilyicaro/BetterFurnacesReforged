@@ -15,9 +15,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public abstract class TileEntityInventory extends TileEntity implements ITileInventory, ISidedInventory, INamedContainerProvider, INameable {
 
@@ -58,6 +61,11 @@ public abstract class TileEntityInventory extends TileEntity implements ITileInv
     @Override
     public ITextComponent getName() {
         return (this.name != null ? this.name : new TranslationTextComponent(IgetName()));
+    }
+
+    @Override
+    public String IgetName() {
+        return Objects.requireNonNull(getBlockState().getBlock().getDescriptionId());
     }
 
     @Override
@@ -178,7 +186,7 @@ public abstract class TileEntityInventory extends TileEntity implements ITileInv
 
     @Override
     public ITextComponent getDisplayName() {
-        return this.getName();
+        return getName();
     }
 
     @Nullable

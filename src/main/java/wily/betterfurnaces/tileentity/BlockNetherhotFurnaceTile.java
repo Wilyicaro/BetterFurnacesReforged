@@ -19,11 +19,6 @@ public class BlockNetherhotFurnaceTile extends BlockSmeltingTileBase {
     }
 
     @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.netherhot_furnace";
-    }
-
-    @Override
     public Container IcreateMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return new BlockNetherhotFurnaceContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }

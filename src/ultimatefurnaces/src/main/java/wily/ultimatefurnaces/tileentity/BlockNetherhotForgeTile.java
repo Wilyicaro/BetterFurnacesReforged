@@ -6,13 +6,12 @@ import net.minecraft.inventory.container.Container;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
-import wily.ultimatefurnaces.container.BlockGoldForgeContainer;
 import wily.ultimatefurnaces.container.BlockNetherhotForgeContainer;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 public class BlockNetherhotForgeTile extends BlockForgeTileBase {
     public BlockNetherhotForgeTile() {
-        super(Registration.NETHERHOT_FORGE_TILE.get());
+        super(RegistrationUF.NETHERHOT_FORGE_TILE.get());
     }
 
     @Override

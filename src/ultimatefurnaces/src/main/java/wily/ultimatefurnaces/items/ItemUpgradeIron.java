@@ -1,13 +1,12 @@
 package wily.ultimatefurnaces.items;
 
-import net.minecraft.block.Blocks;
 import wily.betterfurnaces.items.ItemUpgradeTier;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 public class ItemUpgradeIron extends ItemUpgradeTier {
 
 
     public ItemUpgradeIron(Properties properties) {
-        super(properties, Registration.COPPER_FURNACE.get(), wily.betterfurnaces.init.Registration.IRON_FURNACE.get());
+        super(properties, RegistrationUF.COPPER_FURNACE.get(), wily.betterfurnaces.init.Registration.IRON_FURNACE.get());
     }
 }

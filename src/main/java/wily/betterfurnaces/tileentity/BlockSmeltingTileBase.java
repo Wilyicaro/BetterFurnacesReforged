@@ -194,7 +194,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
     private boolean isEnergy() {
         return ((hasUpgrade(Registration.ENERGY.get())) && energyStorage.getEnergyStored() >= EnergyUse());
     }
-    protected int getCookTime() {
+    public int getCookTime() {
 
         if (this.getItem(FINPUT()).getItem() == Items.AIR) {
             return totalCookTime;
@@ -477,15 +477,15 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                 }
             });
 
-            ItemStack itemstack = this.inventory.get(FUEL());
-            if (isLiquid() && itemstack.hasContainerItem()) {
-                FluidActionResult res = FluidUtil.tryEmptyContainer(itemstack, fluidTank, 1000, null, true);
+            ItemStack fuel = this.inventory.get(FUEL());
+            if (isLiquid() && fuel.hasContainerItem()) {
+                FluidActionResult res = FluidUtil.tryEmptyContainer(fuel, fluidTank, 1000, null, true);
                 if ( res.isSuccess()) {
                     level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundCategory.PLAYERS, 0.6F, 0.8F);
                     inventory.set(FUEL(), res.result);
                 }
             }
-                    if ((isBurning() || !itemstack.isEmpty() || isLiquid() || isEnergy())  && inputSlotsEmpty()) {
+                    if ((isBurning() || !fuel.isEmpty() || isLiquid() || isEnergy())  && inputSlotsEmpty()) {
                         boolean valid = smeltValid();
                         if (!this.isBurning() && valid) {
                             if (isLiquid() && (fluidTank.getFluidAmount() >= 10)){
@@ -504,18 +504,18 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                                     energyStorage.extractEnergy(EnergyUse() * OreProcessingMultiplier(getItem(i)), false);
                             }else{
                                 if (hasUpgradeType(Registration.FUEL.get())){
-                                    this.furnaceBurnTime = 2 * (getBurnTime(itemstack)) * get_cook_time / 200;
+                                    this.furnaceBurnTime = 2 * (getBurnTime(fuel)) * get_cook_time / 200;
                                 }else{
-                                    this.furnaceBurnTime = getBurnTime(itemstack) * get_cook_time / 200;
+                                    this.furnaceBurnTime = getBurnTime(fuel) * get_cook_time / 200;
                                 }
                                 this.recipesUsed = this.furnaceBurnTime;
                             }
                             if (this.isBurning()) {
                                 flag1 = true;
                                 if ((!isLiquid() || fluidTank.getFluidAmount() < 10) && !isEnergy())
-                                    if (itemstack.hasContainerItem()) this.inventory.set(FUEL(), ForgeHooks.getContainerItem(itemstack));
-                                    else if (!itemstack.isEmpty() && isItemFuel(itemstack)) {
-                                        itemstack.shrink(1);
+                                    if (fuel.hasContainerItem()) this.inventory.set(FUEL(), ForgeHooks.getContainerItem(fuel));
+                                    else if (!fuel.isEmpty() && isItemFuel(fuel)) {
+                                        fuel.shrink(1);
                                         if (hasUpgrade(Registration.FUEL.get())) {
                                             breakDurabilityItem(getUpgradeSlotItem(Registration.FUEL.get()));
                                         }
@@ -558,8 +558,8 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                             if (this.getItem(FUEL()).isEmpty()) {
                                 this.autoIO();
                                 flag1 = true;
-                            } else if (this.getItem(FUEL()).getCount() < this.getItem(FUEL()).getMaxStackSize()) {
-                                this.autoIO();
+                            } else if (getItem(FUEL()).getCount() < getItem(FUEL()).getMaxStackSize() || FluidUtil.getFluidHandler(fuel).isPresent() && FluidUtil.getFluidContained(fuel).isPresent() && (FluidUtil.getFluidContained(fuel).get().getAmount() < fluidTank.getSpace()) ){
+                                autoIO();
                                 flag1 = true;
                             }
                         }
@@ -614,6 +614,9 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                                                 continue;
                                             }
                                             for (int i = 0; i < other.getSlots(); i++) {
+                                                if (!isItemFuel(other.getStackInSlot(i))){
+                                                    continue;
+                                                }
                                                 if (other.getStackInSlot(i).isEmpty()) {
                                                     continue;
                                                 }
@@ -630,11 +633,12 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                                             if (this.getItem(FUEL()).isEmpty()) {
                                                 continue;
                                             }
-                                            ItemStack stack = extractItemInternal(FUEL(), 1, true);
-                                            if (stack.getItem() != Items.BUCKET) {
+                                            ItemStack fuel = getItem(FUEL());
+                                            if (isItemFuel(fuel)) {
                                                 continue;
                                             }
                                             for (int i = 0; i < other.getSlots(); i++) {
+                                                ItemStack stack = extractItemInternal(FUEL(), this.getItem(FUEL()).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
                                                 if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && (ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i)))) {
                                                     other.insertItem(i, extractItemInternal(FUEL(), stack.getCount(), false), false);
                                                 }
@@ -1018,13 +1022,11 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
                 return (index >= FOUTPUT() && index <= LOUTPUT());
             } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 3) {
                 return (index >= FOUTPUT() && index <= LOUTPUT());
-            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && stack.getItem() != Items.BUCKET) {
-                return false;
-            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && stack.getItem() == Items.BUCKET) {
-                return true;
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && !isItemFuel(stack) && !stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+                return index == FUEL();
             }
         }else{
-            if (direction == direction.DOWN && index >= FOUTPUT() && index <= LOUTPUT()) return true;
+            if (direction == Direction.DOWN && index >= FOUTPUT() && index <= LOUTPUT()) return true;
         }
         return false;
     }
@@ -1043,8 +1045,7 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
         }
 
         if (index == FUEL()) {
-            ItemStack itemstack = getItem(FUEL());
-            return getBurnTime(stack) > 0 || (stack.getItem() == Items.BUCKET && itemstack.getItem() != Items.BUCKET);
+            return isItemFuel(stack) || stack.hasContainerItem() || stack.getCapability(CapabilityEnergy.ENERGY).isPresent();
         }
         if (index > LOUTPUT()) {
             return (stack.getItem() instanceof ItemUpgrade || (stack.getItem() instanceof ItemUpgradeLiquidFuel && !(this instanceof BlockForgeTileBase))) && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem());

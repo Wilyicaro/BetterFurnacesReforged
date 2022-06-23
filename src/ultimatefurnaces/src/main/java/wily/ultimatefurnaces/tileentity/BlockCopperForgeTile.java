@@ -7,12 +7,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 import wily.ultimatefurnaces.container.BlockCopperForgeContainer;
-import wily.ultimatefurnaces.container.BlockGoldForgeContainer;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 public class BlockCopperForgeTile extends BlockForgeTileBase {
     public BlockCopperForgeTile() {
-        super(Registration.COPPER_FORGE_TILE.get());
+        super(RegistrationUF.COPPER_FORGE_TILE.get());
     }
 
     @Override

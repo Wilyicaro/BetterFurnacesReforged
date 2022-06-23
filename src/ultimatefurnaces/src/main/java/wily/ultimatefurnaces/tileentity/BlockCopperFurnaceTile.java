@@ -7,11 +7,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
 import wily.ultimatefurnaces.container.BlockCopperFurnaceContainer;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 public class BlockCopperFurnaceTile extends BlockSmeltingTileBase {
     public BlockCopperFurnaceTile() {
-        super(Registration.COPPER_FURNACE_TILE.get(),6);
+        super(RegistrationUF.COPPER_FURNACE_TILE.get(),6);
     }
 
     @Override

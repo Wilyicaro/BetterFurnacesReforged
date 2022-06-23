@@ -36,11 +36,6 @@ public class BlockFuelVerifierTile extends TileEntityInventory implements ITicka
         return false;
     }
 
-    @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.fuel_verifier";
-    }
-
     public static class BlockFuelVerifierTileContainer extends wily.betterfurnaces.container.BlockFuelVerifierContainer {
             public BlockFuelVerifierTileContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
             super(Registration.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player);

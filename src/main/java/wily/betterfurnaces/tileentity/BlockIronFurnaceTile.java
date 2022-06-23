@@ -19,11 +19,6 @@ public class BlockIronFurnaceTile extends BlockSmeltingTileBase {
     }
 
     @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.iron_furnace";
-    }
-
-    @Override
     public Container IcreateMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return new BlockIronFurnaceContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }

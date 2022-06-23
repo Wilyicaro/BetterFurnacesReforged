@@ -19,11 +19,6 @@ public class BlockExtremeFurnaceTile extends BlockSmeltingTileBase {
     }
 
     @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.extreme_furnace";
-    }
-
-    @Override
     public Container IcreateMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return new BlockExtremeFurnaceContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }

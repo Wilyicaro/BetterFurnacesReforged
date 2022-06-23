@@ -61,9 +61,10 @@ public class ItemUpgradeTier extends Item {
             TileEntity te = world.getBlockEntity(pos);
             BlockItemUseContext ctx2 = new BlockItemUseContext(ctx);
             if (te instanceof FurnaceTileEntity || te instanceof BlockSmeltingTileBase) {
-                int cooktime = 0;
+                int cooktime = te.serializeNBT().getInt("CookTime");
+                int cooktimetotal = te.serializeNBT().getInt("CookTimeTotal");
                 int currentItemBurnTime = 0;
-                int furnaceBurnTime = 0;
+                int furnaceBurnTime = te.serializeNBT().getInt("BurnTime");
                 int show = 0;
                 int[] settings = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
                 if (te instanceof BlockSmeltingTileBase) {
@@ -101,15 +102,15 @@ public class ItemUpgradeTier extends Item {
                 world.setBlock(pos, next.setValue(BlockStateProperties.LIT, te.getBlockState().getValue(BlockStateProperties.LIT)), 3);
                 world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 TileEntity newTe = world.getBlockEntity(pos);
+                newTe.deserializeNBT(te.serializeNBT());
                 ((IInventory)newTe).setItem(0, input);
                 ((IInventory)newTe).setItem(1, fuel);
                 ((IInventory)newTe).setItem(2, output);
-                newTe.deserializeNBT(next, te.serializeNBT());
                 if (newTe instanceof BlockSmeltingTileBase) {
                     ((IInventory)newTe).setItem(3, upgrade);
                     ((IInventory)newTe).setItem(4, upgrade1);
                     ((IInventory)newTe).setItem(5, upgrade2);
-                    ((BlockSmeltingTileBase)newTe).fields.set(0, furnaceBurnTime);
+                    ((BlockSmeltingTileBase)newTe).fields.set(0, furnaceBurnTime * ((BlockSmeltingTileBase) newTe).getCookTime() / cooktimetotal);
                     ((BlockSmeltingTileBase)newTe).fields.set(1, currentItemBurnTime);
                     ((BlockSmeltingTileBase)newTe).fields.set(2, cooktime);
                     ((BlockSmeltingTileBase)newTe).fields.set(4, show);

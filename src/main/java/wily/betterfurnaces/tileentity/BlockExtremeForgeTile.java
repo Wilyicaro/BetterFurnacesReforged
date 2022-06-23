@@ -19,11 +19,6 @@ public class BlockExtremeForgeTile extends BlockForgeTileBase {
     }
 
     @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.extreme_forge";
-    }
-
-    @Override
     public Container IcreateMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return new BlockExtremeForgeContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }

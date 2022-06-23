@@ -51,10 +51,6 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
         return false;
     }
 
-    @Override
-    public String IgetName() {
-        return "block.betterfurnacesreforged.cobblestone_generator";
-    }
 
     public static class BlockCobblestoneGeneratorContainer extends wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer {
             public BlockCobblestoneGeneratorContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
@@ -135,8 +131,8 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
             this.recipe = Optional.ofNullable(recipes).orElse(level.getRecipeManager().getAllRecipesFor(Registration.COB_GENERATION_RECIPE)).get(index);
         }
     }
-    public void changeRecipe(boolean next) {
-        if (recipes != null) {
+    public void changeRecipe(boolean next, boolean onlyUpdate) {
+        if (recipes != null && !onlyUpdate) {
             int newIndex = resultType + (next ? 1 : -1);
             if (newIndex > recipes.size() - 1) newIndex = 0;
             if (newIndex < 0) newIndex = recipes.size() - 1;
@@ -146,6 +142,7 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
 
             this.updateBlockState();
         }
+        initRecipes();
     }
     @Override
     public void tick() {
@@ -165,11 +162,17 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
         ItemStack output = this.getItem(2);
         ItemStack upgrade = this.getItem(3);
         ItemStack upgrade1 = this.getItem(4);
+        boolean active = true;
+        for (Direction side : Direction.values()) {
+            if (level.getSignal(worldPosition.offset(side.getNormal()), side) > 0) {
+                active = false;
+            }
+        }
         boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
         boolean can1 = (output.isEmpty());
         boolean can3 = (output.getItem() == getResult().getItem());
         forceUpdateAllStates();
-        if ((cobGen() == 3) || cobTime > 0 && cobTime < actualCobTime) {
+        if (((cobGen() == 3) || cobTime > 0 && cobTime < actualCobTime) && active) {
             if ((can && can3 )|| can1)
             ++this.cobTime;
         }
@@ -220,7 +223,7 @@ public class BlockCobblestoneGeneratorTile extends TileEntityInventory implement
     }
     protected ItemStack getResult(){
         ItemStack result;
-        if (recipe != null) result = new ItemStack(recipe.getResultItem().getItem());
+        if (recipe != null) result = new ItemStack(recipes.get(resultType).getResultItem().getItem());
         else result = new ItemStack(Items.COBBLESTONE);
         result.setCount(getResultCount());
         return result;

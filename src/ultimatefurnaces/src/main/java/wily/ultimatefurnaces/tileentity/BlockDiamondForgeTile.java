@@ -7,12 +7,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.tileentity.BlockForgeTileBase;
 import wily.ultimatefurnaces.container.BlockDiamondForgeContainer;
-import wily.ultimatefurnaces.container.BlockGoldForgeContainer;
-import wily.ultimatefurnaces.init.Registration;
+import wily.ultimatefurnaces.init.RegistrationUF;
 
 public class BlockDiamondForgeTile extends BlockForgeTileBase {
     public BlockDiamondForgeTile() {
-        super(Registration.DIAMOND_FORGE_TILE.get());
+        super(RegistrationUF.DIAMOND_FORGE_TILE.get());
     }
 
     @Override

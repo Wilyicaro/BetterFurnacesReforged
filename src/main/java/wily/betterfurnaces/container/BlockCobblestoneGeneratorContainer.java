@@ -89,10 +89,6 @@ public class BlockCobblestoneGeneratorContainer extends Container {
         int i = fields.get(2);
         return this.fields.get(0) * pixels / i;
     }
-    public int getButtonstate() {
-        if (this.fields.get(1) > 0) return this.fields.get(1);
-        else return 1;
-    }
 
 
     @Override

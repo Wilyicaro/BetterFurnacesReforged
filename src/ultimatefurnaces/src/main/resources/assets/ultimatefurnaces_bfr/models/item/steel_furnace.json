@@ -1,0 +1,9 @@
+{
+  "parent": "betterfurnacesreforged:block/bforientable_inventory",
+  "textures": {
+    "top": "ultimatefurnaces_bfr:blocks/steel_top",
+    "side": "ultimatefurnaces_bfr:blocks/steel_side",
+    "front": "ultimatefurnaces_bfr:blocks/steel_front",
+    "overlay": "betterfurnacesreforged:blocks/front"
+  }
+}

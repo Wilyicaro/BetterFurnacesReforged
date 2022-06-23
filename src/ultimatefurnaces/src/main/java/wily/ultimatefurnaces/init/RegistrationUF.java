@@ -19,12 +19,10 @@ import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
 import wily.ultimatefurnaces.UltimateFurnaces;
 import wily.ultimatefurnaces.blocks.*;
 import wily.ultimatefurnaces.container.*;
-import wily.ultimatefurnaces.items.ItemUpgradeCopper;
-import wily.ultimatefurnaces.items.ItemUpgradeIron;
-import wily.ultimatefurnaces.items.ItemUpgradeUltimate;
+import wily.ultimatefurnaces.items.*;
 import wily.ultimatefurnaces.tileentity.*;
 
-public class Registration {
+public class RegistrationUF {
 
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, UltimateFurnaces.MOD_ID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, UltimateFurnaces.MOD_ID);
@@ -38,7 +36,7 @@ public class Registration {
         CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<BlockCopperFurnace> COPPER_FURNACE = BLOCKS.register(BlockCopperFurnace.COPPER_FURNACE, () -> new BlockCopperFurnace(AbstractBlock.Properties.copy(Blocks.COAL_BLOCK).strength(10.0F, 20.0F)));
+    public static final RegistryObject<BlockCopperFurnace> COPPER_FURNACE = BLOCKS.register(BlockCopperFurnace.COPPER_FURNACE, () -> new BlockCopperFurnace(AbstractBlock.Properties.copy(Blocks.COAL_BLOCK).strength(4.0F, 20.0F)));
     public static final RegistryObject<Item> COPPER_FURNACE_ITEM = ITEMS.register(BlockCopperFurnace.COPPER_FURNACE, () -> new BlockItem(COPPER_FURNACE.get(), new Item.Properties().tab(wily.ultimatefurnaces.init.ModObjects.ITEM_GROUP)));
     public static final RegistryObject<TileEntityType<BlockCopperFurnaceTile>> COPPER_FURNACE_TILE = TILES.register(BlockCopperFurnace.COPPER_FURNACE, () -> TileEntityType.Builder.of(BlockCopperFurnaceTile::new, COPPER_FURNACE.get()).build(null));
 
@@ -48,7 +46,38 @@ public class Registration {
         return new BlockCopperFurnaceContainer(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<BlockUltimateFurnace> ULTIMATE_FURNACE = BLOCKS.register(BlockUltimateFurnace.ULTIMATE_FURNACE, () -> new BlockUltimateFurnace(AbstractBlock.Properties.copy(Blocks.NETHERITE_BLOCK).strength(50.0F, 6000.0F)));
+
+    public static final RegistryObject<BlockSteelFurnace> STEEL_FURNACE = BLOCKS.register(BlockSteelFurnace.STEEL_FURNACE, () -> new BlockSteelFurnace(AbstractBlock.Properties.copy(Blocks.IRON_BLOCK).strength(8.0F, 30.0F)));
+    public static final RegistryObject<Item> STEEL_FURNACE_ITEM = ITEMS.register(BlockSteelFurnace.STEEL_FURNACE, () -> new BlockItem(STEEL_FURNACE.get(), new Item.Properties().tab(wily.ultimatefurnaces.init.ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<TileEntityType<BlockSteelFurnaceTile>> STEEL_FURNACE_TILE = TILES.register(BlockSteelFurnace.STEEL_FURNACE, () -> TileEntityType.Builder.of(BlockSteelFurnaceTile::new, STEEL_FURNACE.get()).build(null));
+
+    public static final RegistryObject<ContainerType<BlockSteelFurnaceContainer>> STEEL_FURNACE_CONTAINER = CONTAINERS.register(BlockSteelFurnace.STEEL_FURNACE, () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntity().level;
+        return new BlockSteelFurnaceContainer(windowId, world, pos, inv, inv.player);
+    }));
+
+    public static final RegistryObject<BlockAmethystFurnace> AMETHYST_FURNACE = BLOCKS.register(BlockAmethystFurnace.AMETHYST_FURNACE, () -> new BlockAmethystFurnace(AbstractBlock.Properties.copy(Blocks.END_GATEWAY).strength(6.0F, 20.0F)));
+    public static final RegistryObject<Item> AMETHYST_FURNACE_ITEM = ITEMS.register(BlockAmethystFurnace.AMETHYST_FURNACE, () -> new BlockItem(AMETHYST_FURNACE.get(), new Item.Properties().tab(wily.ultimatefurnaces.init.ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<TileEntityType<BlockAmethystFurnaceTile>> AMETHYST_FURNACE_TILE = TILES.register(BlockAmethystFurnace.AMETHYST_FURNACE, () -> TileEntityType.Builder.of(BlockAmethystFurnaceTile::new, AMETHYST_FURNACE.get()).build(null));
+
+    public static final RegistryObject<ContainerType<BlockAmethystFurnaceContainer>> AMETHYST_FURNACE_CONTAINER = CONTAINERS.register(BlockAmethystFurnace.AMETHYST_FURNACE, () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntity().level;
+        return new BlockAmethystFurnaceContainer(windowId, world, pos, inv, inv.player);
+    }));
+
+    public static final RegistryObject<BlockPlatinumFurnace> PLATINUM_FURNACE = BLOCKS.register(BlockPlatinumFurnace.PLATINUM_FURNACE, () -> new BlockPlatinumFurnace(AbstractBlock.Properties.copy(Blocks.GOLD_BLOCK).strength(10.0F, 35.0F)));
+    public static final RegistryObject<Item> PLATINUM_FURNACE_ITEM = ITEMS.register(BlockPlatinumFurnace.PLATINUM_FURNACE, () -> new BlockItem(PLATINUM_FURNACE.get(), new Item.Properties().tab(wily.ultimatefurnaces.init.ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<TileEntityType<BlockPlatinumFurnaceTile>> PLATINUM_FURNACE_TILE = TILES.register(BlockPlatinumFurnace.PLATINUM_FURNACE, () -> TileEntityType.Builder.of(BlockPlatinumFurnaceTile::new, PLATINUM_FURNACE.get()).build(null));
+
+    public static final RegistryObject<ContainerType<BlockPlatinumFurnaceContainer>> PLATINUM_FURNACE_CONTAINER = CONTAINERS.register(BlockPlatinumFurnace.PLATINUM_FURNACE, () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntity().level;
+        return new BlockPlatinumFurnaceContainer(windowId, world, pos, inv, inv.player);
+    }));
+
+    public static final RegistryObject<BlockUltimateFurnace> ULTIMATE_FURNACE = BLOCKS.register(BlockUltimateFurnace.ULTIMATE_FURNACE, () -> new BlockUltimateFurnace(AbstractBlock.Properties.copy(Blocks.NETHERITE_BLOCK).strength(15.0F, 6000.0F)));
     public static final RegistryObject<Item> ULTIMATE_FURNACE_ITEM = ITEMS.register(BlockUltimateFurnace.ULTIMATE_FURNACE, () -> new BlockItem(ULTIMATE_FURNACE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
     public static final RegistryObject<TileEntityType<BlockUltimateFurnaceTile>> ULTIMATE_FURNACE_TILE = TILES.register(BlockUltimateFurnace.ULTIMATE_FURNACE, () -> TileEntityType.Builder.of(BlockUltimateFurnaceTile::new, ULTIMATE_FURNACE.get()).build(null));
 
@@ -121,6 +150,18 @@ public class Registration {
     public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeCopper> COPPER_UPGRADE = ITEMS.register("copper_upgrade", () -> new ItemUpgradeCopper(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
     public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeIron> IRON_UPGRADE = ITEMS.register("iron_upgrade", () -> new ItemUpgradeIron(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+
+    public static final RegistryObject<ItemUpgradeSteel> STEEL_UPGRADE = ITEMS.register("steel_upgrade", () -> new ItemUpgradeSteel(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+
+    public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeGold> GOLD_UPGRADE = ITEMS.register("gold_upgrade", () -> new ItemUpgradeGold(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+
+    public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeAmethyst> AMETHYST_UPGRADE = ITEMS.register("amethyst_upgrade", () -> new ItemUpgradeAmethyst(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+
+    public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeDiamond> DIAMOND_UPGRADE = ITEMS.register("diamond_upgrade", () -> new ItemUpgradeDiamond(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+
+    public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradePlatinum> PLATINUM_UPGRADE = ITEMS.register("platinum_upgrade", () -> new ItemUpgradePlatinum(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+
+    public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeNetherhot> NETHERHOT_UPGRADE = ITEMS.register("netherhot_upgrade", () -> new ItemUpgradeNetherhot(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
     public static final RegistryObject<wily.ultimatefurnaces.items.ItemUpgradeUltimate> ULTIMATE_UPGRADE = ITEMS.register("ultimate_upgrade", () -> new ItemUpgradeUltimate(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 

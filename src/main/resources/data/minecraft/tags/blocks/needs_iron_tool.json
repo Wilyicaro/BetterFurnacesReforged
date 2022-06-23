@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "betterfurnacesreforged:gold_furnace",
+    "betterfurnacesreforged:diamond_furnace",
+    "betterfurnacesreforged:netherhot_furnace"
+  ]
+}

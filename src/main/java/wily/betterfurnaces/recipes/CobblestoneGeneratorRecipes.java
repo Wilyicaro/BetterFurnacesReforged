@@ -26,6 +26,7 @@ import java.util.Map;
 public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
     public static final Serializer SERIALIZER = new Serializer();
 
+    public static IRecipeType<CobblestoneGeneratorRecipes> TYPE;
     public ResourceLocation recipeId;
     private final HashMap<Ingredient, Integer> ingredients = new LinkedHashMap<>();
     public Ingredient result;
