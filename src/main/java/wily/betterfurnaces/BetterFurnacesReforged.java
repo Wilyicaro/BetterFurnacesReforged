@@ -1,14 +1,6 @@
 package wily.betterfurnaces;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -16,12 +8,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import wily.betterfurnaces.cfup.UpCheck;
+import wily.betterfurnaces.gitup.UpCheck;
 import wily.betterfurnaces.init.ClientSide;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
-import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(BetterFurnacesReforged.MOD_ID)
@@ -30,7 +21,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "191";
+    public static final String VERSION = "192";
     public static final String MC_VERSION = "1.16.5";
 
     public static final Logger LOGGER = LogManager.getLogger();

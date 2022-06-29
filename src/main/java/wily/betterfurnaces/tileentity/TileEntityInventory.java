@@ -26,9 +26,11 @@ public abstract class TileEntityInventory extends TileEntity implements ITileInv
 
     public NonNullList<ItemStack> inventory;
     protected ITextComponent name;
+    public int invLastIndex;
 
     public TileEntityInventory(TileEntityType<?> tileEntityTypeIn, int sizeInventory) {
         super(tileEntityTypeIn);
+        invLastIndex = sizeInventory;
         inventory = NonNullList.withSize(sizeInventory, ItemStack.EMPTY);
     }
 

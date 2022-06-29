@@ -1,6 +1,5 @@
 package wily.betterfurnaces.items;
 
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,15 +11,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
-import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.container.ItemUpgradeContainerBase;
+import wily.betterfurnaces.container.UpgradeContainerBase;
 import wily.betterfurnaces.init.Registration;
 
 
@@ -77,7 +71,7 @@ public class ItemUpgradeColor extends ItemUpgrade {
 
         private ItemStack itemStackColorUpgrade;
     }
-    public static class ContainerColorUpgrade extends ItemUpgradeContainerBase {
+    public static class ContainerColorUpgrade extends UpgradeContainerBase {
 
         public final ItemStack itemStackBeingHeld;
 

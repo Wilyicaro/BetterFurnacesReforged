@@ -4,13 +4,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import wily.betterfurnaces.container.NetherhotFurnaceContainer;
+import wily.betterfurnaces.container.ExtremeFurnaceContainer;
 
 @OnlyIn(Dist.CLIENT)
-public class BlockNetherhotFurnaceScreen extends BlockFurnaceScreenBase<NetherhotFurnaceContainer> {
+public class ExtremeFurnaceScreen extends BlockFurnaceScreenBase<ExtremeFurnaceContainer> {
 
 
-    public BlockNetherhotFurnaceScreen(NetherhotFurnaceContainer container, PlayerInventory inv, ITextComponent name) {
+    public ExtremeFurnaceScreen(ExtremeFurnaceContainer container, PlayerInventory inv, ITextComponent name) {
         super(container, inv, name);
     }
 }

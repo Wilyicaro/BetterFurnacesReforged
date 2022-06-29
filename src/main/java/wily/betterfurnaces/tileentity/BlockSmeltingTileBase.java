@@ -49,13 +49,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.apache.commons.lang3.ArrayUtils;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.BlockForgeBase;
 import wily.betterfurnaces.blocks.BlockFurnaceBase;
-import wily.betterfurnaces.blocks.BlockIronFurnace;
+import wily.betterfurnaces.blocks.IronFurnaceBlock;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.*;
 import wily.betterfurnaces.util.DirectionUtil;
@@ -69,15 +67,16 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
     private final int[] lastProvides = new int[this.provides.length];
 
     public int FUEL() {return 1;}
-    public int UPGRADES()[]{ return new int[]{3,4,5};}
+    public int HEATER() {return FUEL();}
+    public int[] UPGRADES(){ return new int[]{3,4,5};}
     public int FINPUT(){ return INPUTS()[0];}
     public int LINPUT(){ return INPUTS()[INPUTS().length - 1];}
     public int FOUTPUT(){ return OUTPUTS()[0];}
     public int LOUTPUT(){ return OUTPUTS()[OUTPUTS().length - 1];}
     public int[] INPUTS(){ return new int[]{0};}
     public int[] OUTPUTS(){ return new int[]{2};}
-    public int[] FSLOTS(){ return  ArrayUtils.addAll(ArrayUtils.addAll(ISLOTS(), OUTPUTS()));}
-    public int[] ISLOTS(){ return  ArrayUtils.addAll(INPUTS(),new int[FUEL()]);}
+    public int[] FSLOTS(){ return  ArrayUtils.addAll(ISLOTS(), OUTPUTS());}
+    public int[] ISLOTS(){ return  ArrayUtils.addAll(INPUTS(), FUEL());}
 
     private Random rand = new Random();
 
@@ -395,9 +394,9 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
             --this.furnaceBurnTime;
         }
         if ((hasUpgrade(Registration.COLOR.get()))){
-            if (!(level.getBlockState(getBlockPos()).getValue(BlockIronFurnace.COLORED)))
-            level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockIronFurnace.COLORED, true), 3);
-        }else level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockIronFurnace.COLORED, false), 3);
+            if (!(level.getBlockState(getBlockPos()).getValue(IronFurnaceBlock.COLORED)))
+            level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(IronFurnaceBlock.COLORED, true), 3);
+        }else level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()).setValue(IronFurnaceBlock.COLORED, false), 3);
 
         if (hasUpgrade(Registration.BLAST.get())) {
             if (recipeType != IRecipeType.BLASTING) {
@@ -1033,10 +1032,10 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
 
     @Override
     public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        if (index >= FOUTPUT() && index <= LOUTPUT())
+        if (ArrayUtils.contains(OUTPUTS(), index))
             return false;
 
-        if (index >= FINPUT() && index <= LINPUT()) {
+        if (ArrayUtils.contains(INPUTS(), index)) {
             if (stack.isEmpty()) {
                 return false;
             }
@@ -1047,8 +1046,10 @@ public abstract class BlockSmeltingTileBase extends TileEntityInventory implemen
         if (index == FUEL()) {
             return isItemFuel(stack) || stack.hasContainerItem() || stack.getCapability(CapabilityEnergy.ENERGY).isPresent();
         }
-        if (index > LOUTPUT()) {
-            return (stack.getItem() instanceof ItemUpgrade || (stack.getItem() instanceof ItemUpgradeLiquidFuel && !(this instanceof BlockForgeTileBase))) && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem());
+        if (ArrayUtils.contains(UPGRADES(), index)) {
+            if (stack.getItem() instanceof ItemUpgrade && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem()))
+                if (((ItemUpgrade) stack.getItem()).upgradeType == 1) return (index == HEATER() || !isForge());
+                        else return true;
         }
         return false;
     }

@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
-import wily.betterfurnaces.tileentity.BlockCobblestoneGeneratorTile;
+import wily.betterfurnaces.tileentity.CobblestoneGeneratorTileEntity;
 
 import java.util.function.Supplier;
 
@@ -40,7 +40,7 @@ public class PacketCobButton {
 			ctx.get().enqueueWork(() -> {
 				ServerPlayerEntity player = ctx.get().getSender();
 				BlockPos pos = new BlockPos(x, y, z);
-				BlockCobblestoneGeneratorTile te = (BlockCobblestoneGeneratorTile) player.getLevel().getBlockEntity(pos);
+				CobblestoneGeneratorTileEntity te = (CobblestoneGeneratorTileEntity) player.getLevel().getBlockEntity(pos);
 				if (player.level.isLoaded(pos)) {
 					te.changeRecipe(true, onlyUpdate);
 					te.setChanged();
