@@ -22,8 +22,8 @@ public class ClientSide {
         ScreenManager.register(Registration.EXTREME_FURNACE_CONTAINER.get(), ExtremeFurnaceScreen::new);
         ScreenManager.register(Registration.EXTREME_FORGE_CONTAINER.get(), ExtremeForgeScreen::new);
         ScreenManager.register(Registration.COLOR_UPGRADE_CONTAINER.get(), UpgradeColorScreen::new);
-        ScreenManager.register(Registration.COB_GENERATOR_CONTAINER.get(), AbstractItemCobblestoneGeneratorScreenDefinition::new);
-        ScreenManager.register(Registration.FUEL_VERIFIER_CONTAINER.get(), FuelVerifierScreen.FuelVerifierScreenDefinition::new);
+        ScreenManager.register(Registration.COB_GENERATOR_CONTAINER.get(), AbstractCobblestoneGeneratorScreen.CobblestoneGeneratorScreen::new);
+        ScreenManager.register(Registration.FUEL_VERIFIER_CONTAINER.get(), AbstractFuelVerifierScreen.FuelVerifierScreen::new);
         RenderTypeLookup.setRenderLayer(Registration.IRON_FURNACE.get(), RenderType.cutoutMipped());
         RenderTypeLookup.setRenderLayer(Registration.GOLD_FURNACE.get(), RenderType.cutoutMipped());
         RenderTypeLookup.setRenderLayer(Registration.DIAMOND_FURNACE.get(), RenderType.cutoutMipped());

@@ -107,8 +107,8 @@ public class BfJeiPlugin implements IModPlugin {
 			registry.addRecipeClickArea(ExtremeForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
 			registry.addRecipeClickArea(BlockNetherhotFurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
 			registry.addRecipeClickArea(ExtremeFurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
-			registry.addRecipeClickArea(CobblestoneGeneratorItemScreen.class, 58, 44, 17, 12, CobblestoneGeneratorCategory.Uid);
-			registry.addRecipeClickArea(CobblestoneGeneratorItemScreen.class, 101, 44, 17, 12, CobblestoneGeneratorCategory.Uid);
+			registry.addRecipeClickArea(AbstractCobblestoneGeneratorScreen.class, 58, 44, 17, 12, CobblestoneGeneratorCategory.Uid);
+			registry.addRecipeClickArea(AbstractCobblestoneGeneratorScreen.class, 101, 44, 17, 12, CobblestoneGeneratorCategory.Uid);
 		}
 	}
 

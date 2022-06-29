@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class CobblestoneGeneratorItemScreen<T extends CobblestoneGeneratorContainer> extends AbstractInventoryItemScreen<T> {
+public abstract class AbstractCobblestoneGeneratorScreen<T extends CobblestoneGeneratorContainer> extends AbstractInventoryItemScreen<T> {
 
     public ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/cobblestone_generator_gui.png");
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
@@ -37,13 +37,13 @@ public abstract class CobblestoneGeneratorItemScreen<T extends CobblestoneGenera
         Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos(), true));
         return  CobblestoneGeneratorTileEntity.recipes == null ?  Objects.requireNonNull(getMenu().te.getLevel().getRecipeManager().getAllRecipesFor(Registration.COB_GENERATION_RECIPE)) : CobblestoneGeneratorTileEntity.recipes;
     }
-    public CobblestoneGeneratorItemScreen(T t, PlayerInventory inv, ITextComponent name) {
+    public AbstractCobblestoneGeneratorScreen(T t, PlayerInventory inv, ITextComponent name) {
         super(t, inv, name);
         playerInv = inv;
         this.name = name;
     }
-    public static class AbstractCobblestoneGeneratorItemScreenDefinition extends CobblestoneGeneratorItemScreen<CobblestoneGeneratorContainer> {
-        public AbstractCobblestoneGeneratorItemScreenDefinition(CobblestoneGeneratorContainer container, PlayerInventory inv, ITextComponent name) {
+    public static class CobblestoneGeneratorScreen extends AbstractCobblestoneGeneratorScreen<CobblestoneGeneratorContainer> {
+        public CobblestoneGeneratorScreen(CobblestoneGeneratorContainer container, PlayerInventory inv, ITextComponent name) {
             super(container, inv, name);
         }
     }
@@ -118,7 +118,6 @@ public abstract class CobblestoneGeneratorItemScreen<T extends CobblestoneGenera
             Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
             Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos(), false));
         }
-
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
