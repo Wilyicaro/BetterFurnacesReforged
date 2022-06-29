@@ -23,6 +23,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.blocks.CobblestoneGeneratorBlock;
+import wily.betterfurnaces.container.AbstractCobblestoneGeneratorContainer;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
 import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class CobblestoneGeneratorTileEntity extends TileEntityInventory implements ITickableTileEntity {
+public abstract class AbstractCobblestoneGeneratorTileEntity extends TileEntityInventory implements ITickableTileEntity {
 
     public static List<CobblestoneGeneratorRecipes> recipes;
     protected CobblestoneGeneratorRecipes recipe;
@@ -50,35 +51,25 @@ public class CobblestoneGeneratorTileEntity extends TileEntityInventory implemen
         return false;
     }
 
-
-    public static class CobblestoneGeneratorContainer extends wily.betterfurnaces.container.CobblestoneGeneratorContainer {
-            public CobblestoneGeneratorContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
-            super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player);
-        }
-
-    public CobblestoneGeneratorContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
-            super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
-        }
-    }
     public final IIntArray fields = new IIntArray() {
         public int get(int index) {
 
             if (index == 0)
-            return CobblestoneGeneratorTileEntity.this.cobTime;
+            return AbstractCobblestoneGeneratorTileEntity.this.cobTime;
             if (index == 1)
-                return CobblestoneGeneratorTileEntity.this.resultType;
+                return AbstractCobblestoneGeneratorTileEntity.this.resultType;
             if (index == 2)
-                return CobblestoneGeneratorTileEntity.this.actualCobTime;
+                return AbstractCobblestoneGeneratorTileEntity.this.actualCobTime;
             else return 0;
         }
 
         public void set(int index, int value) {
             if (index == 0)
-            CobblestoneGeneratorTileEntity.this.cobTime = value;
+            AbstractCobblestoneGeneratorTileEntity.this.cobTime = value;
             if (index == 1)
-                CobblestoneGeneratorTileEntity.this.resultType = value;
+                AbstractCobblestoneGeneratorTileEntity.this.resultType = value;
             if (index == 2)
-                CobblestoneGeneratorTileEntity.this.actualCobTime = value;
+                AbstractCobblestoneGeneratorTileEntity.this.actualCobTime = value;
         }
 
         @Override
@@ -88,7 +79,7 @@ public class CobblestoneGeneratorTileEntity extends TileEntityInventory implemen
     };
     @Override
     public Container IcreateMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new CobblestoneGeneratorContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
+        return new AbstractCobblestoneGeneratorContainer.CobblestoneGeneratorContainer(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
     public final int[] provides = new int[Direction.values().length];
     private final int[] lastProvides = new int[this.provides.length];
@@ -105,13 +96,13 @@ public class CobblestoneGeneratorTileEntity extends TileEntityInventory implemen
     private int actualCobTime = getCobTime();
     public int resultType = 1;
 
-    public static class CobblestoneGeneratorTileEntityDefinition extends CobblestoneGeneratorTileEntity {
-        public CobblestoneGeneratorTileEntityDefinition() {
+    public static class CobblestoneGeneratorTileEntity extends AbstractCobblestoneGeneratorTileEntity {
+        public CobblestoneGeneratorTileEntity() {
             super(Registration.COB_GENERATOR_TILE.get());
         }
 
     }
-    public CobblestoneGeneratorTileEntity(TileEntityType<?> tileentitytypeIn) {
+    public AbstractCobblestoneGeneratorTileEntity(TileEntityType<?> tileentitytypeIn) {
         super(tileentitytypeIn, 5);
 
     }

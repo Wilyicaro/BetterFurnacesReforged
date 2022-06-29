@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class FuelVerifierTileEntity extends TileEntityInventory implements ITickableTileEntity {
+public abstract class AbstractFuelVerifierTileEntity extends TileEntityInventory implements ITickableTileEntity {
 
     @Override
     public int[] IgetSlotsForFace(Direction side) {
@@ -47,12 +47,12 @@ public class FuelVerifierTileEntity extends TileEntityInventory implements ITick
     public final IIntArray fields = new IIntArray() {
         public int get(int index) {
             if (index == 0)
-            return FuelVerifierTileEntity.this.burnTime;
+            return AbstractFuelVerifierTileEntity.this.burnTime;
             else return 0;
         }
 
         public void set(int index, int value) {
-            FuelVerifierTileEntity.this.burnTime = value;
+            AbstractFuelVerifierTileEntity.this.burnTime = value;
         }
 
         @Override
@@ -72,13 +72,13 @@ public class FuelVerifierTileEntity extends TileEntityInventory implements ITick
      */
     private int burnTime;
 
-    public static class FuelVerifierTileEntityDefinition extends FuelVerifierTileEntity {
-        public FuelVerifierTileEntityDefinition() {
+    public static class FuelVerifierTileEntity extends AbstractFuelVerifierTileEntity {
+        public FuelVerifierTileEntity() {
             super(Registration.FUEL_VERIFIER_TILE.get());
         }
 
     }
-    public FuelVerifierTileEntity(TileEntityType<?> tileentitytypeIn) {
+    public AbstractFuelVerifierTileEntity(TileEntityType<?> tileentitytypeIn) {
         super(tileentitytypeIn, 1);
 
     }

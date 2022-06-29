@@ -22,25 +22,33 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
 import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
-import wily.betterfurnaces.tileentity.CobblestoneGeneratorTileEntity;
+import wily.betterfurnaces.tileentity.AbstractCobblestoneGeneratorTileEntity;
 
 
-public class CobblestoneGeneratorContainer extends Container {
+public abstract class AbstractCobblestoneGeneratorContainer extends Container {
 
-    public CobblestoneGeneratorTileEntity te;
+    public AbstractCobblestoneGeneratorTileEntity te;
     protected IIntArray fields;
     protected PlayerEntity playerEntity;
     protected IItemHandler playerInventory;
     protected final World world;
     private IRecipeType<? extends AbstractCookingRecipe> recipeType;
 
-    public CobblestoneGeneratorContainer(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
+    public AbstractCobblestoneGeneratorContainer(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
         this(containerType, windowId, world, pos, playerInventory, player, new IntArray(3));
     }
+    public static class CobblestoneGeneratorContainer extends wily.betterfurnaces.container.AbstractCobblestoneGeneratorContainer {
+        public CobblestoneGeneratorContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
+            super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player);
+        }
 
-    public CobblestoneGeneratorContainer(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
+        public CobblestoneGeneratorContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
+            super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
+        }
+    }
+    public AbstractCobblestoneGeneratorContainer(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
         super(containerType, windowId);
-        this.te = (CobblestoneGeneratorTileEntity) world.getBlockEntity(pos);
+        this.te = (AbstractCobblestoneGeneratorTileEntity) world.getBlockEntity(pos);
 
         this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);

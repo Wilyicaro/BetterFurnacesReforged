@@ -13,19 +13,19 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.container.CobblestoneGeneratorContainer;
+import wily.betterfurnaces.container.AbstractCobblestoneGeneratorContainer;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketCobButton;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
-import wily.betterfurnaces.tileentity.CobblestoneGeneratorTileEntity;
+import wily.betterfurnaces.tileentity.AbstractCobblestoneGeneratorTileEntity;
 import wily.betterfurnaces.util.FluidRenderUtil;
 
 import java.util.List;
 import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractCobblestoneGeneratorScreen<T extends CobblestoneGeneratorContainer> extends AbstractInventoryItemScreen<T> {
+public abstract class AbstractCobblestoneGeneratorScreen<T extends AbstractCobblestoneGeneratorContainer.CobblestoneGeneratorContainer> extends AbstractInventoryItemScreen<T> {
 
     public ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/cobblestone_generator_gui.png");
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
@@ -35,15 +35,15 @@ public abstract class AbstractCobblestoneGeneratorScreen<T extends CobblestoneGe
 
     private List<CobblestoneGeneratorRecipes> recipes(){
         Messages.INSTANCE.sendToServer(new PacketCobButton(this.getMenu().getPos(), true));
-        return  CobblestoneGeneratorTileEntity.recipes == null ?  Objects.requireNonNull(getMenu().te.getLevel().getRecipeManager().getAllRecipesFor(Registration.COB_GENERATION_RECIPE)) : CobblestoneGeneratorTileEntity.recipes;
+        return  AbstractCobblestoneGeneratorTileEntity.recipes == null ?  Objects.requireNonNull(getMenu().te.getLevel().getRecipeManager().getAllRecipesFor(Registration.COB_GENERATION_RECIPE)) : AbstractCobblestoneGeneratorTileEntity.recipes;
     }
     public AbstractCobblestoneGeneratorScreen(T t, PlayerInventory inv, ITextComponent name) {
         super(t, inv, name);
         playerInv = inv;
         this.name = name;
     }
-    public static class CobblestoneGeneratorScreen extends AbstractCobblestoneGeneratorScreen<CobblestoneGeneratorContainer> {
-        public CobblestoneGeneratorScreen(CobblestoneGeneratorContainer container, PlayerInventory inv, ITextComponent name) {
+    public static class CobblestoneGeneratorScreen extends AbstractCobblestoneGeneratorScreen<AbstractCobblestoneGeneratorContainer.CobblestoneGeneratorContainer> {
+        public CobblestoneGeneratorScreen(AbstractCobblestoneGeneratorContainer.CobblestoneGeneratorContainer container, PlayerInventory inv, ITextComponent name) {
             super(container, inv, name);
         }
     }
@@ -92,7 +92,7 @@ public abstract class AbstractCobblestoneGeneratorScreen<T extends CobblestoneGe
             this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 98, 157, 14, 14);
         } else this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 84, 157, 14, 14);
         int i;
-        i = ((CobblestoneGeneratorContainer) this.getMenu()).getCobTimeScaled(16);
+        i = (this.getMenu()).getCobTimeScaled(16);
         if (i > 0) {
             FluidStack lava = new FluidStack(Fluids.FLOWING_LAVA, 1000);
             FluidStack water = new FluidStack(Fluids.WATER, 1000);

@@ -19,12 +19,12 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.tileentity.FuelVerifierTileEntity;
+import wily.betterfurnaces.tileentity.AbstractFuelVerifierTileEntity;
 
 
 public class FuelVerifierContainer extends Container {
 
-    protected FuelVerifierTileEntity te;
+    protected AbstractFuelVerifierTileEntity te;
     protected IIntArray fields;
     protected PlayerEntity playerEntity;
     protected IItemHandler playerInventory;
@@ -37,7 +37,7 @@ public class FuelVerifierContainer extends Container {
 
     public FuelVerifierContainer(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
         super(containerType, windowId);
-        this.te = (FuelVerifierTileEntity) world.getBlockEntity(pos);
+        this.te = (AbstractFuelVerifierTileEntity) world.getBlockEntity(pos);
 
         this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);

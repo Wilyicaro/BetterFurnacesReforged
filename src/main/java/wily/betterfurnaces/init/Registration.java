@@ -128,22 +128,22 @@ public class Registration {
 
     public static final RegistryObject<CobblestoneGeneratorBlock> COBBLESTONE_GENERATOR = BLOCKS.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> new CobblestoneGeneratorBlock(AbstractBlock.Properties.copy(Blocks.BLACKSTONE)) {});
     public static final RegistryObject<Item> COBBLESTONE_GENERATOR_ITEM = ITEMS.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> new BlockItem(COBBLESTONE_GENERATOR.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
-    public static final RegistryObject<TileEntityType<CobblestoneGeneratorTileEntity.CobblestoneGeneratorTileEntityDefinition>> COB_GENERATOR_TILE = TILES.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> TileEntityType.Builder.of(CobblestoneGeneratorTileEntityDefinition::new, COBBLESTONE_GENERATOR.get()).build(null));
+    public static final RegistryObject<TileEntityType<AbstractCobblestoneGeneratorTileEntity.CobblestoneGeneratorTileEntity>> COB_GENERATOR_TILE = TILES.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> TileEntityType.Builder.of(AbstractCobblestoneGeneratorTileEntity.CobblestoneGeneratorTileEntity::new, COBBLESTONE_GENERATOR.get()).build(null));
 
-    public static final RegistryObject<ContainerType<CobblestoneGeneratorTileEntity.CobblestoneGeneratorContainer>> COB_GENERATOR_CONTAINER = CONTAINERS.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> IForgeContainerType.create((windowId, inv, data) -> {
+    public static final RegistryObject<ContainerType<AbstractCobblestoneGeneratorContainer.CobblestoneGeneratorContainer>> COB_GENERATOR_CONTAINER = CONTAINERS.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntity().level;
-        return new CobblestoneGeneratorTileEntity.CobblestoneGeneratorContainer(windowId, world, pos, inv, inv.player);
+        return new AbstractCobblestoneGeneratorContainer.CobblestoneGeneratorContainer(windowId, world, pos, inv, inv.player);
     }));
 
     public static final RegistryObject<FuelVerifierBlock> FUEL_VERIFIER = BLOCKS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> new FuelVerifierBlock(AbstractBlock.Properties.copy(Blocks.COBBLESTONE)) {});
     public static final RegistryObject<Item> FUEL_VERIFIER_ITEM = ITEMS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> new BlockItem(FUEL_VERIFIER.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
-    public static final RegistryObject<TileEntityType<FuelVerifierTileEntity.FuelVerifierTileEntityDefinition>> FUEL_VERIFIER_TILE = TILES.register(FuelVerifierBlock.FUEL_VERIFIER, () -> TileEntityType.Builder.of(FuelVerifierTileEntityDefinition::new, FUEL_VERIFIER.get()).build(null));
+    public static final RegistryObject<TileEntityType<AbstractFuelVerifierTileEntity.FuelVerifierTileEntity>> FUEL_VERIFIER_TILE = TILES.register(FuelVerifierBlock.FUEL_VERIFIER, () -> TileEntityType.Builder.of(AbstractFuelVerifierTileEntity.FuelVerifierTileEntity::new, FUEL_VERIFIER.get()).build(null));
 
-    public static final RegistryObject<ContainerType<FuelVerifierTileEntity.BlockFuelVerifierTileContainer>> FUEL_VERIFIER_CONTAINER = CONTAINERS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> IForgeContainerType.create((windowId, inv, data) -> {
+    public static final RegistryObject<ContainerType<AbstractFuelVerifierTileEntity.BlockFuelVerifierTileContainer>> FUEL_VERIFIER_CONTAINER = CONTAINERS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntity().level;
-        return new FuelVerifierTileEntity.BlockFuelVerifierTileContainer(windowId, world, pos, inv, inv.player);
+        return new AbstractFuelVerifierTileEntity.BlockFuelVerifierTileContainer(windowId, world, pos, inv, inv.player);
     }));
 
     public static final RegistryObject<ConductorBlock> IRON_CONDUCTOR_BLOCK = BLOCKS.register("iron_conductor_block", () -> new ConductorBlock(AbstractBlock.Properties.copy(Blocks.IRON_BLOCK).strength(8.0F, 20.0F)));

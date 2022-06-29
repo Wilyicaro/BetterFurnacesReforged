@@ -27,7 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
-import wily.betterfurnaces.tileentity.CobblestoneGeneratorTileEntity;
+import wily.betterfurnaces.tileentity.AbstractCobblestoneGeneratorTileEntity;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -77,7 +77,7 @@ public abstract class CobblestoneGeneratorBlock extends Block {
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
         ItemStack stack = player.getItemInHand(handIn).copy();
         ItemStack hand = player.getItemInHand(handIn);
-        CobblestoneGeneratorTileEntity te = (CobblestoneGeneratorTileEntity) world.getBlockEntity(pos);
+        AbstractCobblestoneGeneratorTileEntity te = (AbstractCobblestoneGeneratorTileEntity) world.getBlockEntity(pos);
 
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
@@ -103,7 +103,7 @@ public abstract class CobblestoneGeneratorBlock extends Block {
             return ActionResultType.SUCCESS;
         }
         TileEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof CobblestoneGeneratorTileEntity)) {
+        if (!(te instanceof AbstractCobblestoneGeneratorTileEntity)) {
             return ActionResultType.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
@@ -130,15 +130,15 @@ public abstract class CobblestoneGeneratorBlock extends Block {
         if (!player.isCreative()) {
             player.getItemInHand(handIn).shrink(1);
         }
-        ((CobblestoneGeneratorTileEntity)te).onUpdateSent();
+        ((AbstractCobblestoneGeneratorTileEntity)te).onUpdateSent();
         return ActionResultType.SUCCESS;
     }
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             TileEntity te = world.getBlockEntity(pos);
-            if (te instanceof CobblestoneGeneratorTileEntity) {
-                InventoryHelper.dropContents(world, pos, (CobblestoneGeneratorTileEntity) te);
+            if (te instanceof AbstractCobblestoneGeneratorTileEntity) {
+                InventoryHelper.dropContents(world, pos, (AbstractCobblestoneGeneratorTileEntity) te);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -165,7 +165,7 @@ public abstract class CobblestoneGeneratorBlock extends Block {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new CobblestoneGeneratorTileEntity.CobblestoneGeneratorTileEntityDefinition();
+        return new AbstractCobblestoneGeneratorTileEntity.CobblestoneGeneratorTileEntity();
     }
 
 }

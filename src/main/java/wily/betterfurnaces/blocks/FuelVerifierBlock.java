@@ -22,7 +22,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
-import wily.betterfurnaces.tileentity.FuelVerifierTileEntity;
+import wily.betterfurnaces.tileentity.AbstractFuelVerifierTileEntity;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -82,8 +82,8 @@ public abstract class FuelVerifierBlock extends Block {
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             TileEntity te = world.getBlockEntity(pos);
-            if (te instanceof FuelVerifierTileEntity) {
-                InventoryHelper.dropContents(world, pos, (FuelVerifierTileEntity) te);
+            if (te instanceof AbstractFuelVerifierTileEntity) {
+                InventoryHelper.dropContents(world, pos, (AbstractFuelVerifierTileEntity) te);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -111,7 +111,7 @@ public abstract class FuelVerifierBlock extends Block {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FuelVerifierTileEntity.FuelVerifierTileEntityDefinition();
+        return new AbstractFuelVerifierTileEntity.FuelVerifierTileEntity();
     }
 
 }
