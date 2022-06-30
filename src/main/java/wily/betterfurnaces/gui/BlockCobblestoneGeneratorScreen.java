@@ -8,14 +8,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
-import wily.betterfurnaces.container.BlockCobblestoneGeneratorContainer;
+import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
+import wily.betterfurnaces.container.AbstractCobblestoneGeneratorMenu;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketCobblestoneRecipeUpdate;
@@ -26,16 +25,15 @@ import java.util.List;
 import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestoneGeneratorContainer> extends BlockInventoryScreen<T> {
+public abstract class BlockCobblestoneGeneratorScreen<T extends AbstractCobblestoneGeneratorMenu> extends BlockInventoryScreen<T> {
 
     public ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/cobblestone_generator_gui.png");
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/widgets.png");
     Inventory playerInv;
     Component name;
-
     private List<CobblestoneGeneratorRecipes> recipes(){
         Messages.INSTANCE.sendToServer(new PacketCobblestoneRecipeUpdate(this.getMenu().getPos(), true));
-        return  BlockEntityCobblestoneGenerator.recipes == null ?  Objects.requireNonNull(getMenu().te.getLevel().getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.TYPE)) : BlockEntityCobblestoneGenerator.recipes;
+        return  AbstractCobblestoneGeneratorBlockEntity.recipes == null ?  Objects.requireNonNull(getMenu().te.getLevel().getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.TYPE)) : AbstractCobblestoneGeneratorBlockEntity.recipes;
     }
 
     public BlockCobblestoneGeneratorScreen(T t, Inventory inv, Component name) {
@@ -43,12 +41,12 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
         playerInv = inv;
         this.name = name;
     }
-    public static class BlockCobblestoneGeneratorScreenDefinition extends  BlockCobblestoneGeneratorScreen<BlockCobblestoneGeneratorContainer>{
-        public BlockCobblestoneGeneratorScreenDefinition(BlockCobblestoneGeneratorContainer container, Inventory inv, Component name) {
+    public static class BlockCobblestoneGeneratorScreenDefinition extends  BlockCobblestoneGeneratorScreen<AbstractCobblestoneGeneratorMenu>{
+        public BlockCobblestoneGeneratorScreenDefinition(AbstractCobblestoneGeneratorMenu container, Inventory inv, Component name) {
             super(container, inv, name);
-
         }
     }
+
     @Override
     public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrix);
@@ -74,7 +72,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
 
     private void addTooltips(PoseStack matrix, int mouseX, int mouseY) {
         if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
-           this.renderTooltip(matrix, recipes().get(getMenu().te.resultType).getResultItem(), mouseX, mouseY);
+            this.renderTooltip(matrix, recipes().get(getMenu().te.resultType).getResultItem(), mouseX, mouseY);
         }
     }
 
@@ -93,7 +91,7 @@ public abstract class BlockCobblestoneGeneratorScreen<T extends BlockCobblestone
                 this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 98, 157, 14, 14);
         } else this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 84, 157, 14, 14);
         int i;
-        i = ((BlockCobblestoneGeneratorContainer) this.getMenu()).getCobTimeScaled(16);
+        i = ((AbstractCobblestoneGeneratorMenu) this.getMenu()).getCobTimeScaled(16);
         if (i > 0) {
             FluidStack lava = new FluidStack(Fluids.FLOWING_LAVA, 1000);
             FluidStack water = new FluidStack(Fluids.WATER, 1000);

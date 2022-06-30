@@ -16,13 +16,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,7 +37,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -45,8 +45,7 @@ import net.minecraftforge.network.NetworkHooks;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemUpgradeLiquidFuel;
-import wily.betterfurnaces.items.ItemUpgrade;
+import wily.betterfurnaces.items.UpgradeItem;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -103,7 +102,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if (hand.getItem() instanceof ItemUpgrade && !(player.isCrouching())) {
+            if (hand.getItem() instanceof UpgradeItem && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }else if ((te.hasUpgrade(Registration.LIQUID.get()) && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && BlockEntitySmeltingBase.isItemFuel(hand) &&  !(player.isCrouching()))){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
@@ -122,7 +121,7 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
 
     private InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!(hand.getItem() instanceof ItemUpgrade)){
+        if (!(hand.getItem() instanceof UpgradeItem)){
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);
@@ -132,10 +131,10 @@ public abstract class BlockFurnaceBase extends Block implements EntityBlock {
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
         BlockEntitySmeltingBase be = (BlockEntitySmeltingBase) te;
-        if (be.hasUpgradeType((ItemUpgrade) stack.getItem())) {
+        if (be.hasUpgradeType((UpgradeItem) stack.getItem())) {
             if (!player.isCreative())
-            Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()));
-            else  be.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()).shrink(1);
+            Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeTypeSlotItem((UpgradeItem) stack.getItem()));
+            else  be.getUpgradeTypeSlotItem((UpgradeItem) stack.getItem()).shrink(1);
         }
         for (int upg : be.UPGRADES()) {
             if (be.inventory.isItemValid(upg, stack) && !stack.isEmpty()) {

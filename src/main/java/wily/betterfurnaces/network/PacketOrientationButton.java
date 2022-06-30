@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
 import wily.betterfurnaces.blocks.BlockForgeBase;
-import wily.betterfurnaces.blocks.BlockFurnaceBase;
 
 import java.util.function.Supplier;
 

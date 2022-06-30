@@ -56,9 +56,9 @@ public class ItemUpgradeTier extends Item {
         Level world = ctx.getLevel();
         BlockPos pos = ctx.getClickedPos();
         if (!world.isClientSide) {
-            if ((ctx.getItemInHand().getItem() instanceof ItemUpgradeIron) && ModList.get().isLoaded("fastfurnace"))
+            if ((ctx.getItemInHand().getItem() instanceof IronUpgradeItem) && ModList.get().isLoaded("fastfurnace"))
             {
-                ctx.getPlayer().sendMessage(new TextComponent("FastFurnace Mod is loaded, will not upgrade, drop the upgrade on the floor together with one cobblestone to get your materials back."), ctx.getPlayer().getUUID());
+                ctx.getPlayer().displayClientMessage(new TextComponent("FastFurnace Mod is loaded, will not upgrade, drop the upgrade on the floor together with one cobblestone to get your materials back."), false);
                 return super.useOn(ctx);
             }
             BlockEntity te = world.getBlockEntity(pos);

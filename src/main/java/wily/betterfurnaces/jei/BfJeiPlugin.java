@@ -9,7 +9,6 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -25,7 +24,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.datafix.fixes.RecipesFix;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -42,9 +40,6 @@ import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.GuiUtil;
 import wily.betterfurnaces.util.RecipeUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @JeiPlugin
 public class BfJeiPlugin implements IModPlugin {
@@ -78,7 +73,7 @@ public class BfJeiPlugin implements IModPlugin {
 
 			}
 
-			registry.addRecipeCatalyst(new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), Registration.ROCK_GENERATING_JEI);
+			registry.addRecipeCatalyst(new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), BFRRecipeTypes.ROCK_GENERATING_JEI);
 
 		}
 	}
@@ -97,7 +92,7 @@ public class BfJeiPlugin implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		Level world = Minecraft.getInstance().level;
 		RecipeManager recipeManager = world.getRecipeManager();
-		registration.addRecipes(Registration.ROCK_GENERATING_JEI, RecipeUtil.getRecipes( recipeManager, CobblestoneGeneratorRecipes.TYPE));
+		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes( recipeManager, CobblestoneGeneratorRecipes.TYPE));
 		ItemUpgradeTier[] up = {Registration.IRON_UPGRADE.get(), Registration.GOLD_UPGRADE.get(), Registration.DIAMOND_UPGRADE.get(), Registration.NETHERHOT_UPGRADE.get(), Registration.EXTREME_UPGRADE.get()};
 		for (ItemUpgradeTier i : up)
 			addDescription(registration, new ItemStack(i), new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
@@ -112,8 +107,8 @@ public class BfJeiPlugin implements IModPlugin {
 			registry.addRecipeClickArea(BlockExtremeForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
 			registry.addRecipeClickArea(BlockNetherhotFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
 			registry.addRecipeClickArea(BlockExtremeFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 58, 44, 17, 12, Registration.ROCK_GENERATING_JEI);
-			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 101, 44, 17, 12, Registration.ROCK_GENERATING_JEI);
+			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 58, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
+			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 101, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
 		}
 	}
 
@@ -162,7 +157,7 @@ public class BfJeiPlugin implements IModPlugin {
 
 		@Override
 		public RecipeType<CobblestoneGeneratorRecipes> getRecipeType() {
-			return Registration.ROCK_GENERATING_JEI;
+			return BFRRecipeTypes.ROCK_GENERATING_JEI;
 		}
 
 		@Override

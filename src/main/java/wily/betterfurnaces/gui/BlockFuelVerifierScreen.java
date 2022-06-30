@@ -11,10 +11,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.container.BlockFuelVerifierContainer;
+import wily.betterfurnaces.container.AbstractFuelVerifierMenu;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class BlockFuelVerifierScreen<T extends BlockFuelVerifierContainer> extends AbstractContainerScreen<T> {
+public abstract class BlockFuelVerifierScreen<T extends AbstractFuelVerifierMenu> extends AbstractContainerScreen<T> {
 
     public ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/fuel_verifier_gui.png");
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
@@ -29,8 +29,8 @@ public abstract class BlockFuelVerifierScreen<T extends BlockFuelVerifierContain
         playerInv = inv;
         this.name = name;
     }
-    public static class BlockFuelVerifierScreenDefiniton extends BlockFuelVerifierScreen<BlockFuelVerifierContainer> {
-        public BlockFuelVerifierScreenDefiniton(BlockFuelVerifierContainer container, Inventory inv, Component name) {
+    public static class BlockFuelVerifierScreenDefiniton extends BlockFuelVerifierScreen<AbstractFuelVerifierMenu> {
+        public BlockFuelVerifierScreenDefiniton(AbstractFuelVerifierMenu container, Inventory inv, Component name) {
             super(container, inv, name);
         }
     }
@@ -51,7 +51,7 @@ public abstract class BlockFuelVerifierScreen<T extends BlockFuelVerifierContain
     @Override
     protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
         Component invname = this.playerInv.getDisplayName();
-        Component burntime = new TranslatableComponent("gui.betterfurnacesreforged.fuel.melts").append(new TextComponent(String.valueOf(((BlockFuelVerifierContainer) this.getMenu()).getBurnTime()))).append( new TranslatableComponent("gui.betterfurnacesreforged.fuel.items"));
+        Component burntime = new TranslatableComponent("gui.betterfurnacesreforged.fuel.melts").append(new TextComponent(String.valueOf(((AbstractFuelVerifierMenu) this.getMenu()).getBurnTime()))).append( new TranslatableComponent("gui.betterfurnacesreforged.fuel.items"));
         int actualMouseX = mouseX - ((this.width - this.getXSize()) / 2);
         int actualMouseY = mouseY - ((this.height - this.getYSize()) / 2);
         //drawString(Minecraft.getInstance().fontRenderer, "Energy: " + getMenu().getEnergy(), 10, 10, 0xffffff);
@@ -73,7 +73,7 @@ public abstract class BlockFuelVerifierScreen<T extends BlockFuelVerifierContain
         int relY = (this.height - this.getYSize()) / 2;
         this.blit(matrix, relX, relY, 0, 0, this.getXSize(), this.getYSize());
         int i;
-        i = ((BlockFuelVerifierContainer) this.getMenu()).getBurnTimeScaled(26);
+        i = ((AbstractFuelVerifierMenu) this.getMenu()).getBurnTimeScaled(26);
         if (i > 0) {
             this.blit(matrix, getGuiLeft() + 74, getGuiTop() + 13 + 26 - i, 176, 24 - i, 28, i + 2);
         }

@@ -2,7 +2,6 @@ package wily.betterfurnaces;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -16,7 +15,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import wily.betterfurnaces.cfup.UpCheck;
+import wily.betterfurnaces.gitup.UpCheck;
 import wily.betterfurnaces.init.ClientSide;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
@@ -30,7 +29,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "123";
+    public static final String VERSION = "124";
     public static final String MC_VERSION = "1.18.2";
 
     public static final Logger LOGGER = LogManager.getLogger();

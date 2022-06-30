@@ -10,11 +10,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.container.ItemUpgradeContainerBase;
-import wily.betterfurnaces.items.ItemUpgradeColor;
+import wily.betterfurnaces.container.AbstractUpgradeMenu;
+import wily.betterfurnaces.items.ColorUpgradeItem;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class ItemUpgradeScreen<T extends ItemUpgradeContainerBase> extends AbstractContainerScreen<T> {
+public abstract class ItemUpgradeScreen<T extends AbstractUpgradeMenu> extends AbstractContainerScreen<T> {
     private Component name;
     @Override
     public int getXSize() {
@@ -57,7 +57,7 @@ public abstract class ItemUpgradeScreen<T extends ItemUpgradeContainerBase> exte
     }
     @Override
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-        ItemStack stack = ((ItemUpgradeColor.ContainerColorUpgrade) this.getMenu()).itemStackBeingHeld;
+        ItemStack stack = ((ColorUpgradeItem.ContainerColorUpgrade) this.getMenu()).itemStackBeingHeld;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI);
         int relX = (this.width - this.getXSize()) / 2;
