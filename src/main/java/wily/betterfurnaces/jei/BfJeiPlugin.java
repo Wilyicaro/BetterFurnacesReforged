@@ -72,7 +72,7 @@ public class BfJeiPlugin implements IModPlugin {
 
 			}
 
-			registry.addRecipeCatalyst(new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), Registration.ROCK_GENERATING_JEI);
+			registry.addRecipeCatalyst(new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), BFRRecipeTypes.ROCK_GENERATING_JEI);
 
 		}
 	}
@@ -91,7 +91,7 @@ public class BfJeiPlugin implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		Level world = Minecraft.getInstance().level;
 		RecipeManager recipeManager = world.getRecipeManager();
-		registration.addRecipes(Registration.ROCK_GENERATING_JEI, RecipeUtil.getRecipes(recipeManager, Registration.ROCK_GENERATING_RECIPE.get()));
+		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes(recipeManager, Registration.ROCK_GENERATING_RECIPE.get()));
 		ItemUpgradeTier[] up = {Registration.IRON_UPGRADE.get(), Registration.GOLD_UPGRADE.get(), Registration.DIAMOND_UPGRADE.get(), Registration.NETHERHOT_UPGRADE.get(), Registration.EXTREME_UPGRADE.get()};
 		for (ItemUpgradeTier i : up)
 			addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
@@ -106,13 +106,13 @@ public class BfJeiPlugin implements IModPlugin {
 			registry.addRecipeClickArea(BlockExtremeForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
 			registry.addRecipeClickArea(BlockNetherhotFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
 			registry.addRecipeClickArea(BlockExtremeFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 58, 44, 17, 12, Registration.ROCK_GENERATING_JEI);
-			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 101, 44, 17, 12, Registration.ROCK_GENERATING_JEI);
+			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 58, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
+			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 101, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
 		}
 	}
 
 	public static class CobblestoneGeneratorCategory implements IRecipeCategory<CobblestoneGeneratorRecipes> {
-		private static ResourceLocation Uid = new ResourceLocation(BetterFurnacesReforged.MOD_ID, "jei/rock_generating");
+		private static final ResourceLocation Uid = new ResourceLocation(BetterFurnacesReforged.MOD_ID, "jei/rock_generating");
 		private static final int result = 2;
 		private Component title;
 		private final IDrawable background;
@@ -120,7 +120,6 @@ public class BfJeiPlugin implements IModPlugin {
 		protected IDrawableAnimated water_anim;
 		protected IDrawable lava_overlay;
 		protected IDrawable water_overlay;
-		private IIngredientType ingredientType;
 
 		protected final IGuiHelper guiHelper;
 		public static final ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/cobblestone_generator_gui.png");
@@ -145,7 +144,7 @@ public class BfJeiPlugin implements IModPlugin {
 
 		@Override
 		public RecipeType<CobblestoneGeneratorRecipes> getRecipeType() {
-			return Registration.ROCK_GENERATING_JEI;
+			return BFRRecipeTypes.ROCK_GENERATING_JEI;
 		}
 
 		@Override

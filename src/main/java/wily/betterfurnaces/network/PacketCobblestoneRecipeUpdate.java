@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
-import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
+import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
 
 import java.util.function.Supplier;
 
@@ -40,7 +40,7 @@ public class PacketCobblestoneRecipeUpdate {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer player = ctx.get().getSender();
 			BlockPos pos = new BlockPos(x, y, z);
-			BlockEntityCobblestoneGenerator te = (BlockEntityCobblestoneGenerator) player.getLevel().getBlockEntity(pos);
+			AbstractCobblestoneGeneratorBlockEntity te = (AbstractCobblestoneGeneratorBlockEntity) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
 				te.changeRecipe(true, onlyUpdate);
 				te.setChanged();

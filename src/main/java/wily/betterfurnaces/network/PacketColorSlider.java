@@ -1,13 +1,11 @@
 package wily.betterfurnaces.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
-import wily.betterfurnaces.blockentity.BlockEntityCobblestoneGenerator;
-import wily.betterfurnaces.items.ItemUpgradeColor;
+import wily.betterfurnaces.items.ColorUpgradeItem;
 
 import java.util.function.Supplier;
 
@@ -35,7 +33,7 @@ public class PacketColorSlider {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer player = ctx.get().getSender();
 				ItemStack stack = player.getMainHandItem();
-				if (stack.getItem() instanceof ItemUpgradeColor) {
+				if (stack.getItem() instanceof ColorUpgradeItem) {
 					CompoundTag nbt = stack.getOrCreateTag();
 					if (iden ==  1) nbt.putInt("red", index);
 					if (iden ==  2) nbt.putInt("green", index);

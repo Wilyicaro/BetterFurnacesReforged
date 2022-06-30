@@ -8,20 +8,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import wily.betterfurnaces.util.DirectionUtil;
 
 public abstract class BlockEntityForgeBase extends BlockEntitySmeltingBase {
-    @Override
     public int FUEL() {return 3;}
+    public int HEATER() {return 10;}
     public int UPGRADES()[]{ return new int[]{7,8,9,10,11,12,13};}
-    @Override
     public int[] INPUTS(){ return new int[]{0,1,2};}
-    @Override
     public int[] OUTPUTS(){ return new int[]{4,5,6};}
-    @Override
     public int EnergyUse() {return 1800;}
-    @Override
     public int LiquidCapacity() {return 8000;}
-    @Override
     public int EnergyCapacity() {return 64000;}
-    @Override
     public boolean isForge(){ return true;}
     @Override
     public Direction facing(){

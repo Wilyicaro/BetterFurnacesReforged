@@ -17,10 +17,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -43,7 +41,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -57,7 +54,6 @@ import wily.betterfurnaces.items.*;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public abstract class BlockForgeBase extends Block implements SimpleWaterloggedBlock, EntityBlock {
 
@@ -134,7 +130,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if ((hand.getItem() instanceof ItemUpgrade)  && !(player.isCrouching())) {
+            if ((hand.getItem() instanceof UpgradeItem)  && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }else if ((te.hasUpgrade(Registration.LIQUID.get()) && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && BlockEntitySmeltingBase.isItemFuel(hand) &&  !(player.isCrouching()))){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
@@ -153,7 +149,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
 
     private InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         Item hand = player.getItemInHand(handIn).getItem();
-        if (!(hand instanceof ItemUpgrade)){
+        if (!(hand instanceof UpgradeItem)){
             return InteractionResult.SUCCESS;
         }
         BlockEntity te = world.getBlockEntity(pos);
@@ -164,7 +160,7 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
         newStack.setTag(stack.getTag());
         BlockEntitySmeltingBase be = (BlockEntitySmeltingBase) te;
 
-        if (hand instanceof ItemUpgradeLiquidFuel || hand instanceof ItemUpgradeEnergyFuel) {
+        if (hand instanceof LiquidFuelUpgradeItem || hand instanceof EnergyFuelUpgradeItem) {
             if ((!(((Container) te).getItem(10).isEmpty())) && (!player.isCreative())) {
                 Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(10));
             }
@@ -174,10 +170,10 @@ public abstract class BlockForgeBase extends Block implements SimpleWaterloggedB
                 player.getItemInHand(handIn).shrink(1);
             }
         }else {
-            if (be.hasUpgradeType((ItemUpgrade) stack.getItem())) {
+            if (be.hasUpgradeType((UpgradeItem) stack.getItem())) {
                 if (!player.isCreative())
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()));
-                else  be.getUpgradeTypeSlotItem((ItemUpgrade) stack.getItem()).shrink(1);
+                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeTypeSlotItem((UpgradeItem) stack.getItem()));
+                else  be.getUpgradeTypeSlotItem((UpgradeItem) stack.getItem()).shrink(1);
             }
             for (int upg : be.UPGRADES()) {
                 if (be.inventory.isItemValid(upg, stack) && !stack.isEmpty() && upg != 10) {

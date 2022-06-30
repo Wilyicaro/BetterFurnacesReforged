@@ -53,7 +53,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ArrayUtils;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.BlockForgeBase;
 import wily.betterfurnaces.blocks.BlockFurnaceBase;
@@ -64,23 +63,23 @@ import wily.betterfurnaces.util.DirectionUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.logging.Logger;
 
-public abstract class BlockEntitySmeltingBase extends BlockEntityInventory implements RecipeHolder, StackedContentsCompatible {
+public abstract class BlockEntitySmeltingBase extends InventoryBlockEntity implements RecipeHolder, StackedContentsCompatible {
     public final int[] provides = new int[Direction.values().length];
     private final int[] lastProvides = new int[this.provides.length];
 
 
     public int FUEL() {return 1;}
-    public int UPGRADES()[]{ return new int[]{3,4,5};}
+    public int HEATER() {return FUEL();}
+    public int[] UPGRADES(){ return new int[]{3,4,5};}
     public int FINPUT(){ return INPUTS()[0];}
     public int LINPUT(){ return INPUTS()[INPUTS().length - 1];}
     public int FOUTPUT(){ return OUTPUTS()[0];}
     public int LOUTPUT(){ return OUTPUTS()[OUTPUTS().length - 1];}
     public int[] INPUTS(){ return new int[]{0};}
     public int[] OUTPUTS(){ return new int[]{2};}
-    public int[] FSLOTS(){ return  ArrayUtils.addAll(ArrayUtils.addAll(ISLOTS(), OUTPUTS()));}
-    public int[] ISLOTS(){ return  ArrayUtils.addAll(INPUTS(),new int[FUEL()]);}
+    public int[] FSLOTS(){ return  ArrayUtils.addAll(ISLOTS(), OUTPUTS());}
+    public int[] ISLOTS(){ return  ArrayUtils.addAll(INPUTS(), FUEL());}
 
     private Random rand = new Random();
 
@@ -192,12 +191,12 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         return recipe;
     }
     public boolean hasXPTank() {
-        return hasUpgrade(Registration.XP.get()) && ItemUpgradeXpTank.isWorking();
+        return hasUpgrade(Registration.XP.get()) && XpTankUpgradeItem.isWorking();
     }
     public boolean hasEnder() {
         return (hasUpgradeType(Registration.FUEL.get()));
     }
-    public int getEnderMultiplier(){ if (hasEnder()) return ((ItemUpgradeFuelEfficiency)getUpgradeTypeSlotItem(Registration.FUEL.get()).getItem()).getMultiplier; else return 1;}
+    public int getEnderMultiplier(){ if (hasEnder()) return ((FuelEfficiencyUpgradeItem)getUpgradeTypeSlotItem(Registration.FUEL.get()).getItem()).getMultiplier; else return 1;}
     public boolean isLiquid() {
         return hasUpgrade(Registration.LIQUID.get());
     }
@@ -296,16 +295,16 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         return false;
     }
 
-    public boolean hasUpgradeType(ItemUpgrade upg) {
+    public boolean hasUpgradeType(UpgradeItem upg) {
         for (int slot : UPGRADES()) {
-            if (getItem(slot).getItem() instanceof ItemUpgrade && upg.upgradeType == ((ItemUpgrade)getItem(slot).getItem()).upgradeType) return true;
+            if (getItem(slot).getItem() instanceof UpgradeItem && upg.upgradeType == ((UpgradeItem)getItem(slot).getItem()).upgradeType) return true;
         }
         return hasUpgrade(upg);
     }
 
-    public ItemStack getUpgradeTypeSlotItem(ItemUpgrade upg) {
+    public ItemStack getUpgradeTypeSlotItem(UpgradeItem upg) {
         for (int slot : UPGRADES())
-            if (getItem(slot).getItem() instanceof ItemUpgrade && upg.upgradeType == ((ItemUpgrade) getItem(slot).getItem()).upgradeType) return getItem(slot);
+            if (getItem(slot).getItem() instanceof UpgradeItem && upg.upgradeType == ((UpgradeItem) getItem(slot).getItem()).upgradeType) return getItem(slot);
         return getItem(UPGRADES()[0]);
     }
 
@@ -976,10 +975,10 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
 
     @Override
     public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        if (index >= FOUTPUT() && index <= LOUTPUT())
+        if (ArrayUtils.contains(OUTPUTS(), index))
             return false;
 
-        if (index >= FINPUT() && index <= LINPUT()) {
+        if (ArrayUtils.contains(INPUTS(), index)) {
             if (stack.isEmpty()) {
                 return false;
             }
@@ -988,10 +987,12 @@ public abstract class BlockEntitySmeltingBase extends BlockEntityInventory imple
         }
 
         if (index == FUEL()) {
-            return isItemFuel(stack) || stack.hasContainerItem();
+            return isItemFuel(stack) || stack.hasContainerItem() || stack.getCapability(CapabilityEnergy.ENERGY).isPresent();
         }
-        if (index > LOUTPUT()) {
-            return (stack.getItem() instanceof ItemUpgrade || (stack.getItem() instanceof ItemUpgradeLiquidFuel && !(this instanceof BlockEntityForgeBase))) && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem());
+        if (ArrayUtils.contains(UPGRADES(), index)) {
+            if (stack.getItem() instanceof UpgradeItem && !hasUpgrade(stack.getItem()) && !hasUpgradeType((UpgradeItem) stack.getItem()))
+                if (((UpgradeItem) stack.getItem()).upgradeType == 1) return (index == HEATER() || !isForge());
+                else return true;
         }
         return false;
     }
