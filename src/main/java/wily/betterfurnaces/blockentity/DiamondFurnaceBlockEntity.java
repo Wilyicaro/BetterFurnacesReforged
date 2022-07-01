@@ -7,10 +7,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.container.DiamondFurnaceMenu;
+import wily.betterfurnaces.inventory.DiamondFurnaceMenu;
 import wily.betterfurnaces.init.Registration;
 
-public class DiamondFurnaceBlockEntity extends BlockEntitySmeltingBase {
+public class DiamondFurnaceBlockEntity extends AbstractSmeltingBlockEntity {
     public DiamondFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.DIAMOND_FURNACE_TILE.get(), pos, state,6);
     }

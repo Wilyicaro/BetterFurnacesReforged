@@ -2,7 +2,7 @@ package wily.betterfurnaces.items;
 
 import wily.betterfurnaces.init.Registration;
 
-public class DiamondUpgradeItem extends ItemUpgradeTier {
+public class DiamondUpgradeItem extends TierUpgradeItem {
 
 
     public DiamondUpgradeItem(Properties properties) {

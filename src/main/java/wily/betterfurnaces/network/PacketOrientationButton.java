@@ -4,9 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
-import wily.betterfurnaces.blockentity.BlockEntitySmeltingBase;
-import wily.betterfurnaces.blocks.BlockForgeBase;
-import wily.betterfurnaces.blocks.BlockFurnaceBase;
+import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.blocks.AbstractForgeBlock;
 
 import java.util.function.Supplier;
 
@@ -42,9 +41,9 @@ public class PacketOrientationButton {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer player = ctx.get().getSender();
 			BlockPos pos = new BlockPos(x, y, z);
-			BlockEntitySmeltingBase te = (BlockEntitySmeltingBase) player.getLevel().getBlockEntity(pos);
+			AbstractSmeltingBlockEntity te = (AbstractSmeltingBlockEntity) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
-				player.level.setBlock(pos, player.level.getBlockState(pos).setValue(BlockForgeBase.SHOW_ORIENTATION, state),3);
+				player.level.setBlock(pos, player.level.getBlockState(pos).setValue(AbstractForgeBlock.SHOW_ORIENTATION, state),3);
 				te.getLevel().markAndNotifyBlock(pos, player.getLevel().getChunkAt(pos), te.getLevel().getBlockState(pos).getBlock().defaultBlockState(), te.getLevel().getBlockState(pos), 2, 3);
 				te.setChanged();
 			}

@@ -9,9 +9,9 @@ public class ForgeEnergyStorage implements IEnergyStorage, INBTSerializable<Comp
     private int energy;
     private int capacity;
     private int maxInOut = 1000000;
-    private BlockEntitySmeltingBase tile;
+    private AbstractSmeltingBlockEntity tile;
 
-    public ForgeEnergyStorage(BlockEntitySmeltingBase tile, int energy, int capacity) {
+    public ForgeEnergyStorage(AbstractSmeltingBlockEntity tile, int energy, int capacity) {
         this.energy = energy;
         this.capacity = capacity;
         this.tile = tile;

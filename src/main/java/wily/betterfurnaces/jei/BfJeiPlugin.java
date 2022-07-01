@@ -13,7 +13,6 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -32,9 +31,9 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.gui.*;
+import wily.betterfurnaces.screens.*;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.ItemUpgradeTier;
+import wily.betterfurnaces.items.TierUpgradeItem;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.GuiUtil;
@@ -92,22 +91,22 @@ public class BfJeiPlugin implements IModPlugin {
 		Level world = Minecraft.getInstance().level;
 		RecipeManager recipeManager = world.getRecipeManager();
 		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes(recipeManager, Registration.ROCK_GENERATING_RECIPE.get()));
-		ItemUpgradeTier[] up = {Registration.IRON_UPGRADE.get(), Registration.GOLD_UPGRADE.get(), Registration.DIAMOND_UPGRADE.get(), Registration.NETHERHOT_UPGRADE.get(), Registration.EXTREME_UPGRADE.get()};
-		for (ItemUpgradeTier i : up)
+		TierUpgradeItem[] up = {Registration.IRON_UPGRADE.get(), Registration.GOLD_UPGRADE.get(), Registration.DIAMOND_UPGRADE.get(), Registration.NETHERHOT_UPGRADE.get(), Registration.EXTREME_UPGRADE.get()};
+		for (TierUpgradeItem i : up)
 			addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
 	}
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
 		if (Config.enableJeiPlugin.get() && Config.enableJeiClickArea.get()) {
-			registry.addRecipeClickArea(BlockIronFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(BlockGoldFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(BlockDiamondFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(BlockExtremeForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(BlockNetherhotFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(BlockExtremeFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 58, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
-			registry.addRecipeClickArea(BlockCobblestoneGeneratorScreen.class, 101, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
+			registry.addRecipeClickArea(IronFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+			registry.addRecipeClickArea(GoldFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+			registry.addRecipeClickArea(DiamondFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+			registry.addRecipeClickArea(ExtremeForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+			registry.addRecipeClickArea(NetherhotFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+			registry.addRecipeClickArea(ExtremeFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+			registry.addRecipeClickArea(AbstractCobblestoneGeneratorScreen.class, 58, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
+			registry.addRecipeClickArea(AbstractCobblestoneGeneratorScreen.class, 101, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
 		}
 	}
 

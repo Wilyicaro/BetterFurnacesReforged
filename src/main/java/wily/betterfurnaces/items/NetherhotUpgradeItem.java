@@ -2,7 +2,7 @@ package wily.betterfurnaces.items;
 
 import wily.betterfurnaces.init.Registration;
 
-public class NetherhotUpgradeItem extends ItemUpgradeTier {
+public class NetherhotUpgradeItem extends TierUpgradeItem {
 
 
     public NetherhotUpgradeItem(Properties properties) {

@@ -7,10 +7,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.container.GoldFurnaceMenu;
+import wily.betterfurnaces.inventory.GoldFurnaceMenu;
 import wily.betterfurnaces.init.Registration;
 
-public class GoldFurnaceBlockEntity extends BlockEntitySmeltingBase {
+public class GoldFurnaceBlockEntity extends AbstractSmeltingBlockEntity {
     public GoldFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.GOLD_FURNACE_TILE.get(), pos, state,6);
     }

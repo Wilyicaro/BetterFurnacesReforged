@@ -11,7 +11,7 @@ import wily.betterfurnaces.init.Registration;
 
 import javax.annotation.Nullable;
 
-public class NetherhotFurnaceBlock extends BlockFurnaceBase {
+public class NetherhotFurnaceBlock extends AbstractFurnaceBlock {
 
     public static final String NETHERHOT_FURNACE = "netherhot_furnace";
 

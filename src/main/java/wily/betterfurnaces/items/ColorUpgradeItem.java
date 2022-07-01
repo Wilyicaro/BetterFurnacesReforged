@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-import wily.betterfurnaces.container.AbstractUpgradeMenu;
+import wily.betterfurnaces.inventory.AbstractUpgradeMenu;
 import wily.betterfurnaces.init.Registration;
 
 public class ColorUpgradeItem extends UpgradeItem {

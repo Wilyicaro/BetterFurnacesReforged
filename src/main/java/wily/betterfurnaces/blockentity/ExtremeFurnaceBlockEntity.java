@@ -7,10 +7,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.container.ExtremeFurnaceMenu;
+import wily.betterfurnaces.inventory.ExtremeFurnaceMenu;
 import wily.betterfurnaces.init.Registration;
 
-public class ExtremeFurnaceBlockEntity extends BlockEntitySmeltingBase {
+public class ExtremeFurnaceBlockEntity extends AbstractSmeltingBlockEntity {
     public ExtremeFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.EXTREME_FURNACE_TILE.get(), pos, state,6);
     }

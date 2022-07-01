@@ -21,10 +21,10 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import wily.betterfurnaces.blocks.CobblestoneGeneratorBlock;
-import wily.betterfurnaces.container.AbstractCobblestoneGeneratorMenu;
+import wily.betterfurnaces.inventory.AbstractCobblestoneGeneratorMenu;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
-import wily.betterfurnaces.items.ItemUpgradeOreProcessing;
+import wily.betterfurnaces.items.OreProcessingUpgradeItem;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 
 import javax.annotation.Nonnull;
@@ -137,7 +137,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             e.initRecipes();
         }
         if (e.recipe == null && recipes != null) {
-            e.setRecipe(0);
+            e.setRecipe(e.resultType);
             e.updateBlockState();
         }
         ItemStack output = e.getItem(2);
@@ -162,13 +162,13 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             if ((e.cobTime >= e.getCobTime() && ((can  && can3)|| can1))){
                 if (can1) {
                     e.getInv().setStackInSlot(OUTPUT, e.getResult());
-                    if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing) {
+                    if (upgrade1.getItem() instanceof OreProcessingUpgradeItem) {
                         e.breakDurabilityItem(upgrade1);
                     }
                 }else {
                     if (can && can3) {
                         output.grow(e.getResult().getCount());
-                        if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing) {
+                        if (upgrade1.getItem() instanceof OreProcessingUpgradeItem) {
                             e.breakDurabilityItem(upgrade1);
                         }
                     }
@@ -211,7 +211,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
     }
     protected int getResultCount(){
         ItemStack upgrade1 = this.getItem(4);
-        if (upgrade1.getItem() instanceof ItemUpgradeOreProcessing)
+        if (upgrade1.getItem() instanceof OreProcessingUpgradeItem)
             return 2;
         else return 1;
     }
