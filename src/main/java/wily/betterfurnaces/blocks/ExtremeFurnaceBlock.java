@@ -11,7 +11,7 @@ import wily.betterfurnaces.init.Registration;
 
 import javax.annotation.Nullable;
 
-public class ExtremeFurnaceBlock extends BlockFurnaceBase {
+public class ExtremeFurnaceBlock extends AbstractFurnaceBlock {
 
     public static final String EXTREME_FURNACE = "extreme_furnace";
 

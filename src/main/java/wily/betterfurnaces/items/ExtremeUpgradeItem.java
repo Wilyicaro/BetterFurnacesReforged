@@ -2,7 +2,7 @@ package wily.betterfurnaces.items;
 
 import wily.betterfurnaces.init.Registration;
 
-public class ExtremeUpgradeItem extends ItemUpgradeTier {
+public class ExtremeUpgradeItem extends TierUpgradeItem {
 
 
     public ExtremeUpgradeItem(Properties properties) {

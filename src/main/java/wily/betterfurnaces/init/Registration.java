@@ -1,23 +1,17 @@
 package wily.betterfurnaces.init;
 
-import mezz.jei.api.JeiPlugin;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -25,7 +19,7 @@ import net.minecraftforge.registries.RegistryObject;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.*;
 import wily.betterfurnaces.blocks.*;
-import wily.betterfurnaces.container.*;
+import wily.betterfurnaces.inventory.*;
 import wily.betterfurnaces.items.*;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 
@@ -154,10 +148,10 @@ public class Registration {
     public static final RegistryObject<ExtremeUpgradeItem> EXTREME_UPGRADE = ITEMS.register("extreme_upgrade", () -> new ExtremeUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
     public static final RegistryObject<FuelEfficiencyUpgradeItem> FUEL = ITEMS.register("fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(256),2));
-    public static final RegistryObject<ItemUpgradeOreProcessing> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(128),2,true,false));
-    public static final RegistryObject<ItemUpgradeOreProcessing> RAWORE_PROCESSING = ITEMS.register("raw_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2,false,true));
+    public static final RegistryObject<OreProcessingUpgradeItem> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(128),2,true,false));
+    public static final RegistryObject<OreProcessingUpgradeItem> RAWORE_PROCESSING = ITEMS.register("raw_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2,false,true));
     public static final RegistryObject<FuelEfficiencyUpgradeItem> ADVFUEL = ITEMS.register("advanced_fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2));
-    public static final RegistryObject<ItemUpgradeOreProcessing> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2,true,false));
+    public static final RegistryObject<OreProcessingUpgradeItem> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2,true,false));
     public static final RegistryObject<FactoryUpgradeItem> FACTORY = ITEMS.register("factory_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1), "factory", true,true,true,true));
     public static final RegistryObject<FactoryUpgradeItem> PIPING = ITEMS.register("piping_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1), "piping", false,false,false,true));
     public static final RegistryObject<FactoryUpgradeItem> OUTPUT = ITEMS.register("autooutput_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1), "output", true,false,true,false));

@@ -29,7 +29,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "124";
+    public static final String VERSION = "125";
     public static final String MC_VERSION = "1.18.2";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -51,14 +51,14 @@ public class BetterFurnacesReforged
         MOD_EVENT_BUS.register(Registration.class);
         Registration.init();
 
+
+        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + "-client.toml"));
+        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + ".toml"));
         if (Config.checkUpdates.get()) {
             new UpCheck();
         } else {
             this.LOGGER.warn("You have disabled BetterFurnace's Update Checker, to re-enable: change the value of Update Checker in .minecraft->config->betterfurnacesreforged-client.toml to 'true'.");
         }
-
-        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + "-client.toml"));
-        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + ".toml"));
 
     }
     private static <T extends Recipe<?>> RecipeType<T> recipeRegister(final String key) {

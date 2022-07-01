@@ -1,7 +1,6 @@
 package wily.betterfurnaces.init;
 
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -10,21 +9,21 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.gui.*;
+import wily.betterfurnaces.screens.*;
 
 @Mod.EventBusSubscriber(modid = BetterFurnacesReforged.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSide {
 
     public static void init(final FMLClientSetupEvent event) {
-        MenuScreens.register(Registration.IRON_FURNACE_CONTAINER.get(), BlockIronFurnaceScreen::new);
-        MenuScreens.register(Registration.GOLD_FURNACE_CONTAINER.get(), BlockGoldFurnaceScreen::new);
-        MenuScreens.register(Registration.DIAMOND_FURNACE_CONTAINER.get(), BlockDiamondFurnaceScreen::new);
-        MenuScreens.register(Registration.NETHERHOT_FURNACE_CONTAINER.get(), BlockNetherhotFurnaceScreen::new);
-        MenuScreens.register(Registration.EXTREME_FURNACE_CONTAINER.get(), BlockExtremeFurnaceScreen::new);
-        MenuScreens.register(Registration.EXTREME_FORGE_CONTAINER.get(), BlockExtremeForgeScreen::new);
-        MenuScreens.register(Registration.COLOR_UPGRADE_CONTAINER.get(), ItemUpgradeColorScreen::new);
-        MenuScreens.register(Registration.COB_GENERATOR_CONTAINER.get(), BlockCobblestoneGeneratorScreen.BlockCobblestoneGeneratorScreenDefinition::new);
-        MenuScreens.register(Registration.FUEL_VERIFIER_CONTAINER.get(), BlockFuelVerifierScreen.BlockFuelVerifierScreenDefiniton::new);
+        MenuScreens.register(Registration.IRON_FURNACE_CONTAINER.get(), IronFurnaceScreen::new);
+        MenuScreens.register(Registration.GOLD_FURNACE_CONTAINER.get(), GoldFurnaceScreen::new);
+        MenuScreens.register(Registration.DIAMOND_FURNACE_CONTAINER.get(), DiamondFurnaceScreen::new);
+        MenuScreens.register(Registration.NETHERHOT_FURNACE_CONTAINER.get(), NetherhotFurnaceScreen::new);
+        MenuScreens.register(Registration.EXTREME_FURNACE_CONTAINER.get(), ExtremeFurnaceScreen::new);
+        MenuScreens.register(Registration.EXTREME_FORGE_CONTAINER.get(), ExtremeForgeScreen::new);
+        MenuScreens.register(Registration.COLOR_UPGRADE_CONTAINER.get(), ColorUpgradeScreen::new);
+        MenuScreens.register(Registration.COB_GENERATOR_CONTAINER.get(), AbstractCobblestoneGeneratorScreen.CobblestoneGeneratorScreen::new);
+        MenuScreens.register(Registration.FUEL_VERIFIER_CONTAINER.get(), AbstractFuelVerifierScreen.BlockFuelVerifierScreen::new);
         ItemBlockRenderTypes.setRenderLayer(Registration.IRON_FURNACE.get(), RenderType.cutoutMipped());
         ItemBlockRenderTypes.setRenderLayer(Registration.GOLD_FURNACE.get(), RenderType.cutoutMipped());
         ItemBlockRenderTypes.setRenderLayer(Registration.DIAMOND_FURNACE.get(), RenderType.cutoutMipped());

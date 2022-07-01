@@ -7,10 +7,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.container.ExtremeForgeMenu;
 import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.inventory.ExtremeForgeMenu;
 
-public class ExtremeForgeBlockEntity extends BlockEntityForgeBase {
+public class ExtremeForgeBlockEntity extends AbstractForgeBlockEntity {
 
     public static final String EXTREME_FORGE = "extreme_forge";
 

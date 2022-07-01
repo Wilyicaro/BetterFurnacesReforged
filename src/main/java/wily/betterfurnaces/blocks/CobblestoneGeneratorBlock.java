@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -42,6 +43,11 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     public CobblestoneGeneratorBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(TYPE, 0));
+    }
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+        int s = state.getValue(TYPE);
+        return s == 1 || s == 3  ? 9 : 0;
     }
 
     @Override

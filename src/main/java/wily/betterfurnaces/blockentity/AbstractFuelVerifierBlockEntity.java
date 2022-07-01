@@ -15,8 +15,8 @@ import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
-import wily.betterfurnaces.container.AbstractFuelVerifierMenu;
 import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.inventory.AbstractFuelVerifierMenu;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,8 +53,6 @@ public abstract class AbstractFuelVerifierBlockEntity extends InventoryBlockEnti
     public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new AbstractFuelVerifierMenu.FuelVerifierMenu(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
-    public final int[] provides = new int[Direction.values().length];
-    private final int[] lastProvides = new int[this.provides.length];
 
     /**
      * The number of ticks that the furnace will keep burning

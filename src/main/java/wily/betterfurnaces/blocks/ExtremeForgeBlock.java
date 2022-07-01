@@ -11,7 +11,7 @@ import wily.betterfurnaces.init.Registration;
 
 import javax.annotation.Nullable;
 
-public class ExtremeForgeBlock extends BlockForgeBase {
+public class ExtremeForgeBlock extends AbstractForgeBlock {
 
     public static final String EXTREME_FORGE = "extreme_forge";
 
