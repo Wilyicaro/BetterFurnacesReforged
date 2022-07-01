@@ -5,16 +5,16 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.container.GoldFurnaceContainer;
 import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.inventory.GoldFurnaceContainer;
 
-public class GoldFurnaceTileEntity extends BlockSmeltingTileBase {
+public class GoldFurnaceTileEntity extends AbstractSmeltingTileEntity {
     public GoldFurnaceTileEntity() {
-        super(Registration.GOLD_FURNACE_TILE.get(),6);
+        super(Registration.GOLD_FURNACE_TILE.get(), 6);
     }
 
     @Override
-   public ForgeConfigSpec.IntValue getCookTimeConfig() {
+    public ForgeConfigSpec.IntValue getCookTimeConfig() {
         return Config.goldTierSpeed;
     }
 

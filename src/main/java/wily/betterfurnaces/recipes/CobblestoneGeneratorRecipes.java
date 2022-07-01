@@ -3,8 +3,6 @@ package wily.betterfurnaces.recipes;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -17,7 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import wily.betterfurnaces.init.Registration;
 
-
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -27,11 +24,12 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
     public static final Serializer SERIALIZER = new Serializer();
 
     public static IRecipeType<CobblestoneGeneratorRecipes> TYPE;
-    public ResourceLocation recipeId;
     private final HashMap<Ingredient, Integer> ingredients = new LinkedHashMap<>();
+    public ResourceLocation recipeId;
     public Ingredient result;
     public int resultCount;
     public int duration;
+
     public CobblestoneGeneratorRecipes(ResourceLocation recipeId) {
         this.recipeId = recipeId;
     }
@@ -43,6 +41,7 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
     public int getDuration() {
         return duration;
     }
+
     @Override
     public boolean isSpecial() {
         return true;
@@ -72,9 +71,11 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
     public ResourceLocation getId() {
         return recipeId;
     }
+
     public Map<Ingredient, Integer> getIngredientMap() {
         return ImmutableMap.copyOf(ingredients);
     }
+
     public int getIngredientCost(ItemStack stack) {
         for (Map.Entry<Ingredient, Integer> entry : ingredients.entrySet()) {
             if (entry.getKey().test(stack)) {
@@ -82,6 +83,16 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
             }
         }
         return 0;
+    }
+
+    @Override
+    public IRecipeSerializer<?> getSerializer() {
+        return Registration.COB_GENERATION_SERIALIZER.get();
+    }
+
+    @Override
+    public IRecipeType<?> getType() {
+        return Registration.COB_GENERATION_RECIPE;
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CobblestoneGeneratorRecipes> {
@@ -117,13 +128,5 @@ public class CobblestoneGeneratorRecipes implements IRecipe<IInventory> {
             buffer.writeInt(recipe.resultCount);
 
         }
-    }
-        @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return Registration.COB_GENERATION_SERIALIZER.get();
-    }
-    @Override
-    public IRecipeType<?> getType() {
-        return Registration.COB_GENERATION_RECIPE;
     }
 }

@@ -53,22 +53,6 @@ public class Config {
 
     public static ForgeConfigSpec.BooleanValue showErrors;
 
-    public static String getLiquidXPType() {
-        if (Config.xpFluidType.get() == 0) {
-            return "mob_grinding_utils:fluid_xp";
-        } else if (Config.xpFluidType.get() == 1) {
-            return "industrialforegoing:essence";
-        } else if (Config.xpFluidType.get() == 2) {
-            return "cyclic:xpjuice";
-        } else if (Config.xpFluidType.get() == 3) {
-            return "reliquary:xp_juice";
-        }
-        return "mob_grinding_utils:fluid_xp";
-    }
-    public static String getLiquidXPMod() {
-        String s = getLiquidXPType();
-        return s.substring(0, s.indexOf(":"));
-    }
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
         ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
@@ -111,6 +95,24 @@ public class Config {
 
         COMMON_CONFIG = COMMON_BUILDER.build();
         CLIENT_CONFIG = CLIENT_BUILDER.build();
+    }
+
+    public static String getLiquidXPType() {
+        if (Config.xpFluidType.get() == 0) {
+            return "mob_grinding_utils:fluid_xp";
+        } else if (Config.xpFluidType.get() == 1) {
+            return "industrialforegoing:essence";
+        } else if (Config.xpFluidType.get() == 2) {
+            return "cyclic:xpjuice";
+        } else if (Config.xpFluidType.get() == 3) {
+            return "reliquary:xp_juice";
+        }
+        return "mob_grinding_utils:fluid_xp";
+    }
+
+    public static String getLiquidXPMod() {
+        String s = getLiquidXPType();
+        return s.substring(0, s.indexOf(":"));
     }
 
     private static void setupFurnacesConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder CLIENT_BUILDER) {
@@ -173,8 +175,6 @@ public class Config {
     }
 
 
-
-
     private static void setupJEIConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder CLIENT_BUILDER) {
 
         enableJeiPlugin = CLIENT_BUILDER
@@ -229,18 +229,14 @@ public class Config {
     }
 
     @Nullable
-    public static PlayerEntity getPlayer(IWorld world)
-    {
-        if (world == null)
-        {
+    public static PlayerEntity getPlayer(IWorld world) {
+        if (world == null) {
             return null;
         }
-        if (world.getPlayerByUUID(UUID.fromString("89f4f7f8-8ed5-479d-b04e-f7f843f14963")) != null)
-        {
+        if (world.getPlayerByUUID(UUID.fromString("89f4f7f8-8ed5-479d-b04e-f7f843f14963")) != null) {
             return world.getPlayerByUUID(UUID.fromString("89f4f7f8-8ed5-479d-b04e-f7f843f14963"));
         }
-        if (world.getPlayerByUUID(UUID.fromString("2b27a3a3-e2d6-468a-92e2-70f6f15b6e41")) != null)
-        {
+        if (world.getPlayerByUUID(UUID.fromString("2b27a3a3-e2d6-468a-92e2-70f6f15b6e41")) != null) {
             return world.getPlayerByUUID(UUID.fromString("2b27a3a3-e2d6-468a-92e2-70f6f15b6e41"));
         }
         return null;

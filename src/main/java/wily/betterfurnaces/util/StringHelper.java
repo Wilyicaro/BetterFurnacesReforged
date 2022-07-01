@@ -23,8 +23,7 @@ public class StringHelper {
         return text;
     }
 
-    public static List<ITextComponent> getShiftInfoGui()
-    {
+    public static List<ITextComponent> getShiftInfoGui() {
         List<ITextComponent> list = Lists.newArrayList();
         list.add(new TranslationTextComponent(("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_close")));
         IFormattableTextComponent tooltip1 = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_hold_shift");
@@ -37,8 +36,7 @@ public class StringHelper {
         return list;
     }
 
-    public static ITextComponent getShiftInfoText()
-    {
+    public static ITextComponent getShiftInfoText() {
         IFormattableTextComponent tooltip1 = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".hold");
         IFormattableTextComponent shift = new StringTextComponent("[Shift]");
         IFormattableTextComponent tooltip2 = new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".for_details");

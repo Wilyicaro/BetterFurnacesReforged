@@ -5,10 +5,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.container.ExtremeFurnaceContainer;
 import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.inventory.ExtremeFurnaceContainer;
 
-public class ExtremeFurnaceTileEntity extends BlockSmeltingTileBase {
+public class ExtremeFurnaceTileEntity extends AbstractSmeltingTileEntity {
     public ExtremeFurnaceTileEntity() {
         super(Registration.EXTREME_FURNACE_TILE.get(), 6);
     }

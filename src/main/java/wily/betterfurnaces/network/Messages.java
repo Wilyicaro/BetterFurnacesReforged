@@ -9,6 +9,7 @@ public class Messages {
     public static SimpleChannel INSTANCE;
 
     private static int ID = 0;
+
     private static int nextID() {
         return ID++;
     }

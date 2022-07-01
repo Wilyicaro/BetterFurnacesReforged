@@ -30,9 +30,10 @@ public class UpThreadCheck extends Thread {
 
             String currentMcVersion = BetterFurnacesReforged.MC_VERSION;
             String newestVersionProp = updateProperties.getProperty(currentMcVersion);
+            char[] newVersion = newestVersionProp.toCharArray();
 
             UpCheck.updateVersionInt = Integer.parseInt(newestVersionProp);
-            UpCheck.updateVersionString = currentMcVersion + "-release" + newestVersionProp;
+            UpCheck.updateVersionString = currentMcVersion + "-" + newVersion[0] + "." + newVersion[1] + "." + newVersion[2];
 
             int clientVersion = Integer.parseInt(BetterFurnacesReforged.VERSION);
             if (UpCheck.updateVersionInt > clientVersion) {

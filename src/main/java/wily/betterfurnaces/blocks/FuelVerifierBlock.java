@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class FuelVerifierBlock extends Block {
+public class FuelVerifierBlock extends Block {
     public static final String FUEL_VERIFIER = "fuel_verifier";
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -48,10 +48,12 @@ public abstract class FuelVerifierBlock extends Block {
     public boolean hasTileEntity(BlockState state) {
         return true;
     }
+
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
+
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> dropsOriginal = super.getDrops(state, builder);
@@ -66,7 +68,7 @@ public abstract class FuelVerifierBlock extends Block {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-                 this.interactWith(world, pos, player);
+            this.interactWith(world, pos, player);
         }
 
         return ActionResultType.SUCCESS;
@@ -78,6 +80,7 @@ public abstract class FuelVerifierBlock extends Block {
             NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getBlockPos());
         }
     }
+
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
@@ -92,7 +95,6 @@ public abstract class FuelVerifierBlock extends Block {
     }
 
 
-
     public BlockRenderType getRenderType(BlockState p_149645_1_) {
         return BlockRenderType.MODEL;
     }
@@ -104,10 +106,12 @@ public abstract class FuelVerifierBlock extends Block {
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
+
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING);
     }
+
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

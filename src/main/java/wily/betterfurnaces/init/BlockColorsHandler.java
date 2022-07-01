@@ -3,11 +3,10 @@ package wily.betterfurnaces.init;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import wily.betterfurnaces.tileentity.BlockSmeltingTileBase;
+import wily.betterfurnaces.tileentity.AbstractSmeltingTileEntity;
 
 import javax.annotation.Nullable;
 
@@ -28,8 +27,8 @@ public class BlockColorsHandler implements IBlockColor {
 
     @Override
     public int getColor(BlockState blockState, @Nullable IBlockDisplayReader iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
-        if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof BlockSmeltingTileBase) {
-            BlockSmeltingTileBase te = (BlockSmeltingTileBase) iBlockDisplayReader.getBlockEntity(blockPos);
+        if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof AbstractSmeltingTileEntity) {
+            AbstractSmeltingTileEntity te = (AbstractSmeltingTileEntity) iBlockDisplayReader.getBlockEntity(blockPos);
             if (te.hasUpgrade(Registration.COLOR.get()) && (te.getUpgradeSlotItem(Registration.COLOR.get()).getTag() != null)) {
                 return te.hex();
             }

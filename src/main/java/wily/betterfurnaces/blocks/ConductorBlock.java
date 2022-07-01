@@ -16,10 +16,12 @@ public class ConductorBlock extends Block {
     public ConductorBlock(Properties properties) {
         super(properties);
     }
+
     @Override
     public int getHarvestLevel(BlockState state) {
         return 2;
     }
+
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> dropsOriginal = super.getDrops(state, builder);
@@ -27,6 +29,7 @@ public class ConductorBlock extends Block {
             return dropsOriginal;
         return Collections.singletonList(new ItemStack(this, 1));
     }
+
     @Nullable
     @Override
     public ToolType getHarvestTool(BlockState state) {

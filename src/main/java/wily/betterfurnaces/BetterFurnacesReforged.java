@@ -16,12 +16,11 @@ import wily.betterfurnaces.network.Messages;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(BetterFurnacesReforged.MOD_ID)
-@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
-public class BetterFurnacesReforged
-{
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+public class BetterFurnacesReforged {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "192";
+    public static final String VERSION = "193";
     public static final String MC_VERSION = "1.16.5";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -42,15 +41,15 @@ public class BetterFurnacesReforged
 
         MOD_EVENT_BUS.register(Registration.class);
         Registration.init();
+        
+        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + "-client.toml"));
+        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + ".toml"));
 
         if (Config.checkUpdates.get()) {
             new UpCheck();
         } else {
             this.LOGGER.warn("You have disabled BetterFurnace's Update Checker, to re-enable: change the value of Update Checker in .minecraft->config->betterfurnacesreforged-client.toml to 'true'.");
         }
-
-        Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + "-client.toml"));
-        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + ".toml"));
 
     }
 }

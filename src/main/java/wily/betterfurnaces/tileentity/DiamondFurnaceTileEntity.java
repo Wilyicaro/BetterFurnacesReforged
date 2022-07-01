@@ -5,12 +5,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraftforge.common.ForgeConfigSpec;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.container.DiamondFurnaceContainer;
 import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.inventory.DiamondFurnaceContainer;
 
-public class DiamondFurnaceTileEntity extends BlockSmeltingTileBase {
+public class DiamondFurnaceTileEntity extends AbstractSmeltingTileEntity {
     public DiamondFurnaceTileEntity() {
-        super(Registration.DIAMOND_FURNACE_TILE.get(),6);
+        super(Registration.DIAMOND_FURNACE_TILE.get(), 6);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package wily.betterfurnaces.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,14 +25,14 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
-import wily.betterfurnaces.items.ItemUpgradeFuelEfficiency;
+import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
 import wily.betterfurnaces.tileentity.AbstractCobblestoneGeneratorTileEntity;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class CobblestoneGeneratorBlock extends Block {
+public class CobblestoneGeneratorBlock extends Block {
     public static final String COBBLESTONE_GENERATOR = "cobblestone_generator";
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -57,13 +56,15 @@ public abstract class CobblestoneGeneratorBlock extends Block {
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return 0;
+        int s = state.getValue(TYPE);
+        return s == 1 || s == 3  ? 9 : 0;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
+
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> dropsOriginal = super.getDrops(state, builder);
@@ -77,12 +78,10 @@ public abstract class CobblestoneGeneratorBlock extends Block {
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
         ItemStack stack = player.getItemInHand(handIn).copy();
         ItemStack hand = player.getItemInHand(handIn);
-        AbstractCobblestoneGeneratorTileEntity te = (AbstractCobblestoneGeneratorTileEntity) world.getBlockEntity(pos);
-
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof ItemUpgradeFuelEfficiency)) {
+            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof FuelEfficiencyUpgradeItem)) {
                 interactInsert(world, pos, player, handIn, stack);
             } else this.interactWith(world, pos, player);
         }
@@ -97,9 +96,10 @@ public abstract class CobblestoneGeneratorBlock extends Block {
             player.awardStat(Stats.INTERACT_WITH_FURNACE);
         }
     }
+
     private ActionResultType interactInsert(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof ItemUpgradeFuelEfficiency))){
+        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof FuelEfficiencyUpgradeItem))) {
             return ActionResultType.SUCCESS;
         }
         TileEntity te = world.getBlockEntity(pos);
@@ -108,20 +108,20 @@ public abstract class CobblestoneGeneratorBlock extends Block {
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
-        if (player.getItemInHand(handIn).getItem() instanceof ItemUpgradeFuelEfficiency) {
-            if ((!(((IInventory) te).getItem(3).isEmpty())) && (!player.isCreative())){
+        if (player.getItemInHand(handIn).getItem() instanceof FuelEfficiencyUpgradeItem) {
+            if ((!(((IInventory) te).getItem(3).isEmpty())) && (!player.isCreative())) {
                 InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(3));
             }
             ((IInventory) te).setItem(3, newStack);
         }
         if (hand.getItem() == Items.LAVA_BUCKET) {
-            if ((!(((IInventory) te).getItem(0).isEmpty())) && (!player.isCreative())){
+            if ((!(((IInventory) te).getItem(0).isEmpty())) && (!player.isCreative())) {
                 InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(0));
             }
             ((IInventory) te).setItem(0, newStack);
         }
         if (hand.getItem() == Items.WATER_BUCKET) {
-            if ((!(((IInventory) te).getItem(1).isEmpty())) && (!player.isCreative())){
+            if ((!(((IInventory) te).getItem(1).isEmpty())) && (!player.isCreative())) {
                 InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(1));
             }
             ((IInventory) te).setItem(1, newStack);
@@ -130,9 +130,10 @@ public abstract class CobblestoneGeneratorBlock extends Block {
         if (!player.isCreative()) {
             player.getItemInHand(handIn).shrink(1);
         }
-        ((AbstractCobblestoneGeneratorTileEntity)te).onUpdateSent();
+        ((AbstractCobblestoneGeneratorTileEntity) te).onUpdateSent();
         return ActionResultType.SUCCESS;
     }
+
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
@@ -147,10 +148,6 @@ public abstract class CobblestoneGeneratorBlock extends Block {
     }
 
 
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.MODEL;
-    }
-
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
@@ -158,10 +155,12 @@ public abstract class CobblestoneGeneratorBlock extends Block {
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
+
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING, TYPE);
     }
+
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

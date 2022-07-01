@@ -16,8 +16,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.items.ItemUpgradeTier;
-import wily.ultimatefurnaces.gui.*;
+import wily.betterfurnaces.items.TierUpgradeItem;
+import wily.ultimatefurnaces.screens.*;
 import wily.ultimatefurnaces.init.RegistrationUF;
 
 @JeiPlugin
@@ -34,8 +34,8 @@ public class UFJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         addDescription(registration, new ItemStack(RegistrationUF.ULTIMATE_UPGRADE.get()), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ultore"), new TranslationTextComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.unbreakable"));
-        ItemUpgradeTier[] up = {RegistrationUF.COPPER_UPGRADE.get(), RegistrationUF.IRON_UPGRADE.get(),RegistrationUF.STEEL_UPGRADE.get(), RegistrationUF.GOLD_UPGRADE.get(), RegistrationUF.AMETHYST_UPGRADE.get(), RegistrationUF.DIAMOND_UPGRADE.get(),RegistrationUF.PLATINUM_UPGRADE.get(), RegistrationUF.NETHERHOT_UPGRADE.get(),RegistrationUF.ULTIMATE_UPGRADE.get(), RegistrationUF.IRON_UPGRADE.get()};
-        for(ItemUpgradeTier i : up)
+        TierUpgradeItem[] up = {RegistrationUF.COPPER_UPGRADE.get(), RegistrationUF.IRON_UPGRADE.get(),RegistrationUF.STEEL_UPGRADE.get(), RegistrationUF.GOLD_UPGRADE.get(), RegistrationUF.AMETHYST_UPGRADE.get(), RegistrationUF.DIAMOND_UPGRADE.get(),RegistrationUF.PLATINUM_UPGRADE.get(), RegistrationUF.NETHERHOT_UPGRADE.get(),RegistrationUF.ULTIMATE_UPGRADE.get(), RegistrationUF.IRON_UPGRADE.get()};
+        for(TierUpgradeItem i : up)
             addDescription(registration, new ItemStack(i), new StringTextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
     }
 
@@ -64,14 +64,17 @@ public class UFJeiPlugin implements IModPlugin {
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registry) {
         if (Config.enableJeiPlugin.get() && Config.enableJeiClickArea.get()) {
-            registry.addRecipeClickArea(BlockCopperFurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeClickArea(BlockUltimateFurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeClickArea(BlockCopperForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeClickArea(BlockIronForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeClickArea(BlockGoldForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeClickArea(BlockDiamondForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeClickArea(BlockNetherhotForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
-            registry.addRecipeClickArea(BlockUltimateForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(CopperFurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(SteelFurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(AmethystFurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(PlatinumFurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(UltimateFurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(CopperForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(IronForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(GoldForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(DiamondForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(NetherhotForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
+            registry.addRecipeClickArea(UltimateForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FUEL, VanillaRecipeCategoryUid.FURNACE);
         }
     }
 }

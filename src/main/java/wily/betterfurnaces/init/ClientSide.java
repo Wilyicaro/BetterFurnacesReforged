@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.gui.*;
+import wily.betterfurnaces.screens.*;
 
 @Mod.EventBusSubscriber(modid = BetterFurnacesReforged.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSide {
@@ -18,10 +18,10 @@ public class ClientSide {
         ScreenManager.register(Registration.IRON_FURNACE_CONTAINER.get(), IronFurnaceScreen::new);
         ScreenManager.register(Registration.GOLD_FURNACE_CONTAINER.get(), GoldFurnaceScreen::new);
         ScreenManager.register(Registration.DIAMOND_FURNACE_CONTAINER.get(), DiamondFurnaceScreen::new);
-        ScreenManager.register(Registration.NETHERHOT_FURNACE_CONTAINER.get(), BlockNetherhotFurnaceScreen::new);
+        ScreenManager.register(Registration.NETHERHOT_FURNACE_CONTAINER.get(), NetherhotFurnaceScreen::new);
         ScreenManager.register(Registration.EXTREME_FURNACE_CONTAINER.get(), ExtremeFurnaceScreen::new);
         ScreenManager.register(Registration.EXTREME_FORGE_CONTAINER.get(), ExtremeForgeScreen::new);
-        ScreenManager.register(Registration.COLOR_UPGRADE_CONTAINER.get(), UpgradeColorScreen::new);
+        ScreenManager.register(Registration.COLOR_UPGRADE_CONTAINER.get(), ColorUpgradeScreen::new);
         ScreenManager.register(Registration.COB_GENERATOR_CONTAINER.get(), AbstractCobblestoneGeneratorScreen.CobblestoneGeneratorScreen::new);
         ScreenManager.register(Registration.FUEL_VERIFIER_CONTAINER.get(), AbstractFuelVerifierScreen.FuelVerifierScreen::new);
         RenderTypeLookup.setRenderLayer(Registration.IRON_FURNACE.get(), RenderType.cutoutMipped());

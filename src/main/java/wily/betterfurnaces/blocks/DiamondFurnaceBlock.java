@@ -7,7 +7,7 @@ import wily.betterfurnaces.tileentity.DiamondFurnaceTileEntity;
 
 import javax.annotation.Nullable;
 
-public class DiamondFurnaceBlock extends BlockFurnaceBase {
+public class DiamondFurnaceBlock extends AbstractFurnaceBlock {
 
     public static final String DIAMOND_FURNACE = "diamond_furnace";
 

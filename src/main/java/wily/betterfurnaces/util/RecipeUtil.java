@@ -4,6 +4,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.NonNullList;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +14,7 @@ public class RecipeUtil {
 
     public static List<IRecipe<?>> getRecipes(RecipeManager manager, IRecipeType<?> type) {
         Collection<IRecipe<?>> recipes = manager.getRecipes();
-        return (List)recipes.stream().filter((iRecipe) -> {
+        return recipes.stream().filter((iRecipe) -> {
             return iRecipe.getType() == type;
         }).collect(Collectors.toList());
     }

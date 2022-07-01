@@ -24,7 +24,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.*;
-import wily.betterfurnaces.container.*;
+import wily.betterfurnaces.inventory.*;
 import wily.betterfurnaces.items.*;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.tileentity.*;
@@ -81,9 +81,9 @@ public class Registration {
         return new GoldFurnaceContainer(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<ContainerType<ItemUpgradeColor.ContainerColorUpgrade>> COLOR_UPGRADE_CONTAINER = CONTAINERS.register("color_upgrade", () -> IForgeContainerType.create((windowId, inv, data) -> {
+    public static final RegistryObject<ContainerType<ColorUpgradeItem.ContainerColorUpgrade>> COLOR_UPGRADE_CONTAINER = CONTAINERS.register("color_upgrade", () -> IForgeContainerType.create((windowId, inv, data) -> {
         ItemStack helditem = inv.player.getMainHandItem();
-        return new ItemUpgradeColor.ContainerColorUpgrade(windowId, inv, helditem);
+        return new ColorUpgradeItem.ContainerColorUpgrade(windowId, inv, helditem);
     }));
 
     public static final RegistryObject<DiamondFurnaceBlock> DIAMOND_FURNACE = BLOCKS.register(DiamondFurnaceBlock.DIAMOND_FURNACE, () -> new DiamondFurnaceBlock(AbstractBlock.Properties.copy(Blocks.DIAMOND_BLOCK)));
@@ -140,10 +140,11 @@ public class Registration {
     public static final RegistryObject<Item> FUEL_VERIFIER_ITEM = ITEMS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> new BlockItem(FUEL_VERIFIER.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
     public static final RegistryObject<TileEntityType<AbstractFuelVerifierTileEntity.FuelVerifierTileEntity>> FUEL_VERIFIER_TILE = TILES.register(FuelVerifierBlock.FUEL_VERIFIER, () -> TileEntityType.Builder.of(AbstractFuelVerifierTileEntity.FuelVerifierTileEntity::new, FUEL_VERIFIER.get()).build(null));
 
-    public static final RegistryObject<ContainerType<AbstractFuelVerifierTileEntity.BlockFuelVerifierTileContainer>> FUEL_VERIFIER_CONTAINER = CONTAINERS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> IForgeContainerType.create((windowId, inv, data) -> {
+    public static final RegistryObject<ContainerType<AbstractFuelVerifierContainer.FuelVerifierContainer>> FUEL_VERIFIER_CONTAINER = CONTAINERS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntity().level;
-        return new AbstractFuelVerifierTileEntity.BlockFuelVerifierTileContainer(windowId, world, pos, inv, inv.player);
+        return new AbstractFuelVerifierContainer.FuelVerifierContainer(windowId, world, pos, inv, inv.player) {
+        };
     }));
 
     public static final RegistryObject<ConductorBlock> IRON_CONDUCTOR_BLOCK = BLOCKS.register("iron_conductor_block", () -> new ConductorBlock(AbstractBlock.Properties.copy(Blocks.IRON_BLOCK).strength(8.0F, 20.0F)));
@@ -155,38 +156,28 @@ public class Registration {
     public static final RegistryObject<ConductorBlock> NETHERHOT_CONDUCTOR_BLOCK = BLOCKS.register("netherhot_conductor_block", () -> new ConductorBlock(AbstractBlock.Properties.copy(Blocks.REDSTONE_BLOCK).strength(10.0F, 40.0F)));
     public static final RegistryObject<Item>  NETHERHOT_CONDUCTOR_ITEM = ITEMS.register("netherhot_conductor_block", () -> new BlockItem(NETHERHOT_CONDUCTOR_BLOCK.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
-    public static final RegistryObject<ItemUpgradeIron> IRON_UPGRADE = ITEMS.register("iron_upgrade", () -> new ItemUpgradeIron(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
-    public static final RegistryObject<ItemUpgradeGold> GOLD_UPGRADE = ITEMS.register("gold_upgrade", () -> new ItemUpgradeGold(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
-    public static final RegistryObject<ItemUpgradeDiamond> DIAMOND_UPGRADE = ITEMS.register("diamond_upgrade", () -> new ItemUpgradeDiamond(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
-    public static final RegistryObject<ItemUpgradeNetherhot> NETHERHOT_UPGRADE = ITEMS.register("netherhot_upgrade", () -> new ItemUpgradeNetherhot(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
-    public static final RegistryObject<ItemUpgradeExtreme> EXTREME_UPGRADE = ITEMS.register("extreme_upgrade", () -> new ItemUpgradeExtreme(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<IronUpgradeItem> IRON_UPGRADE = ITEMS.register("iron_upgrade", () -> new IronUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<GoldUpgradeItem> GOLD_UPGRADE = ITEMS.register("gold_upgrade", () -> new GoldUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<DiamondUpgradeItem> DIAMOND_UPGRADE = ITEMS.register("diamond_upgrade", () -> new DiamondUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<NetherhotUpgradeItem> NETHERHOT_UPGRADE = ITEMS.register("netherhot_upgrade", () -> new NetherhotUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<ExtremeUpgradeItem> EXTREME_UPGRADE = ITEMS.register("extreme_upgrade", () -> new ExtremeUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
 
 
-    public static final RegistryObject<ItemUpgradeFuelEfficiency> FUEL = ITEMS.register("fuel_efficiency_upgrade", () -> new ItemUpgradeFuelEfficiency(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(256),2));
-    public static final RegistryObject<ItemUpgradeOreProcessing> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(128),2));
-    public static final RegistryObject<ItemUpgradeFuelEfficiency> ADVFUEL = ITEMS.register("advanced_fuel_efficiency_upgrade", () -> new ItemUpgradeFuelEfficiency(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2));
-    public static final RegistryObject<ItemUpgradeOreProcessing> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new ItemUpgradeOreProcessing(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2));
-    public static final RegistryObject<ItemUpgrade> REDSTONE = ITEMS.register("redstone_signal_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"redstone",false,false,false,true));
-    public static final RegistryObject<ItemUpgrade> PIPING = ITEMS.register("piping_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"piping",false,false,true,false));
-    public static final RegistryObject<ItemUpgrade> INPUT_FACTORY = ITEMS.register("autoinput_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"input",false,true,true,false));
-    public static final RegistryObject<ItemUpgrade> OUTPUT_FACTORY = ITEMS.register("autooutput_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1), "output",true,false,true,false));
-    public static final RegistryObject<ItemUpgrade> FACTORY = ITEMS.register("factory_upgrade", () -> new ItemUpgradeFactory(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"factory",true,true,true,true));
-    public static final RegistryObject<ItemUpgradeColor> COLOR = ITEMS.register("color_upgrade", () -> new ItemUpgradeColor(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"color"));
-    public static final RegistryObject<ItemUpgradeLiquidFuel> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new ItemUpgradeLiquidFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"liquid"));
-    public static final RegistryObject<ItemUpgradeEnergyFuel> ENERGY = ITEMS.register("energy_upgrade", () -> new ItemUpgradeEnergyFuel(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"energy"));
-    public static final RegistryObject<ItemUpgradeXpTank> XP = ITEMS.register("xp_tank_upgrade", () -> new ItemUpgradeXpTank(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"xp"));
-    public static final RegistryObject<ItemUpgradeType> BLAST = ITEMS.register("blasting_upgrade", () -> new ItemUpgradeType(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"blasting"));
-    public static final RegistryObject<ItemUpgradeType> SMOKE = ITEMS.register("smoking_upgrade", () -> new ItemUpgradeType(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"smoking"));
-
-
-    public static void registerBlocks(RegistryEvent.Register<Block> event)
-    {
-    }
-
-
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
-    }
+    public static final RegistryObject<FuelEfficiencyUpgradeItem> FUEL = ITEMS.register("fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(256),2));
+    public static final RegistryObject<OreProcessingUpgradeItem> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1).durability(128),2));
+    public static final RegistryObject<FuelEfficiencyUpgradeItem> ADVFUEL = ITEMS.register("advanced_fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2));
+    public static final RegistryObject<OreProcessingUpgradeItem> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),2));
+    public static final RegistryObject<UpgradeItem> REDSTONE = ITEMS.register("redstone_signal_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"redstone",false,false,false,true));
+    public static final RegistryObject<UpgradeItem> PIPING = ITEMS.register("piping_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"piping",false,false,true,false));
+    public static final RegistryObject<UpgradeItem> INPUT_FACTORY = ITEMS.register("autoinput_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"input",false,true,true,false));
+    public static final RegistryObject<UpgradeItem> OUTPUT_FACTORY = ITEMS.register("autooutput_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1), "output",true,false,true,false));
+    public static final RegistryObject<UpgradeItem> FACTORY = ITEMS.register("factory_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"factory",true,true,true,true));
+    public static final RegistryObject<ColorUpgradeItem> COLOR = ITEMS.register("color_upgrade", () -> new ColorUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"color"));
+    public static final RegistryObject<LiquidFuelUpgradeItem> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new LiquidFuelUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"liquid"));
+    public static final RegistryObject<EnergyFuelUpgradeItem> ENERGY = ITEMS.register("energy_upgrade", () -> new EnergyFuelUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"energy"));
+    public static final RegistryObject<UpgradeItemXpTank> XP = ITEMS.register("xp_tank_upgrade", () -> new UpgradeItemXpTank(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"xp"));
+    public static final RegistryObject<TypeUpgradeItem> BLAST = ITEMS.register("blasting_upgrade", () -> new TypeUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"blasting"));
+    public static final RegistryObject<TypeUpgradeItem> SMOKE = ITEMS.register("smoking_upgrade", () -> new TypeUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP).stacksTo(1),"smoking"));
 
 
 }

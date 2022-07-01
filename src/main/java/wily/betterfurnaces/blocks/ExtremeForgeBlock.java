@@ -7,13 +7,14 @@ import wily.betterfurnaces.tileentity.ExtremeForgeTileEntity;
 
 import javax.annotation.Nullable;
 
-public class ExtremeForgeBlock extends BlockForgeBase {
+public class ExtremeForgeBlock extends AbstractForgeBlock {
 
     public static final String EXTREME_FORGE = "extreme_forge";
 
     public ExtremeForgeBlock(Properties properties) {
         super(properties);
     }
+
     @Override
     public int getHarvestLevel(BlockState state) {
         return 4;

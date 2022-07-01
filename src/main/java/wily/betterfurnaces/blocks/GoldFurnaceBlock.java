@@ -7,7 +7,7 @@ import wily.betterfurnaces.tileentity.GoldFurnaceTileEntity;
 
 import javax.annotation.Nullable;
 
-public class GoldFurnaceBlock extends BlockFurnaceBase {
+public class GoldFurnaceBlock extends AbstractFurnaceBlock {
 
     public static final String GOLD_FURNACE = "gold_furnace";
 
