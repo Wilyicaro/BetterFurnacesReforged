@@ -23,7 +23,7 @@ import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 import wily.betterfurnaces.util.DirectionUtil;
 
 
-public abstract class AbstractSmeltingContainer extends AbstractContainerMenu {
+public abstract class AbstractSmeltingMenu extends AbstractContainerMenu {
 
     public AbstractSmeltingBlockEntity te;
     protected ContainerData fields;
@@ -32,11 +32,11 @@ public abstract class AbstractSmeltingContainer extends AbstractContainerMenu {
     protected final Level world;
     private RecipeType<? extends AbstractCookingRecipe> recipeType;
 
-    public AbstractSmeltingContainer(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
+    public AbstractSmeltingMenu(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
         this(containerType, windowId, world, pos, playerInventory, player, new SimpleContainerData(5));
     }
 
-    public AbstractSmeltingContainer(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
+    public AbstractSmeltingMenu(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(containerType, windowId);
         this.te = (AbstractSmeltingBlockEntity) world.getBlockEntity(pos);
         this.recipeType = te.recipeType;

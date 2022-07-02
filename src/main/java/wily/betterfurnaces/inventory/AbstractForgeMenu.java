@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.level.Level;
 
 
-public abstract class AbstractForgeMenu extends AbstractSmeltingContainer {
+public abstract class AbstractForgeMenu extends AbstractSmeltingMenu {
 
     public AbstractForgeMenu(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
         super(containerType, windowId, world, pos, playerInventory, player);

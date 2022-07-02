@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.level.Level;
 
 
-public abstract class AbstractFurnaceMenu extends AbstractSmeltingContainer {
+public abstract class AbstractFurnaceMenu extends AbstractSmeltingMenu {
 
     public AbstractFurnaceMenu(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
         super(containerType, windowId, world, pos, playerInventory, player);

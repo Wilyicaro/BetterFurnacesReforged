@@ -103,7 +103,7 @@ public abstract class AbstractCobblestoneGeneratorMenu extends AbstractContainer
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickCraft(itemstack1, itemstack);
-            } else if ((!this.moveItemStackTo(itemstack1, 0, 1, false)) && (!this.moveItemStackTo(itemstack1, 3, 5, false))) {
+            } else if ((!this.moveItemStackTo(itemstack1, 0, 2, false)) && (!this.moveItemStackTo(itemstack1, 3, 5, false))) {
                 if (index < 5 + 27) {
                     if (!this.moveItemStackTo(itemstack1, 5 + 27, this.slots.size(), true)) {
                         return ItemStack.EMPTY;

@@ -25,20 +25,6 @@ public abstract class AbstractForgeBlockEntity extends AbstractSmeltingBlockEnti
         super(tileentitytypeIn, pos, state, 14);
     }
 
-    @Override
-    public boolean inputSlotsEmpty(){
-        return (!this.getInv().getStackInSlot(FINPUT()).isEmpty() || !this.getInv().getStackInSlot(FINPUT() +1).isEmpty() || !this.getInv().getStackInSlot(FINPUT() + 2).isEmpty());
-    }
-    @Override
-    public boolean smeltValid(){
-        return (this.canSmelt(irecipeSlot(FINPUT()).orElse(null), FINPUT(), FOUTPUT()) || this.canSmelt(irecipeSlot(FINPUT() + 1).orElse(null), FINPUT() + 1, FOUTPUT() + 1) || this.canSmelt(irecipeSlot(FINPUT() + 2).orElse(null), FINPUT() + 2, FOUTPUT() + 2));
-    }
-    @Override
-    public void trySmelt(){
-        this.smeltItem(irecipeSlot(FINPUT()).orElse(null), FINPUT(), correspondentOutputSlot(FINPUT()));
-        this.smeltItem(irecipeSlot(FINPUT() + 1).orElse(null), FINPUT() + 1, correspondentOutputSlot(FINPUT() + 1));
-        this.smeltItem(irecipeSlot(FINPUT() + 2).orElse(null), FINPUT() + 2, correspondentOutputSlot(FINPUT() + 2));
-    }
     public int getIndexBottom() {
         return facing().getOpposite().ordinal();
     }

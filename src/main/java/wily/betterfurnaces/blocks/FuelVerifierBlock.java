@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
+import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
 import wily.betterfurnaces.blockentity.AbstractFuelVerifierBlockEntity;
 import wily.betterfurnaces.init.Registration;
 
@@ -103,13 +104,13 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
     }
 
     @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>) p_152135_ : null;
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends AbstractFuelVerifierBlockEntity> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, AbstractFuelVerifierBlockEntity::tick);
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return (level1, pos, state1, tile) -> {
+            if (tile instanceof AbstractFuelVerifierBlockEntity.FuelVerifierBlockEntity be) {
+                be.tick(state1);
+            }
+        };
     }
 
     @Nullable
@@ -118,9 +119,4 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
         return new AbstractFuelVerifierBlockEntity.FuelVerifierBlockEntity(p_153215_, p_153216_);
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createFurnaceTicker(level, type, Registration.FUEL_VERIFIER_TILE.get());
-    }
 }

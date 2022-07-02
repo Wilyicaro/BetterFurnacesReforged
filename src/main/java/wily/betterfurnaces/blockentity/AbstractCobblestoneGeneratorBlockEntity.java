@@ -1,10 +1,14 @@
 package wily.betterfurnaces.blockentity;
 
+import net.minecraft.client.model.LavaSlimeModel;
+import net.minecraft.client.particle.DripParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -12,9 +16,11 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -31,6 +37,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
@@ -98,7 +105,6 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
         super(tileentitytypeIn, pos, state, 5);
 
     }
-
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
         if (state.getValue(CobblestoneGeneratorBlock.TYPE) != cobGen()) {
@@ -126,60 +132,77 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
         }
         initRecipes();
     }
-    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, AbstractCobblestoneGeneratorBlockEntity e) {
-        if (e.actualCobTime != e.getCobTime()){
-            e.actualCobTime = e.getCobTime();
+    public void tick(BlockState state) {
+        if (actualCobTime != getCobTime()){
+            actualCobTime = getCobTime();
         }
-        if (e.cobTime > e.getCobTime()){
-            e.cobTime = e.getCobTime();
+        if (cobTime > getCobTime()){
+            cobTime = getCobTime();
         }
         if (recipes == null) {
-            e.initRecipes();
+            initRecipes();
         }
-        if (e.recipe == null && recipes != null) {
-            e.setRecipe(e.resultType);
-            e.updateBlockState();
+        if (recipe == null && recipes != null) {
+            setRecipe(resultType);
+            updateBlockState();
         }
-        ItemStack output = e.getItem(2);
-        ItemStack upgrade = e.getItem(3);
-        ItemStack upgrade1 = e.getItem(4);
+        ItemStack output = getItem(2);
+        ItemStack upgrade = getItem(3);
+        ItemStack upgrade1 = getItem(4);
         boolean active = true;
         for (Direction side : Direction.values()) {
             if (level.getSignal(worldPosition.offset(side.getNormal()), side) > 0) {
                 active = false;
             }
         }
+        forceUpdateAllStates();
         boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
         boolean can1 = (output.isEmpty());
-        boolean can3 = (output.getItem() == e.getResult().getItem());
-        e.forceUpdateAllStates();
-        if (((e.cobGen() == 3) || e.cobTime > 0 && e.cobTime < e.actualCobTime) && active) {
+        boolean can3 = (output.getItem() == getResult().getItem());
+        if (((cobGen() == 3) || cobTime > 0 && cobTime < actualCobTime) && active) {
             if ((can && can3 )|| can1)
-                ++e.cobTime;
+                ++cobTime;
         }
-        if (!e.level.isClientSide) {
-            if (!output.isEmpty()) e.AutoIO();
-            if ((e.cobTime >= e.getCobTime() && ((can  && can3)|| can1))){
+
+            if ((cobTime >= getCobTime() && ((can  && can3)|| can1))){
+                if (!level.isClientSide) {
                 if (can1) {
-                    e.getInv().setStackInSlot(OUTPUT, e.getResult());
+                    getInv().setStackInSlot(OUTPUT, getResult());
                     if (upgrade1.getItem() instanceof OreProcessingUpgradeItem) {
-                        e.breakDurabilityItem(upgrade1);
+                        breakDurabilityItem(upgrade1);
                     }
                 }else {
                     if (can && can3) {
-                        output.grow(e.getResult().getCount());
+                        output.grow(getResult().getCount());
                         if (upgrade1.getItem() instanceof OreProcessingUpgradeItem) {
-                            e.breakDurabilityItem(upgrade1);
+                            breakDurabilityItem(upgrade1);
                         }
                     }
                 }
-                e.getLevel().playSound(null, e.getBlockPos(), SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 0.3F, 0.3F);
-                e.cobTime = 0;
-                e.breakDurabilityItem(upgrade);
-                e.AutoIO();
+                level.playSound(null, getBlockPos(), SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 0.3F, 0.3F);
+                breakDurabilityItem(upgrade);
+                AutoIO();
             }
-        }
+                cobTime = 0;
 
+                if (level.isClientSide) {
+                    RandomSource rand = RandomSource.create();
+                    double d0 = (double) worldPosition.getX() + 0.5D;
+                    double d1 = (double) worldPosition.getY() + 0.5D;
+                    double d2 = (double) worldPosition.getZ() + 0.5D;
+
+                    Direction direction = state.getValue(BlockStateProperties.FACING);
+                    Direction.Axis direction$axis = direction.getAxis();
+                    double d4 = rand.nextDouble() * 0.6D - 0.3D;
+                    double d5 = direction$axis == Direction.Axis.X ? (double) direction.getStepX() * 0.52D : d4;
+                    double d6 = rand.nextDouble() * 6.0D / 16.0D;
+                    double d7 = direction$axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52D : d4;
+                    for (int i = 0; i < 6; i++) {
+                        level.addParticle(ParticleTypes.LARGE_SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
+                    }
+                }
+            }
+        if (!output.isEmpty() && !level.isClientSide) AutoIO();
     }
     protected int cobGen(){
         ItemStack input = this.getInv().getStackInSlot(0);

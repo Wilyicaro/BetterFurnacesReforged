@@ -2,10 +2,12 @@ package wily.betterfurnaces.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,14 +26,18 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
+import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     public static final String COBBLESTONE_GENERATOR = "cobblestone_generator";
@@ -47,7 +53,7 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     @Override
     public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         int s = state.getValue(TYPE);
-        return s == 1 || s == 3  ? 9 : 0;
+        return s == 1 || s == 3 ? 9 : 0;
     }
 
     @Override
@@ -123,6 +129,7 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
         ((AbstractCobblestoneGeneratorBlockEntity)te).onUpdateSent();
         return InteractionResult.SUCCESS;
     }
+
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
@@ -137,10 +144,6 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     }
 
 
-    public RenderShape getRenderType(BlockState p_149645_1_) {
-        return RenderShape.MODEL;
-    }
-
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
@@ -152,26 +155,20 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING, TYPE);
     }
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends AbstractCobblestoneGeneratorBlockEntity> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, AbstractCobblestoneGeneratorBlockEntity::tick);
-    }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
         return new AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity(p_153215_, p_153216_);
     }
-
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createFurnaceTicker(level, type, Registration.COB_GENERATOR_TILE.get());
+        return (level1, pos, state1, tile) -> {
+            if (tile instanceof AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity be) {
+                    be.tick(state1);
+            }
+        };
     }
 
 }
