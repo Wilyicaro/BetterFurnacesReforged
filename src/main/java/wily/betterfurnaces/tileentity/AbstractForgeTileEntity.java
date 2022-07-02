@@ -10,62 +10,19 @@ public abstract class AbstractForgeTileEntity extends AbstractSmeltingTileEntity
 
     }
 
-    public int FUEL() {
-        return 3;
-    }
-
-    public int HEATER() {
-        return 10;
-    }
-
-    public int[] UPGRADES() {
-        return new int[]{7, 8, 9, 10, 11, 12, 13};
-    }
-
-    public int[] INPUTS() {
-        return new int[]{0, 1, 2};
-    }
-
-    public int[] OUTPUTS() {
-        return new int[]{4, 5, 6};
-    }
-
-    public int EnergyUse() {
-        return 1800;
-    }
-
-    public int LiquidCapacity() {
-        return 8000;
-    }
-
-    public int EnergyCapacity() {
-        return 64000;
-    }
-
-    public boolean isForge() {
-        return true;
-    }
+    public int FUEL() {return 3;}
+    public int HEATER() {return 10;}
+    public int[] UPGRADES() {return new int[]{7, 8, 9, 10, 11, 12, 13};}
+    public int[] INPUTS() {return new int[]{0, 1, 2};}
+    public int[] OUTPUTS() {return new int[]{4, 5, 6};}
+    public int EnergyUse() {return 1800;}
+    public int LiquidCapacity() {return 8000;}
+    public int EnergyCapacity() {return 64000;}
+    public boolean isForge() {return true;}
 
     @Override
     public Direction facing() {
         return this.getBlockState().getValue(BlockStateProperties.FACING);
-    }
-
-    @Override
-    public boolean inputSlotsEmpty() {
-        return (!this.inventory.get(FINPUT()).isEmpty() || !this.inventory.get(FINPUT() + 1).isEmpty() || !this.inventory.get(FINPUT() + 2).isEmpty());
-    }
-
-    @Override
-    public boolean smeltValid() {
-        return (this.canSmelt(irecipeSlot(FINPUT()).orElse(null), FINPUT(), FOUTPUT()) || this.canSmelt(irecipeSlot(FINPUT() + 1).orElse(null), FINPUT() + 1, FOUTPUT() + 1) || this.canSmelt(irecipeSlot(FINPUT() + 2).orElse(null), FINPUT() + 2, FOUTPUT() + 2));
-    }
-
-    @Override
-    public void trySmelt() {
-        this.smeltItem(irecipeSlot(FINPUT()).orElse(null), FINPUT(), correspondentOutputSlot(FINPUT()));
-        this.smeltItem(irecipeSlot(FINPUT() + 1).orElse(null), FINPUT() + 1, correspondentOutputSlot(FINPUT() + 1));
-        this.smeltItem(irecipeSlot(FINPUT() + 2).orElse(null), FINPUT() + 2, correspondentOutputSlot(FINPUT() + 2));
     }
 
     @Override

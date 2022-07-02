@@ -11,10 +11,9 @@
   "advancements.thebestfurnace.title": "The Best Furnace",
   "advancements.useless.descr": "After all, this is not so useless",
   "advancements.useless.title": "Useless",
-  
+
   "_comment": "Updates",
-  "betterfurnacesreforged.update.buttonOptions": "Shift-Click: Download! (In Browser)",
-  "betterfurnacesreforged.update.buttons": "{\"text\":\"] [\",\"color\":\"none\"},{\"text\":\"Click for Download\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}},{\"text\":\"]\",\"color\":\"none\"}]",
+  "betterfurnacesreforged.update.buttons": "[{\"text\":\"[✓]\",\"color\":\"green\"},{\"text\":\"Clique for Download\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}}]",
   "betterfurnacesreforged.update.failed": "[{\"text\":\"The Update Check for \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"blue\"},{\"text\":\"failed! Check Logs for more Info!\",\"color\":\"none\"}]",
   "betterfurnacesreforged.update.speech": "[{\"text\":\"There is an Update for \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"dark_aqua\"},{\"text\":\"available!\",\"color\":\"none\"}]",
   "betterfurnacesreforged.update.version": "[{\"text\":\"Current Version: \"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\", newest Version: \",\"color\":\"none\"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
