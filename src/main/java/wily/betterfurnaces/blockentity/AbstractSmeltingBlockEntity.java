@@ -359,22 +359,43 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
             level.setBlock(worldPosition, state.setValue(BlockStateProperties.LIT, this.isBurning()), 3);
         }
     }
-    public int correspondentOutputSlot(int input){return 4 + input;}
+    public int correspondentOutputSlot(int input){return FOUTPUT() - FINPUT() + input;}
     public void trySmelt(){
-        this.smeltItem(irecipeSlot(FINPUT()).orElse(null), FINPUT(), FOUTPUT());
+        for (int i : INPUTS()) {
+            if(!this.canSmelt(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i))) continue;
+            this.smeltItem(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i));
+        }
     }
     public Optional<AbstractCookingRecipe> irecipeSlot(int input){
-        if (!isForge() && input > FINPUT()) return Optional.empty();
+        if (ArrayUtils.contains(INPUTS(), input)) return Optional.empty();
         if (!getItem(input).isEmpty())
             return grabRecipe(getItem(input));
         else
             return Optional.empty();
     }
-    public boolean inputSlotsEmpty(){
-        return !this.getInv().getStackInSlot(FINPUT()).isEmpty();
+    public boolean hasArraySlotSpace(int[] slots){
+        for (int i : slots) {
+            boolean noFull = this.getItem(i).getCount() < getItem(i).getMaxStackSize() && !getItem(i).isEmpty();
+            if(noFull) continue;
+            return true;
+        }
+        return false;
     }
+    public boolean arraySlotFilled(int[] slots, boolean isFilled){
+        for (int i : slots) {
+            boolean filled = this.getItem(i).isEmpty();
+            if (!isFilled) filled = !filled;
+            if(filled) continue;
+            return true;
+        }
+        return false;
+        }
     public boolean smeltValid(){
-        return this.canSmelt(irecipeSlot(FINPUT()).orElse(null), FINPUT(), FOUTPUT());
+        for (int i : INPUTS()) {
+            if(!this.canSmelt(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i))) continue;
+            return true;
+        }
+        return false;
     }
 
     public static void tick(Level level, BlockPos worldPosition, BlockState blockState, AbstractSmeltingBlockEntity e) {
@@ -485,7 +506,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                     e.setItem(e.FUEL(), res.result);
                 }
             }
-            if ((e.isBurning() || !fuel.isEmpty() || e.isLiquid() || e.isEnergy()) &&  e.inputSlotsEmpty()) {
+            if ((e.isBurning() || !fuel.isEmpty() || e.isLiquid() || e.isEnergy()) &&  e.arraySlotFilled(e.INPUTS(), true)) {
                 boolean valid = e.smeltValid();
                 if (!e.isBurning() && (valid)) {
                     if (e.isLiquid() && (e.fluidTank.getFluidAmount() >= 10) ){
@@ -552,17 +573,18 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
             }
             if ((e.timer % 24 == 0) && (e.hasUpgradeType(Registration.FACTORY.get()))){
                 if (e.cookTime <= 0) {
-                    int a = 0;
-                    for (int i: e.INPUTS())
-                        a = a + e.getItem(i).getCount();
-                    if (e.inputSlotsEmpty()) {
+                    if (e.arraySlotFilled(e.INPUTS(), false)) {
                         e.autoIO();
                         flag1 = true;
-                    } else if ((e.FINPUT() - e.LINPUT() * 3 > a)) {
+                    } else if (e.hasArraySlotSpace(e.INPUTS())) {
                         e.autoIO();
                         flag1 = true;
                     }
-                    if (e.getItem(e.FUEL()).isEmpty()) {
+                    if (e.arraySlotFilled(e.OUTPUTS(), true)) {
+                        e.autoIO();
+                        flag1 = true;
+                    }
+                    if (e.getItem(e.FUEL()).isEmpty() && !e.isLiquid() && !e.isEnergy()) {
                         e.autoIO();
                         flag1 = true;
                     } else if (e.getItem(e.FUEL()).getCount() < e.getItem(e.FUEL()).getMaxStackSize() || FluidUtil.getFluidHandler(fuel).isPresent() && FluidUtil.getFluidContained(fuel).isPresent() && (FluidUtil.getFluidContained(fuel).get().getAmount() < e.fluidTank.getSpace()) ){
@@ -1102,19 +1124,4 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
         this.level.updateNeighborsAt(this.worldPosition, getBlockState().getBlock());
     }
 
-
-    public void placeConfig() {
-
-        if (this.furnaceSettings != null) {
-            this.furnaceSettings.set(0, 2);
-            this.furnaceSettings.set(1, 1);
-            for (Direction dir : Direction.values()) {
-                if (dir != Direction.DOWN && dir != Direction.UP) {
-                    this.furnaceSettings.set(dir.ordinal(), 4);
-                }
-            }
-            level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), level.getBlockState(worldPosition).getBlock().defaultBlockState(), level.getBlockState(worldPosition), 3, 3);
-        }
-
-    }
 }

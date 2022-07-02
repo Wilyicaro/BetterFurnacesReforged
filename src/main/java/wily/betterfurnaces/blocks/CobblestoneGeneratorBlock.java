@@ -152,15 +152,6 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING, TYPE);
     }
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends AbstractCobblestoneGeneratorBlockEntity> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, AbstractCobblestoneGeneratorBlockEntity::tick);
-    }
 
     @Nullable
     @Override
@@ -171,7 +162,11 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createFurnaceTicker(level, type, Registration.COB_GENERATOR_TILE.get());
+        return (level1, pos, state1, tile) -> {
+            if (tile instanceof AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity be) {
+                be.tick(state1);
+            }
+        };
     }
 
 }

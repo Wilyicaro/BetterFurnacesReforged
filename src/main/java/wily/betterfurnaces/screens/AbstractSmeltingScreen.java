@@ -19,10 +19,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.blocks.AbstractForgeBlock;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.AbstractSmeltingMenu;
 import wily.betterfurnaces.items.FactoryUpgradeItem;
 import wily.betterfurnaces.network.Messages;
+import wily.betterfurnaces.network.PacketOrientationButton;
 import wily.betterfurnaces.network.PacketSettingsButton;
 import wily.betterfurnaces.network.PacketShowSettingsButton;
 import wily.betterfurnaces.util.FluidRenderUtil;
@@ -165,6 +167,8 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
                     list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_back"));
                     list.add(this.getMenu().getTooltip(this.getMenu().getIndexBack()));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                }else if(getMenu().te.isForge() && mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
+                    this.renderTooltip(matrix, new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_show_orientation"), mouseX, mouseY);
                 }
             }
             if (storedFactoryUpgradeType(4)) {
@@ -321,8 +325,15 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
                     this.blit(matrix, getGuiLeft() - 31, getGuiTop() + 58, 14, 189, 14, 14);
                 }
             }
-            if (storedFactoryUpgradeType(3))
+            if (storedFactoryUpgradeType(3)) {
+                if (getMenu().te.isForge()) {
+                    this.blit(matrix, getGuiLeft() - 15, getGuiTop() + 58, 168, 189, 14, 14);
+                    if (getMenu().te.isForge() && (mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71 || this.getMenu().te.getBlockState().getValue(AbstractForgeBlock.SHOW_ORIENTATION))) {
+                        this.blit(matrix, getGuiLeft() - 15, getGuiTop() + 58, 182, 189, 14, 14);
+                    }
+                }
                 this.blitIO(matrix);
+            }
         }
 
 
@@ -508,6 +519,10 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
                             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                         }
                     }
+                }
+                if (getMenu().te.isForge() && mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
+                    Messages.INSTANCE.sendToServer(new PacketOrientationButton(this.getMenu().getPos(), !this.getMenu().te.getBlockState().getValue(AbstractForgeBlock.SHOW_ORIENTATION)));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                 }
 
                 if (mouseX >= -31 && mouseX <= -18 && mouseY >= 74 && mouseY <= 87) {

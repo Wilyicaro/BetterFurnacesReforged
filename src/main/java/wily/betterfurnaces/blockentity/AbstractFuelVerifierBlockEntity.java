@@ -70,12 +70,12 @@ public abstract class AbstractFuelVerifierBlockEntity extends InventoryBlockEnti
 
     }
 
-    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, AbstractFuelVerifierBlockEntity e) {
-        ItemStack fuel = e.getItem(0);
-        if (!e.level.isClientSide) {
+    public void tick(BlockState blockState) {
+        if (!level.isClientSide) {
+            ItemStack fuel = getItem(0);
             if (!(fuel.isEmpty()))
-            e.burnTime = getBurnTime(fuel);
-            else e.burnTime = 0;
+            burnTime = getBurnTime(fuel);
+            else burnTime = 0;
         }
 
     }

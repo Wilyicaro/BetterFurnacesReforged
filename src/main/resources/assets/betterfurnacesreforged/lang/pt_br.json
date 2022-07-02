@@ -13,7 +13,7 @@
   "advancements.useless.title": "Inútil",
   
   "_comment": "Updates",
-  "betterfurnacesreforged.update.buttons": "{\"text\":\"[✓]\",\"color\":\"green\"},\"text\":\"Clique para fazer Download\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}},{\"text\":\"]\",\"color\":\"none\"}]",
+  "betterfurnacesreforged.update.buttons": "[{\"text\":\"[✓]\",\"color\":\"green\"},{\"text\":\"Clique para fazer Download\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}}]",
   "betterfurnacesreforged.update.failed": "[{\"text\":\"O gerenciador de updates do \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"blue\"},{\"text\":\"falhou! Observe os Logs para mais informações!\",\"color\":\"none\"}]",
   "betterfurnacesreforged.update.speech": "[{\"text\":\"Há um update disponível para \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"dark_aqua\"},{\"text\":\"!\",\"color\":\"none\"}]",
   "betterfurnacesreforged.update.version": "[{\"text\":\"Versão atual: \"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\", Nova versão: \",\"color\":\"none\"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
