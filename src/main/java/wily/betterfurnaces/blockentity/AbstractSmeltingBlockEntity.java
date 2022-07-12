@@ -367,7 +367,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
         }
     }
     public Optional<AbstractCookingRecipe> irecipeSlot(int input){
-        if (ArrayUtils.contains(INPUTS(), input)) return Optional.empty();
+        if (!ArrayUtils.contains(INPUTS(), input)) return Optional.empty();
         if (!getItem(input).isEmpty())
             return grabRecipe(getItem(input));
         else

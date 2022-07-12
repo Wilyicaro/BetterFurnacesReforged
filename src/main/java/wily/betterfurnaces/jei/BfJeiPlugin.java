@@ -92,7 +92,7 @@ public class BfJeiPlugin implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		Level world = Minecraft.getInstance().level;
 		RecipeManager recipeManager = world.getRecipeManager();
-		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes( recipeManager, CobblestoneGeneratorRecipes.TYPE));
+		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes( recipeManager, CobblestoneGeneratorRecipes.Type.INSTANCE));
 		TierUpgradeItem[] up = {Registration.IRON_UPGRADE.get(), Registration.GOLD_UPGRADE.get(), Registration.DIAMOND_UPGRADE.get(), Registration.NETHERHOT_UPGRADE.get(), Registration.EXTREME_UPGRADE.get()};
 		for (TierUpgradeItem i : up)
 			addDescription(registration, new ItemStack(i), new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));

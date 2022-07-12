@@ -3,6 +3,7 @@ package wily.betterfurnaces;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.RegistryEvent;
@@ -11,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
@@ -45,7 +47,6 @@ public class BetterFurnacesReforged
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.COMMON_CONFIG);
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModObjects::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSide::init);
 
         MOD_EVENT_BUS.register(Registration.class);
@@ -61,16 +62,8 @@ public class BetterFurnacesReforged
         }
 
     }
-    private static <T extends Recipe<?>> RecipeType<T> recipeRegister(final String key) {
-        return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(MOD_ID, key), new RecipeType<T>() {
-            @Override
-            public String toString() {
-                return key;
-            }
-        });
-    }
     @SubscribeEvent
-    public static void registerRecipes(RegistryEvent.Register<Block> ev) {
-        CobblestoneGeneratorRecipes.TYPE = recipeRegister("rock_generating");
+    public static void registerRecipeTypes(final RegistryEvent.Register<RecipeSerializer<?>> event) {
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(BetterFurnacesReforged.MOD_ID, CobblestoneGeneratorRecipes.Type.ID), CobblestoneGeneratorRecipes.Type.INSTANCE);
     }
 }

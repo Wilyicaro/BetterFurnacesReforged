@@ -22,7 +22,6 @@ import java.util.Map;
 public class CobblestoneGeneratorRecipes implements Recipe<Container> {
     public static final CobblestoneGeneratorRecipes.Serializer SERIALIZER = new CobblestoneGeneratorRecipes.Serializer();
 
-    public static RecipeType<CobblestoneGeneratorRecipes> TYPE;
     public ResourceLocation recipeId;
     private final HashMap<Ingredient, Integer> ingredients = new LinkedHashMap<>();
     public Ingredient result;
@@ -114,6 +113,12 @@ public class CobblestoneGeneratorRecipes implements Recipe<Container> {
     }
     @Override
     public RecipeType<?> getType() {
-        return TYPE;
+        return Type.INSTANCE;
+    }
+
+    public static class Type implements RecipeType<CobblestoneGeneratorRecipes> {
+        private Type() { }
+        public static final Type INSTANCE = new Type();
+        public static final String ID = "rock_generating";
     }
 }

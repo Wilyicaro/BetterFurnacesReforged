@@ -22,6 +22,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.CobblestoneGeneratorBlock;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.AbstractCobblestoneGeneratorMenu;
@@ -31,6 +32,7 @@ import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -87,6 +89,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
     public static final int INPUT1 = 1;
     public static final int OUTPUT = 2;
     public static final int UPGRADE = 3;
+    public static final int UPGRADE1 = 4;
 
     private int cobTime;
     private int actualCobTime = getCobTime();
@@ -108,16 +111,24 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             level.setBlock(worldPosition, state.setValue(CobblestoneGeneratorBlock.TYPE, cobGen()), 3);
         }
     }
+    protected List<CobblestoneGeneratorRecipes> getSortedCobRecipes(){
+       return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.Type.INSTANCE).stream().sorted(new Comparator<CobblestoneGeneratorRecipes>() {
+            @Override
+            public int compare(CobblestoneGeneratorRecipes o1, CobblestoneGeneratorRecipes o2) {
+                return o1.recipeId.getPath().compareTo(o2.recipeId.getPath());
+            }
+        }).toList();
+    }
     public void initRecipes() {
-        recipes = Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.TYPE);
+        recipes = getSortedCobRecipes();
     }
     public void setRecipe(int index) {
         if (level != null) {
-            this.recipe = Objects.requireNonNullElseGet(recipes, () -> level.getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.TYPE)).get(index);
+            this.recipe = Objects.requireNonNullElseGet(recipes, this::getSortedCobRecipes).get(index);
         }
     }
-    public void changeRecipe(boolean next, boolean onlyUpdate) {
-        if (recipes != null && !onlyUpdate) {
+    public void changeRecipe(boolean next) {
+        if (recipes != null) {
             int newIndex = resultType + (next ? 1 : -1);
             if (newIndex > recipes.size() - 1) newIndex = 0;
             if (newIndex < 0) newIndex = recipes.size() - 1;
@@ -126,8 +137,8 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             this.resultType = newIndex;
 
             this.updateBlockState();
+
         }
-        initRecipes();
     }
     public void tick(BlockState state) {
         if (actualCobTime != getCobTime()){
@@ -139,20 +150,20 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
         if (recipes == null) {
             initRecipes();
         }
-        if (recipe == null && recipes != null) {
+        if (recipe == null && recipes != null || level.isClientSide && recipes.indexOf(recipe) != resultType) {
             setRecipe(resultType);
             updateBlockState();
         }
-        ItemStack output = getItem(2);
-        ItemStack upgrade = getItem(3);
-        ItemStack upgrade1 = getItem(4);
+        if (!getLevel().isClientSide)forceUpdateAllStates();
+        ItemStack output = getItem(OUTPUT);
+        ItemStack upgrade = getItem(UPGRADE);
+        ItemStack upgrade1 = getItem(UPGRADE1);
         boolean active = true;
         for (Direction side : Direction.values()) {
             if (level.getSignal(worldPosition.offset(side.getNormal()), side) > 0) {
                 active = false;
             }
         }
-        forceUpdateAllStates();
         boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
         boolean can1 = (output.isEmpty());
         boolean can3 = (output.getItem() == getResult().getItem());
@@ -183,7 +194,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             cobTime = 0;
 
             if (level.isClientSide) {
-                Random rand = new Random();
+                Random rand = level.random;
                 double d0 = (double) worldPosition.getX() + 0.5D;
                 double d1 = (double) worldPosition.getY() + 0.5D;
                 double d2 = (double) worldPosition.getZ() + 0.5D;
@@ -222,9 +233,9 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
         if (recipe != null) return recipe.duration / FuelEfficiencyMultiplier();
         return -1;
     }
-    protected ItemStack getResult(){
+    public ItemStack getResult(){
         ItemStack result;
-        if (recipe != null) result = new ItemStack(recipes.get(resultType).getResultItem().getItem());
+        if (recipe != null) result = recipe.getResultItem();
         else result = new ItemStack(Items.COBBLESTONE);
         result.setCount(getResultCount());
         return result;
@@ -235,14 +246,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             return 2;
         else return 1;
     }
-    protected boolean hasLava() {
-        ItemStack input = this.getInv().getStackInSlot(0);
-        return (input.getItem() == Items.WATER_BUCKET);
-    }
-    protected boolean hasWater() {
-        ItemStack input = this.getInv().getStackInSlot(1);
-        return (input.getItem() == Items.WATER_BUCKET);
-    }
+
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
@@ -318,7 +322,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
                 return false;
             }
 
-            return hasLava();
+            return stack.getItem() == Items.LAVA_BUCKET;
 
         }
         if (index == INPUT1) {
@@ -326,7 +330,23 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
                 return false;
             }
 
-            return hasWater();
+            return stack.getItem() == Items.WATER_BUCKET;
+
+        }
+        if (index == UPGRADE) {
+            if (stack.isEmpty()) {
+                return false;
+            }
+
+            return stack.getItem() instanceof FuelEfficiencyUpgradeItem;
+
+        }
+        if (index == UPGRADE1) {
+            if (stack.isEmpty()) {
+                return false;
+            }
+
+            return stack.getItem() instanceof OreProcessingUpgradeItem;
 
         }
         return false;
