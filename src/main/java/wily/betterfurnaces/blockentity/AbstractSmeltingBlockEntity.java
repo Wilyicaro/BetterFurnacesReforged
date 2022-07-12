@@ -496,7 +496,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                 e.onUpdateSent();
             }
             ItemStack fuel = e.getItem(e.FUEL());
-            if (e.isLiquid() && fuel.hasContainerItem()) {
+            if (e.isLiquid() && fuel.hasFoil()) {
                 FluidActionResult res = FluidUtil.tryEmptyContainer(fuel, e.fluidTank, 1000, null, true);
                 if ( res.isSuccess()) {
                     e.level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
@@ -539,7 +539,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                     if (e.isBurning()) {
                         flag1 = true;
                         if ((!e.isLiquid() || e.fluidTank.getFluidAmount() < 10) && !e.isEnergy())
-                            if (fuel.hasContainerItem()) e.getInv().setStackInSlot(e.FUEL(), ForgeHooks.getContainerItem(fuel));
+                            fuel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> e.getInv().setStackInSlot(e.FUEL(), f.getContainer()));
                             else if (!fuel.isEmpty() && isItemFuel(fuel)) {
                                 fuel.shrink(1);
                                 if (e.hasUpgrade(Registration.FUEL.get())) {
@@ -1008,7 +1008,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
         }
 
         if (index == FUEL()) {
-            return isItemFuel(stack) || stack.hasContainerItem() || stack.getCapability(CapabilityEnergy.ENERGY).isPresent();
+            return isItemFuel(stack) || stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() || stack.getCapability(CapabilityEnergy.ENERGY).isPresent();
         }
         if (ArrayUtils.contains(UPGRADES(), index)) {
             if (stack.getItem() instanceof UpgradeItem && !hasUpgrade(stack.getItem()) && !hasUpgradeType((UpgradeItem) stack.getItem()))

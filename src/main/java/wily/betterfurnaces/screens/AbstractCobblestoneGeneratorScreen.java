@@ -31,10 +31,7 @@ public abstract class AbstractCobblestoneGeneratorScreen<T extends AbstractCobbl
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/widgets.png");
     Inventory playerInv;
     Component name;
-    private List<CobblestoneGeneratorRecipes> recipes(){
-        Messages.INSTANCE.sendToServer(new PacketCobblestoneRecipeUpdate(this.getMenu().getPos(), true));
-        return  AbstractCobblestoneGeneratorBlockEntity.recipes == null ?  Objects.requireNonNull(getMenu().te.getLevel().getRecipeManager().getAllRecipesFor(Registration.ROCK_GENERATING_RECIPE.get())) : AbstractCobblestoneGeneratorBlockEntity.recipes;
-    }
+
 
     public AbstractCobblestoneGeneratorScreen(T t, Inventory inv, Component name) {
         super(t, inv, name);
@@ -72,7 +69,7 @@ public abstract class AbstractCobblestoneGeneratorScreen<T extends AbstractCobbl
 
     private void addTooltips(PoseStack matrix, int mouseX, int mouseY) {
         if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
-            this.renderTooltip(matrix, recipes().get(getMenu().te.resultType).getResultItem(), mouseX, mouseY);
+            this.renderTooltip(matrix, getMenu().te.getResult(), mouseX, mouseY);
         }
     }
 
@@ -85,7 +82,7 @@ public abstract class AbstractCobblestoneGeneratorScreen<T extends AbstractCobbl
         int relX = (this.width - this.getXSize()) / 2;
         int relY = (this.height - this.getYSize()) / 2;
         this.blit(matrix, relX, relY, 0, 0, this.getXSize(), this.getYSize());
-        renderGuiItem(recipes().get(getMenu().te.resultType).getResultItem(),getGuiLeft() + 80, getGuiTop() + 24, 0.75F, 0.75F);
+        renderGuiItem(getMenu().te.getResult(),getGuiLeft() + 80, getGuiTop() + 24, 0.75F, 0.75F);
         RenderSystem.setShaderTexture(0, WIDGETS);
             if (actualMouseX>= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39){
                 this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 98, 157, 14, 14);

@@ -38,12 +38,6 @@ public abstract class AbstractFuelVerifierScreen<T extends AbstractFuelVerifierM
     }
 
     @Override
-    protected void init() {
-        super.init();
-    }
-
-
-    @Override
     protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
         Component invname = this.playerInv.getDisplayName();
         Component burntime = Component.translatable("gui.betterfurnacesreforged.fuel.melts").append(Component.literal(String.valueOf(((AbstractFuelVerifierMenu) this.getMenu()).getBurnTime()))).append( Component.translatable("gui.betterfurnacesreforged.fuel.items"));

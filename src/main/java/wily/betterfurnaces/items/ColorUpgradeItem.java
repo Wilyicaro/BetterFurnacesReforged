@@ -31,7 +31,7 @@ public class ColorUpgradeItem extends UpgradeItem {
         if (entity instanceof ServerPlayer) {
             ItemStack stack = entity.getItemInHand(InteractionHand.MAIN_HAND);
             MenuProvider ContainerProviderColorUpgrade = new ContainerProviderColorUpgrade(this, stack);
-            NetworkHooks.openGui((ServerPlayer) entity, ContainerProviderColorUpgrade, buf -> {
+            NetworkHooks.openScreen((ServerPlayer) entity, ContainerProviderColorUpgrade, buf -> {
                 buf.writeBlockPos(new BlockPos(x, y, z));
                 buf.writeByte(hand == InteractionHand.MAIN_HAND ? 0 : 1);
             });

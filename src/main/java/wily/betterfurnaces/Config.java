@@ -5,7 +5,7 @@ import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
@@ -222,28 +222,11 @@ public class Config {
     }
 
     @SubscribeEvent
-    public static void onWorldLoad(final WorldEvent.Load event) {
+    public static void onLevelLoad(final LevelEvent.Load event) {
         Config.loadConfig(Config.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + "-client.toml"));
         Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(BetterFurnacesReforged.MOD_ID + ".toml"));
 
     }
 
-    @Nullable
-    public static Player getPlayer(LevelAccessor world)
-    {
-        if (world == null)
-        {
-            return null;
-        }
-        if (world.getPlayerByUUID(UUID.fromString("89f4f7f8-8ed5-479d-b04e-f7f843f14963")) != null)
-        {
-            return world.getPlayerByUUID(UUID.fromString("89f4f7f8-8ed5-479d-b04e-f7f843f14963"));
-        }
-        if (world.getPlayerByUUID(UUID.fromString("2b27a3a3-e2d6-468a-92e2-70f6f15b6e41")) != null)
-        {
-            return world.getPlayerByUUID(UUID.fromString("2b27a3a3-e2d6-468a-92e2-70f6f15b6e41"));
-        }
-        return null;
-    }
 
 }

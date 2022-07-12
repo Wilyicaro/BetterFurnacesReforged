@@ -33,6 +33,7 @@ import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
+import wily.betterfurnaces.items.UpgradeItem;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -78,7 +79,7 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof FuelEfficiencyUpgradeItem)) {
+            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof UpgradeItem upg && (upg.upgradeType == 3 || upg.upgradeType == 2))) {
                 interactInsert(world, pos, player, handIn, stack);
             } else this.interactWith(world, pos, player);
         }
@@ -89,44 +90,35 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     private void interactWith(Level world, BlockPos pos, Player player) {
         BlockEntity tileEntity = world.getBlockEntity(pos);
         if (tileEntity instanceof MenuProvider) {
-            NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) tileEntity, tileEntity.getBlockPos());
+            NetworkHooks.openScreen((ServerPlayer) player, (MenuProvider) tileEntity, tileEntity.getBlockPos());
             player.awardStat(Stats.INTERACT_WITH_FURNACE);
         }
     }
     private InteractionResult interactInsert(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof FuelEfficiencyUpgradeItem))){
+        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof UpgradeItem upg && (upg.upgradeType == 3 || upg.upgradeType == 2)))){
             return InteractionResult.SUCCESS;
         }
-        BlockEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof AbstractCobblestoneGeneratorBlockEntity)) {
+
+        if (!(world.getBlockEntity(pos) instanceof AbstractCobblestoneGeneratorBlockEntity be)) {
             return InteractionResult.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
-        if (player.getItemInHand(handIn).getItem() instanceof FuelEfficiencyUpgradeItem) {
-            if ((!(((Container) te).getItem(3).isEmpty())) && (!player.isCreative())){
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(3));
+
+        for (int i : new int[]{0,1,3,4}) {
+            if(!stack.isEmpty() && be.IisItemValidForSlot(i, stack)) {
+                if ((!(((Container) be).getItem(i).isEmpty())) && (!player.isCreative())) {
+                    Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) be).getItem(i));
+                }
+                ((Container) be).setItem(i, newStack);
             }
-            ((Container) te).setItem(3, newStack);
         }
-        if (hand.getItem() == Items.LAVA_BUCKET) {
-            if ((!(((Container) te).getItem(0).isEmpty())) && (!player.isCreative())){
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(0));
-            }
-            ((Container) te).setItem(0, newStack);
-        }
-        if (hand.getItem() == Items.WATER_BUCKET) {
-            if ((!(((Container) te).getItem(1).isEmpty())) && (!player.isCreative())){
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(1));
-            }
-            ((Container) te).setItem(1, newStack);
-        }
-        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
+        world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
         if (!player.isCreative()) {
             player.getItemInHand(handIn).shrink(1);
         }
-        ((AbstractCobblestoneGeneratorBlockEntity)te).onUpdateSent();
+        be.onUpdateSent();
         return InteractionResult.SUCCESS;
     }
 
@@ -166,7 +158,7 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return (level1, pos, state1, tile) -> {
             if (tile instanceof AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity be) {
-                    be.tick(state1);
+                be.tick(state1);
             }
         };
     }
