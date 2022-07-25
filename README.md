@@ -1,4 +1,4 @@
-# BetterFurnacesReforged
+# BetterFurnacesReforged ![](https://cf.way2muchnoise.eu/395653.svg) ![](https://cf.way2muchnoise.eu/versions/For%20MC_395653_all.svg)
 Resume
 
 This mod project plans to rewrite the old Better Furnaces 
