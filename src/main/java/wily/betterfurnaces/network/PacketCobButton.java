@@ -42,7 +42,7 @@ public class PacketCobButton {
             BlockPos pos = new BlockPos(x, y, z);
             AbstractCobblestoneGeneratorTileEntity te = (AbstractCobblestoneGeneratorTileEntity) player.getLevel().getBlockEntity(pos);
             if (player.level.isLoaded(pos)) {
-                te.changeRecipe(true, onlyUpdate);
+                te.changeRecipe(true);
                 te.setChanged();
             }
         });

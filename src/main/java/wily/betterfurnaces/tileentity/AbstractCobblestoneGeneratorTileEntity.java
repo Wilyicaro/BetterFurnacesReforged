@@ -1,6 +1,7 @@
 package wily.betterfurnaces.tileentity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.audio.SoundSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -32,6 +33,7 @@ import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTileEntity implements ITickableTileEntity {
 
@@ -39,6 +41,7 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
     public static final int INPUT1 = 1;
     public static final int OUTPUT = 2;
     public static final int UPGRADE = 3;
+    public static final int UPGRADE1 = 4;
     public static List<CobblestoneGeneratorRecipes> recipes;
     public final int[] provides = new int[Direction.values().length];
     private final int[] lastProvides = new int[this.provides.length];
@@ -103,18 +106,20 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
         }
     }
 
-    public void initRecipes() {
-        recipes = Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(Registration.COB_GENERATION_RECIPE);
+    protected List<CobblestoneGeneratorRecipes> getSortedCobRecipes(){
+        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(Registration.COB_GENERATION_RECIPE).stream().sorted(Comparator.comparing(o -> o.recipeId.getPath())).collect(Collectors.toList());
     }
-
+    public void initRecipes() {
+        recipes = getSortedCobRecipes();
+    }
     public void setRecipe(int index) {
         if (level != null) {
-            this.recipe = Optional.ofNullable(recipes).orElse(level.getRecipeManager().getAllRecipesFor(Registration.COB_GENERATION_RECIPE)).get(index);
+            this.recipe = Optional.ofNullable(recipes).orElse(getSortedCobRecipes()).get(index);
         }
     }
 
-    public void changeRecipe(boolean next, boolean onlyUpdate) {
-        if (recipes != null && !onlyUpdate) {
+    public void changeRecipe(boolean next) {
+        if (recipes != null) {
             int newIndex = resultType + (next ? 1 : -1);
             if (newIndex > recipes.size() - 1) newIndex = 0;
             if (newIndex < 0) newIndex = recipes.size() - 1;
@@ -124,7 +129,6 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
 
             this.updateBlockState();
         }
-        initRecipes();
     }
 
     @Override
@@ -138,20 +142,20 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
         if (recipes == null) {
             initRecipes();
         }
-        if (recipe == null && recipes != null) {
+        if (recipe == null && recipes != null || level.isClientSide && recipes.indexOf(recipe) != resultType) {
             setRecipe(resultType);
             updateBlockState();
         }
-        ItemStack output = getItem(2);
-        ItemStack upgrade = getItem(3);
-        ItemStack upgrade1 = getItem(4);
+        if (!getLevel().isClientSide)forceUpdateAllStates();
+        ItemStack output = getItem(OUTPUT);
+        ItemStack upgrade = getItem(UPGRADE);
+        ItemStack upgrade1 = getItem(UPGRADE1);
         boolean active = true;
         for (Direction side : Direction.values()) {
             if (level.getSignal(worldPosition.offset(side.getNormal()), side) > 0) {
                 active = false;
             }
         }
-        forceUpdateAllStates();
         boolean can = (output.getCount() + 1 <= output.getMaxStackSize());
         boolean can1 = (output.isEmpty());
         boolean can3 = (output.getItem() == getResult().getItem());
@@ -182,7 +186,7 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
             cobTime = 0;
 
             if (level.isClientSide) {
-                Random rand = getLevel().random;
+                Random rand = level.random;
                 double d0 = (double) worldPosition.getX() + 0.5D;
                 double d1 = (double) worldPosition.getY() + 0.5D;
                 double d2 = (double) worldPosition.getZ() + 0.5D;
@@ -226,9 +230,9 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
         return -1;
     }
 
-    protected ItemStack getResult() {
+    public ItemStack getResult() {
         ItemStack result;
-        if (recipe != null) result = new ItemStack(recipes.get(resultType).getResultItem().getItem());
+        if (recipe != null) result = new ItemStack(recipe.getResultItem().getItem());
         else result = new ItemStack(Items.COBBLESTONE);
         result.setCount(getResultCount());
         return result;
@@ -345,7 +349,7 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
 
     @Override
     public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        if (index == OUTPUT || index == 3) {
+        if (index == OUTPUT) {
             return false;
         }
         if (index == INPUT) {
@@ -353,7 +357,7 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
                 return false;
             }
 
-            return hasLava();
+            return stack.getItem() == Items.LAVA_BUCKET;
 
         }
         if (index == INPUT1) {
@@ -361,7 +365,23 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
                 return false;
             }
 
-            return hasWater();
+            return stack.getItem() == Items.WATER_BUCKET;
+
+        }
+        if (index == UPGRADE) {
+            if (stack.isEmpty()) {
+                return false;
+            }
+
+            return stack.getItem() instanceof FuelEfficiencyUpgradeItem;
+
+        }
+        if (index == UPGRADE1) {
+            if (stack.isEmpty()) {
+                return false;
+            }
+
+            return stack.getItem() instanceof OreProcessingUpgradeItem;
 
         }
         return false;

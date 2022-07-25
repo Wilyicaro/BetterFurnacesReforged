@@ -26,7 +26,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
+import wily.betterfurnaces.items.UpgradeItem;
 import wily.betterfurnaces.tileentity.AbstractCobblestoneGeneratorTileEntity;
+import wily.betterfurnaces.tileentity.InventoryTileEntity;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -81,7 +83,7 @@ public class CobblestoneGeneratorBlock extends Block {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof FuelEfficiencyUpgradeItem)) {
+            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof UpgradeItem&& (((UpgradeItem) hand.getItem()).upgradeType == 3 || ((UpgradeItem) hand.getItem()).upgradeType == 2))) {
                 interactInsert(world, pos, player, handIn, stack);
             } else this.interactWith(world, pos, player);
         }
@@ -99,38 +101,31 @@ public class CobblestoneGeneratorBlock extends Block {
 
     private ActionResultType interactInsert(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof FuelEfficiencyUpgradeItem))) {
+        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof UpgradeItem&& (((UpgradeItem) hand.getItem()).upgradeType == 3 || ((UpgradeItem) hand.getItem()).upgradeType == 2)))){
             return ActionResultType.SUCCESS;
         }
-        TileEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof AbstractCobblestoneGeneratorTileEntity)) {
+
+        if (!(world.getBlockEntity(pos) instanceof AbstractCobblestoneGeneratorTileEntity.CobblestoneGeneratorTileEntity)) {
             return ActionResultType.SUCCESS;
         }
+        AbstractCobblestoneGeneratorTileEntity.CobblestoneGeneratorTileEntity be = (AbstractCobblestoneGeneratorTileEntity.CobblestoneGeneratorTileEntity) world.getBlockEntity(pos);
+
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
-        if (player.getItemInHand(handIn).getItem() instanceof FuelEfficiencyUpgradeItem) {
-            if ((!(((IInventory) te).getItem(3).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(3));
+
+        for (int i : new int[]{0,1,3,4}) {
+            if(!stack.isEmpty() && be.IisItemValidForSlot(i, stack)) {
+                if ((!(((IInventory) be).getItem(i).isEmpty())) && (!player.isCreative())) {
+                    InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) be).getItem(i));
+                }
+                ((IInventory) be).setItem(i, newStack);
             }
-            ((IInventory) te).setItem(3, newStack);
         }
-        if (hand.getItem() == Items.LAVA_BUCKET) {
-            if ((!(((IInventory) te).getItem(0).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(0));
-            }
-            ((IInventory) te).setItem(0, newStack);
-        }
-        if (hand.getItem() == Items.WATER_BUCKET) {
-            if ((!(((IInventory) te).getItem(1).isEmpty())) && (!player.isCreative())) {
-                InventoryHelper.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((IInventory) te).getItem(1));
-            }
-            ((IInventory) te).setItem(1, newStack);
-        }
-        world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundCategory.BLOCKS, 1.0F, 1.0F);
         if (!player.isCreative()) {
             player.getItemInHand(handIn).shrink(1);
         }
-        ((AbstractCobblestoneGeneratorTileEntity) te).onUpdateSent();
+        be.onUpdateSent();
         return ActionResultType.SUCCESS;
     }
 
