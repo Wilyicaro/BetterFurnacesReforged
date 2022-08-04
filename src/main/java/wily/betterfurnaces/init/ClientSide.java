@@ -34,11 +34,11 @@ public class ClientSide {
         ItemColorsHandler.registerItemColors();
         event.enqueueWork(() ->
         {
-            ItemModelsProperties.register(Registration.EXTREME_FURNACE_ITEM.get(),
+            ItemModelsProperties.register(Registration.EXTREME_FURNACE.get().asItem(),
                     new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living) -> {
                         return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
                     });
-            ItemModelsProperties.register(Registration.EXTREME_FORGE_ITEM.get(),
+            ItemModelsProperties.register(Registration.EXTREME_FORGE.get().asItem(),
                     new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living) -> {
                         return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
                     });

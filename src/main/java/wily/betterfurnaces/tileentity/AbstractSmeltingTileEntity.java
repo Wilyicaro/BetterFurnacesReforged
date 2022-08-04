@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IRecipeHelperPopulator;
 import net.minecraft.inventory.IRecipeHolder;
 import net.minecraft.inventory.Inventory;
@@ -565,11 +566,18 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
                     if (this.isBurning()) {
                         flag1 = true;
                         if ((!isLiquid() || fluidTank.getFluidAmount() < 10) && !isEnergy())
-                            if (fuel.hasContainerItem()) this.inventory.set(FUEL(), ForgeHooks.getContainerItem(fuel));
-                            else if (!fuel.isEmpty() && isItemFuel(fuel)) {
-                                fuel.shrink(1);
-                                if (hasUpgrade(Registration.FUEL.get())) {
-                                    breakDurabilityItem(getUpgradeSlotItem(Registration.FUEL.get()));
+                            if ((!isLiquid() || fluidTank.getFluidAmount() < 10) && !isEnergy()) {
+                                FluidUtil.getFluidHandler(fuel).ifPresent(
+                                        (f) -> {
+                                            f.drain(1000, IFluidHandler.FluidAction.EXECUTE);
+                                            setItem(FUEL(), f.getContainer());
+                                        });
+
+                                if (!fuel.isEmpty() && isItemFuel(fuel)) {
+                                    fuel.shrink(1);
+                                    if (hasUpgrade(Registration.FUEL.get())) {
+                                        breakDurabilityItem(getUpgradeSlotItem(Registration.FUEL.get()));
+                                    }
                                 }
                             }
                     }
@@ -924,8 +932,13 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
                 this.setRecipeUsed(recipe);
             }
 
-            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.inventory.get(FUEL()).isEmpty() && this.inventory.get(FUEL()).getItem() == Items.BUCKET) {
-                this.inventory.set(FUEL(), new ItemStack(Items.WATER_BUCKET));
+            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.inventory.get(FUEL()).isEmpty()) {
+                FluidUtil.getFluidHandler(this.getItem(FUEL())).ifPresent(e -> {
+                    if (e.getFluidInTank(0).isEmpty()) {
+                        e.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+                        this.setItem(FUEL(), e.getContainer());
+                    }
+                });
             }
             if (ModList.get().isLoaded("pmmo")) {
                 if (getRecipe(itemstack, IRecipeType.SMOKING).isPresent()) {

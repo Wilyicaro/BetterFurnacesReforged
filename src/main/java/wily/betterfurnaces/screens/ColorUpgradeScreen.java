@@ -107,8 +107,8 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
         }
         GL11.glScalef(4, 4, 4);
         RenderHelper.setupFor3DItems();
-        ItemStack stack = new ItemStack(Registration.EXTREME_FURNACE_ITEM.get());
-        ItemStack stack1 = new ItemStack(Registration.EXTREME_FORGE_ITEM.get());
+        ItemStack stack = new ItemStack(Registration.EXTREME_FURNACE.get().asItem());
+        ItemStack stack1 = new ItemStack(Registration.EXTREME_FORGE.get().asItem());
         CompoundNBT nbt = stack.getOrCreateTag();
         nbt.putInt("red", red.getValueInt());
         nbt.putInt("green", green.getValueInt());

@@ -78,7 +78,7 @@ public class RegistrationUF {
     }));
 
     public static final RegistryObject<BlockUltimateFurnace> ULTIMATE_FURNACE = BLOCKS.register(BlockUltimateFurnace.ULTIMATE_FURNACE, () -> new BlockUltimateFurnace(AbstractBlock.Properties.copy(Blocks.NETHERITE_BLOCK).strength(15.0F, 6000.0F)));
-    public static final RegistryObject<Item> ULTIMATE_FURNACE_ITEM = ITEMS.register(BlockUltimateFurnace.ULTIMATE_FURNACE, () -> new BlockItem(ULTIMATE_FURNACE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<Item> ULTIMATE_FURNACE_ITEM = ITEMS.register(BlockUltimateFurnace.ULTIMATE_FURNACE, () -> new BlockItem(ULTIMATE_FURNACE.get(), defaultItemProperties()));
     public static final RegistryObject<TileEntityType<UltimateFurnaceTileEntity>> ULTIMATE_FURNACE_TILE = TILES.register(BlockUltimateFurnace.ULTIMATE_FURNACE, () -> TileEntityType.Builder.of(UltimateFurnaceTileEntity::new, ULTIMATE_FURNACE.get()).build(null));
 
     public static final RegistryObject<ContainerType<UltimateFurnaceContainer>> ULTIMATE_FURNACE_CONTAINER = CONTAINERS.register(BlockUltimateFurnace.ULTIMATE_FURNACE, () -> IForgeContainerType.create((windowId, inv, data) -> {
@@ -88,7 +88,7 @@ public class RegistrationUF {
     }));
 
     public static final RegistryObject<CopperForgeBlock> COPPER_FORGE = BLOCKS.register(CopperForgeBlock.COPPER_FORGE, () -> new CopperForgeBlock(AbstractBlock.Properties.copy(Blocks.COAL_BLOCK)));
-    public static final RegistryObject<Item> COPPER_FORGE_ITEM = ITEMS.register(CopperForgeBlock.COPPER_FORGE, () -> new BlockItem(COPPER_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<Item> COPPER_FORGE_ITEM = ITEMS.register(CopperForgeBlock.COPPER_FORGE, () -> new BlockItem(COPPER_FORGE.get(), defaultItemProperties()));
     public static final RegistryObject<TileEntityType<CopperForgeTileEntity>> COPPER_FORGE_TILE = TILES.register(CopperForgeBlock.COPPER_FORGE, () -> TileEntityType.Builder.of(CopperForgeTileEntity::new, COPPER_FORGE.get()).build(null));
 
     public static final RegistryObject<ContainerType<CopperForgeContainer>> COPPER_FORGE_CONTAINER = CONTAINERS.register(CopperForgeBlock.COPPER_FORGE, () -> IForgeContainerType.create((windowId, inv, data) -> {
@@ -98,7 +98,7 @@ public class RegistrationUF {
     }));
 
     public static final RegistryObject<IronForgeBlock> IRON_FORGE = BLOCKS.register(IronForgeBlock.IRON_FORGE, () -> new IronForgeBlock(AbstractBlock.Properties.copy(Blocks.IRON_BLOCK)));
-    public static final RegistryObject<Item> IRON_FORGE_ITEM = ITEMS.register(IronForgeBlock.IRON_FORGE, () -> new BlockItem(IRON_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<Item> IRON_FORGE_ITEM = ITEMS.register(IronForgeBlock.IRON_FORGE, () -> new BlockItem(IRON_FORGE.get(), defaultItemProperties()));
     public static final RegistryObject<TileEntityType<IronForgeTileEntity>> IRON_FORGE_TILE = TILES.register(IronForgeBlock.IRON_FORGE, () -> TileEntityType.Builder.of(IronForgeTileEntity::new, IRON_FORGE.get()).build(null));
 
     public static final RegistryObject<ContainerType<IronForgeContainer>> IRON_FORGE_CONTAINER = CONTAINERS.register(IronForgeBlock.IRON_FORGE, () -> IForgeContainerType.create((windowId, inv, data) -> {
@@ -108,7 +108,7 @@ public class RegistrationUF {
     }));
 
     public static final RegistryObject<GoldForgeBlock> GOLD_FORGE = BLOCKS.register(GoldForgeBlock.GOLD_FORGE, () -> new GoldForgeBlock(AbstractBlock.Properties.copy(Blocks.GOLD_BLOCK)));
-    public static final RegistryObject<Item> GOLD_FORGE_ITEM = ITEMS.register(GoldForgeBlock.GOLD_FORGE, () -> new BlockItem(GOLD_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<Item> GOLD_FORGE_ITEM = ITEMS.register(GoldForgeBlock.GOLD_FORGE, () -> new BlockItem(GOLD_FORGE.get(), defaultItemProperties()));
     public static final RegistryObject<TileEntityType<GoldForgeTileEntity>> GOLD_FORGE_TILE = TILES.register(GoldForgeBlock.GOLD_FORGE, () -> TileEntityType.Builder.of(GoldForgeTileEntity::new, GOLD_FORGE.get()).build(null));
 
     public static final RegistryObject<ContainerType<GoldForgeContainer>> GOLD_FORGE_CONTAINER = CONTAINERS.register(GoldForgeBlock.GOLD_FORGE, () -> IForgeContainerType.create((windowId, inv, data) -> {
@@ -118,7 +118,7 @@ public class RegistrationUF {
     }));
 
     public static final RegistryObject<DiamondForgeBlock> DIAMOND_FORGE = BLOCKS.register(DiamondForgeBlock.DIAMOND_FORGE, () -> new DiamondForgeBlock(AbstractBlock.Properties.copy(Blocks.DIAMOND_BLOCK)));
-    public static final RegistryObject<Item> DIAMOND_FORGE_ITEM = ITEMS.register(DiamondForgeBlock.DIAMOND_FORGE, () -> new BlockItem(DIAMOND_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<Item> DIAMOND_FORGE_ITEM = ITEMS.register(DiamondForgeBlock.DIAMOND_FORGE, () -> new BlockItem(DIAMOND_FORGE.get(), defaultItemProperties()));
     public static final RegistryObject<TileEntityType<DiamondForgeTileEntity>> DIAMOND_FORGE_TILE = TILES.register(DiamondForgeBlock.DIAMOND_FORGE, () -> TileEntityType.Builder.of(DiamondForgeTileEntity::new, DIAMOND_FORGE.get()).build(null));
 
     public static final RegistryObject<ContainerType<DiamondForgeContainer>> DIAMOND_FORGE_CONTAINER = CONTAINERS.register(DiamondForgeBlock.DIAMOND_FORGE, () -> IForgeContainerType.create((windowId, inv, data) -> {
@@ -128,7 +128,7 @@ public class RegistrationUF {
     }));
 
     public static final RegistryObject<NetherhotForgeBlock> NETHERHOT_FORGE = BLOCKS.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> new NetherhotForgeBlock(AbstractBlock.Properties.copy(Blocks.DIAMOND_BLOCK)));
-    public static final RegistryObject<Item> NETHERHOT_FORGE_ITEM = ITEMS.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> new BlockItem(NETHERHOT_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<Item> NETHERHOT_FORGE_ITEM = ITEMS.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> new BlockItem(NETHERHOT_FORGE.get(), defaultItemProperties()));
     public static final RegistryObject<TileEntityType<NetherhotForgeTileEntity>> NETHERHOT_FORGE_TILE = TILES.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> TileEntityType.Builder.of(NetherhotForgeTileEntity::new, NETHERHOT_FORGE.get()).build(null));
 
     public static final RegistryObject<ContainerType<NetherhotForgeContainer>> NETHERHOT_FORGE_CONTAINER = CONTAINERS.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> IForgeContainerType.create((windowId, inv, data) -> {
@@ -138,7 +138,7 @@ public class RegistrationUF {
     }));
 
     public static final RegistryObject<UltimateForgeBlock> ULTIMATE_FORGE = BLOCKS.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> new UltimateForgeBlock(AbstractBlock.Properties.copy(Blocks.NETHERITE_BLOCK).strength(50.0F, 6000.0F)));
-    public static final RegistryObject<Item> ULTIMATE_FORGE_ITEM = ITEMS.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> new BlockItem(ULTIMATE_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<Item> ULTIMATE_FORGE_ITEM = ITEMS.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> new BlockItem(ULTIMATE_FORGE.get(), defaultItemProperties()));
     public static final RegistryObject<TileEntityType<UltimateForgeTileEntity>> ULTIMATE_FORGE_TILE = TILES.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> TileEntityType.Builder.of(UltimateForgeTileEntity::new, ULTIMATE_FORGE.get()).build(null));
 
     public static final RegistryObject<ContainerType<UltimateForgeContainer>> ULTIMATE_FORGE_CONTAINER = CONTAINERS.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> IForgeContainerType.create((windowId, inv, data) -> {
@@ -147,25 +147,25 @@ public class RegistrationUF {
         return new UltimateForgeContainer(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<wily.ultimatefurnaces.items.CopperUpgradeItem> COPPER_UPGRADE = ITEMS.register("copper_upgrade", () -> new CopperUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<wily.ultimatefurnaces.items.CopperUpgradeItem> COPPER_UPGRADE = ITEMS.register("copper_upgrade", () -> new CopperUpgradeItem(defaultItemProperties()));
 
-    public static final RegistryObject<wily.ultimatefurnaces.items.IronUpgradeItem> IRON_UPGRADE = ITEMS.register("iron_upgrade", () -> new IronUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<wily.ultimatefurnaces.items.IronUpgradeItem> IRON_UPGRADE = ITEMS.register("iron_upgrade", () -> new IronUpgradeItem(defaultItemProperties()));
 
-    public static final RegistryObject<SteelUpgradeItem> STEEL_UPGRADE = ITEMS.register("steel_upgrade", () -> new SteelUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<SteelUpgradeItem> STEEL_UPGRADE = ITEMS.register("steel_upgrade", () -> new SteelUpgradeItem(defaultItemProperties()));
 
-    public static final RegistryObject<wily.ultimatefurnaces.items.GoldUpgradeItem> GOLD_UPGRADE = ITEMS.register("gold_upgrade", () -> new GoldUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<wily.ultimatefurnaces.items.GoldUpgradeItem> GOLD_UPGRADE = ITEMS.register("gold_upgrade", () -> new GoldUpgradeItem(defaultItemProperties()));
 
-    public static final RegistryObject<wily.ultimatefurnaces.items.AmethystUpgradeItem> AMETHYST_UPGRADE = ITEMS.register("amethyst_upgrade", () -> new AmethystUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<wily.ultimatefurnaces.items.AmethystUpgradeItem> AMETHYST_UPGRADE = ITEMS.register("amethyst_upgrade", () -> new AmethystUpgradeItem(defaultItemProperties()));
 
-    public static final RegistryObject<wily.ultimatefurnaces.items.DiamondUpgradeItem> DIAMOND_UPGRADE = ITEMS.register("diamond_upgrade", () -> new DiamondUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<wily.ultimatefurnaces.items.DiamondUpgradeItem> DIAMOND_UPGRADE = ITEMS.register("diamond_upgrade", () -> new DiamondUpgradeItem(defaultItemProperties()));
 
-    public static final RegistryObject<wily.ultimatefurnaces.items.PlatinumUpgradeItem> PLATINUM_UPGRADE = ITEMS.register("platinum_upgrade", () -> new PlatinumUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<wily.ultimatefurnaces.items.PlatinumUpgradeItem> PLATINUM_UPGRADE = ITEMS.register("platinum_upgrade", () -> new PlatinumUpgradeItem(defaultItemProperties()));
 
-    public static final RegistryObject<wily.ultimatefurnaces.items.NetherhotUpgradeItem> NETHERHOT_UPGRADE = ITEMS.register("netherhot_upgrade", () -> new NetherhotUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<wily.ultimatefurnaces.items.NetherhotUpgradeItem> NETHERHOT_UPGRADE = ITEMS.register("netherhot_upgrade", () -> new NetherhotUpgradeItem(defaultItemProperties()));
 
-    public static final RegistryObject<wily.ultimatefurnaces.items.UltimateUpgradeItem> ULTIMATE_UPGRADE = ITEMS.register("ultimate_upgrade", () -> new UltimateUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<wily.ultimatefurnaces.items.UltimateUpgradeItem> ULTIMATE_UPGRADE = ITEMS.register("ultimate_upgrade", () -> new UltimateUpgradeItem(defaultItemProperties()));
 
-    public static final RegistryObject<OreProcessingUpgradeItem> UORE = ITEMS.register("ultimate_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(ModObjects.ITEM_GROUP),4));
+    public static final RegistryObject<OreProcessingUpgradeItem> UORE = ITEMS.register("ultimate_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(defaultItemProperties(),4));
 
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {
