@@ -12,14 +12,14 @@ public class ItemColorsHandler implements ItemColor {
     @SubscribeEvent
     public static void registerItemColors() {
         System.out.println("Starting Better Furnaces ItemColorsHandler");
-        Minecraft.getInstance().getItemColors().register(COLOR, Registration.EXTREME_FURNACE_ITEM.get());
-        Minecraft.getInstance().getItemColors().register(COLOR, Registration.EXTREME_FORGE_ITEM.get());
+        Minecraft.getInstance().getItemColors().register(COLOR, Registration.EXTREME_FURNACE.get().asItem());
+        Minecraft.getInstance().getItemColors().register(COLOR, Registration.EXTREME_FORGE.get().asItem());
     }
 
     @Override
     public int getColor(ItemStack stack, int i) {
         CompoundTag nbt = stack.getOrCreateTag();
-            if ((stack.getTag() != null) && (stack.getItem() == Registration.EXTREME_FURNACE_ITEM.get() || stack.getItem() == Registration.EXTREME_FORGE_ITEM.get()) && nbt.getBoolean("colored")) {
+            if ((stack.getTag() != null) && (stack.getItem() == Registration.EXTREME_FURNACE.get().asItem() || stack.getItem() == Registration.EXTREME_FORGE.get().asItem()) && nbt.getBoolean("colored")) {
                 return ((nbt.getInt("red") & 0x0ff) << 16) | ((nbt.getInt("green") & 0x0ff) << 8) | (nbt.getInt("blue") & 0x0ff);
             }else {
             return 0xFFFFFF;

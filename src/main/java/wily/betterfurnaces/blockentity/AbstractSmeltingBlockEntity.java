@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeHooks;
@@ -541,14 +542,20 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                     }
                     if (e.isBurning()) {
                         flag1 = true;
-                        if ((!e.isLiquid() || e.fluidTank.getFluidAmount() < 10) && !e.isEnergy())
-                            if (fuel.hasContainerItem()) e.getInv().setStackInSlot(e.FUEL(), ForgeHooks.getContainerItem(fuel));
-                            else if (!fuel.isEmpty() && isItemFuel(fuel)) {
+                        if ((!e.isLiquid() || e.fluidTank.getFluidAmount() < 10) && !e.isEnergy()) {
+                            FluidUtil.getFluidHandler(fuel).ifPresent(
+                                    (f) -> {
+                                        f.drain(1000, IFluidHandler.FluidAction.EXECUTE);
+                                        e.setItem(e.FUEL(), f.getContainer());
+                                    });
+
+                            if (!fuel.isEmpty() && isItemFuel(fuel)) {
                                 fuel.shrink(1);
                                 if (e.hasUpgrade(Registration.FUEL.get())) {
                                     e.breakDurabilityItem(e.getUpgradeSlotItem(Registration.FUEL.get()));
                                 }
                             }
+                        }
                     }
                 }
                 if (e.isBurning() && valid ) {
@@ -836,8 +843,13 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                 this.setRecipeUsed(recipe);
             }
 
-            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.getInv().getStackInSlot(FUEL()).isEmpty() && this.getInv().getStackInSlot(FUEL()).getItem() == Items.BUCKET) {
-                this.getInv().setStackInSlot(FUEL(), new ItemStack(Items.WATER_BUCKET));
+            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.getInv().getStackInSlot(FUEL()).isEmpty()) {
+                FluidUtil.getFluidHandler(this.getItem(FUEL())).ifPresent(e -> {
+                    if (e.getFluidInTank(0).isEmpty()) {
+                        e.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+                        this.setItem(FUEL(), e.getContainer());
+                    }
+                });
             }
             if (ModList.get().isLoaded("pmmo")) {
                 if (getRecipe(itemstack, RecipeType.SMOKING).isPresent()) {

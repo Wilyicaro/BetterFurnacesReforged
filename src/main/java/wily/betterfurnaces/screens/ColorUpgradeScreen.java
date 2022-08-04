@@ -98,8 +98,8 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
                 this.renderTooltip(matrix, Registration.EXTREME_FORGE.get().getName(), mouseX, mouseY);
             }
         }
-        ItemStack stack = new ItemStack(Registration.EXTREME_FURNACE_ITEM.get());
-        ItemStack stack1 = new ItemStack(Registration.EXTREME_FORGE_ITEM.get());
+        ItemStack stack = new ItemStack(Registration.EXTREME_FURNACE.get().asItem());
+        ItemStack stack1 = new ItemStack(Registration.EXTREME_FORGE.get().asItem());
         Lighting.setupFor3DItems();
         CompoundTag nbt = stack.getOrCreateTag();
         nbt.putInt("red", red.getValueInt());
