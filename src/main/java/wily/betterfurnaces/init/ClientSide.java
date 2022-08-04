@@ -1,6 +1,7 @@
 package wily.betterfurnaces.init;
 
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -15,6 +16,7 @@ import wily.betterfurnaces.screens.*;
 public class ClientSide {
 
     public static void init(final FMLClientSetupEvent event) {
+
         MenuScreens.register(Registration.IRON_FURNACE_CONTAINER.get(), IronFurnaceScreen::new);
         MenuScreens.register(Registration.GOLD_FURNACE_CONTAINER.get(), GoldFurnaceScreen::new);
         MenuScreens.register(Registration.DIAMOND_FURNACE_CONTAINER.get(), DiamondFurnaceScreen::new);
@@ -34,11 +36,11 @@ public class ClientSide {
         ItemColorsHandler.registerItemColors();
         event.enqueueWork(() ->
         {
-            ItemProperties.register(Registration.EXTREME_FURNACE_ITEM.get(),
+            ItemProperties.register(Registration.EXTREME_FURNACE.get().asItem(),
                     new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> {
                         return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
                     });
-            ItemProperties.register(Registration.EXTREME_FORGE_ITEM.get(),
+            ItemProperties.register(Registration.EXTREME_FORGE.get().asItem(),
                     new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> {
                         return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
                     });

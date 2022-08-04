@@ -248,14 +248,6 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             return 2;
         else return 1;
     }
-    protected boolean hasLava() {
-        ItemStack input = this.getInv().getStackInSlot(0);
-        return (input.getItem() == Items.WATER_BUCKET);
-    }
-    protected boolean hasWater() {
-        ItemStack input = this.getInv().getStackInSlot(1);
-        return (input.getItem() == Items.WATER_BUCKET);
-    }
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);

@@ -5,12 +5,14 @@ import harmonised.pmmo.api.events.FurnaceBurnEvent;
 import harmonised.pmmo.events.impl.FurnaceHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
@@ -21,10 +23,7 @@ import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
-import net.minecraft.world.item.AirItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -35,6 +34,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeHooks;
@@ -45,6 +45,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -53,6 +54,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ArrayUtils;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.AbstractForgeBlock;
 import wily.betterfurnaces.blocks.AbstractFurnaceBlock;
@@ -496,7 +498,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                 e.onUpdateSent();
             }
             ItemStack fuel = e.getItem(e.FUEL());
-            if (e.isLiquid() && fuel.hasFoil()) {
+            if (e.isLiquid() && FluidUtil.getFluidHandler(fuel).isPresent()) {
                 FluidActionResult res = FluidUtil.tryEmptyContainer(fuel, e.fluidTank, 1000, null, true);
                 if ( res.isSuccess()) {
                     e.level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
@@ -529,23 +531,25 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                         for (int a : e.INPUTS())
                             e.energyStorage.consumeEnergy(e.EnergyUse() * e.OreProcessingMultiplier(e.getItem(a)), false);
                     }else{
-                        if (e.hasEnder()){
-                            e.furnaceBurnTime = e.getEnderMultiplier() * (getBurnTime(fuel)) * get_cook_time / 200;
-                        }else{
-                            e.furnaceBurnTime = getBurnTime(fuel) * get_cook_time / 200;
-                        }
+                        e.furnaceBurnTime =  e.getEnderMultiplier() * getBurnTime(fuel) * get_cook_time / 200;
                         e.recipesUsed = e.furnaceBurnTime;
                     }
                     if (e.isBurning()) {
                         flag1 = true;
-                        if ((!e.isLiquid() || e.fluidTank.getFluidAmount() < 10) && !e.isEnergy())
-                            fuel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(f -> e.getInv().setStackInSlot(e.FUEL(), f.getContainer()));
-                            else if (!fuel.isEmpty() && isItemFuel(fuel)) {
+                        if ((!e.isLiquid() || e.fluidTank.getFluidAmount() < 10) && !e.isEnergy()) {
+                            FluidUtil.getFluidHandler(fuel).ifPresent(
+                                    (f) -> {
+                                        f.drain(1000, IFluidHandler.FluidAction.EXECUTE);
+                                        e.setItem(e.FUEL(), f.getContainer());
+                            });
+
+                            if (!fuel.isEmpty() && isItemFuel(fuel)) {
                                 fuel.shrink(1);
                                 if (e.hasUpgrade(Registration.FUEL.get())) {
                                     e.breakDurabilityItem(e.getUpgradeSlotItem(Registration.FUEL.get()));
                                 }
                             }
+                        }
                     }
                 }
                 if (e.isBurning() && valid ) {
@@ -833,9 +837,15 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                 this.setRecipeUsed(recipe);
             }
 
-            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.getInv().getStackInSlot(FUEL()).isEmpty() && this.getInv().getStackInSlot(FUEL()).getItem() == Items.BUCKET) {
-                this.getInv().setStackInSlot(FUEL(), new ItemStack(Items.WATER_BUCKET));
+            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.getInv().getStackInSlot(FUEL()).isEmpty()) {
+                FluidUtil.getFluidHandler(this.getItem(FUEL())).ifPresent(e -> {
+                    if (e.getFluidInTank(0).isEmpty()) {
+                        e.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+                        this.setItem(FUEL(), e.getContainer());
+                    }
+                });
             }
+
             if (ModList.get().isLoaded("pmmo")) {
                 FurnaceHandler.handle(new FurnaceBurnEvent(itemstack, level, worldPosition));
             }
@@ -953,6 +963,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
 
     @Override
     public int[] IgetSlotsForFace(Direction side) {
+
         if (hasUpgradeType(Registration.FACTORY.get())) {
             if (this.furnaceSettings.get(DirectionUtil.getId(side)) == 0) {
                 return new int[]{};

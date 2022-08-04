@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[37,)"
-license="GNU"
+license="MIT"
 
 [[mods]]
 modId="betterfurnacesreforged"
@@ -17,7 +17,7 @@ This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, pr
 [[dependencies.betterfurnacesreforged]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19]"
+    versionRange="[1.19.,]"
     ordering="NONE"
     side="BOTH"
 [[dependencies.betterfurnacesreforged]]

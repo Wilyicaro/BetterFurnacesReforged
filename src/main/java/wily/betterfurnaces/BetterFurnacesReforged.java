@@ -4,6 +4,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -25,7 +30,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "106";
+    public static final String VERSION = "107";
     public static final String MC_VERSION = "1.19";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -56,12 +61,5 @@ public class BetterFurnacesReforged
             this.LOGGER.warn("You have disabled BetterFurnace's Update Checker, to re-enable: change the value of Update Checker in .minecraft->config->betterfurnacesreforged-client.toml to 'true'.");
         }
     }
-    private static <T extends Recipe<?>> RecipeType<T> recipeRegister(final String key) {
-        return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(MOD_ID, key), new RecipeType<T>() {
-            @Override
-            public String toString() {
-                return key;
-            }
-        });
-    }
+
 }
