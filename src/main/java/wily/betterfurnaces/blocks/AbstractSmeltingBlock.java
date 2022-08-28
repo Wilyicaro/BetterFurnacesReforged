@@ -37,10 +37,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.network.NetworkHooks;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
@@ -104,9 +104,9 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
         } else {
             if (hand.getItem() instanceof UpgradeItem && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
-            }else if ((te.hasUpgrade(Registration.LIQUID.get()) && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && AbstractSmeltingBlockEntity.isItemFuel(hand) &&  !(player.isCrouching()))){
-                FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
-                FluidActionResult res = FluidUtil.tryEmptyContainer(hand, te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get(), 1000, player, true);
+            }else if ((te.hasUpgrade(Registration.LIQUID.get()) && hand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent() && AbstractSmeltingBlockEntity.isItemFuel(hand) &&  !(player.isCrouching()))){
+                FluidStack fluid = hand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get().getFluidInTank(1);
+                FluidActionResult res = FluidUtil.tryEmptyContainer(hand, te.getCapability(ForgeCapabilities.FLUID_HANDLER).resolve().get(), 1000, player, true);
                 if (fluid != null)
                     if (res.isSuccess()) {
                         world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);

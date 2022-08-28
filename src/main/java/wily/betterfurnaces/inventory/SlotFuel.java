@@ -3,6 +3,7 @@ package wily.betterfurnaces.inventory;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
@@ -20,7 +21,7 @@ public class SlotFuel extends Slot {
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-        return AbstractSmeltingBlockEntity.isItemFuel(stack) || (stack.getCapability(CapabilityEnergy.ENERGY).isPresent() && be.hasUpgrade(Registration.ENERGY.get())) || isContainer(stack) ;
+        return AbstractSmeltingBlockEntity.isItemFuel(stack) || (stack.getCapability(ForgeCapabilities.ENERGY).isPresent() && be.hasUpgrade(Registration.ENERGY.get())) || isContainer(stack) ;
     }
 
     @Override
@@ -29,6 +30,6 @@ public class SlotFuel extends Slot {
     }
 
     public static boolean isContainer(ItemStack stack) {
-        return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent();
+        return stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
     }
 }

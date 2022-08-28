@@ -3,6 +3,7 @@ package wily.betterfurnaces.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -24,7 +25,7 @@ public class FluidRenderUtil {
         }
         TextureAtlasSprite fluidSprite = fluidSprite(fluid, hasColor);
         RenderSystem.setShaderTexture(0, fluidSprite.atlas().location());
-            screen.blit(matrix, GuiLeft + x, GuiTop + y, screen.getBlitOffset(), sizeX, sizeY, fluidSprite);
+            GuiComponent.blit(matrix, GuiLeft + x, GuiTop + y, screen.getBlitOffset(), sizeX, sizeY, fluidSprite);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 

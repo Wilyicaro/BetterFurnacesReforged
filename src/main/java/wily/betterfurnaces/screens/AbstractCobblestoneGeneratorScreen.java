@@ -13,16 +13,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
 import wily.betterfurnaces.inventory.AbstractCobblestoneGeneratorMenu;
-import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketCobblestoneRecipeUpdate;
-import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.util.FluidRenderUtil;
-
-import java.util.List;
-import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractCobblestoneGeneratorScreen<T extends AbstractCobblestoneGeneratorMenu> extends AbstractInventoryItemScreen<T> {
@@ -69,7 +63,7 @@ public abstract class AbstractCobblestoneGeneratorScreen<T extends AbstractCobbl
 
     private void addTooltips(PoseStack matrix, int mouseX, int mouseY) {
         if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
-            this.renderTooltip(matrix, getMenu().te.getResult(), mouseX, mouseY);
+            this.renderTooltip(matrix, getMenu().be.getResult(), mouseX, mouseY);
         }
     }
 
@@ -82,7 +76,7 @@ public abstract class AbstractCobblestoneGeneratorScreen<T extends AbstractCobbl
         int relX = (this.width - this.getXSize()) / 2;
         int relY = (this.height - this.getYSize()) / 2;
         this.blit(matrix, relX, relY, 0, 0, this.getXSize(), this.getYSize());
-        renderGuiItem(getMenu().te.getResult(),getGuiLeft() + 80, getGuiTop() + 24, 0.75F, 0.75F);
+        renderGuiItem(getMenu().be.getResult(),getGuiLeft() + 80, getGuiTop() + 24, 0.75F, 0.75F);
         RenderSystem.setShaderTexture(0, WIDGETS);
             if (actualMouseX>= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39){
                 this.blit(matrix, getGuiLeft() + 81, getGuiTop() + 25, 98, 157, 14, 14);

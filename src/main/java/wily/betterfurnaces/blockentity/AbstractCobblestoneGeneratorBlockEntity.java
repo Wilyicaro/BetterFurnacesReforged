@@ -21,8 +21,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -278,7 +278,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
     public <
             T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
-        if (!this.isRemoved() && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!this.isRemoved() && facing != null && capability == ForgeCapabilities.ITEM_HANDLER) {
             return LazyOptional.of(this::getInv).cast();
         }
         return super.getCapability(capability, facing);
@@ -290,7 +290,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
                 continue;
             }
             if (tile != null) {
-                IItemHandler other = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).map(other1 -> other1).orElse(null);
+                IItemHandler other = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, dir.getOpposite()).map(other1 -> other1).orElse(null);
 
                 if (other == null) {
                     continue;

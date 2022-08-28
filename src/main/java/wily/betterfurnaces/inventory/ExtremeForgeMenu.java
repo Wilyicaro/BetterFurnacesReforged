@@ -21,6 +21,6 @@ public class ExtremeForgeMenu extends AbstractForgeMenu {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(te.getLevel(), te.getBlockPos()), playerEntity, Registration.EXTREME_FORGE.get());
+        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), playerEntity, Registration.EXTREME_FORGE.get());
     }
 }

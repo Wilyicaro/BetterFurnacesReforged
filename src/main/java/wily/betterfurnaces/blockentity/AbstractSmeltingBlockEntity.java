@@ -5,14 +5,14 @@ import harmonised.pmmo.api.events.FurnaceBurnEvent;
 import harmonised.pmmo.events.impl.FurnaceHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
@@ -23,7 +23,10 @@ import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.AirItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -37,29 +40,27 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ArrayUtils;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.AbstractForgeBlock;
 import wily.betterfurnaces.blocks.AbstractFurnaceBlock;
 import wily.betterfurnaces.init.Registration;
-import wily.betterfurnaces.items.*;
+import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
+import wily.betterfurnaces.items.OreProcessingUpgradeItem;
+import wily.betterfurnaces.items.UpgradeItem;
+import wily.betterfurnaces.items.XpTankUpgradeItem;
 import wily.betterfurnaces.util.DirectionUtil;
 
 import javax.annotation.Nonnull;
@@ -291,6 +292,11 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
         }
     };
 
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
+    }
+
     public boolean hasUpgrade(Item upg) {
         for (int slot : UPGRADES())
             if (upg == getItem(slot).getItem()) return true;
@@ -317,7 +323,6 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     }
 
     protected final FluidTank fluidTank = new FluidTank(LiquidCapacity(), fs -> (getBurnTime(new ItemStack(fs.getFluid().getBucket())) > 0)){
-        @Override
         protected void onContentsChanged() {
             super.onContentsChanged();
             setChanged();
@@ -418,7 +423,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
         if (e.hasXPTank()) e.grantStoredRecipeExperience(level, null);
 
         if (!e.hasUpgradeType(Registration.FACTORY.get()) && e instanceof AbstractForgeBlockEntity && (level.getBlockState(e.getBlockPos()).getValue(AbstractForgeBlock.SHOW_ORIENTATION))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(AbstractForgeBlock.SHOW_ORIENTATION, false), 3);
-        e.getItem(e.FUEL()).getCapability(CapabilityEnergy.ENERGY).ifPresent(E -> {
+        e.getItem(e.FUEL()).getCapability(ForgeCapabilities.ENERGY).ifPresent(E -> {
             if (e.energyStorage.getEnergyStored() < e.energyStorage.getMaxEnergyStored()) {
                 E.extractEnergy(e.energyStorage.receiveEnergy(E.getEnergyStored(), false), false);
             }
@@ -616,7 +621,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
             }
             if (this.furnaceSettings.get(dir.ordinal()) == 1 || this.furnaceSettings.get(dir.ordinal()) == 2 || this.furnaceSettings.get(dir.ordinal()) == 3 || this.furnaceSettings.get(dir.ordinal()) == 4) {
                 if (tile != null) {
-                    IItemHandler other = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).map(other1 -> other1).orElse(null);
+                    IItemHandler other = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, dir.getOpposite()).map(other1 -> other1).orElse(null);
 
                     if (other == null) {
                         continue;
@@ -923,7 +928,8 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     public <
             T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
         if (!this.isRemoved()) {
-            if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+
+            if (capability == ForgeCapabilities.ITEM_HANDLER) {
                 if (facing != null) {
                     if (facing == Direction.DOWN)
                         return invHandlers[0].cast();
@@ -939,7 +945,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                         return invHandlers[5].cast();
                 }
             }
-            if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            if (capability == ForgeCapabilities.FLUID_HANDLER) {
                 if ((facing == null || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom())) {
                     if(isLiquid())
                         return (LazyOptional.of(() -> fluidTank).cast());
@@ -949,7 +955,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                         return (LazyOptional.of(() -> xpTank).cast());
                 }
             }
-            if ((hasUpgrade(Registration.ENERGY.get())) && capability == CapabilityEnergy.ENERGY)
+            if ((hasUpgrade(Registration.ENERGY.get())) && capability == ForgeCapabilities.ENERGY)
                 return (LazyOptional.of(() -> energyStorage).cast());
         }
         return super.getCapability(capability, facing);
@@ -996,7 +1002,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                 return (index >= FOUTPUT() && index <= LOUTPUT());
             } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 3) {
                 return (index >= FOUTPUT() && index <= LOUTPUT());
-            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && !isItemFuel(stack) && !stack.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+            } else if (this.furnaceSettings.get(DirectionUtil.getId(direction)) == 4 && !isItemFuel(stack) && !stack.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
                 return index == FUEL();
             }
         }else{
@@ -1019,7 +1025,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
         }
 
         if (index == FUEL()) {
-            return isItemFuel(stack) || stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() || stack.getCapability(CapabilityEnergy.ENERGY).isPresent();
+            return isItemFuel(stack) || stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent() || stack.getCapability(ForgeCapabilities.ENERGY).isPresent();
         }
         if (ArrayUtils.contains(UPGRADES(), index)) {
             if (stack.getItem() instanceof UpgradeItem && !hasUpgrade(stack.getItem()) && !hasUpgradeType((UpgradeItem) stack.getItem()))
@@ -1071,6 +1077,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     }
 
     public void unlockRecipes(Player player) {
+
         List<Recipe<?>> list = this.grantStoredRecipeExperience(player.level, player.position());
         player.awardRecipes(list);
         this.recipes.clear();

@@ -2,6 +2,7 @@ package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -23,9 +24,11 @@ public abstract class AbstractForgeBlockEntity extends AbstractSmeltingBlockEnti
 
     public AbstractForgeBlockEntity(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state) {
         super(tileentitytypeIn, pos, state, 14);
+
     }
 
     public int getIndexBottom() {
+
         return facing().getOpposite().ordinal();
     }
     public int getIndexTop() {

@@ -19,7 +19,7 @@ public class DiamondFurnaceMenu extends AbstractFurnaceMenu {
     }
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(te.getLevel(), te.getBlockPos()), playerEntity, Registration.DIAMOND_FURNACE.get());
+        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), playerEntity, Registration.DIAMOND_FURNACE.get());
     }
 
 }
