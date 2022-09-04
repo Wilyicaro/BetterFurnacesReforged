@@ -7,12 +7,12 @@ import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 
 public class SlotUpgrade extends Slot {
 
-    private AbstractSmeltingBlockEntity te;
+    private AbstractSmeltingBlockEntity be;
 
-    public SlotUpgrade(Container te, int slotIndex, int xPosition, int yPosition) {
-        super(te, slotIndex, xPosition, yPosition);
-        if (te instanceof AbstractSmeltingBlockEntity) {
-            this.te = (AbstractSmeltingBlockEntity) te;
+    public SlotUpgrade(Container be, int slotIndex, int xPosition, int yPosition) {
+        super(be, slotIndex, xPosition, yPosition);
+        if (be instanceof AbstractSmeltingBlockEntity) {
+            this.be = (AbstractSmeltingBlockEntity) be;
         }
     }
 
@@ -20,7 +20,7 @@ public class SlotUpgrade extends Slot {
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-        return te.IisItemValidForSlot(getSlotIndex(), stack);
+        return be.IisItemValidForSlot(getSlotIndex(), stack);
     }
 
 
@@ -31,8 +31,8 @@ public class SlotUpgrade extends Slot {
 
     @Override
     public void setChanged() {
-        if (te instanceof AbstractSmeltingBlockEntity) {
-            te.onUpdateSent();
+        if (be instanceof AbstractSmeltingBlockEntity) {
+            be.onUpdateSent();
         }
     }
 

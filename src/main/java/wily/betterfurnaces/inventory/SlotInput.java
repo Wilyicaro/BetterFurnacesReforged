@@ -6,16 +6,16 @@ import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 
 public class SlotInput extends Slot {
-    private AbstractSmeltingBlockEntity te;
-    public SlotInput(Container te, int index, int x, int y) {
-        super(te, index, x, y);
-        this.te = (AbstractSmeltingBlockEntity) te;
+    private AbstractSmeltingBlockEntity be;
+    public SlotInput(Container be, int index, int x, int y) {
+        super(be, index, x, y);
+        this.be = (AbstractSmeltingBlockEntity) be;
     }
 
     /**
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-            return te.hasRecipe(stack);
+            return be.hasRecipe(stack);
     }
 }

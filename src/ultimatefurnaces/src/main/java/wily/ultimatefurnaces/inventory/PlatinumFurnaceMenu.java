@@ -22,6 +22,6 @@ public class PlatinumFurnaceMenu extends AbstractFurnaceMenu {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(te.getLevel(), te.getBlockPos()), playerEntity, RegistrationUF.PLATINUM_FURNACE.get());
+        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), playerEntity, RegistrationUF.PLATINUM_FURNACE.get());
     }
 }

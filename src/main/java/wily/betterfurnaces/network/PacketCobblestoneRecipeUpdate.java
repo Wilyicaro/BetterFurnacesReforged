@@ -36,10 +36,10 @@ public class PacketCobblestoneRecipeUpdate {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer player = ctx.get().getSender();
 			BlockPos pos = new BlockPos(x, y, z);
-			AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity te = (AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity) player.getLevel().getBlockEntity(pos);
+			AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity be = (AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
-				te.changeRecipe(true);
-				te.setChanged();
+				be.changeRecipe(true);
+				be.setChanged();
 			}
 		});
 		ctx.get().setPacketHandled(true);

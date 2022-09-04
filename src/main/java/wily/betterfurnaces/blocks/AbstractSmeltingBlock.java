@@ -84,11 +84,11 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState p_180633_3_, @Nullable LivingEntity entity, ItemStack stack) {
         if (entity != null) {
-            AbstractSmeltingBlockEntity te = (AbstractSmeltingBlockEntity) world.getBlockEntity(pos);
+            AbstractSmeltingBlockEntity be = (AbstractSmeltingBlockEntity) world.getBlockEntity(pos);
             if (stack.hasCustomHoverName()) {
-                te.setCustomName(stack.getDisplayName());
+                be.setCustomName(stack.getDisplayName());
             }
-            te.totalCookTime = te.getCookTimeConfig().get();
+            be.totalCookTime = be.getCookTimeConfig().get();
         }
     }
 
@@ -96,16 +96,16 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult p_225533_6_) {
         ItemStack stack = player.getItemInHand(handIn).copy();
         ItemStack hand = player.getItemInHand(handIn);
-        AbstractSmeltingBlockEntity te = (AbstractSmeltingBlockEntity) world.getBlockEntity(pos);
+        AbstractSmeltingBlockEntity be = (AbstractSmeltingBlockEntity) world.getBlockEntity(pos);
 
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
             if (hand.getItem() instanceof UpgradeItem && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
-            }else if ((te.hasUpgrade(Registration.LIQUID.get()) && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && AbstractSmeltingBlockEntity.isItemFuel(hand) &&  !(player.isCrouching()))){
+            }else if ((be.hasUpgrade(Registration.LIQUID.get()) && hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent() && AbstractSmeltingBlockEntity.isItemFuel(hand) &&  !(player.isCrouching()))){
                 FluidStack fluid = hand.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve().get().getFluidInTank(1);
-                FluidActionResult res = FluidUtil.tryEmptyContainer(hand, te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get(), 1000, player, true);
+                FluidActionResult res = FluidUtil.tryEmptyContainer(hand, be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve().get(), 1000, player, true);
                 if (fluid != null)
                     if (res.isSuccess()) {
                         world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
@@ -123,35 +123,35 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
         if (!(hand.getItem() instanceof UpgradeItem)){
             return InteractionResult.SUCCESS;
         }
-        BlockEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof AbstractSmeltingBlockEntity)) {
+        BlockEntity be = world.getBlockEntity(pos);
+        if (!(be instanceof AbstractSmeltingBlockEntity)) {
             return InteractionResult.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
-        AbstractSmeltingBlockEntity be = (AbstractSmeltingBlockEntity) te;
-        if (be.hasUpgradeType((UpgradeItem) stack.getItem())) {
+        AbstractSmeltingBlockEntity smeltingBe = (AbstractSmeltingBlockEntity) be;
+        if (smeltingBe.hasUpgradeType((UpgradeItem) stack.getItem())) {
             if (!player.isCreative())
-            Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeTypeSlotItem((UpgradeItem) stack.getItem()));
-            else  be.getUpgradeTypeSlotItem((UpgradeItem) stack.getItem()).shrink(1);
+            Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), smeltingBe.getUpgradeTypeSlotItem((UpgradeItem) stack.getItem()));
+            else  smeltingBe.getUpgradeTypeSlotItem((UpgradeItem) stack.getItem()).shrink(1);
         }
-        for (int upg : be.UPGRADES()) {
-            if (be.inventory.isItemValid(upg, stack) && !stack.isEmpty()) {
-                if (!(be.getItem(upg).isEmpty()) && upg == be.UPGRADES()[be.UPGRADES().length - 1]) {
+        for (int upg : smeltingBe.UPGRADES()) {
+            if (smeltingBe.inventory.isItemValid(upg, stack) && !stack.isEmpty()) {
+                if (!(smeltingBe.getItem(upg).isEmpty()) && upg == smeltingBe.UPGRADES()[smeltingBe.UPGRADES().length - 1]) {
                     if (!player.isCreative())
-                    Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.getItem(upg));
-                    else be.getItem(upg).shrink(1);
+                    Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), smeltingBe.getItem(upg));
+                    else smeltingBe.getItem(upg).shrink(1);
                 }
-                if (be.getItem(upg).isEmpty()) {
-                    ((Container) te).setItem(upg, newStack);
+                if (smeltingBe.getItem(upg).isEmpty()) {
+                    ((Container) be).setItem(upg, newStack);
                     if (!player.isCreative()) {
                         player.getItemInHand(handIn).shrink(1);
                     }
-                    world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
             }
         }
-        ((AbstractSmeltingBlockEntity)te).onUpdateSent();
+        ((AbstractSmeltingBlockEntity)be).onUpdateSent();
         return InteractionResult.SUCCESS;
     }
 
@@ -238,10 +238,10 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
-            BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof AbstractSmeltingBlockEntity) {
-                Containers.dropContents(world, pos, (AbstractSmeltingBlockEntity) te);
-                ((AbstractSmeltingBlockEntity)te).grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof AbstractSmeltingBlockEntity) {
+                Containers.dropContents(world, pos, (AbstractSmeltingBlockEntity) be);
+                ((AbstractSmeltingBlockEntity)be).grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 

@@ -68,28 +68,28 @@ public class TierUpgradeItem extends Item {
                 ctx.getPlayer().displayClientMessage(new TextComponent("FastFurnace Mod is loaded, will not upgrade, drop the upgrade on the floor together with one cobblestone to get your materials back."), false);
                 return super.useOn(ctx);
             }
-            BlockEntity te = world.getBlockEntity(pos);
+            BlockEntity be = world.getBlockEntity(pos);
             BlockPlaceContext ctx2 = new BlockPlaceContext(ctx);
-            if (te instanceof FurnaceBlockEntity || te instanceof AbstractSmeltingBlockEntity) {
-                int cooktime = te.serializeNBT().getInt("CookTime");
-                int cooktimetotal = te.serializeNBT().getInt("CookTimeTotal");
+            if (be instanceof FurnaceBlockEntity || be instanceof AbstractSmeltingBlockEntity) {
+                int cooktime = be.serializeNBT().getInt("CookTime");
+                int cooktimetotal = be.serializeNBT().getInt("CookTimeTotal");
                 int currentItemBurnTime = 0;
-                int furnaceBurnTime = te.serializeNBT().getInt("BurnTime");
+                int furnaceBurnTime = be.serializeNBT().getInt("BurnTime");
                 int show = 0;
                 int[] settings = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-                if (te instanceof AbstractSmeltingBlockEntity) {
-                    furnaceBurnTime = ((AbstractSmeltingBlockEntity) te).fields.get(0);
-                    currentItemBurnTime = ((AbstractSmeltingBlockEntity) te).fields.get(1);
-                    cooktime = ((AbstractSmeltingBlockEntity) te).fields.get(2);
-                    cooktimetotal = ((AbstractSmeltingBlockEntity) te).fields.get(3);
-                    show = ((AbstractSmeltingBlockEntity) te).fields.get(4);
-                    for (int i = 0; i < ((AbstractSmeltingBlockEntity) te).furnaceSettings.size(); i++)
+                if (be instanceof AbstractSmeltingBlockEntity) {
+                    furnaceBurnTime = ((AbstractSmeltingBlockEntity) be).fields.get(0);
+                    currentItemBurnTime = ((AbstractSmeltingBlockEntity) be).fields.get(1);
+                    cooktime = ((AbstractSmeltingBlockEntity) be).fields.get(2);
+                    cooktimetotal = ((AbstractSmeltingBlockEntity) be).fields.get(3);
+                    show = ((AbstractSmeltingBlockEntity) be).fields.get(4);
+                    for (int i = 0; i < ((AbstractSmeltingBlockEntity) be).furnaceSettings.size(); i++)
                     {
-                        settings[i] = ((AbstractSmeltingBlockEntity) te).furnaceSettings.get(i);
+                        settings[i] = ((AbstractSmeltingBlockEntity) be).furnaceSettings.get(i);
                     }
 
                 }
-                if (te.getBlockState().getBlock() != from)
+                if (be.getBlockState().getBlock() != from)
                 {
                     return InteractionResult.PASS;
                 }
@@ -97,23 +97,23 @@ public class TierUpgradeItem extends Item {
                 if (next == world.getBlockState(pos)) {
                     return InteractionResult.PASS;
                 }
-                ItemStack input = ((Container) te).getItem(0).copy();
-                ItemStack fuel  = ((Container) te).getItem(1).copy();
-                ItemStack output  = ((Container) te).getItem(2).copy();
+                ItemStack input = ((Container) be).getItem(0).copy();
+                ItemStack fuel  = ((Container) be).getItem(1).copy();
+                ItemStack output  = ((Container) be).getItem(2).copy();
                 ItemStack upgrade  = ItemStack.EMPTY;
                 ItemStack upgrade1  = ItemStack.EMPTY;
                 ItemStack upgrade2  = ItemStack.EMPTY;
-                if (te instanceof AbstractSmeltingBlockEntity) {
-                    upgrade = ((Container) te).getItem(3).copy();
-                    upgrade1 = ((Container) te).getItem(4).copy();
-                    upgrade2 = ((Container) te).getItem(5).copy();
+                if (be instanceof AbstractSmeltingBlockEntity) {
+                    upgrade = ((Container) be).getItem(3).copy();
+                    upgrade1 = ((Container) be).getItem(4).copy();
+                    upgrade2 = ((Container) be).getItem(5).copy();
                 }
-                world.removeBlockEntity(te.getBlockPos());
+                world.removeBlockEntity(be.getBlockPos());
                 world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                world.setBlock(pos, next.setValue(BlockStateProperties.LIT, te.getBlockState().getValue(BlockStateProperties.LIT)), 3);
-                world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                world.setBlock(pos, next.setValue(BlockStateProperties.LIT, be.getBlockState().getValue(BlockStateProperties.LIT)), 3);
+                world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 BlockEntity newTe = world.getBlockEntity(pos);
-                newTe.deserializeNBT(te.serializeNBT());
+                newTe.deserializeNBT(be.serializeNBT());
                 ((Container)newTe).setItem(0, input);
                 ((Container)newTe).setItem(1, fuel);
                 ((Container)newTe).setItem(2, output);

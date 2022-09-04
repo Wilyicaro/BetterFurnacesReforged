@@ -69,7 +69,7 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult p_225533_6_) {
         ItemStack stack = player.getItemInHand(handIn).copy();
         ItemStack hand = player.getItemInHand(handIn);
-        AbstractCobblestoneGeneratorBlockEntity te = (AbstractCobblestoneGeneratorBlockEntity) world.getBlockEntity(pos);
+        AbstractCobblestoneGeneratorBlockEntity be = (AbstractCobblestoneGeneratorBlockEntity) world.getBlockEntity(pos);
 
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
@@ -119,9 +119,9 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
-            BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof AbstractCobblestoneGeneratorBlockEntity) {
-                Containers.dropContents(world, pos, (AbstractCobblestoneGeneratorBlockEntity) te);
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof AbstractCobblestoneGeneratorBlockEntity) {
+                Containers.dropContents(world, pos, (AbstractCobblestoneGeneratorBlockEntity) be);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 

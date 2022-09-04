@@ -32,7 +32,7 @@ public class UpCheck {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent(receiveCanceled = true)
     public void onTick(TickEvent.ClientTickEvent event) {
-        char[] version = BetterFurnacesReforged.VERSION.toCharArray();
+
         if(Minecraft.getInstance().player != null){
             Player player = Minecraft.getInstance().player;
             int id = 0;
@@ -41,7 +41,7 @@ public class UpCheck {
             }
             else if(UpCheck.needsUpdateNotify){
                 player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.speech")), false);
-                player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + version[0] + "." + version[1] + "." + version[2], UpCheck.updateVersionString)), false);
+                player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION, UpCheck.updateVersionString)), false);
                 player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.buttons", UpCheck.DOWNLOAD_LINK)), false);
             }
             if(threadFinished) MinecraftForge.EVENT_BUS.unregister(this);

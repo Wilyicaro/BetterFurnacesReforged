@@ -10,9 +10,9 @@ public class SlotHeater extends Slot {
 
     private AbstractSmeltingBlockEntity tf;
 
-    public SlotHeater(Container te, int slotIndex, int xPosition, int yPosition) {
-        super(te, slotIndex, xPosition, yPosition);
-            this.tf = (AbstractSmeltingBlockEntity) te;
+    public SlotHeater(Container be, int slotIndex, int xPosition, int yPosition) {
+        super(be, slotIndex, xPosition, yPosition);
+            this.tf = (AbstractSmeltingBlockEntity) be;
     }
 
     /**

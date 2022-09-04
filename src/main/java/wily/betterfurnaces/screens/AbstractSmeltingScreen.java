@@ -46,8 +46,8 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
     protected int[] XPTank() { return new int[]{116,57};} // 16x16pixels
 
     private boolean storedFactoryUpgradeType(int type){
-        if (getMenu().te.hasUpgradeType(Registration.FACTORY.get())) {
-            FactoryUpgradeItem stack = ((FactoryUpgradeItem)getMenu().te.getUpgradeTypeSlotItem(Registration.FACTORY.get()).getItem());
+        if (getMenu().be.hasUpgradeType(Registration.FACTORY.get())) {
+            FactoryUpgradeItem stack = ((FactoryUpgradeItem)getMenu().be.getUpgradeTypeSlotItem(Registration.FACTORY.get()).getItem());
             if (type == 0) return true;
             else if (type == 1)
                 return stack.canInput;
@@ -90,19 +90,19 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
         int imageYdifference = 0;
         int invX = 7;
         int titleX = (this.getXSize() - this.minecraft.font.width(name.getString())) / 2;
-        if (getMenu().te.isForge()) {imageYdifference = 20; invX =  (this.getXSize() - this.minecraft.font.width(playerInventoryTitle.getString())) / 2;}
+        if (getMenu().be.isForge()) {imageYdifference = 20; invX =  (this.getXSize() - this.minecraft.font.width(playerInventoryTitle.getString())) / 2;}
         this.minecraft.font.draw(matrix, playerInventoryTitle, invX, this.getYSize() - 93 - imageYdifference, 4210752);
         this.minecraft.font.draw(matrix, name,  titleX, 6 + imageYdifference, 4210752);
-        if (getMenu().te.isLiquid() &&
+        if (getMenu().be.isLiquid() &&
                 (mouseX > getGuiLeft() + FluidTank()[0] && mouseX < getGuiLeft() + FluidTank()[0] + 20 && mouseY > getGuiTop() + FluidTank()[1] && mouseY < getGuiTop() + FluidTank()[1] + 22))
             this.renderTooltip(matrix, new TextComponent(this.getMenu().getFluidStackStored(false).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(false).getAmount() + " mB"), actualMouseX, actualMouseY);
-        if (getMenu().te.hasUpgrade(Registration.ENERGY.get()) &&
+        if (getMenu().be.hasUpgrade(Registration.ENERGY.get()) &&
                 (mouseX > getGuiLeft() + EnergyTank()[0]&& mouseX < getGuiLeft() + EnergyTank()[0] + 16 && mouseY > getGuiTop() + EnergyTank()[1] && mouseY < getGuiTop() + EnergyTank()[1] + 34))
             this.renderTooltip(matrix, new TextComponent((this.getMenu()).getEnergyStored()/1000 + " kFE/" + ( this.getMenu()).getEnergyMaxStored()/1000 + "kFE"), actualMouseX, actualMouseY);
         if (storedFactoryUpgradeType(0)) {
             this.addFactoryTooltips(matrix, actualMouseX, actualMouseY, imageYdifference);
         }
-        if (getMenu().te.hasXPTank() &&
+        if (getMenu().be.hasXPTank() &&
                 (mouseX > getGuiLeft() + XPTank()[0] && mouseX < getGuiLeft() + XPTank()[0] + 16 && mouseY > getGuiTop() + XPTank()[1] && mouseY < getGuiTop() + XPTank()[1] + 16))
             this.renderTooltip(matrix, new TextComponent(this.getMenu().getFluidStackStored(true).getDisplayName().getString() +": " + (this.getMenu()).getFluidStackStored(true).getAmount() + " mB"), actualMouseX, actualMouseY);
 
@@ -167,7 +167,7 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
                     list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_back"));
                     list.add(this.getMenu().getTooltip(this.getMenu().getIndexBack()));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
-                }else if(getMenu().te.isForge() && mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
+                }else if(getMenu().be.isForge() && mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
                     this.renderTooltip(matrix, new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_show_orientation"), mouseX, mouseY);
                 }
             }
@@ -221,13 +221,13 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
         this.blit(matrix, relX, relY, 0, 0, this.getXSize(), this.getYSize());
         blitSmeltingSprites(matrix);
         int i;
-        if (getMenu().te.hasUpgrade(Registration.ENERGY.get())){
+        if (getMenu().be.hasUpgrade(Registration.ENERGY.get())){
             RenderSystem.setShaderTexture(0, WIDGETS);
             i = ( this.getMenu()).getEnergyStoredScaled(34);
             this.blit(matrix, getGuiLeft() + EnergyTank()[0], getGuiTop() + EnergyTank()[1], 240, 0, 16, 34);
             this.blit(matrix, getGuiLeft() + EnergyTank()[0], getGuiTop() + EnergyTank()[1], 240, 34, 16, 34-i);
         }
-        if (getMenu().te.isLiquid()){
+        if (getMenu().be.isLiquid()){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + FluidTank()[0], getGuiTop() + FluidTank()[1], 192, 38, 20, 22);
             FluidStack fluid =  this.getMenu().getFluidStackStored(false);
@@ -242,7 +242,7 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
             this.blit(matrix, getGuiLeft() + FluidTank()[0], getGuiTop() + FluidTank()[1], 192, 16, 20, 22);
         }
 
-        if (this.getMenu().te.hasXPTank()) {
+        if (this.getMenu().be.hasXPTank()) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, getGuiLeft() + XPTank()[0], getGuiTop() + XPTank()[1], 208, 0, 16, 16);
             FluidStack fluid =  this.getMenu().getFluidStackStored(true);
@@ -326,9 +326,9 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
                 }
             }
             if (storedFactoryUpgradeType(3)) {
-                if (getMenu().te.isForge()) {
+                if (getMenu().be.isForge()) {
                     this.blit(matrix, getGuiLeft() - 15, getGuiTop() + 58, 168, 189, 14, 14);
-                    if (getMenu().te.isForge() && (mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71 || this.getMenu().te.getBlockState().getValue(AbstractForgeBlock.SHOW_ORIENTATION))) {
+                    if (getMenu().be.isForge() && (mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71 || this.getMenu().be.getBlockState().getValue(AbstractForgeBlock.SHOW_ORIENTATION))) {
                         this.blit(matrix, getGuiLeft() - 15, getGuiTop() + 58, 182, 189, 14, 14);
                     }
                 }
@@ -520,8 +520,8 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
                         }
                     }
                 }
-                if (getMenu().te.isForge() && mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
-                    Messages.INSTANCE.sendToServer(new PacketOrientationButton(this.getMenu().getPos(), !this.getMenu().te.getBlockState().getValue(AbstractForgeBlock.SHOW_ORIENTATION)));
+                if (getMenu().be.isForge() && mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
+                    Messages.INSTANCE.sendToServer(new PacketOrientationButton(this.getMenu().getPos(), !this.getMenu().be.getBlockState().getValue(AbstractForgeBlock.SHOW_ORIENTATION)));
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                 }
 

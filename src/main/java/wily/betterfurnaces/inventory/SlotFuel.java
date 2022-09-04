@@ -10,10 +10,10 @@ import wily.betterfurnaces.init.Registration;
 
 public class SlotFuel extends Slot {
     AbstractSmeltingBlockEntity be;
-    public SlotFuel(Container te, int index, int x, int y) {
-        super(te, index, x, y);
-        if (te instanceof AbstractSmeltingBlockEntity)
-            be = (AbstractSmeltingBlockEntity) te;
+    public SlotFuel(Container be, int index, int x, int y) {
+        super(be, index, x, y);
+        if (be instanceof AbstractSmeltingBlockEntity)
+            be = (AbstractSmeltingBlockEntity) be;
     }
 
     /**
