@@ -18,9 +18,4 @@ public class ExtremeFurnaceContainer extends AbstractFurnaceContainer {
         super(Registration.EXTREME_FURNACE_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
     }
 
-
-    @Override
-    public boolean stillValid(PlayerEntity playerIn) {
-        return stillValid(IWorldPosCallable.create(te.getLevel(), te.getBlockPos()), playerEntity, Registration.EXTREME_FURNACE.get());
-    }
 }

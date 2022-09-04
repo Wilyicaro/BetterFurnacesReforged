@@ -19,9 +19,5 @@ public class NetherhotFurnaceContainer extends AbstractFurnaceContainer {
     }
 
 
-    @Override
-    public boolean stillValid(PlayerEntity playerIn) {
-        return stillValid(IWorldPosCallable.create(te.getLevel(), te.getBlockPos()), playerEntity, Registration.NETHERHOT_FURNACE.get());
-    }
 
 }

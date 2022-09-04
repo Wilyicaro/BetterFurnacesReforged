@@ -16,10 +16,12 @@ public abstract class AbstractForgeContainer extends AbstractSmeltingContainer {
 
     public AbstractForgeContainer(ContainerType<?> containerType, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, IIntArray fields) {
         super(containerType, windowId, world, pos, playerInventory, player, fields);
+
     }
 
     @Override
     public void addInventorySlots() {
+        TOP_ROW = 106;
         int i = 20;
         int y1 = 62 - i;
         int y2 = 100 - i;
@@ -39,6 +41,5 @@ public abstract class AbstractForgeContainer extends AbstractSmeltingContainer {
         this.addSlot(new SlotUpgrade(te, 11, 115, y4));
         this.addSlot(new SlotUpgrade(te, 12, 133, y4));
         this.addSlot(new SlotUpgrade(te, 13, 151, y4));
-        layoutPlayerInventorySlots(8, 106);
     }
 }

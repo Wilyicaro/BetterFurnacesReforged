@@ -24,7 +24,7 @@ public class UpCheck {
     public static String updateVersionString;
     public static boolean threadFinished = false;
 
-    public UpCheck() {
+    public UpCheck(){
         BetterFurnacesReforged.LOGGER.info("Initializing Update Checker...");
         new UpThreadCheck();
         MinecraftForge.EVENT_BUS.register(this);
@@ -34,20 +34,22 @@ public class UpCheck {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent(receiveCanceled = true)
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (Minecraft.getInstance().player != null) {
-            char[] version = BetterFurnacesReforged.VERSION.toCharArray();
+
+        if(Minecraft.getInstance().player != null){
             PlayerEntity player = Minecraft.getInstance().player;
             int id = 0;
-            if (UpCheck.checkFailed) {
-                player.sendMessage(ITextComponent.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID + ".update.failed")), UUID.randomUUID());
-            } else if (UpCheck.needsUpdateNotify) {
-                player.sendMessage(ITextComponent.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID + ".update.speech")), UUID.randomUUID());
-                player.sendMessage(ITextComponent.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID + ".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + version[0] + "." + version[1] + "." + version[2], UpCheck.updateVersionString)), UUID.randomUUID());
-                player.sendMessage(ITextComponent.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID + ".update.buttons", UpCheck.DOWNLOAD_LINK)), UUID.randomUUID());
+            if(UpCheck.checkFailed){
+                player.displayClientMessage(ITextComponent.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.failed")), false);
             }
-            if (threadFinished) MinecraftForge.EVENT_BUS.unregister(this);
+            else if(UpCheck.needsUpdateNotify){
+                player.displayClientMessage(ITextComponent.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.speech")), false);
+                player.displayClientMessage(ITextComponent.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION, UpCheck.updateVersionString)), false);
+                player.displayClientMessage(ITextComponent.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.buttons", UpCheck.DOWNLOAD_LINK)), false);
+            }
+            if(threadFinished) MinecraftForge.EVENT_BUS.unregister(this);
         }
     }
+
 
 
 }
