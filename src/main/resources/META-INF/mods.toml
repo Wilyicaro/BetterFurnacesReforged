@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[36,)"
-license="GNU"
+license="MIT"
 
 [[mods]]
 modId="betterfurnacesreforged"
