@@ -10,6 +10,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -23,20 +25,27 @@ import wily.ultimatefurnaces.items.*;
 
 public class RegistrationUF {
 
-    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, UltimateFurnaces.MOD_ID);
+    private static final DeferredRegister<Block> BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.BLOCKS, UltimateFurnaces.MOD_ID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, UltimateFurnaces.MOD_ID);
     private static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, UltimateFurnaces.MOD_ID);
     private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, UltimateFurnaces.MOD_ID);
 
     public static void init() {
-        BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
         CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
+    @SubscribeEvent
+    public static void registerBlockItems(final RegistryEvent.Register<Item> a){
+        for (RegistryObject<Block> block : BLOCK_ITEMS.getEntries()){
+            a.getRegistry().register(new BlockItem(block.get(), defaultItemProperties()).setRegistryName(block.getId()));
+        }
 
-    public static final RegistryObject<CopperFurnaceBlock> COPPER_FURNACE = BLOCKS.register(CopperFurnaceBlock.COPPER_FURNACE, () -> new CopperFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.COAL_BLOCK).strength(10.0F, 20.0F)));
-    public static final RegistryObject<Item> COPPER_FURNACE_ITEM = ITEMS.register(CopperFurnaceBlock.COPPER_FURNACE, () -> new BlockItem(COPPER_FURNACE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    }
+    private static Item.Properties defaultItemProperties(){ return new Item.Properties().tab(ModObjects.ITEM_GROUP);}
+
+    public static final RegistryObject<CopperFurnaceBlock> COPPER_FURNACE = BLOCK_ITEMS.register(CopperFurnaceBlock.COPPER_FURNACE, () -> new CopperFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.COAL_BLOCK).strength(10.0F, 20.0F)));
     public static final RegistryObject<BlockEntityType<CopperFurnaceBlockEntity>> COPPER_FURNACE_TILE = TILES.register(CopperFurnaceBlock.COPPER_FURNACE, () -> BlockEntityType.Builder.of(CopperFurnaceBlockEntity::new, COPPER_FURNACE.get()).build(null));
 
     public static final RegistryObject<MenuType<CopperFurnaceMenu>> COPPER_FURNACE_CONTAINER = CONTAINERS.register(CopperFurnaceBlock.COPPER_FURNACE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -45,8 +54,7 @@ public class RegistrationUF {
         return new CopperFurnaceMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<SteelFurnaceBlock> STEEL_FURNACE = BLOCKS.register(SteelFurnaceBlock.STEEL_FURNACE, () -> new SteelFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(20.0F, 60.0F)));
-    public static final RegistryObject<Item> STEEL_FURNACE_ITEM = ITEMS.register(SteelFurnaceBlock.STEEL_FURNACE, () -> new BlockItem(STEEL_FURNACE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<SteelFurnaceBlock> STEEL_FURNACE = BLOCK_ITEMS.register(SteelFurnaceBlock.STEEL_FURNACE, () -> new SteelFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(20.0F, 60.0F)));
     public static final RegistryObject<BlockEntityType<SteelFurnaceBlockEntity>> STEEL_FURNACE_TILE = TILES.register(SteelFurnaceBlock.STEEL_FURNACE, () -> BlockEntityType.Builder.of(SteelFurnaceBlockEntity::new, STEEL_FURNACE.get()).build(null));
 
     public static final RegistryObject<MenuType<SteelFurnaceMenu>> STEEL_FURNACE_CONTAINER = CONTAINERS.register(SteelFurnaceBlock.STEEL_FURNACE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -55,8 +63,7 @@ public class RegistrationUF {
         return new SteelFurnaceMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<AmethystFurnaceBlock> AMETHYST_FURNACE = BLOCKS.register(AmethystFurnaceBlock.AMETHYST_FURNACE, () -> new AmethystFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.AMETHYST_BLOCK).strength(20.0F, 30.0F)));
-    public static final RegistryObject<Item> AMETHYST_FURNACE_ITEM = ITEMS.register(AmethystFurnaceBlock.AMETHYST_FURNACE, () -> new BlockItem(AMETHYST_FURNACE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<AmethystFurnaceBlock> AMETHYST_FURNACE = BLOCK_ITEMS.register(AmethystFurnaceBlock.AMETHYST_FURNACE, () -> new AmethystFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.AMETHYST_BLOCK).strength(20.0F, 30.0F)));
     public static final RegistryObject<BlockEntityType<AmethystFurnaceBlockEntity>> AMETHYST_FURNACE_TILE = TILES.register(AmethystFurnaceBlock.AMETHYST_FURNACE, () -> BlockEntityType.Builder.of(AmethystFurnaceBlockEntity::new, AMETHYST_FURNACE.get()).build(null));
 
     public static final RegistryObject<MenuType<AmethystFurnaceMenu>> AMETHYST_FURNACE_CONTAINER = CONTAINERS.register(AmethystFurnaceBlock.AMETHYST_FURNACE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -65,8 +72,7 @@ public class RegistrationUF {
         return new AmethystFurnaceMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<PlatinumFurnaceBlock> PLATINUM_FURNACE = BLOCKS.register(PlatinumFurnaceBlock.PLATINUM_FURNACE, () -> new PlatinumFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.RAW_GOLD_BLOCK).strength(30.0F, 60.0F)));
-    public static final RegistryObject<Item> PLATINUM_FURNACE_ITEM = ITEMS.register(PlatinumFurnaceBlock.PLATINUM_FURNACE, () -> new BlockItem(PLATINUM_FURNACE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<PlatinumFurnaceBlock> PLATINUM_FURNACE = BLOCK_ITEMS.register(PlatinumFurnaceBlock.PLATINUM_FURNACE, () -> new PlatinumFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.RAW_GOLD_BLOCK).strength(30.0F, 60.0F)));
     public static final RegistryObject<BlockEntityType<PlatinumFurnaceBlockEntity>> PLATINUM_FURNACE_TILE = TILES.register(PlatinumFurnaceBlock.PLATINUM_FURNACE, () -> BlockEntityType.Builder.of(PlatinumFurnaceBlockEntity::new, PLATINUM_FURNACE.get()).build(null));
 
     public static final RegistryObject<MenuType<PlatinumFurnaceMenu>> PLATINUM_FURNACE_CONTAINER = CONTAINERS.register(PlatinumFurnaceBlock.PLATINUM_FURNACE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -75,8 +81,7 @@ public class RegistrationUF {
         return new PlatinumFurnaceMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<UltimateFurnaceBlock> ULTIMATE_FURNACE = BLOCKS.register(UltimateFurnaceBlock.ULTIMATE_FURNACE, () -> new UltimateFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK).strength(50.0F, 6000.0F)));
-    public static final RegistryObject<Item> ULTIMATE_FURNACE_ITEM = ITEMS.register(UltimateFurnaceBlock.ULTIMATE_FURNACE, () -> new BlockItem(ULTIMATE_FURNACE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<UltimateFurnaceBlock> ULTIMATE_FURNACE = BLOCK_ITEMS.register(UltimateFurnaceBlock.ULTIMATE_FURNACE, () -> new UltimateFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK).strength(50.0F, 6000.0F)));
     public static final RegistryObject<BlockEntityType<UltimateFurnaceBlockEntity>> ULTIMATE_FURNACE_TILE = TILES.register(UltimateFurnaceBlock.ULTIMATE_FURNACE, () -> BlockEntityType.Builder.of(UltimateFurnaceBlockEntity::new, ULTIMATE_FURNACE.get()).build(null));
 
     public static final RegistryObject<MenuType<UltimateFurnaceMenu>> ULTIMATE_FURNACE_CONTAINER = CONTAINERS.register(UltimateFurnaceBlock.ULTIMATE_FURNACE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -85,8 +90,7 @@ public class RegistrationUF {
         return new UltimateFurnaceMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<CopperForgeBlock> COPPER_FORGE = BLOCKS.register(CopperForgeBlock.COPPER_FORGE, () -> new CopperForgeBlock(BlockBehaviour.Properties.copy(Blocks.COAL_BLOCK)));
-    public static final RegistryObject<Item> COPPER_FORGE_ITEM = ITEMS.register(CopperForgeBlock.COPPER_FORGE, () -> new BlockItem(COPPER_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<CopperForgeBlock> COPPER_FORGE = BLOCK_ITEMS.register(CopperForgeBlock.COPPER_FORGE, () -> new CopperForgeBlock(BlockBehaviour.Properties.copy(Blocks.COAL_BLOCK)));
     public static final RegistryObject<BlockEntityType<CopperForgeBlockEntity>> COPPER_FORGE_TILE = TILES.register(CopperForgeBlock.COPPER_FORGE, () -> BlockEntityType.Builder.of(CopperForgeBlockEntity::new, COPPER_FORGE.get()).build(null));
 
     public static final RegistryObject<MenuType<CopperForgeMenu>> COPPER_FORGE_CONTAINER = CONTAINERS.register(CopperForgeBlock.COPPER_FORGE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -95,8 +99,7 @@ public class RegistrationUF {
         return new CopperForgeMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<IronForgeBlock> IRON_FORGE = BLOCKS.register(IronForgeBlock.IRON_FORGE, () -> new IronForgeBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
-    public static final RegistryObject<Item> IRON_FORGE_ITEM = ITEMS.register(IronForgeBlock.IRON_FORGE, () -> new BlockItem(IRON_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<IronForgeBlock> IRON_FORGE = BLOCK_ITEMS.register(IronForgeBlock.IRON_FORGE, () -> new IronForgeBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
     public static final RegistryObject<BlockEntityType<IronForgeBlockEntity>> IRON_FORGE_TILE = TILES.register(IronForgeBlock.IRON_FORGE, () -> BlockEntityType.Builder.of(IronForgeBlockEntity::new, IRON_FORGE.get()).build(null));
 
     public static final RegistryObject<MenuType<IronForgeMenu>> IRON_FORGE_CONTAINER = CONTAINERS.register(IronForgeBlock.IRON_FORGE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -105,8 +108,7 @@ public class RegistrationUF {
         return new IronForgeMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<GoldForgeBlock> GOLD_FORGE = BLOCKS.register(GoldForgeBlock.GOLD_FORGE, () -> new GoldForgeBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)));
-    public static final RegistryObject<Item> GOLD_FORGE_ITEM = ITEMS.register(GoldForgeBlock.GOLD_FORGE, () -> new BlockItem(GOLD_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<GoldForgeBlock> GOLD_FORGE = BLOCK_ITEMS.register(GoldForgeBlock.GOLD_FORGE, () -> new GoldForgeBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)));
     public static final RegistryObject<BlockEntityType<GoldForgeBlockEntity>> GOLD_FORGE_TILE = TILES.register(GoldForgeBlock.GOLD_FORGE, () -> BlockEntityType.Builder.of(GoldForgeBlockEntity::new, GOLD_FORGE.get()).build(null));
 
     public static final RegistryObject<MenuType<GoldForgeMenu>> GOLD_FORGE_CONTAINER = CONTAINERS.register(GoldForgeBlock.GOLD_FORGE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -115,8 +117,7 @@ public class RegistrationUF {
         return new GoldForgeMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<DiamondForgeBlock> DIAMOND_FORGE = BLOCKS.register(DiamondForgeBlock.DIAMOND_FORGE, () -> new DiamondForgeBlock(BlockBehaviour.Properties.copy(Blocks.DIAMOND_BLOCK)));
-    public static final RegistryObject<Item> DIAMOND_FORGE_ITEM = ITEMS.register(DiamondForgeBlock.DIAMOND_FORGE, () -> new BlockItem(DIAMOND_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<DiamondForgeBlock> DIAMOND_FORGE = BLOCK_ITEMS.register(DiamondForgeBlock.DIAMOND_FORGE, () -> new DiamondForgeBlock(BlockBehaviour.Properties.copy(Blocks.DIAMOND_BLOCK)));
     public static final RegistryObject<BlockEntityType<DiamondForgeBlockEntity>> DIAMOND_FORGE_TILE = TILES.register(DiamondForgeBlock.DIAMOND_FORGE, () -> BlockEntityType.Builder.of(DiamondForgeBlockEntity::new, DIAMOND_FORGE.get()).build(null));
 
     public static final RegistryObject<MenuType<DiamondForgeMenu>> DIAMOND_FORGE_CONTAINER = CONTAINERS.register(DiamondForgeBlock.DIAMOND_FORGE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -125,8 +126,7 @@ public class RegistrationUF {
         return new DiamondForgeMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<NetherhotForgeBlock> NETHERHOT_FORGE = BLOCKS.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> new NetherhotForgeBlock(BlockBehaviour.Properties.copy(Blocks.DIAMOND_BLOCK)));
-    public static final RegistryObject<Item> NETHERHOT_FORGE_ITEM = ITEMS.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> new BlockItem(NETHERHOT_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<NetherhotForgeBlock> NETHERHOT_FORGE = BLOCK_ITEMS.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> new NetherhotForgeBlock(BlockBehaviour.Properties.copy(Blocks.DIAMOND_BLOCK)));
     public static final RegistryObject<BlockEntityType<NetherhotForgeBlockEntity>> NETHERHOT_FORGE_TILE = TILES.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> BlockEntityType.Builder.of(NetherhotForgeBlockEntity::new, NETHERHOT_FORGE.get()).build(null));
 
     public static final RegistryObject<MenuType<NetherhotForgeMenu>> NETHERHOT_FORGE_CONTAINER = CONTAINERS.register(NetherhotForgeBlock.NETHERHOT_FORGE, () -> IForgeMenuType.create((windowId, inv, data) -> {
@@ -135,8 +135,7 @@ public class RegistrationUF {
         return new NetherhotForgeMenu(windowId, world, pos, inv, inv.player);
     }));
 
-    public static final RegistryObject<UltimateForgeBlock> ULTIMATE_FORGE = BLOCKS.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> new UltimateForgeBlock(BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK).strength(50.0F, 6000.0F)));
-    public static final RegistryObject<Item> ULTIMATE_FORGE_ITEM = ITEMS.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> new BlockItem(ULTIMATE_FORGE.get(), new Item.Properties().tab(ModObjects.ITEM_GROUP)));
+    public static final RegistryObject<UltimateForgeBlock> ULTIMATE_FORGE = BLOCK_ITEMS.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> new UltimateForgeBlock(BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK).strength(50.0F, 6000.0F)));
     public static final RegistryObject<BlockEntityType<UltimateForgeBlockEntity>> ULTIMATE_FORGE_TILE = TILES.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> BlockEntityType.Builder.of(UltimateForgeBlockEntity::new, ULTIMATE_FORGE.get()).build(null));
 
     public static final RegistryObject<MenuType<UltimateForgeMenu>> ULTIMATE_FORGE_CONTAINER = CONTAINERS.register(UltimateForgeBlock.ULTIMATE_FORGE, () -> IForgeMenuType.create((windowId, inv, data) -> {

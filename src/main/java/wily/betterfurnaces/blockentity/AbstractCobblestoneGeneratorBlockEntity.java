@@ -12,7 +12,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,10 +21,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.CobblestoneGeneratorBlock;
-import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.AbstractCobblestoneGeneratorMenu;
+import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
 import wily.betterfurnaces.items.OreProcessingUpgradeItem;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
@@ -104,7 +102,6 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
         super(tileentitytypeIn, pos, state, 5);
 
     }
-
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
         if (state.getValue(CobblestoneGeneratorBlock.TYPE) != cobGen()) {
@@ -112,7 +109,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
         }
     }
     protected List<CobblestoneGeneratorRecipes> getSortedCobRecipes(){
-       return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.Type.INSTANCE).stream().sorted(new Comparator<CobblestoneGeneratorRecipes>() {
+        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(CobblestoneGeneratorRecipes.Type.INSTANCE).stream().sorted(new Comparator<CobblestoneGeneratorRecipes>() {
             @Override
             public int compare(CobblestoneGeneratorRecipes o1, CobblestoneGeneratorRecipes o2) {
                 return o1.recipeId.getPath().compareTo(o2.recipeId.getPath());
@@ -137,10 +134,11 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             this.resultType = newIndex;
 
             this.updateBlockState();
-
         }
+
     }
     public void tick(BlockState state) {
+
         if (actualCobTime != getCobTime()){
             actualCobTime = getCobTime();
         }
@@ -154,6 +152,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             setRecipe(resultType);
             updateBlockState();
         }
+
         if (!getLevel().isClientSide)forceUpdateAllStates();
         ItemStack output = getItem(OUTPUT);
         ItemStack upgrade = getItem(UPGRADE);
@@ -235,7 +234,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
     }
     public ItemStack getResult(){
         ItemStack result;
-        if (recipe != null) result = recipe.getResultItem();
+        if (recipe != null) result = new ItemStack(recipe.getResultItem().getItem());
         else result = new ItemStack(Items.COBBLESTONE);
         result.setCount(getResultCount());
         return result;
@@ -246,7 +245,6 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             return 2;
         else return 1;
     }
-
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
@@ -275,7 +273,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
     @Nonnull
     @Override
     public <
-            T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
+            T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 
         if (!this.isRemoved() && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return LazyOptional.of(this::getInv).cast();

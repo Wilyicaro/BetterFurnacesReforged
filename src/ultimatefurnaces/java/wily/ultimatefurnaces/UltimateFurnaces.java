@@ -20,8 +20,8 @@ public class UltimateFurnaces
 {
 
     public static final String MOD_ID = "ultimatefurnaces_bfr";
-    public static final String VERSION = "101";
-    public static final String MC_VERSION = "1.16.5";
+    public static final String VERSION = "102";
+    public static final String MC_VERSION = "1.18.2";
 
     public static final Logger LOGGER = LogManager.getLogger();
 
