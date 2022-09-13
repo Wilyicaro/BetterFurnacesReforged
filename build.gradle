@@ -1,3 +1,4 @@
+import net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace
 
 plugins {
     id 'eclipse'
@@ -10,6 +11,23 @@ group = 'wily.betterfurnaces'
 archivesBaseName = 'BetterFurnacesReforged'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+
+        def sourceSet = sourceSets.create("ultimatefurnaces")
+        sourceSet.compileClasspath += sourceSets.main.output
+        sourceSet.runtimeClasspath += sourceSets.main.output
+        def ultimatefurnacesImplementation = project.configurations.maybeCreate(sourceSet.getTaskName(null, "implementation"))
+        def ultimatefurnacesCompileOnly = project.configurations.maybeCreate(sourceSet.getTaskName(null, "compileOnly"))
+        def ultimatefurnacesRuntimeOnly = project.configurations.maybeCreate(sourceSet.getTaskName(null, "runtimeOnly"))
+            // If this is a secondary module then make the base tasks extend the builtin ones
+            ultimatefurnacesImplementation.extendsFrom(project.configurations.getByName("implementation"))
+            ultimatefurnacesCompileOnly.extendsFrom(project.configurations.getByName("compileOnly"))
+            ultimatefurnacesRuntimeOnly.extendsFrom(project.configurations.getByName("runtimeOnly"))
+    project.sourceSets.test.compileClasspath += sourceSet.output
+    project.sourceSets.test.runtimeClasspath += sourceSet.output
+
+
+
 
 minecraft {
     mappings channel: "${mappings_channel}", version: "${minecraft_version}"
@@ -26,6 +44,9 @@ minecraft {
                 betterfurnaces {
                     source sourceSets.main
                 }
+                ultimatefurnaces {
+                    source sourceSets.ultimatefurnaces
+                }
             }
         }
 
@@ -39,11 +60,13 @@ minecraft {
                 betterfurnaces {
                     source sourceSets.main
                 }
+                ultimatefurnaces {
+                    source sourceSets.ultimatefurnaces
+                }
             }
         }
     }
 }
-
 jar {
     manifest {
         attributes([
@@ -56,6 +79,36 @@ jar {
         ])
     }
 }
+task ultimatefurnacesJar(type: Jar) {
+    baseName = "UltimateFurnaces"
+    version = "${minecraft_version}-${ufmod_version}"
+    manifest {
+        attributes([
+                "Specification-Title"     : "ultimatefurnaces",
+                "Specification-Vendor"    : "wily",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${ufmod_version}",
+                "Implementation-Vendor"   : "wily"
+        ])
+    }
+    from sourceSets.ultimatefurnaces.output
+
+}
+
+createReobf(sourceSets.ultimatefurnaces)
+
+def createReobf(SourceSet sourceSet) {
+    def reobfTask = createReobf(sourceSet.getJarTaskName())
+    reobfTask.configure { classpath.from(sourceSet.compileClasspath) }
+    tasks.named(sourceSet.getJarTaskName()).configure(task -> task.finalizedBy(reobfTask))
+    return reobfTask
+}
+def createReobf(String name) {
+    def reobfExtension = (NamedDomainObjectContainer<RenameJarInPlace>) extensions.getByName("reobf")
+    return reobfExtension.register(name)
+}
+
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"

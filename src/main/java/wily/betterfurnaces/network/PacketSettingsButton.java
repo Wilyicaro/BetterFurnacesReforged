@@ -44,11 +44,11 @@ public class PacketSettingsButton {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer player = ctx.get().getSender();
 			BlockPos pos = new BlockPos(x, y, z);
-			AbstractSmeltingBlockEntity te = (AbstractSmeltingBlockEntity) player.getLevel().getBlockEntity(pos);
+			AbstractSmeltingBlockEntity be = (AbstractSmeltingBlockEntity) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
-				te.furnaceSettings.set(index, set);
-				te.getLevel().markAndNotifyBlock(pos, player.getLevel().getChunkAt(pos), te.getLevel().getBlockState(pos).getBlock().defaultBlockState(), te.getLevel().getBlockState(pos), 2, 3);
-				te.setChanged();
+				be.furnaceSettings.set(index, set);
+				be.getLevel().markAndNotifyBlock(pos, player.getLevel().getChunkAt(pos), be.getLevel().getBlockState(pos).getBlock().defaultBlockState(), be.getLevel().getBlockState(pos), 2, 3);
+				be.setChanged();
 			}
 		});
 		ctx.get().setPacketHandled(true);

@@ -1,6 +1,8 @@
 package wily.betterfurnaces.blockentity;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.model.LavaSlimeModel;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.DripParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -143,6 +145,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
 
     }
     public void tick(BlockState state) {
+
         if (actualCobTime != getCobTime()){
             actualCobTime = getCobTime();
         }
@@ -156,6 +159,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
             setRecipe(resultType);
             updateBlockState();
         }
+
         if (!getLevel().isClientSide)forceUpdateAllStates();
         ItemStack output = getItem(OUTPUT);
         ItemStack upgrade = getItem(UPGRADE);

@@ -22,6 +22,6 @@ public class DiamondForgeMenu extends AbstractForgeMenu {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(te.getLevel(), te.getBlockPos()), playerEntity, RegistrationUF.DIAMOND_FORGE.get());
+        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), playerEntity, RegistrationUF.DIAMOND_FORGE.get());
     }
 }

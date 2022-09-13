@@ -37,6 +37,7 @@ public class UpThreadCheck extends Thread {
 
             int clientVersion = Integer.parseInt(BetterFurnacesReforged.VERSION.replace(".",""));
             if (UpCheck.updateVersionInt > clientVersion) {
+
                 UpCheck.needsUpdateNotify = true;
             }
 

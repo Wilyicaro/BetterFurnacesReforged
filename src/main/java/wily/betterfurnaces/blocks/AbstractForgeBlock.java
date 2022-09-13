@@ -10,16 +10,14 @@ import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -50,6 +48,8 @@ public abstract class AbstractForgeBlock extends AbstractSmeltingBlock implement
         this.registerDefaultState( this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false).setValue(SHOW_ORIENTATION, false));
     }
 
+
+
     @Override
     public VoxelShape getShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
         return FORGE_SHAPE;
@@ -79,26 +79,26 @@ public abstract class AbstractForgeBlock extends AbstractSmeltingBlock implement
         if (!(hand instanceof UpgradeItem)){
             return InteractionResult.SUCCESS;
         }
-        BlockEntity te = world.getBlockEntity(pos);
-        if (!(te instanceof AbstractSmeltingBlockEntity)) {
+        BlockEntity be = world.getBlockEntity(pos);
+        if (!(be instanceof AbstractSmeltingBlockEntity)) {
             return InteractionResult.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
 
         if (((UpgradeItem) hand).upgradeType == 1) {
-            if ((!(((Container) te).getItem(10).isEmpty())) && (!player.isCreative())) {
-                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) te).getItem(10));
+            if ((!(((Container) be).getItem(10).isEmpty())) && (!player.isCreative())) {
+                Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) be).getItem(10));
             }
-            ((Container) te).setItem(10, newStack);
-            world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
+            ((Container) be).setItem(10, newStack);
+            world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
             if (!player.isCreative()) {
                 player.getItemInHand(handIn).shrink(1);
             }
         }else {
             return super.interactUpgrade(world, pos, player, handIn, stack);
         }
-        ((AbstractSmeltingBlockEntity)te).onUpdateSent();
+        ((AbstractSmeltingBlockEntity)be).onUpdateSent();
         return InteractionResult.SUCCESS;
     }
 

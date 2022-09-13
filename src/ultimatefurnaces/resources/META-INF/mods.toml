@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[36,)"
-license="GNU"
+license="MIT"
 
 [[mods]]
 modId="ultimatefurnaces_bfr"
@@ -17,13 +17,13 @@ An official addon for BetterFurnaces Reforged mod, that add 2 new furnaces and 6
 [[dependencies.ultimatefurnaces_bfr]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19]"
+    versionRange="[1.19.,]"
     ordering="NONE"
     side="BOTH"
     [[dependencies.ultimatefurnaces_bfr]]
         modId="betterfurnacesreforged"
         mandatory=true
-        versionRange="[1.2.,]"
+        versionRange="[1.0.1,]"
         ordering="NONE"
         side="BOTH"
 [[dependencies.ultimatefurnaces_bfr]]

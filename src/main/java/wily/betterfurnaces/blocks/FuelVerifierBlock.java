@@ -75,9 +75,9 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
-            BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof AbstractFuelVerifierBlockEntity) {
-                Containers.dropContents(world, pos, (AbstractFuelVerifierBlockEntity) te);
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof AbstractFuelVerifierBlockEntity) {
+                Containers.dropContents(world, pos, (AbstractFuelVerifierBlockEntity) be);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 

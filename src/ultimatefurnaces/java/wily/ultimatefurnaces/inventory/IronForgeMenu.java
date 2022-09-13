@@ -22,6 +22,6 @@ public class IronForgeMenu extends AbstractForgeMenu {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(te.getLevel(), te.getBlockPos()), playerEntity, RegistrationUF.IRON_FORGE.get());
+        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), playerEntity, RegistrationUF.IRON_FORGE.get());
     }
 }
