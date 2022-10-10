@@ -1,9 +1,10 @@
 package wily.betterfurnaces;
 
-import wily.betterfurnaces.cfup.UpCheck;
+import wily.betterfurnaces.gitup.UpCheck;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import wily.betterfurnaces.compat.TopCompatibility;
 import wily.betterfurnaces.handler.GuiHandler;
 import wily.betterfurnaces.init.ModBlockColors;
 import wily.betterfurnaces.init.ModItemColors;
@@ -12,8 +13,6 @@ import wily.betterfurnaces.net.MessageSync;
 import wily.betterfurnaces.net.MessageColorSliderSync;
 import wily.betterfurnaces.tile.*;
 import wily.betterfurnaces.utils.OreProcessingRegistry;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
@@ -32,7 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class BetterFurnacesReforged {
 	public static final String MODID = "betterfurnacesreforged";
 	public static final String MODNAME = "BetterFurnaces Reforged";
-	public static final String VERSION = "152";
+	public static final String VERSION = "1.5.3";
 	public static final String MC_VERSION = "1.12.2";
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
@@ -53,6 +52,7 @@ public class BetterFurnacesReforged {
 			this.LOGGER.warn("You have disabled BetterFurnace's Update Checker, to re-enable: change the value of Update Checker in .minecraft->config->betterfurnacesreforged-client.toml to 'true'.");
 		}
 		if (cfg.hasChanged()) cfg.save();
+		TopCompatibility.MainCompatHandler.registerTOP();
 	}
 	@EventHandler
 	public void postInit(FMLLoadCompleteEvent event) {

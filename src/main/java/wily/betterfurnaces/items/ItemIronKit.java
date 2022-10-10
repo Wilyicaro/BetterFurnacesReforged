@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.minecraft.util.text.TextFormatting;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blocks.BlockIronFurnace;
+import wily.betterfurnaces.blocks.BlockSmelting;
 import wily.betterfurnaces.init.ModObjects;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.state.IBlockState;
@@ -59,8 +59,8 @@ public final class ItemIronKit extends ItemKit {
 				tag = convert(tag);
 				((TileEntityFurnace) te).clear();
 				boolean burning = state.getBlock() == Blocks.LIT_FURNACE;
-				EnumFacing face = state.getValue(BlockIronFurnace.FACING);
-				world.setBlockState(pos, ModObjects.IRON_FURNACE.getDefaultState().withProperty(BlockIronFurnace.FACING, face).withProperty(BlockIronFurnace.BURNING, burning));
+				EnumFacing face = state.getValue(BlockSmelting.FACING);
+				world.setBlockState(pos, ModObjects.IRON_FURNACE.getDefaultState().withProperty(BlockSmelting.FACING, face).withProperty(BlockSmelting.BURNING, burning));
 				world.getTileEntity(pos).readFromNBT(tag);
 				player.getHeldItem(hand).shrink(1);
 				world.updateComparatorOutputLevel(pos, ModObjects.IRON_FURNACE);

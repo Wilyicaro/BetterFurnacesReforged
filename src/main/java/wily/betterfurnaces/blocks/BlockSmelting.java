@@ -1,16 +1,22 @@
 package wily.betterfurnaces.blocks;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProgressStyle;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.compat.TopCompatibility;
 import wily.betterfurnaces.inventory.ContainerBF;
 import wily.betterfurnaces.items.ItemUpgrade;
-import wily.betterfurnaces.tile.TileEntityForge;
 import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -37,7 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BlockIronFurnace extends Block {
+public abstract class BlockSmelting extends Block  implements  TopCompatibility.GetTheOneProbe.TOPInfoProvider{
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool BURNING = PropertyBool.create("burning");
@@ -53,7 +59,7 @@ public class BlockIronFurnace extends Block {
 	 * @param moreFast The default cook time of this furnace.
 	 * @param teFunc A supplier for the TE of this furnace.
 	 */
-	public BlockIronFurnace(String name, double moreFast, Supplier<TileEntity> teFunc) {
+	public BlockSmelting(String name, double moreFast, Supplier<TileEntity> teFunc) {
 		super(Material.IRON);
 		this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
 		this.setRegistryName(BetterFurnacesReforged.MODID, name);
@@ -62,7 +68,7 @@ public class BlockIronFurnace extends Block {
 		this.setResistance(9.0F);
 		this.setHarvestLevel("pickaxe", 1);
 		this.setLightOpacity(0);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(BURNING, false).withProperty(COLORED, false));
+		this.setDefaultState(this.getDefaultState().withProperty(BURNING, false).withProperty(COLORED, false));
 		this.moreFast = moreFast;
 		this.teFunc = teFunc;
 
@@ -149,7 +155,26 @@ public class BlockIronFurnace extends Block {
 		}
 		return 0;
 	}
+	@Override
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+		TileEntity te = world.getTileEntity(data.getPos());
+		IBlockState state = world.getBlockState(data.getPos());
+		if (te instanceof TileEntitySmeltingBase){
+			TileEntitySmeltingBase tse = (TileEntitySmeltingBase) te;
+			ItemStackHandler h = tse.getInventory();
+			int cookTime = tse.getCurrentCookTime();
+			int defaultCook = tse.getCookTime();
 
+			IProgressStyle style= probeInfo.defaultProgressStyle().showText(false).width(20);
+			if (state.getBlock() instanceof BlockBetterFurnace)
+				probeInfo.horizontal().item(h.getStackInSlot(1)).item(h.getStackInSlot(0)).progress(cookTime,defaultCook,style).item(h.getStackInSlot(2));
+			else if (state.getBlock() instanceof BlockForge) {
+				probeInfo.
+						horizontal().item(h.getStackInSlot(3)).item(h.getStackInSlot(0)).item(h.getStackInSlot(1)).item(h.getStackInSlot(2)).progress(cookTime,defaultCook,style).item(h.getStackInSlot(4)).item(h.getStackInSlot(5)).item(h.getStackInSlot(6));
+			}
+
+		}
+	}
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity te = world.getTileEntity(pos);
@@ -171,11 +196,16 @@ public class BlockIronFurnace extends Block {
 		}
 
 		if (!world.isRemote) {
-			player.openGui(BetterFurnacesReforged.INSTANCE, ContainerBF.GUIID, world, pos.getX(), pos.getY(), pos.getZ());
+			interactFurnace(world,pos,player);
 		}
 		return true;
 	}
-	private boolean interactUpgrade(World world, BlockPos pos, EntityPlayer player, EnumHand handIn, ItemStack stack) {
+	protected  boolean interactFurnace(World world, BlockPos pos, EntityPlayer playerIn){
+		playerIn.addStat(StatList.FURNACE_INTERACTION);
+		playerIn.openGui(BetterFurnacesReforged.INSTANCE, ContainerBF.GUIID, world, pos.getX(), pos.getY(), pos.getZ());
+		return true;
+	}
+	protected boolean interactUpgrade(World world, BlockPos pos, EntityPlayer player, EnumHand handIn, ItemStack stack) {
 		Item hand = player.getHeldItem(handIn).getItem();
 		if (!(hand instanceof ItemUpgrade)){
 			return false;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.minecraft.util.text.TextFormatting;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blocks.BlockIronFurnace;
+import wily.betterfurnaces.blocks.BlockSmelting;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.tile.TileEntitySmeltingBase;
 import net.minecraft.block.state.IBlockState;
@@ -26,10 +26,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemKit extends Item {
 
-	final BlockIronFurnace prev;
-	final BlockIronFurnace next;
+	final BlockSmelting prev;
+	final BlockSmelting next;
 
-	public ItemKit(String name, BlockIronFurnace prev, BlockIronFurnace next) {
+	public ItemKit(String name, BlockSmelting prev, BlockSmelting next) {
 		this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
 		this.setRegistryName(new ResourceLocation(BetterFurnacesReforged.MODID, name));
 		this.setMaxStackSize(1);
@@ -62,8 +62,8 @@ public class ItemKit extends Item {
 				tag.removeTag("id");
 				((TileEntitySmeltingBase) te).clear();
 				boolean burning = state == ((TileEntitySmeltingBase) te).getLitState();
-				EnumFacing face = state.getValue(BlockIronFurnace.FACING);
-				world.setBlockState(pos, next.getDefaultState().withProperty(BlockIronFurnace.FACING, face).withProperty(BlockIronFurnace.BURNING, burning));
+				EnumFacing face = state.getValue(BlockSmelting.FACING);
+				world.setBlockState(pos, next.getDefaultState().withProperty(BlockSmelting.FACING, face).withProperty(BlockSmelting.BURNING, burning));
 				world.getTileEntity(pos).readFromNBT(tag);
 				player.getHeldItem(hand).shrink(1);
 				world.updateComparatorOutputLevel(pos, ModObjects.IRON_FURNACE);

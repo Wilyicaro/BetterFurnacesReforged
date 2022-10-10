@@ -3,17 +3,15 @@ package wily.betterfurnaces.init;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.BlockFurnace;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.blocks.BlockBetterFurnace;
 import wily.betterfurnaces.blocks.BlockConductor;
 import wily.betterfurnaces.blocks.BlockForge;
-import wily.betterfurnaces.blocks.BlockIronFurnace;
+import wily.betterfurnaces.blocks.BlockSmelting;
+import wily.betterfurnaces.compat.TopCompatibility;
 import wily.betterfurnaces.items.*;
 import wily.betterfurnaces.tile.*;
 import wily.betterfurnaces.tile.TileEntityNetherhotFurnace;
@@ -28,8 +26,6 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import javax.annotation.Nullable;
-
 /**
  * Main object class for Furnace Overhaul.  Handles registration.
  * Fields are automatically populated by @ObjectHolder, since their field name is an all-caps version of their registry name.
@@ -40,11 +36,11 @@ import javax.annotation.Nullable;
 @ObjectHolder(BetterFurnacesReforged.MODID)
 public class ModObjects{
 
-	public static final BlockIronFurnace IRON_FURNACE = null;
-	public static final BlockIronFurnace GOLD_FURNACE = null;
-	public static final BlockIronFurnace DIAMOND_FURNACE = null;
-	public static final BlockIronFurnace NETHERHOT_FURNACE = null;
-	public static final BlockIronFurnace EXTREME_FURNACE = null;
+	public static final BlockSmelting IRON_FURNACE = null;
+	public static final BlockSmelting GOLD_FURNACE = null;
+	public static final BlockSmelting DIAMOND_FURNACE = null;
+	public static final BlockSmelting NETHERHOT_FURNACE = null;
+	public static final BlockSmelting EXTREME_FURNACE = null;
 	public static final BlockForge EXTREME_FORGE = null;
 
 	public static final ItemUpgradeDamage FUEL_EFFICIENCY_UPGRADE = null;
@@ -70,11 +66,11 @@ public class ModObjects{
 				new BlockConductor("iron_conductor_block"),
 				new BlockConductor("gold_conductor_block"),
 				new BlockConductor("netherhot_conductor_block"),
-				new BlockIronFurnace("iron_furnace", 1.5, TileEntitySmeltingBase::new),
-				new BlockIronFurnace("gold_furnace", 2, TileEntityGoldFurnace::new),
-				new BlockIronFurnace("diamond_furnace", 4, TileEntityDiamondFurnace::new),
-				new BlockIronFurnace("netherhot_furnace",8, TileEntityNetherhotFurnace::new),
-				new BlockIronFurnace("extreme_furnace", 50, TileEntityExtremeFurnace::new),
+				new BlockBetterFurnace("iron_furnace", 1.5, TileEntitySmeltingBase::new),
+				new BlockBetterFurnace("gold_furnace", 2, TileEntityGoldFurnace::new),
+				new BlockBetterFurnace("diamond_furnace", 4, TileEntityDiamondFurnace::new),
+				new BlockBetterFurnace("netherhot_furnace",8, TileEntityNetherhotFurnace::new),
+				new BlockBetterFurnace("extreme_furnace", 50, TileEntityExtremeFurnace::new),
 				new BlockForge("extreme_forge", 50, TileEntityForge::new));
 		//Formatter::on
 	}
@@ -122,5 +118,6 @@ public class ModObjects{
 		for (Item i : items)
 			modelList.add(i);
 	}
+
 
 }

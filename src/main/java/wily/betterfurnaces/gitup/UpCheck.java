@@ -1,4 +1,4 @@
-package wily.betterfurnaces.cfup;
+package wily.betterfurnaces.gitup;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

@@ -3,19 +3,16 @@ package wily.betterfurnaces.tile;
 import java.nio.charset.StandardCharsets;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.logging.LogManager;
 
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.SoundCategory;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
-import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blocks.BlockIronFurnace;
+import wily.betterfurnaces.blocks.BlockSmelting;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.SlotFuel;
 import wily.betterfurnaces.inventory.SlotInput;
@@ -169,8 +166,8 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	public final void update() {
 		if (world.isRemote) return;
 		if (hasUpgrade(ModObjects.COLOR_UPGRADE)){
-			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockIronFurnace.COLORED, true));
-		}else world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockIronFurnace.COLORED, false));
+			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockSmelting.COLORED, true));
+		}else world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockSmelting.COLORED, false));
 
 		ItemStackHandler inv = getInventory();
 		ItemStack filler = inv.getStackInSlot(FUEL());
@@ -421,14 +418,14 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	 * @return The unlit state of this TE.
 	 */
 	public IBlockState getDimState() {
-		return world.getBlockState(pos).withProperty(BlockIronFurnace.BURNING, false);
+		return world.getBlockState(pos).withProperty(BlockSmelting.BURNING, false);
 	}
 
 	/**
 	 * @return The burning state of this TE.
 	 */
 	public IBlockState getLitState() {
-		return world.getBlockState(pos).withProperty(BlockIronFurnace.BURNING, true);
+		return world.getBlockState(pos).withProperty(BlockSmelting.BURNING, true);
 	}
 
 	/**

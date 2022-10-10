@@ -1,9 +1,6 @@
 package wily.betterfurnaces.blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -13,22 +10,16 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.ItemStackHandler;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.inventory.FContainerBF;
 import wily.betterfurnaces.items.ItemUpgrade;
@@ -38,14 +29,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class BlockForge extends Block {
+public class BlockForge extends BlockSmelting {
 
 	public static final PropertyDirection FACING = BlockDirectional.FACING;
 	public static final PropertyBool BURNING = PropertyBool.create("burning");
 	public static final PropertyBool COLORED = PropertyBool.create("colored");
 
-	protected final int moreFast;
-	protected final Supplier<TileEntity> teFunc;
 
 	/**
 	 * Make a new Iron Furnace.
@@ -54,23 +43,15 @@ public class BlockForge extends Block {
 	 * @param teFunc A supplier for the TE of this furnace.
 	 */
 	public BlockForge(String name, int moreFast, Supplier<TileEntity> teFunc) {
-		super(Material.IRON);
-		this.setUnlocalizedName(BetterFurnacesReforged.MODID + "." + name);
-		this.setRegistryName(BetterFurnacesReforged.MODID, name);
-		this.setCreativeTab(BetterFurnacesReforged.BF_TAB);
+		super(name, moreFast, teFunc);
 		this.setHardness(2.0F);
 		this.setResistance(9.0F);
 		this.setLightOpacity(0);
 		this.setHarvestLevel("pickaxe", 1);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.UP).withProperty(BURNING, false).withProperty(COLORED, false));
-		this.moreFast = moreFast;
-		this.teFunc = teFunc;
+		this.setDefaultState(this.getDefaultState().withProperty(FACING, EnumFacing.UP));
+
 	}
 
-	@Override
-	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return state.getValue(BURNING) ? 14 : 0;
-	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -78,15 +59,6 @@ public class BlockForge extends Block {
 		tooltip.add(I18n.format("info.betterfurnacesreforged.forgemorefast", moreFast));
 	}
 
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return teFunc.get();
-	}
 
 	@Override
 	protected BlockStateContainer createBlockState() {
@@ -115,11 +87,7 @@ public class BlockForge extends Block {
 
 		return getForgeIndex(state.getValue(FACING)) << 2 | (state.getValue(BURNING) ? 1 : 0) | (state.getValue(COLORED) ? 2 : 0);
 	}
-	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
-	{
-		return BlockRenderLayer.CUTOUT;
-	}
+
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		return this.getDefaultState().withProperty( FACING, ForgeFacing(getForgeIndex(EnumFacing.getDirectionFromEntityLiving(pos, placer))));
@@ -135,56 +103,14 @@ public class BlockForge extends Block {
 		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
 	}
 
-	@Override
-	public boolean hasComparatorInputOverride(IBlockState state) {
+@Override
+	protected  boolean interactFurnace(World world, BlockPos pos, EntityPlayer playerIn){
+		playerIn.addStat(StatList.FURNACE_INTERACTION);
+		playerIn.openGui(BetterFurnacesReforged.INSTANCE, FContainerBF.GUIID, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
-
-	@Override
-	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
-		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof TileEntityForge) {
-			ItemStackHandler inv = ((TileEntityForge) te).getInventory();
-			int i = 0;
-			float f = 0.0F;
-			for (int j = 0; j < 3; ++j) {
-				ItemStack itemstack = inv.getStackInSlot(j);
-
-				if (!itemstack.isEmpty()) {
-					f += (float) itemstack.getCount() / (float) Math.min(64, itemstack.getMaxStackSize());
-					++i;
-				}
-			}
-			f = f / 3;
-			return MathHelper.floor(f * 14.0F) + (i > 0 ? 1 : 0);
-		}
-		return 0;
-	}
-
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		TileEntity te = world.getTileEntity(pos);
-		ItemStack stack = player.getHeldItem(hand);
-		if (!world.isRemote && player.getHeldItem(hand).getItem() instanceof ItemUpgrade  && !(player.isSneaking())) {
-			return this.interactUpgrade(world, pos, player, hand, stack);
-		}
-		if (!world.isRemote && te instanceof TileEntityForge && ((TileEntityForge) te).isFluid()) {
-			FluidStack fs = FluidUtil.getFluidContained(stack);
-			if (fs != null && TileEntityForge.getFluidBurnTime(fs) > 0) {
-				FluidActionResult res = FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(world, pos, null), 1000, player, true);
-				if (res.isSuccess()) {
-					world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY_LAVA, SoundCategory.PLAYERS, 0.6F, 0.8F);
-					if (!player.capabilities.isCreativeMode) player.setHeldItem(hand, res.result);
-					return true;
-				}
-			}
-		}
-
-		if (!world.isRemote) {
-			player.openGui(BetterFurnacesReforged.INSTANCE, FContainerBF.GUIID, world, pos.getX(), pos.getY(), pos.getZ());
-		}
-		return true;
-	}
-	private boolean interactUpgrade(World world, BlockPos pos, EntityPlayer player, EnumHand handIn, ItemStack stack) {
+@Override
+	protected boolean interactUpgrade(World world, BlockPos pos, EntityPlayer player, EnumHand handIn, ItemStack stack) {
 		Item hand = player.getHeldItem(handIn).getItem();
 		if (!(hand instanceof ItemUpgrade)){
 			return false;
@@ -231,17 +157,7 @@ public class BlockForge extends Block {
 		te.update();
 		return true;
 	}
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof TileEntityForge && world.getBlockState(pos).getBlock() != state.getBlock()) {
-			ItemStackHandler inv = ((TileEntityForge) te).getInventory();
-			for (int i = 0; i < inv.getSlots(); i++)
-				Block.spawnAsEntity(world, pos, inv.getStackInSlot(i));
-			world.updateComparatorOutputLevel(pos, this);
-		}
-		super.breakBlock(world, pos, state);
-	}
+
 
 	@Override
 	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
@@ -281,9 +197,5 @@ public class BlockForge extends Block {
 
 	}
 
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
 
 }
