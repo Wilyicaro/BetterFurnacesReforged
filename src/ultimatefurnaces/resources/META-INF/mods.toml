@@ -27,11 +27,11 @@ An official addon for BetterFurnaces Reforged mod, that add 2 new furnaces and 6
         ordering="NONE"
         side="BOTH"
 [[dependencies.ultimatefurnaces_bfr]]
-        modId="pmmo"
-        mandatory=false
-        versionRange="[1.19-1,)"
-        ordering="NONE"
-        side="BOTH"
+modId="pmmo"
+mandatory=false
+versionRange="[1.19-,)"
+ordering="NONE"
+side="BOTH"
 [[dependencies.ultimatefurnaces_bfr]]
    modId="jei"
    mandatory=false

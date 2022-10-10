@@ -44,7 +44,7 @@ public class RegistrationUF {
 
     }
 
-    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().tab(wily.betterfurnaces.init.ModObjects.ITEM_GROUP);}
+    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().tab(ModObjects.ITEM_GROUP);}
     public static final RegistryObject<CopperFurnaceBlock> COPPER_FURNACE = BLOCK_ITEMS.register(CopperFurnaceBlock.COPPER_FURNACE, () -> new CopperFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.COAL_BLOCK).strength(10.0F, 20.0F)));
     public static final RegistryObject<BlockEntityType<CopperFurnaceBlockEntity>> COPPER_FURNACE_TILE = TILES.register(CopperFurnaceBlock.COPPER_FURNACE, () -> BlockEntityType.Builder.of(CopperFurnaceBlockEntity::new, COPPER_FURNACE.get()).build(null));
 

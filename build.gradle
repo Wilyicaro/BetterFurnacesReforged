@@ -116,7 +116,6 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}")
     //runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge:${jei_version}")
     compileOnly fg.deobf("curse.maven:project-mmo-${pmmo_version}")
-    // runtimeOnly fg.deobf("curse.maven:project-mmo-${pmmo_version}")
 
 
 }
@@ -130,9 +129,6 @@ repositories {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
-    }
-    maven {
-        url =  "https://maven.latmod.com/"
     }
     maven {
         url "https://www.cursemaven.com"

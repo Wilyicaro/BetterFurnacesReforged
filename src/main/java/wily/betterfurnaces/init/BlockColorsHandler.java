@@ -14,17 +14,6 @@ import javax.annotation.Nullable;
 public class BlockColorsHandler implements BlockColor {
     public static final BlockColor COLOR = new BlockColorsHandler();
 
-    @SubscribeEvent
-    public static void registerBlockColors() {
-        System.out.println("Starting Better Furnaces BlockColorsHandler");
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.IRON_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.GOLD_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.DIAMOND_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.NETHERHOT_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.EXTREME_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.EXTREME_FORGE.get());
-    }
-
     @Override
     public int getColor(BlockState blockState, @Nullable BlockAndTintGetter iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
         if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof AbstractSmeltingBlockEntity) {

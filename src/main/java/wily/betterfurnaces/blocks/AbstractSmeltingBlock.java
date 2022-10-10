@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,6 +20,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -33,7 +36,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -49,6 +54,7 @@ import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.UpgradeItem;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -59,6 +65,7 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
     // 0= Furnace, 1= Blast Furnace, 2= Smoker
     public static final IntegerProperty TYPE = IntegerProperty.create("type",0,3);
 
+    public boolean shouldDropContent = true;
 
     public AbstractSmeltingBlock(Properties properties) {
         super(properties.destroyTime(3f));
@@ -76,10 +83,15 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        List<ItemStack> dropsOriginal = super.getDrops(state, builder);
-        if (!dropsOriginal.isEmpty())
-            return dropsOriginal;
-        return Collections.singletonList(new ItemStack(this, 1));
+        ItemStack drop = new ItemStack(this.asItem());
+        ItemStack stack = builder.getOptionalParameter(LootContextParams.TOOL);
+        BlockEntity be = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (EnchantmentHelper.getEnchantments(stack).containsKey(Enchantments.SILK_TOUCH) && stack.isCorrectToolForDrops(state)) {
+            CompoundTag tag = new CompoundTag();
+            tag.put("BlockEntityTag", be.getUpdateTag());
+            drop.setTag(tag);
+        }
+        return Collections.singletonList(drop);
     }
 
     @Override
@@ -90,7 +102,7 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
                 be.setCustomName(stack.getDisplayName());
             }
             be.totalCookTime = be.getCookTimeConfig().get();
-            be.placeConfig();
+            be.forceUpdateAllStates();
         }
     }
 
@@ -237,12 +249,22 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
     }
 
     @Override
+    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+        if (EnchantmentHelper.getEnchantments(stack).containsKey(Enchantments.SILK_TOUCH) && stack.isCorrectToolForDrops(blockState))
+            shouldDropContent = false;
+        else shouldDropContent = true;
+        super.playerWillDestroy(level, blockPos, blockState, player);
+    }
+    @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             BlockEntity be = world.getBlockEntity(pos);
             if (be instanceof AbstractSmeltingBlockEntity) {
-                Containers.dropContents(world, pos, (AbstractSmeltingBlockEntity) be);
-                ((AbstractSmeltingBlockEntity)be).grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
+                if (shouldDropContent) {
+                    Containers.dropContents(world, pos, (AbstractSmeltingBlockEntity) be);
+                    ((AbstractSmeltingBlockEntity) be).grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
+                }
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 

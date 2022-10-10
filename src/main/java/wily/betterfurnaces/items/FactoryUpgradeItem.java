@@ -5,14 +5,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import wily.betterfurnaces.blockentity.FurnaceSettings;
+import wily.betterfurnaces.blockentity.FactoryUpgradeSettings;
 
 public class FactoryUpgradeItem extends UpgradeItem {
     public boolean canOutput;
     public boolean canInput;
     public boolean pipeSide;
     public boolean redstoneSignal;
-    FurnaceSettings furnaceSettings;
 
     public FactoryUpgradeItem(Properties properties, String tooltip, boolean output, boolean input, boolean pipe, boolean redstone) {
         super(properties,5, tooltip);
@@ -20,27 +19,28 @@ public class FactoryUpgradeItem extends UpgradeItem {
         canInput = input;
         pipeSide = pipe;
         redstoneSignal = redstone;
-        furnaceSettings = new FurnaceSettings() {
-        };
     }
     public void inventoryTick(ItemStack stack, Level world, Entity player, int slot, boolean selected) {
         super.inventoryTick(stack, world, player, slot, selected);
         CompoundTag nbt;
         nbt = stack.getOrCreateTag();
         if (!(nbt.contains("Settings") && nbt.contains("AutoIO") && nbt.contains("Redstone"))) {
-            placeConfig();
-            furnaceSettings.write(nbt);
+            FactoryUpgradeSettings settings = getSettings(stack);
+            placeConfig(settings);
             stack.setTag(nbt);
         }
     }
-    public void placeConfig() {
+    public FactoryUpgradeSettings getSettings(ItemStack stack){
+        return new FactoryUpgradeSettings(stack);
+    }
+    public void placeConfig(FactoryUpgradeSettings furnaceSettings) {
 
-        if (this.furnaceSettings != null) {
-            this.furnaceSettings.set(0, 2);
-            this.furnaceSettings.set(1, 1);
+        if (furnaceSettings != null) {
+            furnaceSettings.set(0, 2);
+            furnaceSettings.set(1, 1);
             for (Direction dir : Direction.values()) {
                 if (dir != Direction.DOWN && dir != Direction.UP) {
-                    this.furnaceSettings.set(dir.ordinal(), 4);
+                    furnaceSettings.set(dir.ordinal(), 4);
                 }
             }
         }

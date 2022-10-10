@@ -30,7 +30,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "1.0.1";
+    public static final String VERSION = "1.0.3";
     public static final String MC_VERSION = "1.19.2";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -46,7 +46,7 @@ public class BetterFurnacesReforged
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.COMMON_CONFIG);
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModObjects::init);
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSide::init);
 
         MOD_EVENT_BUS.register(Registration.class);

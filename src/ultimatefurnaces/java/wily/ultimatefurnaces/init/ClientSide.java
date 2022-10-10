@@ -35,7 +35,6 @@ public class ClientSide {
         ItemBlockRenderTypes.setRenderLayer(RegistrationUF.DIAMOND_FORGE.get(), RenderType.cutoutMipped());
         ItemBlockRenderTypes.setRenderLayer(RegistrationUF.NETHERHOT_FORGE.get(), RenderType.cutoutMipped());
         ItemBlockRenderTypes.setRenderLayer(RegistrationUF.ULTIMATE_FORGE.get(), RenderType.cutoutMipped());
-        BlockColorsHandlerUF.registerBlockColors();
 
     }
 

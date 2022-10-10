@@ -1,8 +1,6 @@
 package wily.betterfurnaces.blockentity;
 
 import com.google.common.collect.Lists;
-import harmonised.pmmo.api.events.FurnaceBurnEvent;
-import harmonised.pmmo.events.impl.FurnaceHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -56,6 +54,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.AbstractForgeBlock;
 import wily.betterfurnaces.blocks.AbstractFurnaceBlock;
+import wily.betterfurnaces.compat.ProjectMMO;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
 import wily.betterfurnaces.items.OreProcessingUpgradeItem;
@@ -100,7 +99,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     public boolean isForge(){ return false;}
     public RecipeType<? extends AbstractCookingRecipe> recipeType;
 
-    public FurnaceSettings furnaceSettings;
+    public FactoryUpgradeSettings furnaceSettings;
 
     private LRUCache<Item, Optional<AbstractCookingRecipe>> cache = LRUCache.newInstance(Config.cache_capacity.get());
     protected LRUCache<Item, Optional<AbstractCookingRecipe>> blasting_cache = LRUCache.newInstance(Config.cache_capacity.get());
@@ -114,24 +113,20 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     public AbstractSmeltingBlockEntity(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state, int invsize) {
         super(tileentitytypeIn, pos, state, invsize);
         this.recipeType = RecipeType.SMELTING;
-        furnaceSettings = new FurnaceSettings() {
+        furnaceSettings = new FactoryUpgradeSettings(getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
             @Override
             public void onChanged() {
+                if (hasUpgradeType(Registration.FACTORY.get())) {
+                    setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory);
+
+                }
                 setChanged();
             }
             @Override
-            public void set(int index, int value) {
-                if (hasUpgradeType(Registration.FACTORY.get()))
-                    read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getOrCreateTag());
-                super.set(index,value);
-                if (hasUpgradeType(Registration.FACTORY.get()))
-                    write(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getOrCreateTag());
-            }
-            @Override
-            public int get(int index) {
-                if (hasUpgradeType(Registration.FACTORY.get()))
-                    read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getOrCreateTag());
-                return super.get(index);
+            public void updateItem() {
+                if (hasUpgradeType(Registration.FACTORY.get())) {
+                    factory = getUpgradeTypeSlotItem(Registration.FACTORY.get());
+                }
             }
         };
     }
@@ -311,15 +306,19 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     }
 
     public ItemStack getUpgradeTypeSlotItem(UpgradeItem upg) {
+        int i = getUpgradeTypeSlot(upg);
+        return i < 0 ? ItemStack.EMPTY : getItem(i);
+    }
+    public int getUpgradeTypeSlot(UpgradeItem upg) {
         for (int slot : UPGRADES())
-            if (getItem(slot).getItem() instanceof UpgradeItem && upg.upgradeType == ((UpgradeItem) getItem(slot).getItem()).upgradeType) return getItem(slot);
-        return getItem(UPGRADES()[0]);
+            if (getItem(slot).getItem() instanceof UpgradeItem && upg.upgradeType == ((UpgradeItem) getItem(slot).getItem()).upgradeType) return slot;
+        return -1;
     }
 
     public ItemStack getUpgradeSlotItem(Item upg) {
         for (int slot : UPGRADES())
             if (upg == getItem(slot).getItem()) return getItem(slot);
-        return getItem(UPGRADES()[0]);
+        return ItemStack.EMPTY;
     }
 
     protected final FluidTank fluidTank = new FluidTank(LiquidCapacity(), fs -> (getBurnTime(new ItemStack(fs.getFluid().getBucket())) > 0)){
@@ -329,7 +328,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
             updateBlockState();
         }
     };
-    protected final FluidTank xpTank = new FluidTank(2000, xp -> (ModList.get().isLoaded(Config.getLiquidXPMod()) && ForgeRegistries.FLUIDS.getKey(xp.getFluid()).equals(Config.getLiquidXPType()))){
+    protected final FluidTank xpTank = new FluidTank(2000, xp -> (ModList.get().isLoaded(Config.getLiquidXPMod()) && ForgeRegistries.FLUIDS.getKey(xp.getFluid()).toString().equals(Config.getLiquidXPType()))){
         @Override
         protected void onContentsChanged() {
             super.onContentsChanged();
@@ -404,14 +403,6 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     }
     public static void tick(Level level, BlockPos worldPosition, BlockState blockState, AbstractSmeltingBlockEntity e) {
 
-        if (e.furnaceSettings.size() <= 0) {
-            e.furnaceSettings = new FurnaceSettings() {
-                @Override
-                public void onChanged() {
-                    e.setChanged();
-                }
-            };
-        }
         boolean wasBurning = e.isBurning();
         boolean flag1 = false;
         boolean flag2 = false;
@@ -419,6 +410,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
         if (e.isBurning()) {
             --e.furnaceBurnTime;
         }
+
 
         if (e.hasXPTank()) e.grantStoredRecipeExperience(level, null);
 
@@ -852,7 +844,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
             }
 
             if (ModList.get().isLoaded("pmmo")) {
-                FurnaceHandler.handle(new FurnaceBurnEvent(itemstack, level, worldPosition));
+                ProjectMMO.burnEvent(itemstack,level,worldPosition);
             }
             itemstack.shrink(1);
         }
@@ -860,11 +852,6 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     @Override
     public void load( CompoundTag tag) {
         super.load(tag);
-        if (tag.getCompound("inventory").isEmpty() && !tag.getList("Items",10).isEmpty()) {
-            if (isEmpty())
-                getInv().deserializeNBT(tag);
-        }else
-            getInv().deserializeNBT(tag.getCompound("inventory"));
         this.furnaceBurnTime = tag.getInt("BurnTime");
         this.cookTime = tag.getInt("CookTime");
         this.totalCookTime = tag.getInt("CookTimeTotal");
@@ -983,8 +970,8 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
                 return new int[]{FUEL()};
             }
         }else {
-            if (side == side.UP) return INPUTS();
-            else if (side == side.DOWN) return OUTPUTS();
+            if (side == Direction.UP) return INPUTS();
+            else if (side == Direction.DOWN) return OUTPUTS();
             else return new int[]{FUEL()};
         }
 
@@ -1085,7 +1072,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
 
     public List<Recipe<?>> grantStoredRecipeExperience(Level level, Vec3 worldPosition) {
         List<Recipe<?>> list = Lists.newArrayList();
-        if (this.recipes.object2IntEntrySet() != null)
+        if (!this.recipes.object2IntEntrySet().isEmpty())
             for (Object2IntMap.Entry<ResourceLocation> entry : this.recipes.object2IntEntrySet()) {
                 level.getRecipeManager().byKey(entry.getKey()).ifPresent((h) -> {
                     list.add(h);

@@ -35,9 +35,7 @@ public class PacketColorSlider {
 				ItemStack stack = player.getMainHandItem();
 				if (stack.getItem() instanceof ColorUpgradeItem) {
 					CompoundTag nbt = stack.getOrCreateTag();
-					if (iden ==  1) nbt.putInt("red", index);
-					if (iden ==  2) nbt.putInt("green", index);
-					if (iden ==  3) nbt.putInt("blue", index);
+					nbt.putInt(iden <= 1 ? "red" : iden < 3 ? "green"  : "blue", index);
 					}
 		});
 		ctx.get().setPacketHandled(true);

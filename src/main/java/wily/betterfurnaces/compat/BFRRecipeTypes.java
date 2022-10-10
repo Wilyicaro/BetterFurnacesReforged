@@ -1,4 +1,4 @@
-package wily.betterfurnaces.jei;
+package wily.betterfurnaces.compat;
 
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;

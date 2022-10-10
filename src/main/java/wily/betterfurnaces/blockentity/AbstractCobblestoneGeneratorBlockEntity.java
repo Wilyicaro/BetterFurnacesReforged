@@ -4,6 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.model.LavaSlimeModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.DripParticle;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,8 +27,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.client.model.DynamicFluidContainerModel;
+import net.minecraftforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fluids.capability.ItemFluidContainer;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -219,6 +227,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
         if (!output.isEmpty() && !level.isClientSide) AutoIO();
     }
     protected int cobGen(){
+
         ItemStack input = this.getInv().getStackInSlot(0);
         ItemStack input1 = this.getInv().getStackInSlot(1);
         if (input.getItem() == Items.LAVA_BUCKET && input1.isEmpty()){
@@ -255,11 +264,6 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.getCompound("inventory").isEmpty() && !tag.getList("Items",10).isEmpty()) {
-            if (isEmpty())
-                getInv().deserializeNBT(tag);
-        }else
-            getInv().deserializeNBT(tag.getCompound("inventory"));
         this.cobTime = tag.getInt("CobTime");
         this.resultType = tag.getInt("ResultType");
         this.actualCobTime = tag.getInt("ActualCobTime");

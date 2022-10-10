@@ -21,6 +21,12 @@ This mod is a little remake of the outdated mod from 1.7.10, Better Furnaces, pr
     ordering="NONE"
     side="BOTH"
 [[dependencies.betterfurnacesreforged]]
+modId="pmmo"
+mandatory=false
+versionRange="[1.19-,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.betterfurnacesreforged]]
    modId="jei"
    mandatory=false
    versionRange="[8,)"

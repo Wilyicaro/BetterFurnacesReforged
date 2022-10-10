@@ -14,7 +14,7 @@ import wily.betterfurnaces.inventory.AbstractUpgradeMenu;
 import wily.betterfurnaces.items.ColorUpgradeItem;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractUpgradeScreen<T extends AbstractUpgradeMenu> extends AbstractContainerScreen<T> {
+public abstract class AbstractUpgradeScreen<T extends AbstractUpgradeMenu> extends AbstractInventoryItemScreen<T> {
     private Component name;
     @Override
     public int getXSize() {
