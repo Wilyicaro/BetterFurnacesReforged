@@ -12,6 +12,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
+import org.apache.commons.lang3.ArrayUtils;
 import wily.betterfurnaces.blocks.BlockSmelting;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.SlotFuel;
@@ -50,6 +51,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	//Constants
 	public int FUEL() {return 1;}
 	public int[] UPGRADES(){ return new int[] {3,4,5};}
+	public int HEATER() {return FUEL();}
 	public int FINPUT(){ return INPUTS()[0];}
 	public int LINPUT(){ return INPUTS()[INPUTS().length - 1];}
 	public int FOUTPUT(){ return OUTPUTS()[0];}
@@ -59,10 +61,10 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 	public int LiquidCapacity() {return 4000;}
 	public int MAX_FE_TRANSFER(){ return 2400;}
 	public int MAX_ENERGY_STORED(){ return 16000;}
-	public int invsize(){ return 6;}
+	public int inventorySize(){ return 6;}
 
 	//Item Handling, RangedWrappers are for sided i/o
-	protected final ItemStackHandler inv = new ItemStackHandler(invsize()) {
+	protected final ItemStackHandler inv = new ItemStackHandler(inventorySize()) {
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			if (!isItemValid(slot, stack)) return stack;
 			return super.insertItem(slot, stack, simulate);
@@ -71,7 +73,11 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		public boolean isItemValid(int slot, ItemStack stack) {
 			if (slot >= FINPUT() && slot <= LINPUT()) return SlotInput.isStackValid(stack);
 			if (slot == FUEL()) return SlotFuel.isStackValid( TileEntitySmeltingBase.this, stack);
-			if (slot >= UPGRADES()[0]) return (stack.getItem() instanceof ItemUpgrade && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem()));
+			if (ArrayUtils.contains(UPGRADES(), slot)) {
+				if (stack.getItem() instanceof ItemUpgrade && !hasUpgrade(stack.getItem()) && !hasUpgradeType((ItemUpgrade) stack.getItem()))
+					if (((ItemUpgrade) stack.getItem()).upgradeType == 1) return (slot == HEATER() || getSlots() <= 6);
+					else return true;
+			}
 		return false;
 		};
 	};
