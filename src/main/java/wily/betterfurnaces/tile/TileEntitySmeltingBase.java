@@ -237,7 +237,7 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 		if (isEnergy() && Energy) {
 			fuelLength = (burnTime = energy.getEnergyStored() >= getEnergyUse() ? 1 : 0);
 			for (int a : INPUTS())
-			if (this.isBurning()) energy.extractEnergy(getEnergyUse() * (hasUpgradeType(ModObjects.ORE_PROCESSING_UPGRADE) && isOre(inv.getStackInSlot(a)) ? 2 : 1), false);
+				if (this.isBurning() && !inv.getStackInSlot(a).isEmpty()) energy.extractEnergy(getEnergyUse() * (hasUpgradeType(ModObjects.ORE_PROCESSING_UPGRADE) && isOre(inv.getStackInSlot(a)) ? 2 : 1), false);
 		} else if (isFluid() && Liquid) {
 			fuelLength = burnTime = getFluidBurnTime(tank.getFluid()) * (hasUpgradeType(ModObjects.FUEL_EFFICIENCY_UPGRADE) ? 2 : 1) * getDefaultCookTime() / 20000;
 			if (this.isBurning()) tank.drain(10, true);
