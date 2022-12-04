@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "wily.betterfurnaces.forge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+  ],
+  "mixins": [
+    "AddBetterFurnacesBlocksCapabilities"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

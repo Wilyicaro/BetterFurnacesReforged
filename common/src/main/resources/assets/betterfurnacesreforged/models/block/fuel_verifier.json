@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "betterfurnacesreforged:blocks/fuel_verifier_side",
+    "up": "betterfurnacesreforged:blocks/fuel_verifier_side",
+    "north": "betterfurnacesreforged:blocks/fuel_verifier_front",
+    "east": "betterfurnacesreforged:blocks/fuel_verifier_side",
+    "south": "betterfurnacesreforged:blocks/fuel_verifier_side",
+    "west": "betterfurnacesreforged:blocks/fuel_verifier_side",
+    "particle": "betterfurnacesreforged:blocks/fuel_verifier_side"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "ultimatefurnaces_bfr:blocks/copper_top",
+    "side": "ultimatefurnaces_bfr:blocks/copper_side",
+    "front": "ultimatefurnaces_bfr:blocks/copper_front"
+  }
+}

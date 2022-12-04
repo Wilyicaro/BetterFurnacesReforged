@@ -1,0 +1,10 @@
+{
+  "parent": "betterfurnacesreforged:block/forge",
+  "textures": {
+    "particle": "ultimatefurnaces_bfr:blocks/ultimate_top",
+    "front": "ultimatefurnaces_bfr:blocks/ultimate_forge_front",
+    "side": "ultimatefurnaces_bfr:blocks/ultimate_forge_side",
+    "overlayfront": "betterfurnacesreforged:blocks/forge_frontactive",
+    "overlayside": "betterfurnacesreforged:blocks/forge_sideactive"
+  }
+}

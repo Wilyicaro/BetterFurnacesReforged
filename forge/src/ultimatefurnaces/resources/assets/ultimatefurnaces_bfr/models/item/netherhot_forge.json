@@ -1,0 +1,11 @@
+{
+  "parent": "ultimatefurnaces_bfr:block/netherhot_forge",
+  "overrides": [
+    {
+      "predicate": {
+        "betterfurnacesreforged:colored": 1
+      },
+      "model": "betterfurnacesreforged:item/color_forge"
+    }
+  ]
+}

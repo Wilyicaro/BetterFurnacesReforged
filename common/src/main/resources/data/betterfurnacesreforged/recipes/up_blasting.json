@@ -1,0 +1,23 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "IXI",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:smooth_stone"
+    },
+    "X": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:blasting_upgrade"
+  }
+}

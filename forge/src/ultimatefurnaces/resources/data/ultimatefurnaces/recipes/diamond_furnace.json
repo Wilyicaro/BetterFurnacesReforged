@@ -1,0 +1,24 @@
+{
+  "group": "ultimatefurnaces",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "121",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "tag": "forge:glass"
+    },
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "ultimatefurnaces_bfr:amethyst_furnace"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:diamond_furnace",
+    "count": 1
+  }
+}
