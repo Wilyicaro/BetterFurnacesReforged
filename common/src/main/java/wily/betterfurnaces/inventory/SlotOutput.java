@@ -5,20 +5,20 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 
 public class SlotOutput extends Slot {
 
     private final Player player;
     private int removeCount;
-    private AbstractSmeltingBlockEntity be;
+    private InventoryBlockEntity be;
 
-    public SlotOutput(Player player, Container be, int slotIndex, int xPosition, int yPosition) {
-        super(be, slotIndex, xPosition, yPosition);
+    public SlotOutput(Player player,InventoryBlockEntity be, int slotIndex, int xPosition, int yPosition) {
+        super(be.inventory, slotIndex, xPosition, yPosition);
         this.player = player;
-        if (be instanceof AbstractSmeltingBlockEntity) {
-            this.be = (AbstractSmeltingBlockEntity) be;
-        }
+        this.be = be;
     }
 
     /**
@@ -46,8 +46,9 @@ public class SlotOutput extends Slot {
     @Override
     protected void onQuickCraft(ItemStack stack, int p_75210_2_) {
         stack.onCraftedBy(this.player.level, this.player, this.removeCount);
-        if (!this.player.level.isClientSide && this.be instanceof AbstractSmeltingBlockEntity) {
-            (be).unlockRecipes(this.player);
+        if (!this.player.level.isClientSide && this.be instanceof AbstractSmeltingBlockEntity smeltBe) {
+            smeltBe.unlockRecipes(this.player);
+
         }
 
         this.removeCount = 0;

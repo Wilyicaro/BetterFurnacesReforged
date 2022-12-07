@@ -1,6 +1,12 @@
 {
   "replace": false,
   "values": [
-    "betterfurnacesreforged:extreme_forge"
+    "betterfurnacesreforged:extreme_forge",
+    "betterfurnacesreforged:copper_forge",
+    "betterfurnacesreforged:iron_forge",
+    "betterfurnacesreforged:gold_forge",
+    "betterfurnacesreforged:diamond_forge",
+    "betterfurnacesreforged:netherhot_forge",
+    "betterfurnacesreforged:ultimate_forge"
   ]
 }

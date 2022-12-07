@@ -28,9 +28,9 @@ public abstract class AbstractForgeMenu extends AbstractSmeltingMenu {
         this.addSlot(new SlotInput(be, 1, 45, y1));
         this.addSlot(new SlotInput(be, 2, 63, y1));
         this.addSlot(new SlotFuel(this.be, 3, 8, y2));
-        this.addSlot(new SlotOutput(playerEntity, be.inventory, 4, 108, y3));
-        this.addSlot(new SlotOutput(playerEntity, be.inventory, 5, 126, y3));
-        this.addSlot(new SlotOutput(playerEntity, be.inventory, 6, 144, y3));
+        this.addSlot(new SlotOutput(playerEntity, be, 4, 108, y3));
+        this.addSlot(new SlotOutput(playerEntity, be, 5, 126, y3));
+        this.addSlot(new SlotOutput(playerEntity, be, 6, 144, y3));
         this.addSlot(new SlotUpgrade(be, 7, 7, y4));
         this.addSlot(new SlotUpgrade(be, 8, 25, y4));
         this.addSlot(new SlotUpgrade(be, 9, 43, y4));

@@ -29,6 +29,17 @@
   "block.betterfurnacesreforged.iron_furnace": "Fornalha de ferro",
   "block.betterfurnacesreforged.netherhot_conductor_block": "Bloco condutor do calor do nether",
   "block.betterfurnacesreforged.netherhot_furnace": "Fornalha do nether",
+  "block.betterfurnacesreforged.copper_furnace": "Fornalha de cobre",
+  "block.betterfurnacesreforged.steel_furnace": "Fornalha de aço",
+  "block.betterfurnacesreforged.amethyst_furnace": "Fornalha de ametista",
+  "block.betterfurnacesreforged.platinum_furnace": "Fornalha de platina",
+  "block.betterfurnacesreforged.ultimate_furnace": "Fornalha ultimate",
+  "block.betterfurnacesreforged.copper_forge": "Forja de cobre",
+  "block.betterfurnacesreforged.iron_forge": "Forja de ferro",
+  "block.betterfurnacesreforged.gold_forge": "Forja de ouro",
+  "block.betterfurnacesreforged.diamond_forge": "Forja de diamante",
+  "block.betterfurnacesreforged.netherhot_forge": "Forja do nether",
+  "block.betterfurnacesreforged.ultimate_forge": "Forja ultimate",
 
   "description.betterfurnacesreforged.fuel_verifier": "Apenas mostra a quantidade que cada combustível é capaz de derreter(Inútil)",
   
@@ -59,6 +70,16 @@
   "item.betterfurnacesreforged.xp_tank_upgrade": "Melhoria de tanque de XP",
   "item.betterfurnacesreforged.blasting_upgrade": "Melhoria de alto-forno",
   "item.betterfurnacesreforged.smoking_upgrade": "Melhoria de defumação",
+  "item.betterfurnacesreforged.copper_upgrade": "Melhoria de cobre",
+  "item.betterfurnacesreforged.copper_iron_upgrade": "Melhoria de ferro",
+  "item.betterfurnacesreforged.steel_upgrade": "Melhoria de aço",
+  "item.betterfurnacesreforged.steel_gold_upgrade": "Melhoria de ouro",
+  "item.betterfurnacesreforged.amethyst_upgrade": "Melhoria de ametista",
+  "item.betterfurnacesreforged.amethyst_diamond_upgrade": "Melhoria de diamante",
+  "item.betterfurnacesreforged.platinum_upgrade": "Melhoria de platina",
+  "item.betterfurnacesreforged.platinum_netherhot_upgrade": "Melhoria do Nether",
+  "item.betterfurnacesreforged.ultimate_upgrade": "Melhoria ultimate",
+  "item.betterfurnacesreforged.ultimate_ore_processing_upgrade": "Melhoria de processamento de minérios ultimate",
   
   "tooltip.betterfurnacesreforged.for_details": " para detalhes.",
   "tooltip.betterfurnacesreforged.furnace.only": "Somente se estiver com %s",
@@ -110,5 +131,6 @@
   "tooltip.betterfurnacesreforged.upgrade.smoking": "Muda o tipo da fornalha para defumador",
   "tooltip.betterfurnacesreforged.upgrade.blasting": "Muda o tipo da fornalha para alto-forno",
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Clique direito para inserir o upgrade",
-  "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Clique direito segurando SHIFT para aplicar o upgrade"
+  "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Clique direito segurando SHIFT para aplicar o upgrade",
+  "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruplica a quantidade resultante de cada minério derretido"
 }

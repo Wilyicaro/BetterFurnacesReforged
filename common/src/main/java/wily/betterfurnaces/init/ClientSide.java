@@ -4,9 +4,12 @@ import dev.architectury.registry.client.rendering.ColorHandlerRegistry;
 import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import dev.architectury.registry.item.ItemPropertiesRegistry;
 import dev.architectury.registry.menu.MenuRegistry;
+import dev.architectury.registry.registries.DeferredRegister;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.AbstractSmeltingBlock;
 import wily.betterfurnaces.screens.*;
 
@@ -25,17 +28,22 @@ public class ClientSide {
         MenuRegistry.registerScreenFactory(Registration.COLOR_UPGRADE_CONTAINER.get(), ColorUpgradeScreen::new);
         MenuRegistry.registerScreenFactory(Registration.COB_GENERATOR_CONTAINER.get(), AbstractCobblestoneGeneratorScreen.CobblestoneGeneratorScreen::new);
         MenuRegistry.registerScreenFactory(Registration.FUEL_VERIFIER_CONTAINER.get(), AbstractFuelVerifierScreen.FuelVerifierScreen::new);
-        RenderTypeRegistry.register(RenderType.cutoutMipped(), Registration.IRON_FURNACE.get(),Registration.GOLD_FURNACE.get(),Registration.DIAMOND_FURNACE.get(),Registration.NETHERHOT_FURNACE.get(),Registration.EXTREME_FURNACE.get(),Registration.EXTREME_FORGE.get());
-                Registration.BLOCK_ITEMS.forEach((block)->{
-                    if (block.get() instanceof AbstractSmeltingBlock) {
-                        ItemPropertiesRegistry.register(block.get().asItem(),
-                                new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
-                    }
-                    ColorHandlerRegistry.registerBlockColors(BlockColorsHandler.COLOR, block.get());
-                    ColorHandlerRegistry.registerItemColors(ItemColorsHandler.COLOR,block.get().asItem());
-                });
+        registerBetterFurnacesBlocksClientSide(Registration.BLOCK_ITEMS);
+        if (Config.checkUpdates)
+            wily.ultimatefurnaces.init.ClientSide.init();
 
                 
 
+    }
+    public static void registerBetterFurnacesBlocksClientSide(DeferredRegister<Block> blocks){
+        blocks.forEach((block)->{
+            if (block.get() instanceof AbstractSmeltingBlock) {
+                RenderTypeRegistry.register(RenderType.cutoutMipped(),block.get());
+                ItemPropertiesRegistry.register(block.get().asItem(),
+                        new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
+            }
+            ColorHandlerRegistry.registerBlockColors(BlockColorsHandler.COLOR, block.get());
+            ColorHandlerRegistry.registerItemColors(ItemColorsHandler.COLOR,block.get().asItem());
+        });
     }
 }

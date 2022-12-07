@@ -13,9 +13,11 @@ dependencies {
     modImplementation "mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}"
     modImplementation "maven.modrinth:factory_api:${factory_api_version}:common"
     modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.0.0"
+
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 }
+
 
 publishing {
     publications {

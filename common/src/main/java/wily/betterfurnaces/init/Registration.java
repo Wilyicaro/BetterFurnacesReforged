@@ -33,7 +33,7 @@ public class Registration {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.ITEM_REGISTRY);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY);
     private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.MENU_REGISTRY);
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPES_SEREALIZERS = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registry.RECIPE_SERIALIZER_REGISTRY);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPES_SERIALIZERS = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registry.RECIPE_SERIALIZER_REGISTRY);
     private static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create( BetterFurnacesReforged.MOD_ID,Registry.RECIPE_TYPE_REGISTRY);
 
     public static void init() {
@@ -42,7 +42,7 @@ public class Registration {
         ITEMS.register();
         BLOCK_ENTITIES.register();
         CONTAINERS.register();
-        RECIPES_SEREALIZERS.register();
+        RECIPES_SERIALIZERS.register();
         RECIPES.register();
 
 
@@ -54,7 +54,7 @@ public class Registration {
         return Util.fetchChoiceType(References.BLOCK_ENTITY, name);
     }
 
-    public static final RegistrySupplier<RecipeSerializer<CobblestoneGeneratorRecipes>> COB_GENERATION_SERIALIZER = RECIPES_SEREALIZERS.register("rock_generating", () -> CobblestoneGeneratorRecipes.SERIALIZER);
+    public static final RegistrySupplier<RecipeSerializer<CobblestoneGeneratorRecipes>> COB_GENERATION_SERIALIZER = RECIPES_SERIALIZERS.register("rock_generating", () -> CobblestoneGeneratorRecipes.SERIALIZER);
 
     public static final RegistrySupplier<RecipeType<CobblestoneGeneratorRecipes>> ROCK_GENERATING_RECIPE = RECIPES.register("rock_generating", () -> new RecipeType<>() {});
 

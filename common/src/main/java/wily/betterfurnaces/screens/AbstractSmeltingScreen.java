@@ -239,7 +239,7 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
             FluidStack fluid =  this.getMenu().getFluidStackStored(true);
             i = this.getMenu().getFluidStoredScaled(16,true);
             if (i > 0) {
-                FluidRenderUtil.renderTiledFluid(matrix, this, XPTank()[0], XPTank()[1], 16, 16, fluid, false);
+                FluidRenderUtil.renderTiledFluid(matrix, this, relX()+ XPTank()[0], relY() + XPTank()[1], 16, 16, fluid, false);
                 RenderSystem.setShaderTexture(0, WIDGETS);
                 this.blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16-i);
 

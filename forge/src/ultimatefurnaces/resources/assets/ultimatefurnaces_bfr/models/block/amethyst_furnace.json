@@ -1,8 +1,0 @@
-{
-  "parent": "block/orientable",
-  "textures": {
-    "top": "ultimatefurnaces_bfr:blocks/amethyst_top",
-    "side": "ultimatefurnaces_bfr:blocks/amethyst_side",
-    "front": "ultimatefurnaces_bfr:blocks/amethyst_front"
-  }
-}

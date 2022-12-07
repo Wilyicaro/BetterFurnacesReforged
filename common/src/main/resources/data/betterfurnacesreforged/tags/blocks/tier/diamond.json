@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "betterfurnacesreforged:diamond_furnace"
+    "betterfurnacesreforged:diamond_furnace",
+    "betterfurnacesreforged:diamond_forge"
   ]
 }

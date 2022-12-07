@@ -5,7 +5,6 @@ plugins {
 repositories {
     maven { url "https://maven.quiltmc.org/repository/release/" }
 }
-
 architectury {
     platformSetupLoomIde()
     loader("quilt")

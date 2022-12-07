@@ -1,10 +1,16 @@
 {
   "replace": false,
   "values": [
+    "betterfurnacesreforged:copper_furnace",
     "betterfurnacesreforged:iron_furnace",
+    "betterfurnacesreforged:steel_furnace",
     "betterfurnacesreforged:gold_furnace",
+    "betterfurnacesreforged:amethyst_furnace",
     "betterfurnacesreforged:diamond_furnace",
+    "betterfurnacesreforged:platinum_furnace",
     "betterfurnacesreforged:netherhot_furnace",
-    "betterfurnacesreforged:extreme_furnace"
+    "betterfurnacesreforged:extreme_furnace",
+    "betterfurnacesreforged:ultimate_furnace"
+    
   ]
 }

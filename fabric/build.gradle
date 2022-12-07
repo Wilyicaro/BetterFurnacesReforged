@@ -7,6 +7,9 @@ architectury {
     fabric()
 }
 
+tasks.remapJar{
+    archiveClassifier.set("fabric")
+}
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 }

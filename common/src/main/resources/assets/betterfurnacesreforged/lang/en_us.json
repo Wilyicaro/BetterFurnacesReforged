@@ -29,6 +29,18 @@
   "block.betterfurnacesreforged.iron_furnace": "Iron Furnace",
   "block.betterfurnacesreforged.netherhot_conductor_block": "Netherhot Conduter Block",
   "block.betterfurnacesreforged.netherhot_furnace": "Netherhot Furnace",
+  "itemGroup.betterfurnacesreforged": "Ultimate Furnaces",
+  "block.betterfurnacesreforged.copper_furnace": "Copper Furnace",
+  "block.betterfurnacesreforged.steel_furnace": "Steel Furnace",
+  "block.betterfurnacesreforged.amethyst_furnace": "Amethyst Furnace",
+  "block.betterfurnacesreforged.platinum_furnace": "Platinum Furnace",
+  "block.betterfurnacesreforged.ultimate_furnace": "Ultimate Furnace",
+  "block.betterfurnacesreforged.copper_forge": "Copper Forge",
+  "block.betterfurnacesreforged.iron_forge": "Iron Forge",
+  "block.betterfurnacesreforged.gold_forge": "Gold Forge",
+  "block.betterfurnacesreforged.diamond_forge": "Diamond Forge",
+  "block.betterfurnacesreforged.netherhot_forge": "Netherhot Forge",
+  "block.betterfurnacesreforged.ultimate_forge": "Ultimate Forge",
 
   "description.betterfurnacesreforged.fuel_verifier": "It only shows how much each fuel is capable of melting (Useless)",
   
@@ -59,8 +71,19 @@
   "item.betterfurnacesreforged.xp_tank_upgrade": "XP Tank Upgrade",
   "item.betterfurnacesreforged.blasting_upgrade": "Blasting Upgrade",
   "item.betterfurnacesreforged.smoking_upgrade": "Smoking Upgrade",
+  "item.betterfurnacesreforged.copper_upgrade": "Copper Upgrade",
+  "item.betterfurnacesreforged.copper_iron_upgrade": "Iron Upgrade",
+  "item.betterfurnacesreforged.steel_upgrade": "Steel Upgrade",
+  "item.betterfurnacesreforged.steel_gold_upgrade": "Gold Upgrade",
+  "item.betterfurnacesreforged.amethyst_upgrade": "Amethyst Upgrade",
+  "item.betterfurnacesreforged.amethyst_diamond_upgrade": "Diamond Upgrade",
+  "item.betterfurnacesreforged.platinum_upgrade": "Platinum Upgrade",
+  "item.betterfurnacesreforged.platinum_netherhot_upgrade": "Netherhot Upgrade",
+  "item.betterfurnacesreforged.ultimate_upgrade": "Ultimate Upgrade",
+  "item.betterfurnacesreforged.ultimate_ore_processing_upgrade": "Ultimate Ore Processing Upgrade",
   
   "itemGroup.betterfurnacesreforged.tab": "Better Furnaces Reforged",
+  "itemGroup.betterfurnacesreforged.tab_ultimate": "Ultimate Furnaces",
   
   "tooltip.betterfurnacesreforged.for_details": " for Details.",
   "tooltip.betterfurnacesreforged.furnace.only": "Only if it has a %s",
@@ -112,5 +135,6 @@
   "tooltip.betterfurnacesreforged.upgrade.smoking": "Changes furnace type to smoker",
   "tooltip.betterfurnacesreforged.upgrade.blasting": "Changes furnace type to blast furnace",
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Right-click to insert upgrade",
-  "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Right-click holding shift to insert tier upgrade"
+  "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Right-click holding shift to insert tier upgrade",
+  "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruples the amount that each molten ore gives"
 }

@@ -62,7 +62,7 @@ public abstract class AbstractCobblestoneGeneratorMenu extends AbstractInventory
                 return ( stack.getItem() == Items.WATER_BUCKET);
             }
         });
-        this.addSlot(new SlotOutput(playerEntity, be.inventory, 2, 80, 45));
+        this.addSlot(new SlotOutput(playerEntity, be, 2, 80, 45));
         this.addSlot(new SlotUpgrade(be, 3, 8, 18){
             @Override
             public boolean mayPlace(ItemStack stack) {

@@ -3,6 +3,7 @@ package wily.betterfurnaces;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import dev.architectury.platform.Platform;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.nio.file.Path;
@@ -15,6 +16,7 @@ public class ForgeConfigCompat {
 
     public static ForgeConfigSpec COMMON_CONFIG;
     public static ForgeConfigSpec CLIENT_CONFIG;
+    public static ForgeConfigSpec SERVER_CONFIG;
 
     public static ForgeConfigSpec.IntValue cache_capacity;
 
@@ -41,21 +43,27 @@ public class ForgeConfigCompat {
 
     public static ForgeConfigSpec.BooleanValue showErrors;
 
+    public static ForgeConfigSpec.BooleanValue enableUltimateFurnaces;
+
 
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
         ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
+        ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
 
         CLIENT_BUILDER.comment("Settings").push(CATEGORY_GENERAL);
         CLIENT_BUILDER.pop();
 
         CLIENT_BUILDER.comment("Furnace Settings").push(CATEGORY_FURNACE);
 
-        setupFurnacesConfig(COMMON_BUILDER, CLIENT_BUILDER);
+        setupFurnacesConfig(COMMON_BUILDER,SERVER_BUILDER);
 
         CLIENT_BUILDER.pop();
 
-        CLIENT_BUILDER.comment("Modded Furnace Settings").push(CATEGORY_MODDED_FURNACE);
+        CLIENT_BUILDER.comment("Additional Content").push(CATEGORY_MODDED_FURNACE);
+
+        enableUltimateFurnaces = COMMON_BUILDER
+                .comment("Enable or disable Ultimate Furnaces Addon").define("additional.enable_ultimatefurnaces", true);
 
 
         CLIENT_BUILDER.pop();
@@ -77,83 +85,90 @@ public class ForgeConfigCompat {
 
         CLIENT_BUILDER.comment("Update Checker Settings").push(CATEGORY_UPDATES);
 
-        setupUpdatesConfig(COMMON_BUILDER, CLIENT_BUILDER);
+        checkUpdates = COMMON_BUILDER
+                .comment(" true = check for updates, false = don't check for updates.\n Default: true.")
+                .define("check_updates.updates", true);
 
         CLIENT_BUILDER.pop();
 
-
         COMMON_CONFIG = COMMON_BUILDER.build();
         CLIENT_CONFIG = CLIENT_BUILDER.build();
+        SERVER_CONFIG = SERVER_BUILDER.build();
     }
 
-    private static void setupFurnacesConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder CLIENT_BUILDER) {
+    private static void setupFurnacesConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder SERVER_BUILDER) {
 
-        cache_capacity = CLIENT_BUILDER
+        cache_capacity = SERVER_BUILDER
                 .comment(" The capacity of the recipe cache, higher values use more memory.\n Default: 10")
                 .defineInRange("recipe_cache", 10, 1, 100);
 
-        copperTierSpeed = CLIENT_BUILDER
+        copperTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 175(Only work with Ultimate Furnaces addon)")
                 .defineInRange("copper_tier.speed", 175, 2, 72000);
 
-        ironTierSpeed = CLIENT_BUILDER
+        ironTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 150")
                 .defineInRange("iron_tier.speed", 150, 2, 72000);
 
-        steelTierSpeed = CLIENT_BUILDER
+        steelTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 125(Only work with Ultimate Furnaces addon)")
                 .defineInRange("steel_tier.speed", 125, 2, 72000);
 
-        goldTierSpeed = CLIENT_BUILDER
+        goldTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 100")
                 .defineInRange("gold_tier.speed", 100, 2, 72000);
 
-        amethystTierSpeed = CLIENT_BUILDER
+        amethystTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 75(Only work with Ultimate Furnaces addon)")
                 .defineInRange("amethyst_tier.speed", 75, 2, 72000);
 
-        diamondTierSpeed = CLIENT_BUILDER
+        diamondTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 50")
                 .defineInRange("diamond_tier.speed", 50, 2, 72000);
 
-        platinumTierSpeed = CLIENT_BUILDER
+        platinumTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 25(Only work with Ultimate Furnaces addon)")
                 .defineInRange("platinum_tier.speed", 25, 2, 72000);
 
-        netherhotTierSpeed = CLIENT_BUILDER
+        netherhotTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 8")
                 .defineInRange("netherhot_tier.speed", 8, 2, 72000);
 
-        extremeTierSpeed = CLIENT_BUILDER
+        extremeTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 4")
                 .defineInRange("extreme_tier.speed", 4, 2, 72000);
 
-        ultimateTierSpeed = CLIENT_BUILDER
+        ultimateTierSpeed = SERVER_BUILDER
                 .comment(" Number of ticks to complete one smelting operation.\n 200 ticks is what a regular furnace takes.\n Default: 1 (Only work with Ultimate Furnaces addon)")
                 .defineInRange("ultimate_tier.speed", 1, 1, 72000);
 
-        furnaceXPDropValue = CLIENT_BUILDER
+        furnaceXPDropValue = SERVER_BUILDER
                 .comment(" This value indicates when the furnace or forge should 'overload' and spit out the xp stored. \n Default: 10, Recipes")
                 .defineInRange("furnace_xp_drop.value", 10, 1, 500);
 
-        furnaceXPDropValue2 = CLIENT_BUILDER
+        furnaceXPDropValue2 = SERVER_BUILDER
                 .comment(" This value indicates when the furnace or forge should 'overload' and spit out the xp stored. \n Default: 100000, Single recipe uses")
                 .defineInRange("furnace_xp_drop.value_two", 100000, 1, 1000000);
 
-        xpFluidType = CLIENT_BUILDER
-                .comment(" Value referring to the mod used for the xp fluid generated with the Xp Tank Upgrade. \n 0 = Mob Grinding Utils(Default) \n 1 = Industrial Foregoing \n 2 = Cyclic \n 3 = Reliquary")
-                .defineInRange("upgrade.xp_fluid_type", 0, 0, 3);
+        xpFluidType = COMMON_BUILDER
+                .comment(" Value referring to the mod used for the xp fluid generated with the Xp Tank Upgrade. \n 0 = Mob Grinding Utils(Default) \n 1 = Industrial Foregoing \n 2 = Cyclic \n 3 = Reliquary \n 4 = Kibe Utilities")
+                .defineInRange("upgrade.xp_fluid_type", getDefaultLiquidXpMod(), 0, supportedLiquidXps.size() - 1);
     }
 
-
+    public static int getDefaultLiquidXpMod(){
+        for (String s : supportedLiquidXps){
+            if (Platform.isModLoaded(s.substring(0, s.indexOf(":")))) return supportedLiquidXps.indexOf(s);
+        }
+        return 0;
+    }
 
 
     private static void setupJEIConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder CLIENT_BUILDER) {
 
-        enableJeiPlugin = CLIENT_BUILDER
+        enableJeiPlugin = COMMON_BUILDER
                 .comment(" Enable or disable the JeiPlugin of BetterFurnaces.").define("jei.enable_jei", true);
 
-        enableJeiCatalysts = CLIENT_BUILDER
+        enableJeiCatalysts = COMMON_BUILDER
                 .comment(" Enable or disable the Catalysts in Jei for BetterFurnaces.").define("jei.enable_jei_catalysts", true);
 
         enableJeiClickArea = CLIENT_BUILDER
@@ -161,13 +176,7 @@ public class ForgeConfigCompat {
 
     }
 
-    private static void setupUpdatesConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder CLIENT_BUILDER) {
 
-        checkUpdates = CLIENT_BUILDER
-                .comment(" true = check for updates, false = don't check for updates.\n Default: true.")
-                .define("check_updates.updates", true);
-
-    }
 
     public static void loadConfig(ForgeConfigSpec spec, Path path) {
         BetterFurnacesReforged.LOGGER.debug("Loading config file {}", path);
@@ -186,23 +195,12 @@ public class ForgeConfigCompat {
 
 
 
-    public static void loadAllConfigs() {
+    public static void loadAllSyncConfigs() {
         loadConfig(CLIENT_CONFIG, BetterFurnacesPlatform.getConfigDirectory().resolve(BetterFurnacesReforged.MOD_ID + "-client.toml"));
-        loadConfig(COMMON_CONFIG, BetterFurnacesPlatform.getConfigDirectory().resolve(BetterFurnacesReforged.MOD_ID + ".toml"));
-
+        loadConfig(COMMON_CONFIG, BetterFurnacesPlatform.getConfigDirectory().resolve(BetterFurnacesReforged.MOD_ID + "-common.toml"));
     }
-    @ExpectPlatform
-    public static void registerConfig() {
-        throw new AssertionError();
-    }
-    public static void setupPlatformConfig(){
-        registerConfig();
-        loadAllConfigs();
-
-
-        Config.checkUpdates = checkUpdates.get();
+    public static void onServerConfigLoad(){
         Config.cacheCapacity = cache_capacity.get();
-
         Config.copperTierSpeed = copperTierSpeed.get();
         Config.ironTierSpeed = ironTierSpeed.get();
         Config.steelTierSpeed = steelTierSpeed.get();
@@ -217,6 +215,17 @@ public class ForgeConfigCompat {
         Config.furnaceXPDropValue = furnaceXPDropValue.get();
         Config.furnaceXPDropValue2 = furnaceXPDropValue2.get();
         Config.xpFluidType = xpFluidType.get();
+    }
+
+    @ExpectPlatform
+    public static void registerConfig() {
+        throw new AssertionError();
+    }
+    public static void setupPlatformConfig(){
+        registerConfig();
+        loadAllSyncConfigs();
+        Config.checkUpdates = checkUpdates.get();
+        Config.enableUltimateFurnaces = enableUltimateFurnaces.get();
 
         Config.enableJeiPlugin = enableJeiPlugin.get();
         Config.enableJeiCatalysts = enableJeiCatalysts.get();

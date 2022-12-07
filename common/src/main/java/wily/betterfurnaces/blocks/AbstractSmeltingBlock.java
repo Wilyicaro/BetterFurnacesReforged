@@ -110,13 +110,13 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
         } else {
             if (hand.getItem() instanceof UpgradeItem upg && upg.isEnabled() && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
-            }else if (!ItemContainerUtil.isFluidContainer(hand)) {
+            }if ((be.hasUpgrade(Registration.LIQUID.get()) && ItemContainerUtil.isFluidContainer(hand) && AbstractSmeltingBlockEntity.isItemFuel(hand) &&  !(player.isCrouching()))) {
+                be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getFluidStack().isFluidEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) e.fill(ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn), false);});
+            }else {
                 this.interactWith(world, pos, player);
             }
         }
-        if ((be.hasUpgrade(Registration.LIQUID.get()) && ItemContainerUtil.isFluidContainer(hand) && AbstractSmeltingBlockEntity.isItemFuel(hand) &&  !(player.isCrouching()))) {
-            be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getFluidStack().isFluidEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) e.fill(ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn), false);});
-        }
+
         return InteractionResult.SUCCESS;
     }
 
@@ -248,10 +248,10 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof AbstractSmeltingBlockEntity) {
+            if (be instanceof AbstractSmeltingBlockEntity smeltBe) {
                 if (shouldDropContent) {
-                    Containers.dropContents(world, pos, ((AbstractSmeltingBlockEntity) be).inventory);
-                    ((AbstractSmeltingBlockEntity) be).grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
+                    Containers.dropContents(world, pos, smeltBe.inventory);
+                    smeltBe.grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
                 }
                 world.updateNeighbourForOutputSignal(pos, this);
             }

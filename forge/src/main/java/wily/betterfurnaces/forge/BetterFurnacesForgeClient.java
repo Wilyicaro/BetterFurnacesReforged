@@ -10,7 +10,5 @@ import wily.betterfurnaces.init.ClientSide;
 @Mod.EventBusSubscriber(modid = BetterFurnacesReforged.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class BetterFurnacesForgeClient {
     @SubscribeEvent
-    public static void initClient(FMLClientSetupEvent event){
-        event.enqueueWork(ClientSide::init);
-    }
+    public static void initClient(FMLClientSetupEvent event){event.enqueueWork(ClientSide::init);}
 }

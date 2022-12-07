@@ -3,6 +3,15 @@ package wily.betterfurnaces;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import dev.architectury.platform.Platform;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import wily.betterfurnaces.init.Registration;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static wily.betterfurnaces.BetterFurnacesReforged.REGISTRIES;
 
 
 public class Config {
@@ -14,19 +23,14 @@ public class Config {
     public static final String CATEGORY_UPDATES = "updates";
     public static final String CATEGORY_MISC = "misc";
 
-    public static String getLiquidXPType() {
-        if (xpFluidType == 0) {
-            return "mob_grinding_utils:fluid_xp";
-        } else if (xpFluidType == 1) {
-            return "industrialforegoing:essence";
-        } else if (xpFluidType == 2) {
-            return "cyclic:xpjuice";
-        } else if (xpFluidType == 3) {
-            return "reliquary:xp_juice";
-        }
-        return "mob_grinding_utils:fluid_xp";
-    }
+    public static final List<String> supportedLiquidXps = new ArrayList<>(List.of("mob_grinding_utils:fluid_xp","industrialforegoing:essence","cyclic:xpjuice","reliquary:xp_juice","kibe:liquid_xp"));
 
+    public static String getLiquidXPType() {
+        return supportedLiquidXps.size() > xpFluidType ? supportedLiquidXps.get(xpFluidType) : supportedLiquidXps.get(0);
+    }
+    public static Fluid getLiquidXP() {
+        return REGISTRIES.get().get(Registry.FLUID_REGISTRY).get(new ResourceLocation(getLiquidXPType()));
+    }
 
     public static String getLiquidXPMod() {
         String s = getLiquidXPType();
@@ -45,6 +49,7 @@ public class Config {
     public static int furnaceXPDropValue = 1;
     public static int furnaceXPDropValue2 = 100000;
 
+    public static boolean enableUltimateFurnaces = true;
     public static boolean enableJeiPlugin = true;
 
     public static boolean enableJeiCatalysts = true;
