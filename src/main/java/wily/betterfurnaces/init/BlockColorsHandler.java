@@ -13,21 +13,10 @@ import javax.annotation.Nullable;
 public class BlockColorsHandler implements BlockColor {
     public static final BlockColor COLOR = new BlockColorsHandler();
 
-    @SubscribeEvent
-    public static void registerBlockColors() {
-        System.out.println("Starting Better Furnaces BlockColorsHandler");
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.IRON_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.GOLD_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.DIAMOND_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.NETHERHOT_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.EXTREME_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.EXTREME_FORGE.get());
-    }
-
     @Override
-    public int getColor(BlockState blockState, @Nullable BlockAndTintGetter iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
-        if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof AbstractSmeltingBlockEntity) {
-            AbstractSmeltingBlockEntity be = (AbstractSmeltingBlockEntity) iBlockDisplayReader.getBlockEntity(blockPos);
+    public int getColor(BlockState blockState, @Nullable BlockAndTintGetter blockAndTintGetter, @Nullable BlockPos blockPos, int i) {
+        if (blockAndTintGetter != null && blockAndTintGetter.getBlockEntity(blockPos) instanceof AbstractSmeltingBlockEntity) {
+            AbstractSmeltingBlockEntity be = (AbstractSmeltingBlockEntity) blockAndTintGetter.getBlockEntity(blockPos);
             if (be.hasUpgrade(Registration.COLOR.get()) && (be.getUpgradeSlotItem(Registration.COLOR.get()).getTag() != null)) {
                 return be.hex();
             }

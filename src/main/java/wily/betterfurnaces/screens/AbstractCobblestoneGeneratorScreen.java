@@ -13,18 +13,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
 import wily.betterfurnaces.inventory.AbstractCobblestoneGeneratorMenu;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketCobblestoneRecipeUpdate;
-import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.util.FluidRenderUtil;
 
-import java.util.List;
-import java.util.Objects;
-
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractCobblestoneGeneratorScreen<T extends AbstractCobblestoneGeneratorMenu> extends AbstractInventoryItemScreen<T> {
+public abstract class AbstractCobblestoneGeneratorScreen<T extends AbstractCobblestoneGeneratorMenu> extends AbstractBasicScreen<T> {
 
     public ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/cobblestone_generator_gui.png");
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/widgets.png");

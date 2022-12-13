@@ -1,6 +1,6 @@
 
 
-package wily.betterfurnaces.jei;
+package wily.betterfurnaces.compat;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;

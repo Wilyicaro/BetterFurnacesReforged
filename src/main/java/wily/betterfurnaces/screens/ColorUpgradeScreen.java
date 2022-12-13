@@ -19,6 +19,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.init.ItemColorsHandler;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ColorUpgradeItem.ContainerColorUpgrade;
 import wily.betterfurnaces.network.Messages;
@@ -98,26 +99,12 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
                 this.renderTooltip(matrix, Registration.EXTREME_FORGE.get().getName(), mouseX, mouseY);
             }
         }
-        ItemStack stack = new ItemStack(Registration.EXTREME_FURNACE.get().asItem());
-        ItemStack stack1 = new ItemStack(Registration.EXTREME_FORGE.get().asItem());
+        ItemStack stack = buttonstate == 0 ? new ItemStack(Registration.EXTREME_FURNACE.get().asItem()) : new ItemStack(Registration.EXTREME_FORGE.get().asItem());
         Lighting.setupFor3DItems();
-        CompoundTag nbt = stack.getOrCreateTag();
-        nbt.putInt("red", red.getValueInt());
-        nbt.putInt("green", green.getValueInt());
-        nbt.putInt("blue", blue.getValueInt());
-        nbt.putBoolean("colored", true);
-        stack.setTag(nbt);
-        CompoundTag nbt1 = stack1.getOrCreateTag();
-        nbt1.putInt("red", red.getValueInt());
-        nbt1.putInt("green", green.getValueInt());
-        nbt1.putInt("blue", blue.getValueInt());
-        nbt1.putBoolean("colored", true);
-        stack.setTag(nbt);
-        if (buttonstate == 0) {
-            this.itemRenderer.renderGuiItem(stack, (width / 2 - 8), (this.getGuiTop() - 48));
-        }else
-            if (buttonstate == 1)
-            this.itemRenderer.renderGuiItem(stack1, (width / 2 - 8), (this.getGuiTop() - 48));
+        CompoundTag tag = stack.getOrCreateTag();
+        ItemColorsHandler.putColor(tag,red.getValueInt(),green.getValueInt(),blue.getValueInt());
+        stack.setTag(tag);
+        renderGuiItem(stack, (width / 2 - 8), (this.getGuiTop() - 48), 4,4);
     }
 
 }

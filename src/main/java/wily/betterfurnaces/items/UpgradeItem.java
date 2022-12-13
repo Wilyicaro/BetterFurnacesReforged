@@ -16,20 +16,39 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class UpgradeItem extends Item {
-private String tooltip;
-public int upgradeType;
-// Use a different int for each type of upgrade
-    public UpgradeItem(Properties properties, int Type, String tooltip ) {
+    private String tooltipName;
+    private Component tooltip;
+    public int upgradeType;
+    // Use a different int for each type of upgrade
+    public UpgradeItem(Properties properties, int Type, String tooltipName ) {
+        super(properties);
+        upgradeType = Type;
+        this.tooltipName = tooltipName;
+    }
+    public UpgradeItem(Properties properties, int Type) {
+        super(properties);
+        upgradeType = Type;
+    }
+    public UpgradeItem(Properties properties, int Type, Component tooltip ) {
         super(properties);
         upgradeType = Type;
         this.tooltip = tooltip;
+
+    }
+    public boolean isEnabled(){
+        return true;
+    }
+    public Component getDisabledMessage(){
+        return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.disabled").setStyle(Style.EMPTY.applyFormat((ChatFormatting.RED)));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        if (!isEnabled())
+            tooltip.add(getDisabledMessage());
         tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
-        if (this.tooltip != null)
-        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade." + this.tooltip ).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
+        if (this.tooltip != null || tooltipName != null)
+            tooltip.add( this.tooltip == null ? new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade." + this.tooltipName).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))) : this.tooltip);
+
     }
 }

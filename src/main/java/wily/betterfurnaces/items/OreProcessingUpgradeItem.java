@@ -20,7 +20,7 @@ public class OreProcessingUpgradeItem extends UpgradeItem {
     public boolean acceptOre;
     public boolean acceptRaw;
     public OreProcessingUpgradeItem(Properties properties, int Multiplier, boolean acceptOre, boolean acceptRaw ) {
-        super(properties,3, null);
+        super(properties,3);
         this.getMultiplier = Multiplier;
         this.acceptOre = acceptOre;
         this.acceptRaw = acceptRaw;

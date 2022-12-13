@@ -2,7 +2,6 @@ package wily.betterfurnaces.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,7 +13,7 @@ import wily.betterfurnaces.inventory.AbstractUpgradeMenu;
 import wily.betterfurnaces.items.ColorUpgradeItem;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractUpgradeScreen<T extends AbstractUpgradeMenu> extends AbstractContainerScreen<T> {
+public abstract class AbstractUpgradeScreen<T extends AbstractUpgradeMenu> extends AbstractBasicScreen<T> {
     private Component name;
     @Override
     public int getXSize() {

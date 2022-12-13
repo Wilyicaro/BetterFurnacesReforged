@@ -72,20 +72,20 @@ public class TierUpgradeItem extends Item {
             BlockPlaceContext ctx2 = new BlockPlaceContext(ctx);
             if (be instanceof FurnaceBlockEntity || be instanceof AbstractSmeltingBlockEntity) {
                 int cooktime = be.serializeNBT().getInt("CookTime");
-                int cooktimetotal = be.serializeNBT().getInt("CookTimeTotal");
+                int cooktimetotal = 200;
                 int currentItemBurnTime = 0;
                 int furnaceBurnTime = be.serializeNBT().getInt("BurnTime");
                 int show = 0;
                 int[] settings = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-                if (be instanceof AbstractSmeltingBlockEntity) {
-                    furnaceBurnTime = ((AbstractSmeltingBlockEntity) be).fields.get(0);
-                    currentItemBurnTime = ((AbstractSmeltingBlockEntity) be).fields.get(1);
-                    cooktime = ((AbstractSmeltingBlockEntity) be).fields.get(2);
-                    cooktimetotal = ((AbstractSmeltingBlockEntity) be).fields.get(3);
-                    show = ((AbstractSmeltingBlockEntity) be).fields.get(4);
-                    for (int i = 0; i < ((AbstractSmeltingBlockEntity) be).furnaceSettings.size(); i++)
+                if (be instanceof AbstractSmeltingBlockEntity smeltBe) {
+                    furnaceBurnTime = smeltBe.fields.get(0);
+                    currentItemBurnTime = smeltBe.fields.get(1);
+                    cooktime = smeltBe.fields.get(2);
+                    cooktimetotal = smeltBe.fields.get(3);
+                    show = smeltBe.fields.get(4);
+                    for (int i = 0; i < smeltBe.furnaceSettings.size(); i++)
                     {
-                        settings[i] = ((AbstractSmeltingBlockEntity) be).furnaceSettings.get(i);
+                        settings[i] = smeltBe.furnaceSettings.get(i);
                     }
 
                 }
@@ -112,22 +112,22 @@ public class TierUpgradeItem extends Item {
                 world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                 world.setBlock(pos, next.setValue(BlockStateProperties.LIT, be.getBlockState().getValue(BlockStateProperties.LIT)), 3);
                 world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                BlockEntity newTe = world.getBlockEntity(pos);
-                newTe.deserializeNBT(be.serializeNBT());
-                ((Container)newTe).setItem(0, input);
-                ((Container)newTe).setItem(1, fuel);
-                ((Container)newTe).setItem(2, output);
-                if (newTe instanceof AbstractSmeltingBlockEntity) {
-                    ((Container)newTe).setItem(3, upgrade);
-                    ((Container)newTe).setItem(4, upgrade1);
-                    ((Container)newTe).setItem(5, upgrade2);
-                    ((AbstractSmeltingBlockEntity)newTe).fields.set(0, furnaceBurnTime * ((AbstractSmeltingBlockEntity) newTe).getCookTime() / cooktimetotal);
-                    ((AbstractSmeltingBlockEntity)newTe).fields.set(1, currentItemBurnTime);
-                    ((AbstractSmeltingBlockEntity)newTe).fields.set(2, cooktime);
-                    ((AbstractSmeltingBlockEntity)newTe).fields.set(4, show);
-                    for (int i = 0; i < ((AbstractSmeltingBlockEntity)newTe).furnaceSettings.size(); i++)
+                BlockEntity newBe = world.getBlockEntity(pos);
+                newBe.deserializeNBT(newBe.getUpdateTag().merge(be.serializeNBT()));
+                ((Container)newBe).setItem(0, input);
+                ((Container)newBe).setItem(1, fuel);
+                ((Container)newBe).setItem(2, output);
+                if (newBe instanceof AbstractSmeltingBlockEntity) {
+                    ((Container)newBe).setItem(3, upgrade);
+                    ((Container)newBe).setItem(4, upgrade1);
+                    ((Container)newBe).setItem(5, upgrade2);
+                    ((AbstractSmeltingBlockEntity)newBe).fields.set(0, furnaceBurnTime * ((AbstractSmeltingBlockEntity) newBe).getCookTime() / cooktimetotal);
+                    ((AbstractSmeltingBlockEntity)newBe).fields.set(1, currentItemBurnTime);
+                    ((AbstractSmeltingBlockEntity)newBe).fields.set(2, cooktime);
+                    ((AbstractSmeltingBlockEntity)newBe).fields.set(4, show);
+                    for (int i = 0; i < ((AbstractSmeltingBlockEntity)newBe).furnaceSettings.size(); i++)
                     {
-                        ((AbstractSmeltingBlockEntity)newTe).furnaceSettings.set(i, settings[i]);
+                        ((AbstractSmeltingBlockEntity)newBe).furnaceSettings.set(i, settings[i]);
                     }
                 }
                 world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos).getBlock().defaultBlockState(), world.getBlockState(pos),3,  3);

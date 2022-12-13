@@ -20,10 +20,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractInventoryItemScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
+public abstract class AbstractBasicScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 
 
-    public AbstractInventoryItemScreen(T p_97741_, Inventory p_97742_, Component p_97743_) {
+    public AbstractBasicScreen(T p_97741_, Inventory p_97742_, Component p_97743_) {
         super(p_97741_, p_97742_, p_97743_);
     }
     protected void renderGuiItem(ItemStack stack, int Posx, int Posy, float scaleX, float scaleY) {
