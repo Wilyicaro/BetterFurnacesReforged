@@ -96,7 +96,7 @@
   "tooltip.betterfurnacesreforged.upgrade.fuel": "%s %sthe fuel efficiency",
   "tooltip.betterfurnacesreforged.upgrade.infinitely": "infinitely ",
   "tooltip.betterfurnacesreforged.upgrade.input": "Adds a side management in the furnace/forge where items automatically enter from nearby inventory",
-  "tooltip.betterfurnacesreforged.upgrade.isworking": "There is currently no mods configured that supports this upgrade.",
+  "tooltip.betterfurnacesreforged.upgrade.disabled": "There is currently no mods configured that supports this upgrade.",
   "tooltip.betterfurnacesreforged.upgrade.liquid": "Uses liquid fuel instead of solid fuel",
   "tooltip.betterfurnacesreforged.upgrade.multiple": "Multiplies",
   "tooltip.betterfurnacesreforged.upgrade.ores": "%s %sthe amount that each molten ore gives",

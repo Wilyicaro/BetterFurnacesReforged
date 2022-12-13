@@ -20,6 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.widget.Slider;
 import org.lwjgl.opengl.GL11;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.init.ItemColorsHandler;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ColorUpgradeItem.ContainerColorUpgrade;
 import wily.betterfurnaces.network.Messages;
@@ -107,23 +108,12 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
         }
         GL11.glScalef(4, 4, 4);
         RenderHelper.setupFor3DItems();
-        ItemStack stack = new ItemStack(Registration.EXTREME_FURNACE.get().asItem());
-        ItemStack stack1 = new ItemStack(Registration.EXTREME_FORGE.get().asItem());
+        ItemStack stack = new ItemStack((buttonstate == 0 ? Registration.EXTREME_FURNACE.get() :Registration.EXTREME_FORGE.get()).asItem());
         CompoundNBT nbt = stack.getOrCreateTag();
-        nbt.putInt("red", red.getValueInt());
-        nbt.putInt("green", green.getValueInt());
-        nbt.putInt("blue", blue.getValueInt());
-        nbt.putBoolean("colored", true);
+        ItemColorsHandler.putColor(nbt,red.getValueInt(),green.getValueInt(),blue.getValueInt());
         stack.setTag(nbt);
-        CompoundNBT nbt1 = stack1.getOrCreateTag();
-        nbt1.putInt("red", red.getValueInt());
-        nbt1.putInt("green", green.getValueInt());
-        nbt1.putInt("blue", blue.getValueInt());
-        nbt1.putBoolean("colored", true);
-        if (buttonstate == 0) {
-            this.itemRenderer.renderGuiItem(stack, (width / 2 - 32) / 4, (this.getGuiTop() - 70) / 4);
-        } else if (buttonstate == 1)
-            this.itemRenderer.renderGuiItem(stack1, (width / 2 - 32) / 4, (this.getGuiTop() - 70) / 4);
+        this.itemRenderer.renderGuiItem(stack, (width / 2 - 32) / 4, (this.getGuiTop() - 70) / 4);
+
     }
 
 }

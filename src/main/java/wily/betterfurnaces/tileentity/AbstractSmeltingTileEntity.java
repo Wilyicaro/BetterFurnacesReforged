@@ -49,7 +49,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.ArrayUtils;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blocks.AbstractForgeBlock;
@@ -75,7 +74,7 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
             level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);
         }
     };
-    protected final FluidTank xpTank = new FluidTank(2000, xp -> xp.getFluid().getRegistryName().toString().equals(Config.getLiquidXPType()) && ModList.get().isLoaded(Config.getLiquidXPMod())) {
+    protected final FluidTank xpTank = new FluidTank(2000, xp -> xp.getFluid().equals(Config.getLiquidXP()) && ModList.get().isLoaded(Config.getLiquidXPMod())) {
         @Override
         protected void onContentsChanged() {
             super.onContentsChanged();
@@ -109,7 +108,7 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     public int show_inventory_settings;
     public int cookTime;
     public IRecipeType<? extends AbstractCookingRecipe> recipeType;
-    public FurnaceSettings furnaceSettings;
+    public FactoryUpgradeSettings furnaceSettings;
     protected int timer;
     ITag<Item> ore = ItemTags.getAllTags().getTag(new ResourceLocation("forge", "ores"));
     SidedInvWrapper invHandler = new
@@ -130,26 +129,20 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     public AbstractSmeltingTileEntity(TileEntityType<?> tileentitytypeIn, int invsize) {
         super(tileentitytypeIn, invsize);
         this.recipeType = IRecipeType.SMELTING;
-        furnaceSettings = new FurnaceSettings() {
+        furnaceSettings = new FactoryUpgradeSettings(getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
             @Override
             public void onChanged() {
+                if (hasUpgradeType(Registration.FACTORY.get())) {
+                    setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory);
+
+                }
                 setChanged();
             }
-
             @Override
-            public void set(int index, int value) {
-                if (hasUpgradeType(Registration.FACTORY.get()))
-                    read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getOrCreateTag());
-                super.set(index, value);
-                if (hasUpgradeType(Registration.FACTORY.get()))
-                    write(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getOrCreateTag());
-            }
-
-            @Override
-            public int get(int index) {
-                if (hasUpgradeType(Registration.FACTORY.get()))
-                    read(getUpgradeTypeSlotItem(Registration.FACTORY.get()).getOrCreateTag());
-                return super.get(index);
+            public void updateItem() {
+                if (hasUpgradeType(Registration.FACTORY.get())) {
+                    factory = getUpgradeTypeSlotItem(Registration.FACTORY.get());
+                }
             }
         };
 
@@ -307,7 +300,7 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     }
 
     public boolean hasXPTank() {
-        return (hasUpgrade(Registration.XP.get()) && UpgradeItemXpTank.isWorking());
+        return hasUpgrade(Registration.XP.get());
     }
 
     private boolean isEnergy() {
@@ -355,31 +348,34 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
         return null;
     }
 
-    public boolean hasUpgrade(Item upg) {
+    public boolean hasUpgrade(UpgradeItem upg) {
         for (int slot : UPGRADES())
-            if (upg == getItem(slot).getItem()) return true;
+            if (upg.equals(getItem(slot).getItem()) && upg.isEnabled()) return true;
         return false;
     }
 
     public boolean hasUpgradeType(UpgradeItem upg) {
         for (int slot : UPGRADES()) {
-            if (getItem(slot).getItem() instanceof UpgradeItem && upg.upgradeType == ((UpgradeItem) getItem(slot).getItem()).upgradeType)
-                return true;
+            if (getItem(slot).getItem() instanceof UpgradeItem && ((UpgradeItem) getItem(slot).getItem()).isEnabled() && upg.upgradeType == ((UpgradeItem) getItem(slot).getItem()).upgradeType) return true;
         }
         return hasUpgrade(upg);
     }
 
     public ItemStack getUpgradeTypeSlotItem(UpgradeItem upg) {
-        for (int slot : UPGRADES())
-            if (getItem(slot).getItem() instanceof UpgradeItem && upg.upgradeType == ((UpgradeItem) getItem(slot).getItem()).upgradeType)
-                return getItem(slot);
-        return getItem(UPGRADES()[0]);
+        int i = getUpgradeTypeSlot(upg);
+        return i < 0 ? ItemStack.EMPTY : getItem(i);
+    }
+    public int getUpgradeTypeSlot(UpgradeItem upg) {
+        for (int slot : UPGRADES()) {
+            if (hasUpgradeType(upg))
+                return slot;
+        }return -1;
     }
 
     public ItemStack getUpgradeSlotItem(Item upg) {
         for (int slot : UPGRADES())
             if (upg == getItem(slot).getItem()) return getItem(slot);
-        return getItem(UPGRADES()[0]);
+        return ItemStack.EMPTY;
     }
 
     public void forceUpdateAllStates() {
@@ -430,14 +426,6 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     }
     @Override
     public void tick() {
-        if (furnaceSettings.size() <= 0) {
-            furnaceSettings = new FurnaceSettings() {
-                @Override
-                public void onChanged() {
-                    setChanged();
-                }
-            };
-        }
 
         boolean wasBurning = this.isBurning();
         boolean flag1 = false;
@@ -1095,7 +1083,7 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
             return isItemFuel(stack) || stack.hasContainerItem() || stack.getCapability(CapabilityEnergy.ENERGY).isPresent();
         }
         if (ArrayUtils.contains(UPGRADES(), index)) {
-            if (stack.getItem() instanceof UpgradeItem && !hasUpgrade(stack.getItem()) && !hasUpgradeType((UpgradeItem) stack.getItem()))
+            if (stack.getItem() instanceof UpgradeItem && !hasUpgrade((UpgradeItem) stack.getItem()) && !hasUpgradeType((UpgradeItem) stack.getItem()))
                 if (((UpgradeItem) stack.getItem()).upgradeType == 1) return (index == HEATER() || !isForge());
                 else return true;
         }
@@ -1152,21 +1140,19 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     public List<IRecipe<?>> grantStoredRecipeExperience(World level, Vector3d worldPosition) {
         List<IRecipe<?>> list = Lists.newArrayList();
         if (this.recipes.object2IntEntrySet() != null)
-            for (Object2IntMap.Entry<ResourceLocation> entry : this.recipes.object2IntEntrySet()) {
-                level.getRecipeManager().byKey(entry.getKey()).ifPresent((h) -> {
-                    list.add(h);
-                    int amountLiquidXp = MathHelper.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h).getExperience()) * 5;
-                    if (hasXPTank()) {
-                        if (amountLiquidXp >= 1) {
-                            xpTank.fill(new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(Config.getLiquidXPType()))), amountLiquidXp), IFluidHandler.FluidAction.EXECUTE);
-                            recipes.clear();
-                        }
-                    } else {
-                        if (worldPosition != null)
-                            splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h).getExperience());
+            recipes.object2IntEntrySet().fastForEach(entry-> level.getRecipeManager().byKey(entry.getKey()).ifPresent((h) -> {
+                list.add(h);
+                int amountLiquidXp = MathHelper.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h).getExperience()) * 5;
+                if (hasXPTank()) {
+                    if (amountLiquidXp >= 1) {
+                        xpTank.fill(new FluidStack(Config.getLiquidXP(), amountLiquidXp), IFluidHandler.FluidAction.EXECUTE);
+                        recipes.clear();
                     }
-                });
-            }
+                } else {
+                    if (worldPosition != null)
+                        splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h).getExperience());
+                }
+            }));
 
         return list;
     }

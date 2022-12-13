@@ -369,26 +369,14 @@ public abstract class AbstractCobblestoneGeneratorTileEntity extends InventoryTi
 
         }
         if (index == UPGRADE) {
-            if (stack.isEmpty()) {
-                return false;
-            }
-
             return stack.getItem() instanceof FuelEfficiencyUpgradeItem;
 
         }
         if (index == UPGRADE1) {
-            if (stack.isEmpty()) {
-                return false;
-            }
-
             return stack.getItem() instanceof OreProcessingUpgradeItem;
 
         }
         return false;
-    }
-
-    protected boolean doesNeedUpdateSend() {
-        return !Arrays.equals(this.provides, this.lastProvides);
     }
 
     public void onUpdateSent() {

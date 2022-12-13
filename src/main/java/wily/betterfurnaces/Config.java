@@ -3,17 +3,22 @@ package wily.betterfurnaces;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.nio.file.Path;
-import java.util.UUID;
+import java.util.*;
+
 
 @Mod.EventBusSubscriber
 public class Config {
@@ -24,6 +29,9 @@ public class Config {
     public static final String CATEGORY_JEI = "jei";
     public static final String CATEGORY_UPDATES = "updates";
     public static final String CATEGORY_MISC = "misc";
+
+    public static final List<String> supportedLiquidXps = Arrays.asList("mob_grinding_utils:fluid_xp", "industrialforegoing:essence", "cyclic:xpjuice", "reliquary:xp_juice");
+
 
     public static ForgeConfigSpec COMMON_CONFIG;
     public static ForgeConfigSpec CLIENT_CONFIG;
@@ -97,22 +105,24 @@ public class Config {
         CLIENT_CONFIG = CLIENT_BUILDER.build();
     }
 
+
     public static String getLiquidXPType() {
-        if (Config.xpFluidType.get() == 0) {
-            return "mob_grinding_utils:fluid_xp";
-        } else if (Config.xpFluidType.get() == 1) {
-            return "industrialforegoing:essence";
-        } else if (Config.xpFluidType.get() == 2) {
-            return "cyclic:xpjuice";
-        } else if (Config.xpFluidType.get() == 3) {
-            return "reliquary:xp_juice";
-        }
-        return "mob_grinding_utils:fluid_xp";
+        return supportedLiquidXps.size() > xpFluidType.get() ? supportedLiquidXps.get(xpFluidType.get()) : supportedLiquidXps.get(0);
+    }
+    public static Fluid getLiquidXP() {
+        return ForgeRegistries.FLUIDS.getValue(new ResourceLocation(getLiquidXPType()));
     }
 
     public static String getLiquidXPMod() {
         String s = getLiquidXPType();
         return s.substring(0, s.indexOf(":"));
+    }
+
+    public static int getDefaultLiquidXpMod(){
+        for (String s : supportedLiquidXps){
+            if (ModList.get().isLoaded(s.substring(0, s.indexOf(":")))) return supportedLiquidXps.indexOf(s);
+        }
+        return 0;
     }
 
     private static void setupFurnacesConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder CLIENT_BUILDER) {
@@ -171,7 +181,7 @@ public class Config {
 
         xpFluidType = CLIENT_BUILDER
                 .comment(" Value referring to the mod used for the xp fluid generated with the Xp Tank Upgrade. \n 0 = Mob Grinding Utils(Default) \n 1 = Industrial Foregoing \n 2 = Cyclic \n 3 = Reliquary")
-                .defineInRange("upgrade.xp_fluid_type", 0, 0, 3);
+                .defineInRange("upgrade.xp_fluid_type", getDefaultLiquidXpMod(), 0, supportedLiquidXps.size() - 1);
     }
 
 

@@ -3,6 +3,8 @@ package wily.betterfurnaces.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -13,6 +15,9 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameter;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
@@ -53,6 +58,7 @@ public abstract class AbstractSmeltingBlock extends Block {
     // 0= Furnace, 1= Blast Furnace, 2= Smoker
     public static final IntegerProperty TYPE = IntegerProperty.create("type",0,3);
 
+    public boolean shouldDropContent = true;
 
     public AbstractSmeltingBlock(Properties properties) {
         super(properties);
@@ -75,10 +81,38 @@ public abstract class AbstractSmeltingBlock extends Block {
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        List<ItemStack> dropsOriginal = super.getDrops(state, builder);
-        if (!dropsOriginal.isEmpty())
-            return dropsOriginal;
-        return Collections.singletonList(new ItemStack(this, 1));
+        ItemStack drop = new ItemStack(this.asItem());
+        ItemStack stack = builder.getOptionalParameter(LootParameters.TOOL);
+        TileEntity be = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
+        if (EnchantmentHelper.getEnchantments(stack).containsKey(Enchantments.SILK_TOUCH) && stack.isCorrectToolForDrops(state)) {
+            CompoundNBT tag = new CompoundNBT();
+            tag.put("BlockEntityTag", be.getUpdateTag());
+            drop.setTag(tag);
+        }
+        return Collections.singletonList(drop);
+    }
+    @Override
+    public void playerWillDestroy(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
+        ItemStack stack = player.getItemInHand(Hand.MAIN_HAND);
+        if (EnchantmentHelper.getEnchantments(stack).containsKey(Enchantments.SILK_TOUCH) && stack.isCorrectToolForDrops(blockState))
+            shouldDropContent = false;
+        else shouldDropContent = true;
+        super.playerWillDestroy(world, blockPos, blockState, player);
+    }
+    @Override
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
+        if (state.getBlock() != oldState.getBlock()) {
+           TileEntity te = world.getBlockEntity(pos);
+            if (te instanceof AbstractSmeltingTileEntity) {
+                if (shouldDropContent) {
+                    InventoryHelper.dropContents(world, pos, (AbstractSmeltingTileEntity) te);
+                    ((AbstractSmeltingTileEntity)te).grantStoredRecipeExperience(world, Vector3d.atCenterOf(pos));
+                }
+                world.updateNeighbourForOutputSignal(pos, this);
+            }
+
+            super.onRemove(state, world, pos, oldState, p_196243_5_);
+        }
     }
 
     @Override
@@ -91,6 +125,7 @@ public abstract class AbstractSmeltingBlock extends Block {
             te.totalCookTime = te.getCookTimeConfig().get();
         }
     }
+
 
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
@@ -234,20 +269,6 @@ public abstract class AbstractSmeltingBlock extends Block {
         }
     }
 
-    @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
-        if (state.getBlock() != oldState.getBlock()) {
-            TileEntity te = world.getBlockEntity(pos);
-            if (te instanceof AbstractSmeltingTileEntity) {
-                InventoryHelper.dropContents(world, pos, (AbstractSmeltingTileEntity) te);
-                ((AbstractSmeltingTileEntity)te).grantStoredRecipeExperience(world, Vector3d.atCenterOf(pos));
-                world.updateNeighbourForOutputSignal(pos, this);
-            }
-
-            super.onRemove(state, world, pos, oldState, p_196243_5_);
-        }
-    }
-    
     public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
         return Container.getRedstoneSignalFromContainer((IInventory) world.getBlockEntity(pos));
 

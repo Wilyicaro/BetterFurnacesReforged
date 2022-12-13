@@ -1,14 +1,21 @@
 package wily.betterfurnaces.init;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.blocks.AbstractSmeltingBlock;
 import wily.betterfurnaces.screens.*;
 
 @Mod.EventBusSubscriber(modid = BetterFurnacesReforged.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -24,26 +31,22 @@ public class ClientSide {
         ScreenManager.register(Registration.COLOR_UPGRADE_CONTAINER.get(), ColorUpgradeScreen::new);
         ScreenManager.register(Registration.COB_GENERATOR_CONTAINER.get(), AbstractCobblestoneGeneratorScreen.CobblestoneGeneratorScreen::new);
         ScreenManager.register(Registration.FUEL_VERIFIER_CONTAINER.get(), AbstractFuelVerifierScreen.FuelVerifierScreen::new);
-        RenderTypeLookup.setRenderLayer(Registration.IRON_FURNACE.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(Registration.GOLD_FURNACE.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(Registration.DIAMOND_FURNACE.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(Registration.NETHERHOT_FURNACE.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(Registration.EXTREME_FURNACE.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(Registration.EXTREME_FORGE.get(), RenderType.cutoutMipped());
-        BlockColorsHandler.registerBlockColors();
-        ItemColorsHandler.registerItemColors();
-        event.enqueueWork(() ->
-        {
-            ItemModelsProperties.register(Registration.EXTREME_FURNACE.get().asItem(),
-                    new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living) -> {
-                        return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
-                    });
-            ItemModelsProperties.register(Registration.EXTREME_FORGE.get().asItem(),
-                    new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living) -> {
-                        return stack.getOrCreateTag().getBoolean("colored") ? 1.0F : 0.0F;
-                    });
-        });
-
+        BetterFurnacesReforged.LOGGER.info("Initializing Better Furnaces Block Colors registering...");
+        ItemColors itemColors = event.getMinecraftSupplier().get().getItemColors();
+        BlockColors blockColors = event.getMinecraftSupplier().get().getBlockColors();
+        for (Block block : ForgeRegistries.BLOCKS.getValues())
+            if (block instanceof AbstractSmeltingBlock) {
+                RenderTypeLookup.setRenderLayer(block, RenderType.cutoutMipped());
+                blockColors.register(BlockColorsHandler.COLOR, block);
+                itemColors.register(ItemColorsHandler.COLOR, block.asItem());
+                event.enqueueWork(() ->
+                {
+                    ItemModelsProperties.register(block.asItem(),
+                            new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
+                });
+            }
     }
+
+
 
 }

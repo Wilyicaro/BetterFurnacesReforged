@@ -13,21 +13,9 @@ import javax.annotation.Nullable;
 public class BlockColorsHandler implements IBlockColor {
     public static final IBlockColor COLOR = new BlockColorsHandler();
 
-    @SubscribeEvent
-    public static void registerBlockColors() {
-        System.out.println("Starting Better Furnaces BlockColorsHandler");
-
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.IRON_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.GOLD_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.DIAMOND_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.NETHERHOT_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.EXTREME_FURNACE.get());
-        Minecraft.getInstance().getBlockColors().register(COLOR, Registration.EXTREME_FORGE.get());
-    }
-
     @Override
     public int getColor(BlockState blockState, @Nullable IBlockDisplayReader iBlockDisplayReader, @Nullable BlockPos blockPos, int i) {
-        if (iBlockDisplayReader.getBlockEntity(blockPos) instanceof AbstractSmeltingTileEntity) {
+        if (iBlockDisplayReader != null && iBlockDisplayReader.getBlockEntity(blockPos) instanceof AbstractSmeltingTileEntity) {
             AbstractSmeltingTileEntity te = (AbstractSmeltingTileEntity) iBlockDisplayReader.getBlockEntity(blockPos);
             if (te.hasUpgrade(Registration.COLOR.get()) && (te.getUpgradeSlotItem(Registration.COLOR.get()).getTag() != null)) {
                 return te.hex();

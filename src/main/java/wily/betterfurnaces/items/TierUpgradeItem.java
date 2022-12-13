@@ -62,18 +62,20 @@ public class TierUpgradeItem extends Item {
             BlockItemUseContext ctx2 = new BlockItemUseContext(ctx);
             if (te instanceof FurnaceTileEntity || te instanceof AbstractSmeltingTileEntity) {
                 int cooktime = te.serializeNBT().getInt("CookTime");
-                int cooktimetotal = te.serializeNBT().getInt("CookTimeTotal");
+                int cooktimetotal = 200;
                 int currentItemBurnTime = 0;
                 int furnaceBurnTime = te.serializeNBT().getInt("BurnTime");
                 int show = 0;
                 int[] settings = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
                 if (te instanceof AbstractSmeltingTileEntity) {
-                    furnaceBurnTime = ((AbstractSmeltingTileEntity) te).fields.get(0);
-                    currentItemBurnTime = ((AbstractSmeltingTileEntity) te).fields.get(1);
-                    cooktime = ((AbstractSmeltingTileEntity) te).fields.get(2);
-                    show = ((AbstractSmeltingTileEntity) te).fields.get(4);
-                    for (int i = 0; i < ((AbstractSmeltingTileEntity) te).furnaceSettings.size(); i++) {
-                        settings[i] = ((AbstractSmeltingTileEntity) te).furnaceSettings.get(i);
+                    AbstractSmeltingTileEntity smeltBe = (AbstractSmeltingTileEntity) te;
+                    furnaceBurnTime = smeltBe.fields.get(0);
+                    currentItemBurnTime = smeltBe.fields.get(1);
+                    cooktime = smeltBe.fields.get(2);
+                    cooktimetotal = smeltBe.fields.get(3);
+                    show = smeltBe.fields.get(4);
+                    for (int i = 0; i < smeltBe.furnaceSettings.size(); i++) {
+                        settings[i] = smeltBe.furnaceSettings.get(i);
                     }
 
                 }
@@ -100,7 +102,7 @@ public class TierUpgradeItem extends Item {
                 world.setBlock(pos, next.setValue(BlockStateProperties.LIT, te.getBlockState().getValue(BlockStateProperties.LIT)), 3);
                 world.playSound(null, te.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 TileEntity newTe = world.getBlockEntity(pos);
-                newTe.deserializeNBT(te.serializeNBT());
+                newTe.deserializeNBT(newTe.getUpdateTag().merge(te.serializeNBT()));
                 ((IInventory) newTe).setItem(0, input);
                 ((IInventory) newTe).setItem(1, fuel);
                 ((IInventory) newTe).setItem(2, output);

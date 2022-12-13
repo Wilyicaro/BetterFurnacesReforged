@@ -96,7 +96,7 @@
   "tooltip.betterfurnacesreforged.upgrade.fuel": "%s%s燃料效率",
   "tooltip.betterfurnacesreforged.upgrade.infinitely": "无限使用的",
   "tooltip.betterfurnacesreforged.upgrade.input": "在熔炉/锻造炉中添加一个侧面管理，使物品可自动从附近的库存进入",
-  "tooltip.betterfurnacesreforged.upgrade.isworking": "当前没有支持此升级的模组配置。",
+  "tooltip.betterfurnacesreforged.upgrade.disabled": "当前没有支持此升级的模组配置。",
   "tooltip.betterfurnacesreforged.upgrade.liquid": "使用液体燃料代替固体燃料",
   "tooltip.betterfurnacesreforged.upgrade.multiple": "相乘",
   "tooltip.betterfurnacesreforged.upgrade.ores": "%s%s烧炼每个矿石的得到的数量",

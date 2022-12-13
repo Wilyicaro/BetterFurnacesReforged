@@ -20,7 +20,7 @@ public class OreProcessingUpgradeItem extends UpgradeItem {
     public int getMultiplier;
 
     public OreProcessingUpgradeItem(Properties properties, int Multiplier) {
-        super(properties, 3, null);
+        super(properties, 3);
         this.getMultiplier = Multiplier;
     }
 

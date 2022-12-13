@@ -19,7 +19,7 @@ public class FuelEfficiencyUpgradeItem extends UpgradeItem {
     public int getMultiplier;
 
     public FuelEfficiencyUpgradeItem(Properties properties, int Multiplier) {
-        super(properties, 2, null);
+        super(properties, 2);
         this.getMultiplier = Multiplier;
     }
 

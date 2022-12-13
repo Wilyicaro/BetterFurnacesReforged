@@ -94,7 +94,7 @@
   "tooltip.betterfurnacesreforged.upgrade.fuel": "%s %sa eficiência do combustível",
   "tooltip.betterfurnacesreforged.upgrade.infinitely": "infinitamente ",
   "tooltip.betterfurnacesreforged.upgrade.input": "Adiciona um gerenciamento dos lados na fornalha/ forja onde os itens entram automaticamente do inventário próximo",
-  "tooltip.betterfurnacesreforged.upgrade.isworking": "Atualmente, não há nenhum mod configurado que suporte esta melhoria.",
+  "tooltip.betterfurnacesreforged.upgrade.disabled": "Atualmente, não há nenhum mod configurado que suporte esta melhoria.",
   "tooltip.betterfurnacesreforged.upgrade.liquid": "Faz a fornalha ou forja usar fluídos como combustível",
   "tooltip.betterfurnacesreforged.upgrade.multiple": "Multiplica",
   "tooltip.betterfurnacesreforged.upgrade.ore": "minério",
