@@ -849,7 +849,7 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     }
 
     protected boolean isOre(ItemStack input) {
-        return (input.getItem().is(ore) || input.getItem().getRegistryName().toString().contains("ore"));
+        return (input.getItem().is(ore));
     }
 
     protected int OreProcessingMultiplier(ItemStack input) {
