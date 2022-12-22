@@ -1,8 +1,8 @@
 {
   "parent": "betterfurnacesreforged:block/orientable_overlay",
   "textures": {
-    "front": "betterfurnacesreforged:blocks/smoker_front",
-    "side": "betterfurnacesreforged:blocks/smoker_side",
-    "top": "betterfurnacesreforged:blocks/smoker_top"
+    "front": "betterfurnacesreforged:block/smoker_front",
+    "side": "betterfurnacesreforged:block/smoker_side",
+    "top": "betterfurnacesreforged:block/smoker_top"
   }
 }

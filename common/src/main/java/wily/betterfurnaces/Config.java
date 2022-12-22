@@ -4,6 +4,7 @@ package wily.betterfurnaces;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import dev.architectury.platform.Platform;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import wily.betterfurnaces.init.Registration;
@@ -29,7 +30,7 @@ public class Config {
         return supportedLiquidXps.size() > xpFluidType ? supportedLiquidXps.get(xpFluidType) : supportedLiquidXps.get(0);
     }
     public static Fluid getLiquidXP() {
-        return REGISTRIES.get().get(Registry.FLUID_REGISTRY).get(new ResourceLocation(getLiquidXPType()));
+        return REGISTRIES.get().get(Registries.FLUID).get(new ResourceLocation(getLiquidXPType()));
     }
 
     public static String getLiquidXPMod() {

@@ -1,8 +1,8 @@
 {
   "parent": "block/orientable",
   "textures": {
-    "top": "betterfurnacesreforged:blocks/copper_top",
-    "side": "betterfurnacesreforged:blocks/copper_side",
-    "front": "betterfurnacesreforged:blocks/copper_front"
+    "top": "betterfurnacesreforged:block/copper_top",
+    "side": "betterfurnacesreforged:block/copper_side",
+    "front": "betterfurnacesreforged:block/copper_front"
   }
 }

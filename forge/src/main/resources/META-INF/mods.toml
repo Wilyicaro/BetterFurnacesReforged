@@ -23,7 +23,7 @@ This mod is a remake of the outdated mod from 1.7.10, Better Furnaces, presentin
 [[dependencies.betterfurnacesreforged]]
 modId="factory_api"
 mandatory=true
-versionRange="[0.0.5,]"
+versionRange="[0.1.,]"
 ordering="NONE"
 side="BOTH"
 [[dependencies.betterfurnacesreforged]]

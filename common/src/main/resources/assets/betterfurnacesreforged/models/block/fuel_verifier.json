@@ -1,12 +1,12 @@
 {
   "parent": "block/cube",
   "textures": {
-    "down": "betterfurnacesreforged:blocks/fuel_verifier_side",
-    "up": "betterfurnacesreforged:blocks/fuel_verifier_side",
-    "north": "betterfurnacesreforged:blocks/fuel_verifier_front",
-    "east": "betterfurnacesreforged:blocks/fuel_verifier_side",
-    "south": "betterfurnacesreforged:blocks/fuel_verifier_side",
-    "west": "betterfurnacesreforged:blocks/fuel_verifier_side",
-    "particle": "betterfurnacesreforged:blocks/fuel_verifier_side"
+    "down": "betterfurnacesreforged:block/fuel_verifier_side",
+    "up": "betterfurnacesreforged:block/fuel_verifier_side",
+    "north": "betterfurnacesreforged:block/fuel_verifier_front",
+    "east": "betterfurnacesreforged:block/fuel_verifier_side",
+    "south": "betterfurnacesreforged:block/fuel_verifier_side",
+    "west": "betterfurnacesreforged:block/fuel_verifier_side",
+    "particle": "betterfurnacesreforged:block/fuel_verifier_side"
   }
 }

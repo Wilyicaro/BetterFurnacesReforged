@@ -1,10 +1,10 @@
 {
   "parent": "betterfurnacesreforged:block/forge",
   "textures": {
-    "particle": "betterfurnacesreforged:blocks/ultimate_top",
-    "front": "betterfurnacesreforged:blocks/ultimate_forge_front",
-    "side": "betterfurnacesreforged:blocks/ultimate_forge_side",
-    "overlayfront": "betterfurnacesreforged:blocks/forge_frontactive",
-    "overlayside": "betterfurnacesreforged:blocks/forge_sideactive"
+    "particle": "betterfurnacesreforged:block/ultimate_top",
+    "front": "betterfurnacesreforged:block/ultimate_forge_front",
+    "side": "betterfurnacesreforged:block/ultimate_forge_side",
+    "overlayfront": "betterfurnacesreforged:block/forge_frontactive",
+    "overlayside": "betterfurnacesreforged:block/forge_sideactive"
   }
 }

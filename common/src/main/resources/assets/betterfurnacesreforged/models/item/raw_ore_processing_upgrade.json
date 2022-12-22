@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "betterfurnacesreforged:items/up_rawore"
+    "layer0": "betterfurnacesreforged:item/up_rawore"
   }
 }

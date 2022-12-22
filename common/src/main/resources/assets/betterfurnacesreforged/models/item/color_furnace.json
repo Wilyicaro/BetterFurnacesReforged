@@ -1,9 +1,9 @@
 {
   "parent": "betterfurnacesreforged:block/color_orientable_inventory",
   "textures": {
-    "top": "betterfurnacesreforged:blocks/colored_top",
-    "front": "betterfurnacesreforged:blocks/colored_front",
-    "side": "betterfurnacesreforged:blocks/colored_side",
-    "overlay": "betterfurnacesreforged:blocks/front"
+    "top": "betterfurnacesreforged:block/colored_top",
+    "front": "betterfurnacesreforged:block/colored_front",
+    "side": "betterfurnacesreforged:block/colored_side",
+    "overlay": "betterfurnacesreforged:block/front"
   }
 }

@@ -27,9 +27,9 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
-    modImplementation "maven.modrinth:factory_api:${factory_api_version}:fabric"
+    modImplementation "maven.modrinth:factory_api:${factory_api_version}-fabric"
     modImplementation("teamreborn:energy:2.2.0") { transitive false }
-    modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.0.0"
+    modCompileOnly "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:5.0.0"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

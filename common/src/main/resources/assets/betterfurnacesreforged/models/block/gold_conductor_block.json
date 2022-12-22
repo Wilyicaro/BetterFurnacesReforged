@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "betterfurnacesreforged:blocks/gold_conductor_block"
+    "all": "betterfurnacesreforged:block/gold_conductor_block"
   }
 }

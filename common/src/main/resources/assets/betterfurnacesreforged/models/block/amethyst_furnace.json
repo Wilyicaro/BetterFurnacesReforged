@@ -1,8 +1,8 @@
 {
   "parent": "block/orientable",
   "textures": {
-    "top": "betterfurnacesreforged:blocks/amethyst_top",
-    "side": "betterfurnacesreforged:blocks/amethyst_side",
-    "front": "betterfurnacesreforged:blocks/amethyst_front"
+    "top": "betterfurnacesreforged:block/amethyst_top",
+    "side": "betterfurnacesreforged:block/amethyst_side",
+    "front": "betterfurnacesreforged:block/amethyst_front"
   }
 }

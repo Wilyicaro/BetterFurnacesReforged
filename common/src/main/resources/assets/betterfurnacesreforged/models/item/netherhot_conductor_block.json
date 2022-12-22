@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "betterfurnacesreforged:blocks/netherhot_conductor_block"
+    "all": "betterfurnacesreforged:block/netherhot_conductor_block"
   }
 }

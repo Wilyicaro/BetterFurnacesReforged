@@ -16,11 +16,11 @@
     }
   ],
   "textures": {
-    "down": "betterfurnacesreforged:blocks/down",
-    "up": "betterfurnacesreforged:blocks/up",
-    "north": "betterfurnacesreforged:blocks/north",
-    "east": "betterfurnacesreforged:blocks/east",
-    "south": "betterfurnacesreforged:blocks/south",
-    "west": "betterfurnacesreforged:blocks/west"
+    "down": "betterfurnacesreforged:block/down",
+    "up": "betterfurnacesreforged:block/up",
+    "north": "betterfurnacesreforged:block/north",
+    "east": "betterfurnacesreforged:block/east",
+    "south": "betterfurnacesreforged:block/south",
+    "west": "betterfurnacesreforged:block/west"
   }
 }

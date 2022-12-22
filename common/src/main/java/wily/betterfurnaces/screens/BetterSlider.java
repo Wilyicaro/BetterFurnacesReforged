@@ -98,7 +98,7 @@ public class BetterSlider extends AbstractSliderButton {
     }
 
     private void m_93585_(double mouseX) {
-        this.setSliderValue((mouseX - (double)(this.x + 4)) / (double)(this.width - 8));
+        this.setSliderValue((mouseX - (double)(getX() + 4)) / (double)(this.width - 8));
     }
 
     private void setSliderValue(double value) {

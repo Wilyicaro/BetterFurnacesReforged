@@ -1,6 +1,6 @@
 {
   "parent": "betterfurnacesreforged:block/orientable_front_overlay",
   "textures": {
-    "overlay": "betterfurnacesreforged:blocks/frontactive"
+    "overlay": "betterfurnacesreforged:block/frontactive"
   }
 }

@@ -1,10 +1,10 @@
 {
   "parent": "betterfurnacesreforged:block/bforientable_inventory",
   "textures": {
-    "top": "betterfurnacesreforged:blocks/steel_top",
-    "side": "betterfurnacesreforged:blocks/steel_side",
-    "front": "betterfurnacesreforged:blocks/steel_front",
-    "overlay": "betterfurnacesreforged:blocks/front"
+    "top": "betterfurnacesreforged:block/steel_top",
+    "side": "betterfurnacesreforged:block/steel_side",
+    "front": "betterfurnacesreforged:block/steel_front",
+    "overlay": "betterfurnacesreforged:block/front"
   },
   "overrides": [
     {

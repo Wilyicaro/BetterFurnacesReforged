@@ -20,7 +20,7 @@ public class FluidRenderUtil {
             screen = abstractContainerScreen;
         }
         TextureAtlasSprite fluidSprite = fluidSprite(fluid, hasColor);
-        RenderSystem.setShaderTexture(0, fluidSprite.atlas().location());
+        RenderSystem.setShaderTexture(0, fluidSprite.atlasLocation());
             GuiComponent.blit(matrix, x, y, screen.getBlitOffset(), sizeX, sizeY, fluidSprite);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }

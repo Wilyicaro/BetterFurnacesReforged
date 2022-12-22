@@ -12,7 +12,7 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.0.0"
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
-    modCompileOnly "maven.modrinth:factory_api:${factory_api_version}:fabric"
+    modCompileOnly "maven.modrinth:factory_api:${factory_api_version}-fabric"
     modCompileOnly("teamreborn:energy:2.2.0") { transitive false }
     compileClasspath(project(path: ":common", configuration: "namedElements")) { transitive false }
 }

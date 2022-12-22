@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -103,20 +104,14 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
         super(tileentitytypeIn, pos, state, invsize);
 
         this.recipeType = RecipeType.SMELTING;
-        furnaceSettings = new FactoryUpgradeSettings(getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
+        furnaceSettings = new FactoryUpgradeSettings(()->getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
             @Override
             public void onChanged() {
                 if (hasUpgradeType(Registration.FACTORY.get())) {
-                    inventory.setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory);
+                    inventory.setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory.get());
 
                 }
                 setChanged();
-            }
-            @Override
-            public void updateItem() {
-                if (hasUpgradeType(Registration.FACTORY.get())) {
-                    factory = getUpgradeTypeSlotItem(Registration.FACTORY.get());
-                }
             }
         };
     }
@@ -285,10 +280,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     }
 
     public boolean hasUpgradeType(UpgradeItem upg) {
-        for (int slot : UPGRADES()) {
-            if (inventory.getItem(slot).getItem() instanceof UpgradeItem upgradeItem &&  upgradeItem.isEnabled() && upg.upgradeType == upgradeItem.upgradeType) return true;
-        }
-        return hasUpgrade(upg);
+        return getUpgradeTypeSlot(upg)>=0;
     }
 
     public ItemStack getUpgradeTypeSlotItem(UpgradeItem upg) {
@@ -650,7 +642,7 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
 
 
     private TagKey<Item> getItemTag(ResourceLocation resourceLocation) {
-        return TagKey.create(Registry.ITEM_REGISTRY,resourceLocation);
+        return TagKey.create(Registries.ITEM,resourceLocation);
     }
     private boolean hasRawOreTag(ItemStack stack){
         if(Platform.isForge()) return stack.is(getItemTag( new ResourceLocation("forge","raw_materials")));

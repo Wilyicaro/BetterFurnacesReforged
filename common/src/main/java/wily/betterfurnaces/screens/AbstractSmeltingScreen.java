@@ -482,38 +482,38 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
         if (!getMenu().showInventoryButtons()) {
             if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() + 13) {
                 Messages.INSTANCE.sendToServer(new PacketShowSettingsButton(this.getMenu().getPos(), 1));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1F));
             }
         } else {
             if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() + 13) {
                 Messages.INSTANCE.sendToServer(new PacketShowSettingsButton(this.getMenu().getPos(), 0));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1F));
             }
             if (storedFactoryUpgradeType(3)) {
                 if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71) {
                     if (storedFactoryUpgradeType(1)) {
                         if (!this.getMenu().getAutoInput()) {
                             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 6, 1));
-                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                         } else {
                             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 6, 0));
-                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                         }
                     }
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 58 && mouseY <= 71) {
                     if (storedFactoryUpgradeType(2)) {
                         if (!this.getMenu().getAutoOutput()) {
                             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 7, 1));
-                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                         } else {
                             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 7, 0));
-                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                         }
                     }
                 }
                 if (getMenu().be.isForge() && mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
                     Messages.INSTANCE.sendToServer(new PacketOrientationButton(this.getMenu().getPos(), !this.getMenu().be.getBlockState().getValue(AbstractForgeBlock.SHOW_ORIENTATION)));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                 }
 
                 if (mouseX >= -31 && mouseX <= -18 && mouseY >= 74 && mouseY <= 87) {
@@ -536,7 +536,7 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
                         Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 3, 0));
                         Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 4, 0));
                         Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 5, 0));
-                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.8F, 0.3F));
+                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.8F, 0.3F));
                     } else {
                         if (flag) {
                             sendToServerInverted(this.getMenu().getSettingFront(), this.getMenu().getIndexFront());
@@ -568,7 +568,7 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
     }
 
     private void sendToServer(int setting, int index) {
-        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
         if (setting <= 0) {
             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), index, 1));
         } else if (setting == 1) {
@@ -583,7 +583,7 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
     }
 
     private void sendToServerInverted(int setting, int index) {
-        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 0.3F));
         if (setting <= 0) {
             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), index, 4));
         } else if (setting == 1) {
@@ -602,44 +602,44 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
             if (mouseX >= -31 && mouseX <= -18 && mouseY >= 132 && mouseY <= 147) {
                 if (this.sub_button && isShiftKeyDown()) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 9, this.getMenu().getComSub() - 1));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 0.3F));
                 }
             }
             if (mouseX >= -31 && mouseX <= -18 && mouseY >= 132 && mouseY <= 147) {
                 if (this.add_button && !isShiftKeyDown()) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 9, this.getMenu().getComSub() + 1));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                 }
             }
             if (mouseX >= -47 && mouseX <= -34 && mouseY >= 118 && mouseY <= 131) {
                 if (this.getMenu().getRedstoneMode() != 0) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 0));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                 }
             }
 
             if (mouseX >= -31 && mouseX <= -18 && mouseY >= 118 && mouseY <= 131) {
                 if (this.getMenu().getRedstoneMode() != 1 && !isShiftKeyDown()) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 1));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                 }
                 if (this.getMenu().getRedstoneMode() != 2 && isShiftKeyDown()) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 2));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                 }
             }
 
             if (mouseX >= -15 && mouseX <= -2 && mouseY >= 118 && mouseY <= 131) {
                 if (this.getMenu().getRedstoneMode() != 3) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 3));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                 }
             }
 
             if (mouseX >= -47 && mouseX <= -34 && mouseY >= 134 && mouseY <= 147) {
                 if (this.getMenu().getRedstoneMode() != 4) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 4));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
                 }
 
             }

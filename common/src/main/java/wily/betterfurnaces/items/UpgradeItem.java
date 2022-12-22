@@ -36,7 +36,7 @@ public int upgradeType;
         return true;
     }
     public Component getDisabledMessage(){
-        return Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.enabled").setStyle(Style.EMPTY.applyFormat((ChatFormatting.RED)));
+        return Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.disabled").setStyle(Style.EMPTY.applyFormat((ChatFormatting.RED)));
     }
 
     @Override

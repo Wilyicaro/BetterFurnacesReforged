@@ -1,6 +1,7 @@
 package wily.betterfurnaces.forge;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,8 +15,8 @@ import wily.ultimatefurnaces.init.RegistrationUF;
 public class ModEvents {
     @SubscribeEvent
     public static void missingMappingEvent(MissingMappingsEvent event){
-        event.getMappings(Registry.BLOCK_REGISTRY,"ultimatefurnaces_bfr").forEach((m)-> m.remap(ForgeRegistries.BLOCKS.getValue( new ResourceLocation(BetterFurnacesReforged.MOD_ID, m.getKey().getPath()))));
-        event.getMappings(Registry.ITEM_REGISTRY,"ultimatefurnaces_bfr").forEach((m)-> {
+        event.getMappings(Registries.BLOCK,"ultimatefurnaces_bfr").forEach((m)-> m.remap(ForgeRegistries.BLOCKS.getValue( new ResourceLocation(BetterFurnacesReforged.MOD_ID, m.getKey().getPath()))));
+        event.getMappings(Registries.ITEM,"ultimatefurnaces_bfr").forEach((m)-> {
             m.remap(ForgeRegistries.ITEMS.getValue(new ResourceLocation(BetterFurnacesReforged.MOD_ID, m.getKey().getPath())));
             if (m.getKey().equals(Registration.IRON_UPGRADE.getId())) m.remap(RegistrationUF.IRON_UPGRADE.get());
             if (m.getKey().equals(Registration.GOLD_UPGRADE.getId())) m.remap(RegistrationUF.GOLD_UPGRADE.get());

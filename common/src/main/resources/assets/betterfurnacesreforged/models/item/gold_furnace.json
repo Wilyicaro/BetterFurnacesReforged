@@ -1,10 +1,10 @@
 {
   "parent": "betterfurnacesreforged:block/bforientable_inventory",
   "textures": {
-    "top": "betterfurnacesreforged:blocks/gold_top",
-    "side": "betterfurnacesreforged:blocks/gold_side",
-    "front": "betterfurnacesreforged:blocks/gold_front",
-    "overlay": "betterfurnacesreforged:blocks/front"
+    "top": "betterfurnacesreforged:block/gold_top",
+    "side": "betterfurnacesreforged:block/gold_side",
+    "front": "betterfurnacesreforged:block/gold_front",
+    "overlay": "betterfurnacesreforged:block/front"
   },
   "overrides": [
     {

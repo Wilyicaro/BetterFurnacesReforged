@@ -1,8 +1,8 @@
 {
   "parent": "block/orientable",
   "textures": {
-    "top": "betterfurnacesreforged:blocks/netherhot_top",
-    "side": "betterfurnacesreforged:blocks/netherhot_side",
-    "front": "betterfurnacesreforged:blocks/netherhot_front"
+    "top": "betterfurnacesreforged:block/netherhot_top",
+    "side": "betterfurnacesreforged:block/netherhot_side",
+    "front": "betterfurnacesreforged:block/netherhot_front"
   }
 }

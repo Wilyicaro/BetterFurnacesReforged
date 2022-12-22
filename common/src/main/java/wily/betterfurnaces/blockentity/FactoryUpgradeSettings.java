@@ -1,30 +1,41 @@
 package wily.betterfurnaces.blockentity;
 
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.ArrayUtils;
 
-public class FactoryUpgradeSettings {
-    String Settings = "Settings";
-    String AutoIO = "AutoIO";
-    String Redstone = "Redstone";
-    public ItemStack factory;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-    public FactoryUpgradeSettings(ItemStack stack) {
+public class FactoryUpgradeSettings {
+    public static String Settings = "Settings";
+    public static String AutoIO = "AutoIO";
+    public static String Redstone = "Redstone";
+    public Supplier<ItemStack> factory;
+
+    public FactoryUpgradeSettings(Supplier<ItemStack> stack) {
         factory = stack;
-        CompoundTag tag=  stack.getOrCreateTag();
         // (mode 1, 2, 3, 4, subtract) ignored, low/high, comparator, comparator sub, subtract
-        if (!tag.contains(Settings) || !tag.contains(AutoIO) || !tag.contains(Redstone)){
+        if  (!containsAnyTag(factory.get())){
+            CompoundTag tag=  factory.get().getOrCreateTag();
             tag.putIntArray(Settings, new int[]{0, 0, 0, 0, 0, 0});
             tag.putIntArray(AutoIO, new int[]{0, 0});
             tag.putIntArray(Redstone, new int[]{0, 0});
+            placeDefaultConfig();
+            stack.get().setTag(tag);
         }
 
+
+    }
+    public static boolean containsAnyTag(ItemStack factory){
+        CompoundTag tag=  factory.getOrCreateTag();
+        return  (tag.contains(Settings) && tag.contains(AutoIO) && tag.contains(Redstone));
     }
 
     public int get(int index) {
-        updateItem();
-        if(factory.isEmpty()) return 0;
+
+        if(factory.get().isEmpty() || !containsAnyTag(factory.get())) return 0;
         int[] all = ArrayUtils.addAll(getFurnaceSetting(Settings),ArrayUtils.addAll(getFurnaceSetting(AutoIO),getFurnaceSetting(Redstone)));
         return all[index];
     }
@@ -32,8 +43,8 @@ public class FactoryUpgradeSettings {
         return index < 6 ? settings : index < 8 ? autoio : redstone;
     }
     public void set(int index, int value) {
-        updateItem();
-        if(factory.isEmpty()) return;
+
+        if(factory.get().isEmpty()) return;
         String actualSettings = byIndex(index,Settings,AutoIO,Redstone);
         int actualIndex = byIndex(index, index, index-6, index -8);
         int[] settings = getFurnaceSetting(actualSettings);
@@ -44,20 +55,25 @@ public class FactoryUpgradeSettings {
     }
 
     public int size() {
-        if(factory.isEmpty()) return 0;
+        if(factory.get().isEmpty()) return 0;
         return getFurnaceSetting(Settings).length + getFurnaceSetting(AutoIO).length + getFurnaceSetting(Redstone).length ;
     }
 
     public int[] getFurnaceSetting(String setting){
-        return factory.getOrCreateTag().getIntArray(setting);
+        return factory.get().getOrCreateTag().getIntArray(setting);
     }
     public void setFurnaceSetting(String setting,int[] settings){
-        factory.getOrCreateTag().putIntArray(setting, settings);
+        factory.get().getOrCreateTag().putIntArray(setting, settings);
     }
-    public void updateItem() {
+
+    public void onChanged() {
 
     }
-    public void onChanged() {
+
+    public void placeDefaultConfig() {
+        for (Direction dir : Direction.values()) set(dir.ordinal(), 4);
+        set(0, 2);
+        set(1, 1);
 
     }
 }

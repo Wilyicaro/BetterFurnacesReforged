@@ -10,6 +10,7 @@ import net.fabricmc.fabric.impl.tag.convention.TagRegistration;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -109,7 +110,7 @@ public class BetterFurnacesPlatformImpl {
                                         if (o.isEmpty()) {
                                             continue;
                                         }
-                                        if (Registry.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
+                                        if (BuiltInRegistries.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
                                             continue;
                                         }
                                         try (Transaction transaction = Transaction.openOuter()) {
@@ -145,7 +146,7 @@ public class BetterFurnacesPlatformImpl {
                     if (be.inventory.getItem(be.OUTPUT).isEmpty()) {
                         continue;
                     }
-                    if (Registry.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
+                    if (BuiltInRegistries.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
                         continue;
                     }
                     try (Transaction transaction = Transaction.openOuter()) {

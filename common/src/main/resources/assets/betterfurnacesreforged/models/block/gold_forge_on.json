@@ -1,10 +1,10 @@
 {
   "parent": "betterfurnacesreforged:block/forge",
   "textures": {
-    "particle": "betterfurnacesreforged:blocks/gold_top",
-    "front": "betterfurnacesreforged:blocks/gold_forge_front",
-    "side": "betterfurnacesreforged:blocks/gold_forge_side",
-    "overlayfront": "betterfurnacesreforged:blocks/forge_frontactive",
-    "overlayside": "betterfurnacesreforged:blocks/forge_sideactive"
+    "particle": "betterfurnacesreforged:block/gold_top",
+    "front": "betterfurnacesreforged:block/gold_forge_front",
+    "side": "betterfurnacesreforged:block/gold_forge_side",
+    "overlayfront": "betterfurnacesreforged:block/forge_frontactive",
+    "overlayside": "betterfurnacesreforged:block/forge_sideactive"
   }
 }

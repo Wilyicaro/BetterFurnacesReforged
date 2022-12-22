@@ -1,10 +1,10 @@
 {
   "parent": "betterfurnacesreforged:block/bforientable_inventory",
   "textures": {
-    "top": "betterfurnacesreforged:blocks/netherhot_top",
-    "side": "betterfurnacesreforged:blocks/netherhot_side",
-    "front": "betterfurnacesreforged:blocks/netherhot_front",
-    "overlay": "betterfurnacesreforged:blocks/front"
+    "top": "betterfurnacesreforged:block/netherhot_top",
+    "side": "betterfurnacesreforged:block/netherhot_side",
+    "front": "betterfurnacesreforged:block/netherhot_front",
+    "overlay": "betterfurnacesreforged:block/front"
   },
   "overrides": [
   {

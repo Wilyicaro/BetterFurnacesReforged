@@ -7,6 +7,8 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.datafix.fixes.References;
@@ -29,12 +31,12 @@ import wily.factoryapi.FactoryAPIPlatform;
 
 public class Registration {
 
-    public static final DeferredRegister<Block> BLOCK_ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.BLOCK_REGISTRY);
-    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.ITEM_REGISTRY);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY);
-    private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.MENU_REGISTRY);
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPES_SERIALIZERS = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registry.RECIPE_SERIALIZER_REGISTRY);
-    private static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create( BetterFurnacesReforged.MOD_ID,Registry.RECIPE_TYPE_REGISTRY);
+    public static final DeferredRegister<Block> BLOCK_ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.BLOCK);
+    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.ITEM);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
+    private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.MENU);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPES_SERIALIZERS = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registries.RECIPE_SERIALIZER);
+    private static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registries.RECIPE_TYPE);
 
     public static void init() {
         BLOCK_ITEMS.register();
@@ -49,7 +51,9 @@ public class Registration {
     }
 
 
-    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP);}
+    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().arch$tab(BetterFurnacesReforged.ITEM_GROUP);}
+
+    private static Item.Properties uniqueStackItemProperties(){ return  defaultItemProperties().stacksTo(1);}
     private static Type<?> blockEntityType(String name){
         return Util.fetchChoiceType(References.BLOCK_ENTITY, name);
     }
@@ -108,28 +112,28 @@ public class Registration {
 
     public static final RegistrySupplier<ConductorBlock> NETHERHOT_CONDUCTOR_BLOCK = BLOCK_ITEMS.register("netherhot_conductor_block", () -> new ConductorBlock(BlockBehaviour.Properties.copy(Blocks.REDSTONE_BLOCK).strength(10.0F, 40.0F)));
 
-    public static final RegistrySupplier<IronUpgradeItem> IRON_UPGRADE = ITEMS.register("iron_upgrade", () -> new IronUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP)));
-    public static final RegistrySupplier<GoldUpgradeItem> GOLD_UPGRADE = ITEMS.register("gold_upgrade", () -> new GoldUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP)));
-    public static final RegistrySupplier<DiamondUpgradeItem> DIAMOND_UPGRADE = ITEMS.register("diamond_upgrade", () -> new DiamondUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP)));
-    public static final RegistrySupplier<NetherhotUpgradeItem> NETHERHOT_UPGRADE = ITEMS.register("netherhot_upgrade", () -> new NetherhotUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP)));
-    public static final RegistrySupplier<ExtremeUpgradeItem> EXTREME_UPGRADE = ITEMS.register("extreme_upgrade", () -> new ExtremeUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP)));
+    public static final RegistrySupplier<IronUpgradeItem> IRON_UPGRADE = ITEMS.register("iron_upgrade", () -> new IronUpgradeItem(uniqueStackItemProperties()));
+    public static final RegistrySupplier<GoldUpgradeItem> GOLD_UPGRADE = ITEMS.register("gold_upgrade", () -> new GoldUpgradeItem(uniqueStackItemProperties()));
+    public static final RegistrySupplier<DiamondUpgradeItem> DIAMOND_UPGRADE = ITEMS.register("diamond_upgrade", () -> new DiamondUpgradeItem(uniqueStackItemProperties()));
+    public static final RegistrySupplier<NetherhotUpgradeItem> NETHERHOT_UPGRADE = ITEMS.register("netherhot_upgrade", () -> new NetherhotUpgradeItem(uniqueStackItemProperties()));
+    public static final RegistrySupplier<ExtremeUpgradeItem> EXTREME_UPGRADE = ITEMS.register("extreme_upgrade", () -> new ExtremeUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<FuelEfficiencyUpgradeItem> FUEL = ITEMS.register("fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1).durability(256),2));
-    public static final RegistrySupplier<OreProcessingUpgradeItem> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1).durability(128),2,true,false));
-    public static final RegistrySupplier<OreProcessingUpgradeItem> RAWORE_PROCESSING = ITEMS.register("raw_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1),2,false,true));
-    public static final RegistrySupplier<FuelEfficiencyUpgradeItem> ADVFUEL = ITEMS.register("advanced_fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1),2));
-    public static final RegistrySupplier<OreProcessingUpgradeItem> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1),2,true,false));
-    public static final RegistrySupplier<FactoryUpgradeItem> FACTORY = ITEMS.register("factory_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1), "factory", true,true,true,true));
-    public static final RegistrySupplier<FactoryUpgradeItem> PIPING = ITEMS.register("piping_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1), "piping", false,false,false,true));
-    public static final RegistrySupplier<FactoryUpgradeItem> OUTPUT = ITEMS.register("autooutput_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1), "output", true,false,true,false));
-    public static final RegistrySupplier<FactoryUpgradeItem> INPUT = ITEMS.register("autoinput_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1), "input", false,true,true,false));
-    public static final RegistrySupplier<FactoryUpgradeItem> REDSTONE = ITEMS.register("redstone_signal_upgrade", () -> new FactoryUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1), "redstone", false,false,false,true));
-    public static final RegistrySupplier<ColorUpgradeItem> COLOR = ITEMS.register("color_upgrade", () -> new ColorUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1),"color"));
-    public static final RegistrySupplier<LiquidFuelUpgradeItem> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new LiquidFuelUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1),"liquid"));
-    public static final RegistrySupplier<EnergyFuelUpgradeItem> ENERGY = ITEMS.register("energy_upgrade", () -> new EnergyFuelUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1), Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.energy", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY)))));
-    public static final RegistrySupplier<XpTankUpgradeItem> XP = ITEMS.register("xp_tank_upgrade", () -> new XpTankUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1),"xp"));
-    public static final RegistrySupplier<TypeUpgradeItem> BLAST = ITEMS.register("blasting_upgrade", () -> new TypeUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1),"blasting"));
-    public static final RegistrySupplier<TypeUpgradeItem> SMOKE = ITEMS.register("smoking_upgrade", () -> new TypeUpgradeItem(new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP).stacksTo(1),"smoking"));
+    public static final RegistrySupplier<FuelEfficiencyUpgradeItem> FUEL = ITEMS.register("fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(uniqueStackItemProperties().durability(256),2));
+    public static final RegistrySupplier<OreProcessingUpgradeItem> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties().durability(128),2,true,false));
+    public static final RegistrySupplier<OreProcessingUpgradeItem> RAWORE_PROCESSING = ITEMS.register("raw_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(),2,false,true));
+    public static final RegistrySupplier<FuelEfficiencyUpgradeItem> ADVFUEL = ITEMS.register("advanced_fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(uniqueStackItemProperties(),2));
+    public static final RegistrySupplier<OreProcessingUpgradeItem> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(),2,true,false));
+    public static final RegistrySupplier<FactoryUpgradeItem> FACTORY = ITEMS.register("factory_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(), "factory", true,true,true,true));
+    public static final RegistrySupplier<FactoryUpgradeItem> PIPING = ITEMS.register("piping_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(), "piping", false,false,false,true));
+    public static final RegistrySupplier<FactoryUpgradeItem> OUTPUT = ITEMS.register("autooutput_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(), "output", true,false,true,false));
+    public static final RegistrySupplier<FactoryUpgradeItem> INPUT = ITEMS.register("autoinput_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(), "input", false,true,true,false));
+    public static final RegistrySupplier<FactoryUpgradeItem> REDSTONE = ITEMS.register("redstone_signal_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(), "redstone", false,false,false,true));
+    public static final RegistrySupplier<ColorUpgradeItem> COLOR = ITEMS.register("color_upgrade", () -> new ColorUpgradeItem(uniqueStackItemProperties(),"color"));
+    public static final RegistrySupplier<LiquidFuelUpgradeItem> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new LiquidFuelUpgradeItem(uniqueStackItemProperties(),"liquid"));
+    public static final RegistrySupplier<EnergyFuelUpgradeItem> ENERGY = ITEMS.register("energy_upgrade", () -> new EnergyFuelUpgradeItem(uniqueStackItemProperties(), Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.energy", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY)))));
+    public static final RegistrySupplier<XpTankUpgradeItem> XP = ITEMS.register("xp_tank_upgrade", () -> new XpTankUpgradeItem(uniqueStackItemProperties(),"xp"));
+    public static final RegistrySupplier<TypeUpgradeItem> BLAST = ITEMS.register("blasting_upgrade", () -> new TypeUpgradeItem(uniqueStackItemProperties(),"blasting"));
+    public static final RegistrySupplier<TypeUpgradeItem> SMOKE = ITEMS.register("smoking_upgrade", () -> new TypeUpgradeItem(uniqueStackItemProperties(),"smoking"));
 
 
 

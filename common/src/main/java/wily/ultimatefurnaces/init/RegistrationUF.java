@@ -4,6 +4,7 @@ import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -21,10 +22,10 @@ import wily.ultimatefurnaces.items.*;
 
 public class RegistrationUF {
 
-    public static final DeferredRegister<Block> BLOCK_ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.BLOCK_REGISTRY);
-    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.ITEM_REGISTRY);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY);
-    private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.MENU_REGISTRY);
+    public static final DeferredRegister<Block> BLOCK_ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.BLOCK);
+    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.ITEM);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
+    private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.MENU);
 
     public static void init() {
         BLOCK_ITEMS.register();
@@ -36,7 +37,8 @@ public class RegistrationUF {
 
 
 
-    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP);}
+    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().arch$tab(UltimateFurnaces.ITEM_GROUP);}
+    private static Item.Properties uniqueStackItemProperties(){ return  defaultItemProperties().stacksTo(1);}
     public static final RegistrySupplier<CopperFurnaceBlock> COPPER_FURNACE = BLOCK_ITEMS.register(CopperFurnaceBlock.COPPER_FURNACE, () -> new CopperFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.COAL_BLOCK).strength(10.0F, 20.0F)));
     public static final RegistrySupplier<BlockEntityType<CopperFurnaceBlockEntity>> COPPER_FURNACE_TILE = BLOCK_ENTITIES.register(CopperFurnaceBlock.COPPER_FURNACE, () -> BlockEntityType.Builder.of(CopperFurnaceBlockEntity::new, COPPER_FURNACE.get()).build(null));
 
@@ -92,24 +94,24 @@ public class RegistrationUF {
 
     public static final RegistrySupplier<MenuType<UltimateForgeMenu>> ULTIMATE_FORGE_CONTAINER = CONTAINERS.register(UltimateForgeBlock.ULTIMATE_FORGE,  () -> MenuRegistry.ofExtended((windowId, inv, data) -> new UltimateForgeMenu(windowId, inv.player.level, data.readBlockPos(), inv, inv.player)));
 
-    public static final RegistrySupplier<CopperUpgradeItem> COPPER_UPGRADE = ITEMS.register("copper_upgrade", () -> new CopperUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP)));
+    public static final RegistrySupplier<CopperUpgradeItem> COPPER_UPGRADE = ITEMS.register("copper_upgrade", () -> new CopperUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<IronUpgradeItem> IRON_UPGRADE = ITEMS.register("copper_iron_upgrade", () -> new IronUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP)));
+    public static final RegistrySupplier<IronUpgradeItem> IRON_UPGRADE = ITEMS.register("copper_iron_upgrade", () -> new IronUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<SteelUpgradeItem> STEEL_UPGRADE = ITEMS.register("steel_upgrade", () -> new SteelUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP)));
+    public static final RegistrySupplier<SteelUpgradeItem> STEEL_UPGRADE = ITEMS.register("steel_upgrade", () -> new SteelUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<GoldUpgradeItem> GOLD_UPGRADE = ITEMS.register("steel_gold_upgrade", () -> new GoldUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP)));
+    public static final RegistrySupplier<GoldUpgradeItem> GOLD_UPGRADE = ITEMS.register("steel_gold_upgrade", () -> new GoldUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<AmethystUpgradeItem> AMETHYST_UPGRADE = ITEMS.register("amethyst_upgrade", () -> new AmethystUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP)));
+    public static final RegistrySupplier<AmethystUpgradeItem> AMETHYST_UPGRADE = ITEMS.register("amethyst_upgrade", () -> new AmethystUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<DiamondUpgradeItem> DIAMOND_UPGRADE = ITEMS.register("amethyst_diamond_upgrade", () -> new DiamondUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP)));
+    public static final RegistrySupplier<DiamondUpgradeItem> DIAMOND_UPGRADE = ITEMS.register("amethyst_diamond_upgrade", () -> new DiamondUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<PlatinumUpgradeItem> PLATINUM_UPGRADE = ITEMS.register("platinum_upgrade", () -> new PlatinumUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP)));
+    public static final RegistrySupplier<PlatinumUpgradeItem> PLATINUM_UPGRADE = ITEMS.register("platinum_upgrade", () -> new PlatinumUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<NetherhotUpgradeItem> NETHERHOT_UPGRADE = ITEMS.register("platinum_netherhot_upgrade", () -> new NetherhotUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP)));
+    public static final RegistrySupplier<NetherhotUpgradeItem> NETHERHOT_UPGRADE = ITEMS.register("platinum_netherhot_upgrade", () -> new NetherhotUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<UltimateUpgradeItem> ULTIMATE_UPGRADE = ITEMS.register("ultimate_upgrade", () -> new UltimateUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP)));
+    public static final RegistrySupplier<UltimateUpgradeItem> ULTIMATE_UPGRADE = ITEMS.register("ultimate_upgrade", () -> new UltimateUpgradeItem(uniqueStackItemProperties()));
 
-    public static final RegistrySupplier<OreProcessingUpgradeItem> UORE_PROCESSING = ITEMS.register("ultimate_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(new Item.Properties().tab(UltimateFurnaces.ITEM_GROUP),4,true,true));
+    public static final RegistrySupplier<OreProcessingUpgradeItem> UORE_PROCESSING = ITEMS.register("ultimate_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(),4,true,true));
 
 }
