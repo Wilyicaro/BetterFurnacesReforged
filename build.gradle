@@ -137,9 +137,6 @@ repositories {
         url = "https://modmaven.k-4u.nl"
     }
     maven {
-        url =  "https://maven.latmod.com/"
-    }
-    maven {
         url "https://www.cursemaven.com"
     }
     maven {

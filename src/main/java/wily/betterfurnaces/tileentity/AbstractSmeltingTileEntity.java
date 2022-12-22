@@ -111,13 +111,7 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     public FactoryUpgradeSettings furnaceSettings;
     protected int timer;
     ITag<Item> ore = ItemTags.getAllTags().getTag(new ResourceLocation("forge", "ores"));
-    SidedInvWrapper invHandler = new
-            SidedInvWrapper(this, null) {
-                @Override
-                public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                    return IisItemValidForSlot(slot, stack);
-                }
-            };
+
     LazyOptional<? extends IItemHandler>[] invHandlers =
             SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
     private final Random rand = new Random();
@@ -129,20 +123,14 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     public AbstractSmeltingTileEntity(TileEntityType<?> tileentitytypeIn, int invsize) {
         super(tileentitytypeIn, invsize);
         this.recipeType = IRecipeType.SMELTING;
-        furnaceSettings = new FactoryUpgradeSettings(getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
+        furnaceSettings = new FactoryUpgradeSettings(()->getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
             @Override
             public void onChanged() {
                 if (hasUpgradeType(Registration.FACTORY.get())) {
-                    setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory);
+                    setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory.get());
 
                 }
                 setChanged();
-            }
-            @Override
-            public void updateItem() {
-                if (hasUpgradeType(Registration.FACTORY.get())) {
-                    factory = getUpgradeTypeSlotItem(Registration.FACTORY.get());
-                }
             }
         };
 
@@ -355,10 +343,7 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     }
 
     public boolean hasUpgradeType(UpgradeItem upg) {
-        for (int slot : UPGRADES()) {
-            if (getItem(slot).getItem() instanceof UpgradeItem && ((UpgradeItem) getItem(slot).getItem()).isEnabled() && upg.upgradeType == ((UpgradeItem) getItem(slot).getItem()).upgradeType) return true;
-        }
-        return hasUpgrade(upg);
+        return getUpgradeTypeSlot(upg) >= 0;
     }
 
     public ItemStack getUpgradeTypeSlotItem(UpgradeItem upg) {
@@ -367,8 +352,7 @@ public abstract class AbstractSmeltingTileEntity extends InventoryTileEntity imp
     }
     public int getUpgradeTypeSlot(UpgradeItem upg) {
         for (int slot : UPGRADES()) {
-            if (hasUpgradeType(upg))
-                return slot;
+            if (getItem(slot).getItem() instanceof UpgradeItem && ((UpgradeItem) getItem(slot).getItem()).isEnabled() && upg.upgradeType == ((UpgradeItem) getItem(slot).getItem()).upgradeType) return slot;
         }return -1;
     }
 
