@@ -113,20 +113,14 @@ public abstract class AbstractSmeltingBlockEntity extends InventoryBlockEntity i
     public AbstractSmeltingBlockEntity(BlockEntityType<?> tileentitytypeIn, BlockPos pos, BlockState state, int invsize) {
         super(tileentitytypeIn, pos, state, invsize);
         this.recipeType = RecipeType.SMELTING;
-        furnaceSettings = new FactoryUpgradeSettings(getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
+        furnaceSettings = new FactoryUpgradeSettings(()->getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
             @Override
             public void onChanged() {
                 if (hasUpgradeType(Registration.FACTORY.get())) {
-                    setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory);
+                    setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory.get());
 
                 }
                 setChanged();
-            }
-            @Override
-            public void updateItem() {
-                if (hasUpgradeType(Registration.FACTORY.get())) {
-                    factory = getUpgradeTypeSlotItem(Registration.FACTORY.get());
-                }
             }
         };
     }
