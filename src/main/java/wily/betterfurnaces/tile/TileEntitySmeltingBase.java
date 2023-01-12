@@ -13,6 +13,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
 import org.apache.commons.lang3.ArrayUtils;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.BlockSmelting;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.SlotFuel;
@@ -245,8 +246,8 @@ public class TileEntitySmeltingBase extends TileEntity implements ITickable {
 			for (int a : INPUTS())
 				if (this.isBurning() && !inv.getStackInSlot(a).isEmpty()) energy.extractEnergy(getEnergyUse() * (hasUpgradeType(ModObjects.ORE_PROCESSING_UPGRADE) && isOre(inv.getStackInSlot(a)) ? 2 : 1), false);
 		} else if (isFluid() && Liquid) {
-			fuelLength = burnTime = getFluidBurnTime(tank.getFluid()) * (hasUpgradeType(ModObjects.FUEL_EFFICIENCY_UPGRADE) ? 2 : 1) * getDefaultCookTime() / 20000;
-			if (this.isBurning()) tank.drain(10, true);
+			fuelLength = (burnTime =  (hasUpgradeType(ModObjects.FUEL_EFFICIENCY_UPGRADE) ? 2 : 1) * getDefaultCookTime());
+			if (this.isBurning()) tank.drain(Math.max( getFluidBurnTime(tank.getFluid()) / 200,1), true);
 		} else if ((isEnergy() && !Energy) || (isFluid() && !Liquid) || (!isEnergy() && !isFluid()) ){
 
 			fuelLength = burnTime = getItemBurnTime(fuel) * getDefaultCookTime() / 200;
