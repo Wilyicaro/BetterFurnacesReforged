@@ -29,6 +29,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
+import org.apache.commons.lang3.ArrayUtils;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.init.Registration;
@@ -38,6 +39,8 @@ import wily.betterfurnaces.screens.*;
 import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.GuiUtil;
 import wily.betterfurnaces.util.RecipeUtil;
+import wily.ultimatefurnaces.init.RegistrationUF;
+import wily.ultimatefurnaces.screens.*;
 
 @JeiPlugin
 public class BfJeiPlugin implements IModPlugin {
@@ -52,10 +55,10 @@ public class BfJeiPlugin implements IModPlugin {
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
-		if (Config.enableJeiCatalysts) {
-			Block[] stack = {Registration.IRON_FURNACE.get(), Registration.GOLD_FURNACE.get(), Registration.DIAMOND_FURNACE.get(), Registration.NETHERHOT_FURNACE.get(), Registration.EXTREME_FURNACE.get(), Registration.EXTREME_FORGE.get()};
-
-			for (Block i : stack) {
+		if (Config.enableJeiCatalysts && Config.enableJeiPlugin) {
+			Block[] blocks = {Registration.IRON_FURNACE.get(), Registration.GOLD_FURNACE.get(), Registration.DIAMOND_FURNACE.get(), Registration.NETHERHOT_FURNACE.get(), Registration.EXTREME_FURNACE.get(), Registration.EXTREME_FORGE.get()};
+			if (Config.enableUltimateFurnaces) blocks = ArrayUtils.addAll(blocks, RegistrationUF.COPPER_FURNACE.get(), RegistrationUF.STEEL_FURNACE.get(),RegistrationUF.AMETHYST_FURNACE.get(),RegistrationUF.PLATINUM_FURNACE.get(), RegistrationUF.ULTIMATE_FURNACE.get(), RegistrationUF.COPPER_FORGE.get(), RegistrationUF.IRON_FORGE.get(), RegistrationUF.GOLD_FORGE.get(), RegistrationUF.DIAMOND_FORGE.get(), RegistrationUF.NETHERHOT_FORGE.get(), RegistrationUF.ULTIMATE_FORGE.get());
+			for (Block i : blocks) {
 				ItemStack smelting = new ItemStack(i);
 				registry.addRecipeCatalyst(smelting, RecipeTypes.SMELTING);
 
@@ -91,14 +94,19 @@ public class BfJeiPlugin implements IModPlugin {
 		Level world = Minecraft.getInstance().level;
 		RecipeManager recipeManager = world.getRecipeManager();
 		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes(recipeManager, Registration.ROCK_GENERATING_RECIPE.get()));
-		TierUpgradeItem[] up = {Registration.IRON_UPGRADE.get(), Registration.GOLD_UPGRADE.get(), Registration.DIAMOND_UPGRADE.get(), Registration.NETHERHOT_UPGRADE.get(), Registration.EXTREME_UPGRADE.get()};
-		for (TierUpgradeItem i : up)
-			addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
+
+		Registration.ITEMS.forEach((item)-> {
+			if (item.get() instanceof TierUpgradeItem i) addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
+		});
+		if (Config.enableUltimateFurnaces) RegistrationUF.ITEMS.forEach((item)-> {
+			if (item.get() instanceof TierUpgradeItem i) addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
+		});
+
 	}
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
-		if (Config.enableJeiClickArea) {
+		if (Config.enableJeiClickArea && Config.enableJeiPlugin) {
 			registry.addRecipeClickArea(IronFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
 			registry.addRecipeClickArea(GoldFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
 			registry.addRecipeClickArea(DiamondFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
@@ -107,6 +115,19 @@ public class BfJeiPlugin implements IModPlugin {
 			registry.addRecipeClickArea(ExtremeFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
 			registry.addRecipeClickArea(AbstractCobblestoneGeneratorScreen.class, 58, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
 			registry.addRecipeClickArea(AbstractCobblestoneGeneratorScreen.class, 101, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
+			if (Config.enableUltimateFurnaces){
+				registry.addRecipeClickArea(CopperFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(SteelFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(AmethystFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(PlatinumFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(UltimateFurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(CopperForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(IronForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(GoldForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(DiamondForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(NetherhotForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+				registry.addRecipeClickArea(UltimateForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+			}
 		}
 	}
 

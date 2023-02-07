@@ -28,10 +28,10 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
 import wily.betterfurnaces.items.UpgradeItem;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 

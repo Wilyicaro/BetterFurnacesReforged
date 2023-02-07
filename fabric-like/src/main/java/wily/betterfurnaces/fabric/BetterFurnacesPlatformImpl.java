@@ -160,15 +160,12 @@ public class BetterFurnacesPlatformImpl {
 
     public static void transferEnergySides(AbstractSmeltingBlockEntity be) {
         for (Direction dir : Direction.values()) {
-            BlockEntity sideBe = be.getLevel().getBlockEntity(be.getBlockPos().offset(dir.getNormal()));
-            if (sideBe == null) {
-                continue;
-            }
             EnergyStorage storage= EnergyStorage.SIDED.find(be.getLevel(),be.getBlockPos().relative(dir),dir);
-            long amount = be.getStorage(Storages.ENERGY,dir).get().receiveEnergy((int) storage.getAmount(),false);
+            if (storage == null) continue;
             try (Transaction transaction = Transaction.openOuter()){
-                storage.extract(amount,transaction);
+                int i = (int) storage.insert(be.energyStorage.getEnergyStored(),transaction);
                 transaction.commit();
+                be.energyStorage.consumeEnergy(i,false);
             }
         }
     }

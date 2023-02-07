@@ -9,16 +9,21 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 
-public class SlotOutput extends Slot {
+import java.util.function.Predicate;
+
+public class SlotOutput extends HideableSlot {
 
     private final Player player;
     private int removeCount;
-    private InventoryBlockEntity be;
 
     public SlotOutput(Player player,InventoryBlockEntity be, int slotIndex, int xPosition, int yPosition) {
-        super(be.inventory, slotIndex, xPosition, yPosition);
+        super(be, slotIndex, xPosition, yPosition);
         this.player = player;
         this.be = be;
+    }
+    public SlotOutput(Player player,InventoryBlockEntity be, int slotIndex, int xPosition, int yPosition, Predicate<Slot> isActive) {
+        this(player,be, slotIndex, xPosition, yPosition);
+        this.isActive = isActive;
     }
 
     /**
@@ -27,7 +32,6 @@ public class SlotOutput extends Slot {
     public boolean mayPlace(ItemStack stack) {
         return false;
     }
-
 
     public void onTake(Player thePlayer, ItemStack stack) {
         this.checkTakeAchievements(stack);

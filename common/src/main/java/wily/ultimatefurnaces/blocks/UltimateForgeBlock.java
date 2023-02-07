@@ -10,7 +10,7 @@ import wily.betterfurnaces.blocks.AbstractForgeBlock;
 import wily.ultimatefurnaces.blockentity.UltimateForgeBlockEntity;
 import wily.ultimatefurnaces.init.RegistrationUF;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class UltimateForgeBlock extends AbstractForgeBlock {
 

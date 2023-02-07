@@ -8,7 +8,7 @@
   ],
   "key": {
     "0": {
-      "tag": "forge:ingots/copper"
+      "tag": "minecraft:copper_ingot"
     },
     "4": {
       "item": "minecraft:cobblestone"

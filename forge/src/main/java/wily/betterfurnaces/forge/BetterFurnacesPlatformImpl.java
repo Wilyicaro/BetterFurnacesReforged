@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,6 +22,7 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
+import wily.factoryapi.base.Storages;
 
 import java.nio.file.Path;
 
@@ -150,13 +152,14 @@ public class BetterFurnacesPlatformImpl {
     }
 
     public static void transferEnergySides(AbstractSmeltingBlockEntity be) {
-        //for (Direction dir : Direction.values()) {
-        //    BlockEntity sideBe = be.getLevel().getBlockEntity(be.getBlockPos().offset(dir.getNormal()));
-         //   if (sideBe == null) {
-         //       continue;
-        //    }
-        //    IEnergyStorage = sideBe.getCapability(ForgeCapabilities.ENERGY,dir);
-        //}
+        for (Direction dir : Direction.values()) {
+            BlockEntity sideBe = be.getLevel().getBlockEntity(be.getBlockPos().offset(dir.getNormal()));
+            if (sideBe == null) {
+                continue;
+            }
+            LazyOptional<IEnergyStorage> energyStorage = sideBe.getCapability(ForgeCapabilities.ENERGY,dir);
+            energyStorage.ifPresent((e)-> { if (be.energyStorage.getEnergyStored() > 0)be.energyStorage.consumeEnergy(e.receiveEnergy(be.energyStorage.getEnergyStored(),false),false);});
+        }
     }
 
     public static Path getConfigDirectory() {

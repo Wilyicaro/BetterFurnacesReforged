@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import wily.betterfurnaces.blockentity.DiamondFurnaceBlockEntity;
 import wily.betterfurnaces.init.Registration;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class DiamondFurnaceBlock extends AbstractFurnaceBlock {
 

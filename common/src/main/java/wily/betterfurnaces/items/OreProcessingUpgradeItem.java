@@ -24,6 +24,11 @@ public class OreProcessingUpgradeItem extends UpgradeItem {
     }
 
     @Override
+    public boolean isUpgradeCompatibleWith(UpgradeItem upg) {
+        return upg.upgradeType != 7;
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         String s;

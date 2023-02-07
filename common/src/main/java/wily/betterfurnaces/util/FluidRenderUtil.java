@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class FluidRenderUtil {
     public static void renderTiledFluid(PoseStack matrix, @Nullable AbstractContainerScreen abstractContainerScreen, int x, int y, int sizeX, int sizeY, FluidStack fluid, boolean hasColor){

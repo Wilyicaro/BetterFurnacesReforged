@@ -11,8 +11,8 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modCompileOnly "mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}"
-    modImplementation "maven.modrinth:factory_api:${factory_api_version}-common"
-    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:5.0.0"
+    modCompileOnly "wily.factory_api:factory_api-common:${minecraft_version}-${factory_api_version}"
+    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-common:5.0.7"
 
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"

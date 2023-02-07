@@ -29,7 +29,7 @@ public class ClientSide {
         MenuRegistry.registerScreenFactory(Registration.COB_GENERATOR_CONTAINER.get(), AbstractCobblestoneGeneratorScreen.CobblestoneGeneratorScreen::new);
         MenuRegistry.registerScreenFactory(Registration.FUEL_VERIFIER_CONTAINER.get(), AbstractFuelVerifierScreen.FuelVerifierScreen::new);
         registerBetterFurnacesBlocksClientSide(Registration.BLOCK_ITEMS);
-        if (Config.checkUpdates)
+        if (Config.enableUltimateFurnaces)
             wily.ultimatefurnaces.init.ClientSide.init();
 
                 

@@ -3,19 +3,22 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "000",
-    "040",
+    "121",
     "000"
   ],
   "key": {
     "0": {
-      "tag": "forge:ingots/platinum"
+      "tag": "c:glass_blocks"
     },
-    "4": {
+    "1": {
       "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:amethyst_furnace"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:platinum_upgrade",
+    "item": "betterfurnacesreforged:diamond_furnace",
     "count": 1
   }
 }

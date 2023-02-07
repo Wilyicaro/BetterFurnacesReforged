@@ -41,10 +41,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 import wily.betterfurnaces.init.Registration;
@@ -52,7 +54,6 @@ import wily.betterfurnaces.items.UpgradeItem;
 import wily.factoryapi.ItemContainerUtil;
 import wily.factoryapi.base.Storages;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -110,8 +111,12 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
         } else {
             if (hand.getItem() instanceof UpgradeItem upg && upg.isEnabled() && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
-            }if ((be.hasUpgrade(Registration.LIQUID.get()) && ItemContainerUtil.isFluidContainer(hand) && AbstractSmeltingBlockEntity.isItemFuel(hand) &&  !(player.isCrouching()))) {
-                be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getFluidStack().isFluidEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) e.fill(ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn), false);});
+            }if (ItemContainerUtil.isFluidContainer(hand) &&  !(player.isCrouching())) {
+                if ((be.hasUpgrade(Registration.GENERATOR.get()) && ItemContainerUtil.getFluid(stack).getFluid().isSame(Fluids.WATER) && ItemContainerUtil.getFluid(be.getUpgradeSlotItem(Registration.GENERATOR.get())).getAmount() <= 3 * FluidStack.bucketAmount())){
+                    ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.fillItem(be.getUpgradeSlotItem(Registration.GENERATOR.get()), ItemContainerUtil.drainItem(FluidStack.bucketAmount(), player, handIn));
+                    be.inventory.setItem(be.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container());
+                }else if ((be.hasUpgrade(Registration.LIQUID.get()) && AbstractSmeltingBlockEntity.isItemFuel(hand)))
+                    be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getFluidStack().isFluidEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) e.fill(ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn), false);});
             }else {
                 this.interactWith(world, pos, player);
             }
@@ -178,7 +183,8 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
 
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource rand) {
         if (state.getValue(BlockStateProperties.LIT)) {
-            if (state.getValue(TYPE) == 0) {
+            int type = state.getValue(TYPE);
+            if (type == 0  || type == 3) {
                 if (world.getBlockEntity(pos) == null) {
                     return;
                 }
@@ -206,17 +212,7 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
 
                 }
             }
-            if (state.getValue(TYPE) == 2) {
-                double d0 = (double) pos.getX() + 0.5D;
-                double d1 = (double) pos.getY();
-                double d2 = (double) pos.getZ() + 0.5D;
-                if (rand.nextDouble() < 0.1D) {
-                    world.playLocalSound(d0, d1, d2, SoundEvents.SMOKER_SMOKE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
-                }
-
-                world.addParticle(ParticleTypes.SMOKE, d0, d1 + 1.1D, d2, 0.0D, 0.0D, 0.0D);
-            }
-            if (state.getValue(TYPE) == 1) {
+            if (type == 1) {
                 double d0 = (double) pos.getX() + 0.5D;
                 double d1 = (double) pos.getY();
                 double d2 = (double) pos.getZ() + 0.5D;
@@ -224,7 +220,7 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
                     world.playLocalSound(d0, d1, d2, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
                 }
 
-                Direction direction = (Direction) state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+                Direction direction = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
                 Direction.Axis direction$axis = direction.getAxis();
                 double d3 = 0.52D;
                 double d4 = rand.nextDouble() * 0.6D - 0.3D;
@@ -232,6 +228,16 @@ public abstract class AbstractSmeltingBlock extends Block implements EntityBlock
                 double d6 = rand.nextDouble() * 9.0D / 16.0D;
                 double d7 = direction$axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52D : d4;
                 world.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
+            }
+            if (type == 2) {
+                double d0 = (double) pos.getX() + 0.5D;
+                double d1 = pos.getY();
+                double d2 = (double) pos.getZ() + 0.5D;
+                if (rand.nextDouble() < 0.1D) {
+                    world.playLocalSound(d0, d1, d2, SoundEvents.SMOKER_SMOKE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
+                }
+
+                world.addParticle(ParticleTypes.SMOKE, d0, d1 + 1.1D, d2, 0.0D, 0.0D, 0.0D);
             }
         }
     }

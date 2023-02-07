@@ -10,9 +10,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     // Remove the next line if you don't want to depend on the API
-    modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.0.0"
+    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:5.0.7"
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
-    modCompileOnly "maven.modrinth:factory_api:${factory_api_version}-fabric"
-    modCompileOnly("teamreborn:energy:2.2.0") { transitive false }
+    modCompileOnly "wily.factory_api:factory_api-fabric:${minecraft_version}-${factory_api_version}"
     compileClasspath(project(path: ":common", configuration: "namedElements")) { transitive false }
 }

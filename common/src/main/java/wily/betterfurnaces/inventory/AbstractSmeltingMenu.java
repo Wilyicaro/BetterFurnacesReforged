@@ -13,6 +13,7 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketSyncEnergy;
 import wily.betterfurnaces.network.PacketSyncFluid;
@@ -33,9 +34,10 @@ public abstract class AbstractSmeltingMenu extends AbstractInventoryMenu<Abstrac
     }
 
     public void addInventorySlots(){
-        this.addSlot(new SlotInput(be, 0, 54, 18));
         this.addSlot(new SlotFuel(be, 1, 54, 54));
-        this.addSlot(new SlotOutput(playerEntity, be, 2, 116, 35));
+        this.addSlot(new SlotInput(be, 0, 54, 18, (s)-> !be.hasUpgrade(Registration.GENERATOR.get())));
+        this.addSlot(new SlotOutput(playerEntity, be, 2, 116, 35, (s)-> !be.hasUpgrade(Registration.GENERATOR.get())));
+
         this.addSlot(new SlotUpgrade(be, 3, 8, 18));
         this.addSlot(new SlotUpgrade(be, 4, 8, 36));
         this.addSlot(new SlotUpgrade(be, 5, 8, 54));
@@ -164,31 +166,21 @@ public abstract class AbstractSmeltingMenu extends AbstractInventoryMenu<Abstrac
         return cur * pixels / max;
     }
     public int getEnergyStored() {
-        return be.getStorage(Storages.ENERGY,null).get().getEnergyStored();
+        return be.energyStorage.getEnergyStored();
     }
     public int getMaxEnergyStored() {
-        return be.getStorage(Storages.ENERGY,null).get().getMaxEnergyStored();
+        return be.energyStorage.getMaxEnergyStored();
     }
     public int BurnTimeGet(){
         return this.fields.get(0);
     }
-    @Override
-    public void broadcastChanges() {
-        super.broadcastChanges();
-        updateChanges();
-    }
-    @Override
-    public void sendAllDataToRemote() {
-        super.sendAllDataToRemote();
-        updateChanges();
-
-    }
     protected void updateChanges() {
+        super.updateChanges();
         if (playerEntity instanceof ServerPlayer sp) {
             for (Direction d : Direction.values()) {
                 be.getStorage(Storages.FLUID, d).ifPresent(t-> Messages.INSTANCE.sendToPlayer(sp, new PacketSyncFluid(be.getBlockPos(), d, t.getFluidStack())));
             }
-            be.getStorage(Storages.ENERGY, null).ifPresent(t-> Messages.INSTANCE.sendToPlayer(sp, new PacketSyncEnergy(be.getBlockPos(),  t.getEnergyStored())));
+            Messages.INSTANCE.sendToPlayer(sp, new PacketSyncEnergy(be.getBlockPos(),  be.energyStorage.getEnergyStored()));
         }
     }
 

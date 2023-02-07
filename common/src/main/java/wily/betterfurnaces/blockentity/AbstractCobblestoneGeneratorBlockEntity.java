@@ -109,12 +109,7 @@ public abstract class AbstractCobblestoneGeneratorBlockEntity extends InventoryB
         }
     }
     protected List<CobblestoneGeneratorRecipes> getSortedCobRecipes(){
-        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(Registration.ROCK_GENERATING_RECIPE.get()).stream().sorted(new Comparator<CobblestoneGeneratorRecipes>() {
-            @Override
-            public int compare(CobblestoneGeneratorRecipes o1, CobblestoneGeneratorRecipes o2) {
-                return o1.recipeId.getPath().compareTo(o2.recipeId.getPath());
-            }
-        }).toList();
+        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(Registration.ROCK_GENERATING_RECIPE.get()).stream().sorted(Comparator.comparing(o -> o.recipeId.getPath())).toList();
     }
     public void initRecipes() {
         recipes = getSortedCobRecipes();

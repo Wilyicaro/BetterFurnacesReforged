@@ -11,14 +11,14 @@
       "item": "minecraft:iron_ingot"
     },
     "1": {
-      "tag": "forge:glass"
+      "tag": "c:glass_blocks"
     },
     "4": {
-      "tag": "forge:ingots/copper"
+      "item": "betterfurnacesreforged:copper_furnace"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:iron_upgrade",
+    "item": "betterfurnacesreforged:iron_furnace",
     "count": 1
   }
 }

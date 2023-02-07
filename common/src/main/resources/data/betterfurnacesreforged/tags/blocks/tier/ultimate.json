@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "ultimatefurnaces_bfr:ultimate_furnace",
-    "ultimatefurnaces_bfr:ultimate_forge"
+    "betterfurnacesreforged:ultimate_furnace",
+    "betterfurnacesreforged:ultimate_forge"
   ]
 }

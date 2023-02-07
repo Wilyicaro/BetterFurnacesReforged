@@ -2,23 +2,23 @@
   "group": "ultimatefurnaces",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "   ",
     "010",
-    "040"
+    "141",
+    "010"
   ],
   "key": {
     "0": {
-      "tag": "forge:ingots/steel"
+      "item": "minecraft:iron_ingot"
     },
     "1": {
-      "item": "betterfurnacesreforged:iron_conductor_block"
+      "tag": "c:glass_blocks"
     },
     "4": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:copper_ingot"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:steel_upgrade",
+    "item": "betterfurnacesreforged:copper_iron_upgrade",
     "count": 1
   }
 }

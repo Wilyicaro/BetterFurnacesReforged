@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class XpTankUpgradeItem extends UpgradeItem {

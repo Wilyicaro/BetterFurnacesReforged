@@ -37,7 +37,7 @@ public class PacketSyncEnergy {
             Player player = ctx.get().getPlayer();
             BlockEntity be = player.getLevel().getBlockEntity(pos);
             if (player.level.isLoaded(pos)) {
-                ((AbstractSmeltingBlockEntity)be).getStorage(Storages.ENERGY,null).ifPresent(t-> t.setEnergyStored(energy));
+                if (be instanceof AbstractSmeltingBlockEntity sBe) sBe.energyStorage.setEnergyStored(energy);
                 be.setChanged();
             }
         });

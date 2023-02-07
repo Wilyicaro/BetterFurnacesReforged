@@ -2,20 +2,20 @@
   "group": "ultimatefurnaces",
   "type": "minecraft:crafting_shaped",
   "pattern": [
+    "   ",
     "000",
-    "040",
-    "000"
+    "040"
   ],
   "key": {
     "0": {
-      "tag": "forge:ingots/platinum"
+      "item": "minecraft:gold_ingot"
     },
     "4": {
-      "item": "betterfurnacesreforged:diamond_furnace"
+      "item": "betterfurnacesreforged:steel_furnace"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:platinum_furnace",
+    "item": "betterfurnacesreforged:steel_gold_upgrade",
     "count": 1
   }
 }

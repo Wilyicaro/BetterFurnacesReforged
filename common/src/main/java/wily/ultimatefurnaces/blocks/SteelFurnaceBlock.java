@@ -10,7 +10,7 @@ import wily.betterfurnaces.blocks.AbstractFurnaceBlock;
 import wily.ultimatefurnaces.blockentity.SteelFurnaceBlockEntity;
 import wily.ultimatefurnaces.init.RegistrationUF;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class SteelFurnaceBlock extends AbstractFurnaceBlock {
 

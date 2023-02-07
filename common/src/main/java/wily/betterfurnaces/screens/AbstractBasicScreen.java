@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import wily.betterfurnaces.inventory.AbstractInventoryMenu;
 
 public abstract class AbstractBasicScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 
@@ -25,6 +26,13 @@ public abstract class AbstractBasicScreen<T extends AbstractContainerMenu> exten
     public AbstractBasicScreen(T p_97741_, Inventory p_97742_, Component p_97743_) {
         super(p_97741_, p_97742_, p_97743_);
     }
+
+    @Override
+    public void render(PoseStack poseStack, int i, int j, float f) {
+        if (getMenu()instanceof AbstractInventoryMenu<?> menu) menu.be.syncAdditionalMenuData(menu, menu.playerEntity);
+        super.render(poseStack, i, j, f);
+    }
+
     protected void renderGuiItem(ItemStack stack, int Posx, int Posy, float scaleX, float scaleY) {
         minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);

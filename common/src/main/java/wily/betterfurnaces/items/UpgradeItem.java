@@ -7,9 +7,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class UpgradeItem extends Item {
@@ -35,6 +36,17 @@ public int upgradeType;
     public boolean isEnabled(){
         return true;
     }
+
+    public boolean isSameType(UpgradeItem upg){
+        return upgradeType == upg.upgradeType;
+    }
+    public boolean isValid(AbstractSmeltingBlockEntity blockEntity){
+        return  isEnabled() && blockEntity.getUpgrades().stream().allMatch(this::isUpgradeCompatibleWith);
+    }
+
+    public boolean isUpgradeCompatibleWith(UpgradeItem upg){
+        return true;
+    }
     public Component getDisabledMessage(){
         return Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.disabled").setStyle(Style.EMPTY.applyFormat((ChatFormatting.RED)));
     }
@@ -48,4 +60,5 @@ public int upgradeType;
         tooltip.add( this.tooltip == null ? Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade." + this.tooltipName).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))) : this.tooltip);
 
     }
+
 }

@@ -5,7 +5,8 @@
   "client": [
   ],
   "mixins": [
-    "AddBetterFurnacesBlocksCapabilities"
+    "AddBetterFurnacesBlocksCapabilities",
+    "AddBetterFurnacesItemsCapabilities"
   ],
   "injectors": {
     "defaultRequire": 1

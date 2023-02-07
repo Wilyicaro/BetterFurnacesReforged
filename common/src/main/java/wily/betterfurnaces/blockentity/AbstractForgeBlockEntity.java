@@ -12,7 +12,6 @@ public abstract class AbstractForgeBlockEntity extends AbstractSmeltingBlockEnti
     public int UPGRADES()[]{ return new int[]{7,8,9,10,11,12,13};}
     public int[] INPUTS(){ return new int[]{0,1,2};}
     public int[] OUTPUTS(){ return new int[]{4,5,6};}
-    public int EnergyUse() {return 1800;}
     public long LiquidCapacity() {return 2 * super.LiquidCapacity();}
     public int EnergyCapacity() {return 64000;}
     public boolean isForge(){ return true;}

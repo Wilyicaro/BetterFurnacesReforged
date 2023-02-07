@@ -6,7 +6,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockColorsHandler implements BlockColor {
     public static final BlockColor COLOR = new BlockColorsHandler();

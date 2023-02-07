@@ -1,6 +1,8 @@
 package wily.betterfurnaces.inventory;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -11,13 +13,17 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
+import wily.betterfurnaces.network.Messages;
+import wily.betterfurnaces.network.PacketSyncEnergy;
+import wily.betterfurnaces.network.PacketSyncFluid;
+import wily.factoryapi.base.Storages;
 
 
 public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> extends AbstractContainerMenu {
 
     public T be;
     protected ContainerData fields;
-    protected Player playerEntity;
+    public Player playerEntity;
     protected final Level world;
     protected int TOP_ROW = 84;
 
@@ -39,7 +45,20 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
     public void addInventorySlots(){
 
     }
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        updateChanges();
+    }
+    @Override
+    public void sendAllDataToRemote() {
+        super.sendAllDataToRemote();
+        updateChanges();
 
+    }
+    protected void updateChanges() {
+        be.syncAdditionalMenuData(this,playerEntity);
+    }
     @Override
     protected boolean moveItemStackTo(ItemStack itemStack, int i, int j, boolean bl) {
         boolean bl2 = false;
@@ -137,7 +156,7 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickCraft(stack, itemstack);
-            } else if (!this.moveItemStackTo(stack, 0, be.inventorySize, true)){
+            } else if (!this.moveItemStackTo(stack, 0, be.inventorySize, false)){
                 if (index < be.inventorySize + 27) {
                     if (!this.moveItemStackTo(stack, be.inventorySize + 27, be.inventorySize + 36, true)) {
                         return ItemStack.EMPTY;

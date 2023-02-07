@@ -2,6 +2,10 @@ package wily.betterfurnaces.items;
 
 import dev.architectury.platform.Platform;
 import net.minecraft.network.chat.Component;
+import wily.betterfurnaces.blockentity.InventoryBlockEntity;
+import wily.betterfurnaces.init.Registration;
+
+import java.util.List;
 
 public class EnergyFuelUpgradeItem extends UpgradeItem {
 
@@ -10,8 +14,9 @@ public class EnergyFuelUpgradeItem extends UpgradeItem {
         super(properties, 1, tooltip);
     }
 
-    @Override
-    public boolean isEnabled() {
-        return Platform.isForge() || Platform.isModLoaded("techreborn");
+
+
+    public boolean isUpgradeCompatibleWith(UpgradeItem upg) {
+        return upg != Registration.GENERATOR.get();
     }
 }

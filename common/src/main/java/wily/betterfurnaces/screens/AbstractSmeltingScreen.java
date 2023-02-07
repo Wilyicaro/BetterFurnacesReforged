@@ -13,12 +13,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.AbstractForgeBlock;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.AbstractSmeltingMenu;
 import wily.betterfurnaces.items.FactoryUpgradeItem;
+import wily.betterfurnaces.items.GeneratorUpgradeItem;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketOrientationButton;
 import wily.betterfurnaces.network.PacketSettingsButton;
@@ -26,7 +28,10 @@ import wily.betterfurnaces.network.PacketShowSettingsButton;
 import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.StringHelper;
 import wily.factoryapi.FactoryAPIPlatform;
+import wily.factoryapi.ItemContainerUtil;
+import wily.factoryapi.base.ProgressType;
 import wily.factoryapi.base.Storages;
+import wily.factoryapi.util.ProgressElementRenderUtil;
 import wily.factoryapi.util.StorageStringUtil;
 
 import java.util.List;
@@ -42,9 +47,19 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
     // Widgets x and y pos
     protected int FactoryShowButtonY() {return 3;}
     protected int[] FluidTank() {return new int[]{73,49};} // 20x22pixels
-    protected int[] EnergyTank() {return new int[]{31,17};} // 16x34pixels
+    protected int[] EnergyTank() {
+        return getMenu().be.hasUpgrade(Registration.GENERATOR.get()) ? new int[]{116,26} : new int[]{31,17};
+    } // 16x34pixels
     protected int[] XPTank() { return new int[]{116,57};} // 16x16pixels
 
+    public static ProgressType MINI_FLUID_TANK = BFProgressType(ProgressType.Identifier.TANK,new int[]{192,0,16,16},true,false, ProgressType.Direction.VERTICAL);
+
+    public static ProgressType FLUID_TANK = BFProgressType(ProgressType.Identifier.TANK,new int[]{192,16,20,22},true,false, ProgressType.Direction.VERTICAL);
+
+    public static ProgressType ENERGY_CELL = BFProgressType(ProgressType.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false,false, ProgressType.Direction.VERTICAL);
+    public static ProgressType BFProgressType(ProgressType.Identifier identifier, int[] uvSize, boolean hasFluid, boolean reverse, ProgressType.Direction plane) {
+        return new ProgressType(identifier, WIDGETS, uvSize, hasFluid, reverse, plane);
+    }
     private boolean storedFactoryUpgradeType(int type){
         if (getMenu().be.hasUpgradeType(Registration.FACTORY.get())) {
             FactoryUpgradeItem stack = ((FactoryUpgradeItem)getMenu().be.getUpgradeTypeSlotItem(Registration.FACTORY.get()).getItem());
@@ -76,28 +91,34 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
         this.renderTooltip(matrix, mouseX, mouseY);
     }
 
-
+    @Override
+    public Component getTitle() {
+        return getMenu().be.getName();
+    }
 
     @Override
     protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
         int actualMouseX = mouseX - relX();
         int actualMouseY = mouseY - relY();
         int invX = 7;
+
         int titleX = (this.imageWidth - this.minecraft.font.width(getTitle().getString())) / 2;
-        if (getMenu().be.isForge()) invX =  (this.imageWidth - this.minecraft.font.width(playerInventoryTitle.getString())) / 2;
+        if (getMenu().be.isForge())
+            invX = (this.imageWidth - this.minecraft.font.width(playerInventoryTitle.getString())) / 2;
         this.minecraft.font.draw(matrix, playerInventoryTitle, invX, this.imageHeight - 93, 4210752);
-        this.minecraft.font.draw(matrix, getTitle(),  titleX, imageHeight - 160 , 4210752);
-        if (getMenu().be.isLiquid() && (mouseX > relX() + FluidTank()[0] && mouseX < relX() + FluidTank()[0] + 20 && mouseY > relY() + FluidTank()[1] && mouseY < relY() + FluidTank()[1] + 22))
-            this.renderTooltip(matrix, getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.getStorage(Storages.FLUID,null).get()), actualMouseX, actualMouseY);
-        if (getMenu().be.hasUpgrade(Registration.ENERGY.get()) && (mouseX > relX() + EnergyTank()[0]&& mouseX < relX() + EnergyTank()[0] + 16 && mouseY > relY() + EnergyTank()[1] && mouseY < relY() + EnergyTank()[1] + 34)) {
-            String kilo =  " k"+ StorageStringUtil.getBetweenParenthesis(FactoryAPIPlatform.getPlatformEnergyComponent().getString());
-            this.renderTooltip(matrix, Component.literal((this.getMenu()).getEnergyStored() / 1000 + kilo+ "/" + (this.getMenu()).getMaxEnergyStored() / 1000 + kilo).withStyle(FactoryAPIPlatform.getPlatformEnergyComponent().getStyle()), actualMouseX, actualMouseY);
+        this.minecraft.font.draw(matrix, getTitle(), titleX, imageHeight - 160, 4210752);
+        if (getMenu().be.isLiquid() && FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, FluidTank()[0], FluidTank()[1]))
+            this.renderTooltip(matrix, getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.fluidTank), actualMouseX, actualMouseY);
+        if (getMenu().be.hasUpgrade(Registration.GENERATOR.get()) && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, 54, 18)){
+            ItemStack gen = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
+            this.renderTooltip(matrix, getFluidTooltip("tooltip.factory_api.fluid_stored", ((GeneratorUpgradeItem)gen.getItem()).getFluidStorage(gen)), actualMouseX, actualMouseY);
+    }if ((getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) && ENERGY_CELL.inMouseLimit(actualMouseX,actualMouseY, EnergyTank()[0], EnergyTank()[1])){
+            this.renderTooltip(matrix, StorageStringUtil.getEnergyTooltip("tooltip.factory_api.energy_stored", getMenu().be.energyStorage), actualMouseX, actualMouseY);
         }if (storedFactoryUpgradeType(0)) {
             this.addFactoryTooltips(matrix, actualMouseX, actualMouseY);
         }
-        if (getMenu().be.hasXPTank() && (mouseX > relX() + XPTank()[0] && mouseX < relX() + XPTank()[0] + 16 && mouseY > relY() + XPTank()[1] && mouseY < relY() + XPTank()[1] + 16))
-            this.renderTooltip(matrix,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.getStorage(Storages.FLUID, Direction.values()[getMenu().be.getIndexFront()]).get()), actualMouseX, actualMouseY);
-
+        if (getMenu().be.hasXPTank() && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY,XPTank()[0], XPTank()[1]))
+            this.renderTooltip(matrix,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.xpTank), actualMouseX, actualMouseY);
 
     }
 
@@ -196,7 +217,6 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
         }
     }
     protected void blitSmeltingSprites(PoseStack matrix) {
-
         int i;
         if ((this.getMenu()).BurnTimeGet() > 0) {
             i = (this.getMenu()).getBurnLeftScaled(13);
@@ -204,6 +224,11 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
         }
         i = (this.getMenu()).getCookScaled(24);
         this.blit(matrix, relX() + 79, relY() + 34, 176, 14, i + 1, 16);
+        RenderSystem.setShaderTexture(0, WIDGETS);
+        this.blit(matrix, relX() + 53, relY() + 17, 192, 60, 18, 18);
+        if (!getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
+            this.blit(matrix, relX() + 111, relY() + 30, 210, 60, 26, 26);
+        }
     }
     @Override
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
@@ -211,41 +236,24 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
         RenderSystem.setShaderTexture(0, GUI());
         this.blit(matrix, relX(), relY(), 0, 0, imageWidth, imageHeight);
         blitSmeltingSprites(matrix);
-        int i;
-        if (getMenu().be.hasUpgrade(Registration.ENERGY.get())){
+        if (getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             RenderSystem.setShaderTexture(0, WIDGETS);
-            i = ( this.getMenu()).getEnergyStoredScaled(34);
-            this.blit(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 0, 16, 34);
-            this.blit(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 34, 16, 34-i);
-        }
-        if (getMenu().be.isLiquid()){
+            this.blit(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 34, 16, 34);
+            ProgressElementRenderUtil.renderDefaultProgress(matrix, this, relX() + EnergyTank()[0], relY() + EnergyTank()[1], this.getMenu().getEnergyStoredScaled(34), ENERGY_CELL);
+        }if (getMenu().be.isLiquid()){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 38, 20, 22);
-            FluidStack fluid =  this.getMenu().getFluidStackStored(false);
-            i = this.getMenu().getFluidStoredScaled(21,false);
-            if (i > 0) {
-                FluidRenderUtil.renderTiledFluid(matrix, this, relX() + FluidTank()[0], relY() + FluidTank()[1], 20, 22, fluid, false);
-                RenderSystem.setShaderTexture(0, WIDGETS);
-                this.blit(matrix, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 38, 20, 22-i);
-
-            }
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            this.blit(matrix, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 16, 20, 22);
+            ProgressElementRenderUtil.renderFluidTank(matrix,this,relX() + FluidTank()[0], relY() + FluidTank()[1], this.getMenu().getFluidStoredScaled(22,false),FLUID_TANK, this.getMenu().getFluidStackStored(false),false);
         }
 
         if (this.getMenu().be.hasXPTank()) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16);
-            FluidStack fluid =  this.getMenu().getFluidStackStored(true);
-            i = this.getMenu().getFluidStoredScaled(16,true);
-            if (i > 0) {
-                FluidRenderUtil.renderTiledFluid(matrix, this, relX()+ XPTank()[0], relY() + XPTank()[1], 16, 16, fluid, false);
-                RenderSystem.setShaderTexture(0, WIDGETS);
-                this.blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16-i);
-
-            }
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            this.blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 192, 0, 16, 16);
+            ProgressElementRenderUtil.renderFluidTank(matrix,this,relX() + XPTank()[0], relY() + XPTank()[1], this.getMenu().getFluidStoredScaled(16,true),MINI_FLUID_TANK, this.getMenu().getFluidStackStored(true),true);
+        }
+        if (this.getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
+            ItemStack generatorUp = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
+            ProgressElementRenderUtil.renderFluidTank(matrix,this,relX() + 54, relY() + 18, (int)(ItemContainerUtil.getFluid(generatorUp).getAmount() * 16 / (4 * FluidStack.bucketAmount())),MINI_FLUID_TANK,ItemContainerUtil.getFluid(generatorUp),true);
         }
         if (storedFactoryUpgradeType(0)) {
             RenderSystem.setShaderTexture(0, WIDGETS);
@@ -453,11 +461,13 @@ public abstract class AbstractSmeltingScreen<T extends AbstractSmeltingMenu> ext
         blitSlotsLayer(matrix, input, both, fuel, output);
     }
     protected void blitSlotsLayer(PoseStack matrix, boolean input, boolean both, boolean fuel, boolean output){
-        if (input || both) {
-            this.blit(matrix, relX() + 53, relY() + 17, 0, 171, 18, 18);
-        }
-        if (output || both) {
-            this.blit(matrix, relX() + 111, relY() + 30, 0, 203, 26, 26);
+        if (!getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
+            if (input || both) {
+                this.blit(matrix, relX() + 53, relY() + 17, 0, 171, 18, 18);
+            }
+            if (output || both) {
+                this.blit(matrix, relX() + 111, relY() + 30, 0, 203, 26, 26);
+            }
         }
         if (fuel) {
             this.blit(matrix, relX() + 53, relY() + 53, 18, 171, 18, 18);

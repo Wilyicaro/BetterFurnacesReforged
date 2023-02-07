@@ -1,8 +1,7 @@
 {
   "schema_version": 1,
   "mixin": [
-    "betterfurnaces.mixins.json",
-    "betterfurnaces-common.mixins.json"
+    "betterfurnaces.mixins.json"
   ],
   "quilt_loader": {
     "group": "${group}",

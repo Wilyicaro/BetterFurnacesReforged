@@ -20,18 +20,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.base.IPlatformHandlerApi;
 import wily.factoryapi.base.IPlatformItemHandler;
 import wily.factoryapi.base.Storages;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public abstract class InventoryBlockEntity extends BlockEntity implements IInventoryBlockEntity, ExtendedMenuProvider, Nameable {
-    
-    public NonNullList<ItemStack> inventoryList;
-    public boolean loadEmpty = false;
+
     protected Component name;
     public int inventorySize;
     public IPlatformItemHandler inventory;
@@ -42,7 +40,6 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
         inventory = FactoryAPIPlatform.getItemHandlerApi(inventorySize,this);
         inventory.setExtractableSlots(this::IcanExtractItem);
         inventory.setInsertableSlots(this::IisItemValidForSlot);
-        inventoryList = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
     }
 
     @Override
@@ -93,11 +90,15 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
     public void breakDurabilityItem(ItemStack stack){
         if (stack.isDamageableItem()) {
             stack.hurt(1, null, null);
-        }
-            if (stack.isDamageableItem() && stack.getDamageValue() >= stack.getMaxDamage()) {
+            if (stack.getDamageValue() >= stack.getMaxDamage()) {
                 stack.shrink(1);
                 this.getLevel().playSound(null, this.getBlockPos(), SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
+        }
+
+    }
+    public void syncAdditionalMenuData(AbstractContainerMenu menu, Player player){
+
     }
     @Override
     public void load(CompoundTag tag) {
