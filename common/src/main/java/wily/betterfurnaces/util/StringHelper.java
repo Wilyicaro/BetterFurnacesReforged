@@ -14,17 +14,6 @@ import java.util.List;
 public class StringHelper {
 
 
-    public static List<String> displayEnergy(int energy, int capacity) {
-        List<String> text = new ArrayList<String>();
-        NumberFormat format = DecimalFormat.getNumberInstance();
-        String i = format.format(energy);
-        String j = format.format(capacity);
-        i = i.replaceAll("\u00A0", ",");
-        j = j.replaceAll("\u00A0", ",");
-        text.add(i + " / " + j + " RF");
-        return text;
-    }
-
     public static List<Component> getShiftInfoGui()
     {
         List<Component> list = Lists.newArrayList();
@@ -37,17 +26,6 @@ public class StringHelper {
         tooltip2.withStyle(ChatFormatting.GRAY);
         list.add(tooltip1.append(shift).append(tooltip2));
         return list;
-    }
-
-    public static Component getShiftInfoText()
-    {
-        MutableComponent tooltip1 = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".hold");
-        MutableComponent shift = Component.literal("[Shift]");
-        MutableComponent tooltip2 = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".for_details");
-        tooltip1.withStyle(ChatFormatting.GRAY);
-        shift.withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC);
-        tooltip2.withStyle(ChatFormatting.GRAY);
-        return tooltip1.append(shift).append(tooltip2);
     }
 
 }

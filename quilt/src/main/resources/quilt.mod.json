@@ -42,15 +42,15 @@
       },
       {
         "id": "minecraft",
-        "version": ">=1.19.2"
+        "version": ">=1.19.3"
       },
       {
         "id": "architectury",
-        "version": ">=6.2.43"
+        "version": ">=7.0.0"
       },
       {
         "id": "factory_api",
-        "version": ">=0.1.0"
+        "version": ">=0.1.5"
       }
     ]
   }

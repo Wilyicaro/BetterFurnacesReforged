@@ -19,10 +19,5 @@ public class RecipeUtil {
         }).collect(Collectors.toList());
     }
 
-    public static <T> NonNullList<T> nnListOf(T... toList) {
-        NonNullList<T> list = NonNullList.create();
-        list.addAll(Arrays.asList(toList));
-        return list;
-    }
 
 }

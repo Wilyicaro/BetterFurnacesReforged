@@ -36,6 +36,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 import wily.betterfurnaces.items.UpgradeItem;
+import wily.factoryapi.util.VoxelShapeUtil;
 
 public abstract class AbstractForgeBlock extends AbstractSmeltingBlock implements SimpleWaterloggedBlock {
 
@@ -52,7 +53,7 @@ public abstract class AbstractForgeBlock extends AbstractSmeltingBlock implement
 
     @Override
     public VoxelShape getShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
-        return FORGE_SHAPE;
+        return VoxelShapeUtil.rotate(FORGE_SHAPE, p_48735_.getValue(FACING));
     }
 
     public static final VoxelShape FORGE_SHAPE = Shapes.join(Shapes.block(), Shapes.or(box(0, 0,0, 16,1,16), box(15,1,0,16,15,1), box(0,1,0,1,15,1), box(0,1,15,1,15,16), box(15,1,15,16,15,16), box(1.75,15,1.75,14.5,15,14.5), box(0,15,0,16,16,16) ,box(1, 0.5,1,15,15,15)), BooleanOp.AND);

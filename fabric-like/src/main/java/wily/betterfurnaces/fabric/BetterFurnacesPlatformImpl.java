@@ -50,7 +50,8 @@ public class BetterFurnacesPlatformImpl {
                             if (be.getAutoInput() == 1) {
                                 for (int INPUT : be.INPUTS())
                                     if (be.furnaceSettings.get(dir.ordinal()) == 1 || be.furnaceSettings.get(dir.ordinal()) == 3) {
-                                        if (be.inventory.getItem(INPUT).getCount() >= be.inventory.getItem(INPUT).getMaxStackSize()) {
+                                        ItemStack input = be.inventory.getItem(INPUT);
+                                        if (input.getCount() >= input.getMaxStackSize()) {
                                             continue;
                                         }
                                         while (storageView.hasNext()) {
@@ -59,27 +60,27 @@ public class BetterFurnacesPlatformImpl {
                                             if (view.isResourceBlank() || !be.IisItemValidForSlot(INPUT,variant.toStack())) {
                                                 continue;
                                             }
-                                            try (Transaction transaction = Transaction.openOuter()) {
-                                                be.inventory.insertItem(INPUT, variant.toStack((int) other.extract(variant, view.getResource().getItem().getMaxStackSize() - be.inventory.getItem(INPUT).getCount(), transaction)), false);
-                                                transaction.commit();
-                                            }
+                                            if (variant.isOf(input.getItem()) || input.isEmpty())
+                                                try (Transaction transaction = Transaction.openOuter()) {
+                                                    be.inventory.insertItem(INPUT, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(INPUT).getCount(), transaction)), false);
+                                                    transaction.commit();
+                                                }
                                         }
                                     }
                                 if (be.furnaceSettings.get(dir.ordinal()) == 4) {
-                                    if (be.inventory.getItem(be.FUEL()).getCount() >= be.inventory.getItem(be.FUEL()).getMaxStackSize()) {
+                                    ItemStack fuel = be.inventory.getItem(be.FUEL());
+                                    if (fuel.getCount() >= fuel.getMaxStackSize()) {
                                         continue;
                                     }
                                     while (storageView.hasNext()) {
                                         StorageView<ItemVariant> view = storageView.next();
-                                        if (!be.isItemFuel(view.getResource().toStack())){
+                                        ItemVariant variant = view.getResource();
+                                        if (view.isResourceBlank() || !be.isItemFuel(view.getResource().toStack())) {
                                             continue;
                                         }
-                                        if (view.isResourceBlank()) {
-                                            continue;
-                                        }
+                                        if (variant.isOf(fuel.getItem()) || fuel.isEmpty())
                                         try (Transaction transaction = Transaction.openOuter()) {
-                                            ItemVariant variant = view.getResource();
-                                            be.inventory.insertItem(be.FUEL(), variant.toStack((int) other.extract(variant, view.getResource().getItem().getMaxStackSize() - be.inventory.getItem(be.FUEL()).getCount(), transaction)), false);
+                                            be.inventory.insertItem(be.FUEL(), variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(be.FUEL()).getCount(), transaction)), false);
                                             transaction.commit();
                                         }
                                         }

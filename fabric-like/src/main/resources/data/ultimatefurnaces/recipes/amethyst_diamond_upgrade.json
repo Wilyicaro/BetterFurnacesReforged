@@ -1,0 +1,24 @@
+{
+  "group": "ultimatefurnaces",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "121",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "tag": "c:glass_blocks"
+    },
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:amethyst_diamond_upgrade",
+    "count": 1
+  }
+}
