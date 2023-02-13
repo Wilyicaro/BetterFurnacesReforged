@@ -17,7 +17,8 @@ This mod project plans to rewrite the [old Better Furnaces mod](https://www.9min
 - Netherhot Furnace (25x speed)
 - Extreme Furnace (50x speed)
 - Ultimate Furnace (200x speed)
-*Each of these speeds can be configured in ```/wily/betterfurnaces/Config.java``` inside the JAR archive of the mod*
+
+*Each of these speed tiers can be configured in ```<world_dir>/serverconfig/betterfurnacesreforged-server.toml archive```, and if using Fabric or Quilt only with [ForgeConfigApiPort mod installed](https://github.com/Fuzss/forgeconfigapiport)*
 
 ### Forges (like their furnace counterparts, but they can smelt 3 separate items at a time, and can also be upgraded)
 - Copper Forge (1.12x3 speed)
@@ -28,16 +29,16 @@ This mod project plans to rewrite the [old Better Furnaces mod](https://www.9min
 - Extreme Forge (50x3 speed)
 - Ultimate Forge (200x speed)
 
-### Upgrades (advanced upgrades are unbreakable, while regular upgrades can break after usage)
+### Upgrades (advanced upgrades are unbreakable, while regular upgrades that double something can break after usage)
 - (Advanced) Fuel Efficiency - doubles the amount that each fuel can smelt
 - (Advanced) Ore Processing - doubles the amount that each smelted item yields
 - Auto Input/Output - items automatically enter or exit nearby inventories
 - Redstone Signal - controls furnace or forge operation based on redstone signals
 - Factory - combines the Auto Input/Output and Redstone Signal upgrades
-- Color - change the color of the furnace (sneak-right click to configure)
+- Color - change the color of the furnace (right click to configure)
 - Blasting/Smoking - change the furnace type to blast furnace or smoker for their specific bonuses
 - Fuel Liquid - use liquid fuel like lava buckets instead of solid fuel
-- Energy - uses Energy instead of fuel in Extreme forges
+- Energy - uses Energy instead of fuel
 - XP Tank - turns resulting experience points into liquid experience points in a created tank
 - Generator - instead of smelting items, this furnace will generate Energy from water evaporation
 - Ultimate Ore Processing - quadruples infinitely the amount that each smelted ore type yields
