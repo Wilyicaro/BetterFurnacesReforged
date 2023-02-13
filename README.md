@@ -7,7 +7,7 @@ This mod project plans to rewrite the [old Better Furnaces mod](https://www.9min
 
 ## Mod Additions
 ### Furnaces (each can be upgraded to the next tier and have upgrades like Liquid Fuel, Fuel Efficiency, and Processing)
-- Copper Furnace (1.12x speed)
+- Copper Furnace (1.14x speed)
 - Iron Furnace (1.33x speed)
 - Steel Furnace (1.6x speed)
 - Gold Furnace (2x speed)
@@ -21,7 +21,7 @@ This mod project plans to rewrite the [old Better Furnaces mod](https://www.9min
 *Each of these speed tiers can be configured in ```<world_dir>/serverconfig/betterfurnacesreforged-server.toml archive```, and if using Fabric or Quilt only with [ForgeConfigApiPort mod installed](https://github.com/Fuzss/forgeconfigapiport)*
 
 ### Forges (like their furnace counterparts, but they can smelt 3 separate items at a time, and can also be upgraded)
-- Copper Forge (1.12x3 speed)
+- Copper Forge (1.14x3 speed)
 - Iron Forge (1.33x3 speed)
 - Gold Forge (2x3 speed)
 - Diamond Forge (4x3 speed)
