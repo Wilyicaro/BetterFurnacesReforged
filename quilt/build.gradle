@@ -32,6 +32,7 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api"
     }
     modApi "wily.factory_api:factory_api-quilt:${minecraft_version}-${factory_api_version}"
+    modCompileOnly "net.minecraftforge:forgeconfigapiport-fabric:${forgeconfigapiport_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionQuilt")) { transitive false }

@@ -28,7 +28,7 @@ dependencies {
 
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
     modApi "wily.factory_api:factory_api-fabric:${minecraft_version}-${factory_api_version}"
-    modCompileOnly "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:5.0.7"
+    modCompileOnly "net.minecraftforge:forgeconfigapiport-fabric:${forgeconfigapiport_version}"
     modCompileOnly "mezz.jei:jei-${jei_minecraft_version}-fabric-api:${jei_version}"
     modRuntimeOnly "mezz.jei:jei-${jei_minecraft_version}-fabric:${jei_version}"
 
