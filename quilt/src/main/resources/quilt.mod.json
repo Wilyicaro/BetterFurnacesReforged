@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "mixin": [
+    "betterfurnaces.mixins.json"
+  ],
+  "quilt_loader": {
+    "group": "${group}",
+    "id": "betterfurnacesreforged",
+    "version": "${version}",
+    "name": "BetterFurnaces Reforged",
+    "description": "This mod is a remake of the outdated mod from 1.7.10 for Quilt, Better Furnaces, presenting the concept used in the original mod",
+    "authors": [
+      "Wilyicaro"
+    ],
+    "contributors": [
+      "TheFrogMC(Original mod creator) and Qelifern (Iron Furnaces creator)"
+    ],
+    "contact": {
+      "homepage": "https://www.curseforge.com/minecraft/mc-mods/better-furnaces-reforged/",
+      "sources": "https://github.com/Wilyicaro/BetterFurnacesReforged"
+    },
+    "license": "MIT",
+    "icon": "bfr_icon.png",
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "environment": "*",
+    "entrypoints": {
+      "init": [
+        "wily.betterfurnaces.quilt.BetterFurnacesQuilt"
+      ],
+      "client_init": [
+        "wily.betterfurnaces.quilt.BetterFurnacesQuiltClient"
+      ]
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "version": "*"
+      },
+      {
+        "id": "quilt_base",
+        "version": "*"
+      },
+      {
+        "id": "minecraft",
+        "version": "1.19.2"
+      },
+      {
+        "id": "architectury",
+        "version": "6.5.69"
+      },
+      {
+        "id": "factory_api",
+        "version": ">=0.1.5"
+      }
+    ]
+  }
+}

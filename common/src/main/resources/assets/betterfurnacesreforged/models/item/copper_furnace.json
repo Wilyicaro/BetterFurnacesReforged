@@ -1,0 +1,17 @@
+{
+  "parent": "betterfurnacesreforged:block/bforientable_inventory",
+  "textures": {
+    "top": "betterfurnacesreforged:block/copper_top",
+    "side": "betterfurnacesreforged:block/copper_side",
+    "front": "betterfurnacesreforged:block/copper_front",
+    "overlay": "betterfurnacesreforged:block/front"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "betterfurnacesreforged:colored": 1
+      },
+      "model": "betterfurnacesreforged:item/color_furnace"
+    }
+  ]
+}

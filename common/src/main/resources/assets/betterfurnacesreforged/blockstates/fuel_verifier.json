@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "betterfurnacesreforged:block/fuel_verifier"
+    },
+    "facing=east": {
+      "model": "betterfurnacesreforged:block/fuel_verifier",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "betterfurnacesreforged:block/fuel_verifier",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "betterfurnacesreforged:block/fuel_verifier",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "betterfurnacesreforged:block/fuel_verifier",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "betterfurnacesreforged:block/fuel_verifier",
+      "x": 90
+    }
+  }
+  }

@@ -1,0 +1,20 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "#X#",
+    " # "
+  ],
+  "key": {
+    "#": {
+      "tag": "minecraft:logs"
+    },
+    "X": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:smoking_upgrade"
+  }
+}
