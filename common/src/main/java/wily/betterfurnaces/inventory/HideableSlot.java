@@ -1,8 +1,6 @@
 package wily.betterfurnaces.inventory;
 
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 
 import java.util.function.Predicate;

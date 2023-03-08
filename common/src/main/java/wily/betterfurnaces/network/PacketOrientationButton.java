@@ -4,14 +4,14 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
-import wily.betterfurnaces.blocks.AbstractForgeBlock;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
+import wily.betterfurnaces.blocks.ForgeBlock;
 
 import java.util.function.Supplier;
 
 public class PacketOrientationButton {
 
-private BlockPos pos;
+	private BlockPos pos;
 	private boolean state;
 
 	public PacketOrientationButton(FriendlyByteBuf buf) {
@@ -31,10 +31,9 @@ private BlockPos pos;
 	public void handle(Supplier<NetworkManager.PacketContext> ctx) {
 		ctx.get().queue(() -> {
 			ServerPlayer player = (ServerPlayer) ctx.get().getPlayer();
-			AbstractSmeltingBlockEntity be = (AbstractSmeltingBlockEntity) player.getLevel().getBlockEntity(pos);
+			SmeltingBlockEntity be = (SmeltingBlockEntity) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
-				player.level.setBlock(pos, player.level.getBlockState(pos).setValue(AbstractForgeBlock.SHOW_ORIENTATION, state),3);
-				be.getLevel().setBlock(pos, be.getLevel().getBlockState(pos), 2, 3);
+				be.showOrientation = state;
 				be.setChanged();
 			}
 		});

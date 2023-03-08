@@ -200,21 +200,21 @@ public class ForgeConfigCompat {
         loadConfig(COMMON_CONFIG, BetterFurnacesPlatform.getConfigDirectory().resolve(BetterFurnacesReforged.MOD_ID + "-common.toml"));
     }
     public static void onServerConfigLoad(){
-        Config.cacheCapacity = cache_capacity.get();
-        Config.copperTierSpeed = copperTierSpeed.get();
-        Config.ironTierSpeed = ironTierSpeed.get();
-        Config.steelTierSpeed = steelTierSpeed.get();
-        Config.goldTierSpeed = goldTierSpeed.get();
-        Config.amethystTierSpeed = amethystTierSpeed.get();
-        Config.diamondTierSpeed = diamondTierSpeed.get();
-        Config.platinumTierSpeed = platinumTierSpeed.get();
-        Config.netherhotTierSpeed = netherhotTierSpeed.get();
-        Config.extremeTierSpeed = extremeTierSpeed.get();
-        Config.ultimateTierSpeed = ultimateTierSpeed.get();
+        Config.cacheCapacity = cache_capacity;
+        Config.copperTierSpeed = copperTierSpeed;
+        Config.ironTierSpeed = ironTierSpeed;
+        Config.steelTierSpeed = steelTierSpeed;
+        Config.goldTierSpeed = goldTierSpeed;
+        Config.amethystTierSpeed = amethystTierSpeed;
+        Config.diamondTierSpeed = diamondTierSpeed;
+        Config.platinumTierSpeed = platinumTierSpeed;
+        Config.netherhotTierSpeed = netherhotTierSpeed;
+        Config.extremeTierSpeed = extremeTierSpeed;
+        Config.ultimateTierSpeed = ultimateTierSpeed;
 
-        Config.furnaceXPDropValue = furnaceXPDropValue.get();
-        Config.furnaceXPDropValue2 = furnaceXPDropValue2.get();
-        Config.xpFluidType = xpFluidType.get();
+        Config.furnaceXPDropValue = furnaceXPDropValue;
+        Config.furnaceXPDropValue2 = furnaceXPDropValue2;
+        Config.xpFluidType = xpFluidType;
     }
 
     @ExpectPlatform
@@ -224,12 +224,12 @@ public class ForgeConfigCompat {
     public static void setupPlatformConfig(){
         registerConfig();
         loadAllSyncConfigs();
-        Config.checkUpdates = checkUpdates.get();
-        Config.enableUltimateFurnaces = enableUltimateFurnaces.get();
+        Config.checkUpdates = checkUpdates;
+        Config.enableUltimateFurnaces = enableUltimateFurnaces;
 
-        Config.enableJeiPlugin = enableJeiPlugin.get();
-        Config.enableJeiCatalysts = enableJeiCatalysts.get();
-        Config.enableJeiClickArea = enableJeiClickArea.get();
+        Config.enableJeiPlugin = enableJeiPlugin;
+        Config.enableJeiCatalysts = enableJeiCatalysts;
+        Config.enableJeiClickArea = enableJeiClickArea;
     }
 
 }

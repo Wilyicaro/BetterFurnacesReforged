@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
-import wily.betterfurnaces.blockentity.AbstractFuelVerifierBlockEntity;
+import wily.betterfurnaces.blockentity.FuelVerifierBlockEntity;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
@@ -74,8 +74,8 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof AbstractFuelVerifierBlockEntity) {
-                Containers.dropContents(world, pos,  ((AbstractFuelVerifierBlockEntity) be).inventory);
+            if (be instanceof FuelVerifierBlockEntity) {
+                Containers.dropContents(world, pos,  ((FuelVerifierBlockEntity) be).inventory);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -105,7 +105,7 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return (level1, pos, state1, tile) -> {
-            if (tile instanceof AbstractFuelVerifierBlockEntity.FuelVerifierBlockEntity be) {
+            if (tile instanceof FuelVerifierBlockEntity be) {
                 be.tick(state1);
             }
         };
@@ -114,7 +114,7 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new AbstractFuelVerifierBlockEntity.FuelVerifierBlockEntity(p_153215_, p_153216_);
+        return new FuelVerifierBlockEntity(p_153215_, p_153216_);
     }
 
 }

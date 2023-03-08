@@ -1,6 +1,7 @@
 package wily.betterfurnaces.forge;
 
 import dev.architectury.platform.forge.EventBuses;
+import dev.architectury.registry.level.biome.forge.BiomeModificationsImpl;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;

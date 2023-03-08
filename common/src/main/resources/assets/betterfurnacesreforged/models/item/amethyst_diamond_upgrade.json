@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "betterfurnacesreforged:item/up_diamond"
+    "layer0": "betterfurnacesreforged:item/up_amethyst_diamond"
   }
 }

@@ -19,6 +19,6 @@ public class UltimateFurnaces
     public static final CreativeModeTab ITEM_GROUP = CreativeTabRegistry.create(new ResourceLocation(BetterFurnacesReforged.MOD_ID,"tab_ultimate"), ()-> RegistrationUF.ULTIMATE_FURNACE.get().asItem().getDefaultInstance());
 
     public static void init() {
-        RegistrationUF.init();
+
     }
 }

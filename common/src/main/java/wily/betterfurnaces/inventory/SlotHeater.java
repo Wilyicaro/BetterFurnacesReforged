@@ -1,16 +1,15 @@
 package wily.betterfurnaces.inventory;
 
-import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.items.UpgradeItem;
 
 public class SlotHeater extends Slot {
 
-    private AbstractSmeltingBlockEntity tf;
+    private SmeltingBlockEntity tf;
 
-    public SlotHeater(AbstractSmeltingBlockEntity be, int slotIndex, int xPosition, int yPosition) {
+    public SlotHeater(SmeltingBlockEntity be, int slotIndex, int xPosition, int yPosition) {
         super(be.inventory, slotIndex, xPosition, yPosition);
             this.tf =  be;
     }
