@@ -7,7 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.factoryapi.base.Storages;
 
 import java.util.function.Supplier;
@@ -40,7 +40,7 @@ public class PacketSyncFluid {
             Player player = ctx.get().getPlayer();
             BlockEntity be = player.getLevel().getBlockEntity(pos);
             if (player.level.isLoaded(pos)) {
-                ((AbstractSmeltingBlockEntity)be).getStorage(Storages.FLUID,direction).ifPresent(t-> t.setFluid(stack));
+                ((SmeltingBlockEntity)be).getStorage(Storages.FLUID,direction).ifPresent(t-> t.setFluid(stack));
                 be.setChanged();
             }
         });

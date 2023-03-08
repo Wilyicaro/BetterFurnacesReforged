@@ -20,7 +20,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "0.2.1";
+    public static final String VERSION = "0.2.2";
     public static final String MC_VERSION = "1.19.3";
 
     public static final Supplier<RegistrarManager> REGISTRIES = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
@@ -35,10 +35,7 @@ public class BetterFurnacesReforged
 
         Registration.init();
 
-        if (Config.enableUltimateFurnaces)
-            UltimateFurnaces.init();
-
-        if (Config.checkUpdates) {
+        if (Config.checkUpdates.get()) {
             new UpCheck();
         } else {
             LOGGER.warn("You have disabled BetterFurnace's Update Checker, to re-enable: change the value of Update Checker in .minecraft->config->betterfurnacesreforged-client.toml to 'true'.");

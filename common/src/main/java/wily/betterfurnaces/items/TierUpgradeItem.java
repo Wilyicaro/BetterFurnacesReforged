@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
@@ -65,14 +65,14 @@ public class TierUpgradeItem extends Item {
             }
             BlockEntity be = world.getBlockEntity(pos);
             BlockPlaceContext ctx2 = new BlockPlaceContext(ctx);
-            if (be instanceof FurnaceBlockEntity || be instanceof AbstractSmeltingBlockEntity) {
+            if (be instanceof FurnaceBlockEntity || be instanceof SmeltingBlockEntity) {
                 int cooktime = be.getUpdateTag().getInt("CookTime");
                 int cooktimetotal = 200;
                 int currentItemBurnTime = 0;
                 int furnaceBurnTime = be.getUpdateTag().getInt("BurnTime");
                 int show = 0;
                 int[] settings = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-                if (be instanceof AbstractSmeltingBlockEntity smeltBe) {
+                if (be instanceof SmeltingBlockEntity smeltBe) {
                     furnaceBurnTime = smeltBe.fields.get(0);
                     currentItemBurnTime = smeltBe.fields.get(1);
                     cooktime = smeltBe.fields.get(2);
@@ -97,7 +97,7 @@ public class TierUpgradeItem extends Item {
                 ItemStack upgrade  = ItemStack.EMPTY;
                 ItemStack upgrade1  = ItemStack.EMPTY;
                 ItemStack upgrade2  = ItemStack.EMPTY;
-                if (be instanceof AbstractSmeltingBlockEntity smeltBe) {
+                if (be instanceof SmeltingBlockEntity smeltBe) {
                     inv = smeltBe.getInv();
                     upgrade = inv.getItem(3).copy();
                     upgrade1 = inv.getItem(4).copy();
@@ -114,12 +114,12 @@ public class TierUpgradeItem extends Item {
                 BlockEntity newBe = world.getBlockEntity(pos);
                 newBe.load(be.getUpdateTag().merge(newBe.getUpdateTag()));
                 Container newInv;
-                if (newBe instanceof AbstractSmeltingBlockEntity smeltBe) {
+                if (newBe instanceof SmeltingBlockEntity smeltBe) {
                     newInv = smeltBe.inventory;
                     smeltBe.inventory.setItem(3, upgrade);
                     smeltBe.inventory.setItem(4, upgrade1);
                     smeltBe.inventory.setItem(5, upgrade2);
-                    smeltBe.fields.set(0, furnaceBurnTime * ((AbstractSmeltingBlockEntity) newBe).getCookTime() / cooktimetotal);
+                    smeltBe.fields.set(0, furnaceBurnTime * ((SmeltingBlockEntity) newBe).getCookTime() / cooktimetotal);
                     smeltBe.fields.set(1, currentItemBurnTime);
                     smeltBe.fields.set(2, cooktime);
                     smeltBe.fields.set(4, show);

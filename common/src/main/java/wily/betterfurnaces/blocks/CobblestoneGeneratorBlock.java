@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,7 +28,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
+import wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity;
 import wily.betterfurnaces.items.UpgradeItem;
 
 import java.util.Collections;
@@ -65,7 +64,7 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult p_225533_6_) {
         ItemStack stack = player.getItemInHand(handIn).copy();
         ItemStack hand = player.getItemInHand(handIn);
-        AbstractCobblestoneGeneratorBlockEntity be = (AbstractCobblestoneGeneratorBlockEntity) world.getBlockEntity(pos);
+        CobblestoneGeneratorBlockEntity be = (CobblestoneGeneratorBlockEntity) world.getBlockEntity(pos);
 
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
@@ -90,7 +89,7 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
 
-        if (!(world.getBlockEntity(pos) instanceof AbstractCobblestoneGeneratorBlockEntity be)) {
+        if (!(world.getBlockEntity(pos) instanceof CobblestoneGeneratorBlockEntity be)) {
             return InteractionResult.SUCCESS;
         }
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
@@ -116,8 +115,8 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
             BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof AbstractCobblestoneGeneratorBlockEntity) {
-                Containers.dropContents(world, pos, ((AbstractCobblestoneGeneratorBlockEntity) be).inventory);
+            if (be instanceof CobblestoneGeneratorBlockEntity) {
+                Containers.dropContents(world, pos, ((CobblestoneGeneratorBlockEntity) be).inventory);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -141,13 +140,13 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity(p_153215_, p_153216_);
+        return new CobblestoneGeneratorBlockEntity(p_153215_, p_153216_);
     }
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return (level1, pos, state1, tile) -> {
-            if (tile instanceof AbstractCobblestoneGeneratorBlockEntity.CobblestoneGeneratorBlockEntity be) {
+            if (tile instanceof CobblestoneGeneratorBlockEntity be) {
                 be.tick(state1);
             }
         };

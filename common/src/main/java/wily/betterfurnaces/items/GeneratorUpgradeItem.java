@@ -4,11 +4,10 @@ import dev.architectury.fluid.FluidStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.AbstractForgeBlockEntity;
-import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.blockentity.ForgeBlockEntity;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.init.Registration;
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.base.IFluidItem;
@@ -27,8 +26,8 @@ public class GeneratorUpgradeItem extends UpgradeItem implements IFluidItem<IPla
     }
 
     @Override
-    public boolean isValid(AbstractSmeltingBlockEntity blockEntity) {
-        return super.isValid(blockEntity) && !(blockEntity instanceof AbstractForgeBlockEntity);
+    public boolean isValid(SmeltingBlockEntity blockEntity) {
+        return super.isValid(blockEntity) && !(blockEntity instanceof ForgeBlockEntity);
     }
 
     @Override

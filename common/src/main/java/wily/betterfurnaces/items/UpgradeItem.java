@@ -9,7 +9,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public int upgradeType;
     public boolean isSameType(UpgradeItem upg){
         return upgradeType == upg.upgradeType;
     }
-    public boolean isValid(AbstractSmeltingBlockEntity blockEntity){
+    public boolean isValid(SmeltingBlockEntity blockEntity){
         return  isEnabled() && blockEntity.getUpgrades().stream().allMatch(this::isUpgradeCompatibleWith);
     }
 

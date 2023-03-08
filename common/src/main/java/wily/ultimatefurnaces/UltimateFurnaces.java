@@ -18,7 +18,4 @@ public class UltimateFurnaces
     public static final Logger LOGGER = LogManager.getLogger();
     public static final CreativeTabRegistry.TabSupplier ITEM_GROUP = CreativeTabRegistry.create(new ResourceLocation(BetterFurnacesReforged.MOD_ID,"tab_ultimate"), ()-> RegistrationUF.ULTIMATE_FURNACE.get().asItem().getDefaultInstance());
 
-    public static void init() {
-        RegistrationUF.init();
-    }
 }

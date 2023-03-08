@@ -1,9 +1,8 @@
 package wily.betterfurnaces.inventory;
 
-import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 
 public class SlotUpgrade extends Slot {
@@ -31,7 +30,7 @@ public class SlotUpgrade extends Slot {
 
     @Override
     public void setChanged() {
-        if (be instanceof AbstractSmeltingBlockEntity smeltingBe) {
+        if (be instanceof SmeltingBlockEntity smeltingBe) {
             smeltingBe.onUpdateSent();
         }
     }

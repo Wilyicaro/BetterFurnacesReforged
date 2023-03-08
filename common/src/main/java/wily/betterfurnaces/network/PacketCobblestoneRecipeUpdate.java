@@ -4,7 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import wily.betterfurnaces.blockentity.AbstractCobblestoneGeneratorBlockEntity;
+import wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity;
 
 import java.util.function.Supplier;
 
@@ -27,7 +27,7 @@ private BlockPos pos;
 	public void handle(Supplier<NetworkManager.PacketContext> ctx) {
 		ctx.get().queue(() -> {
 			ServerPlayer player = (ServerPlayer) ctx.get().getPlayer();
-			AbstractCobblestoneGeneratorBlockEntity be = (AbstractCobblestoneGeneratorBlockEntity) player.getLevel().getBlockEntity(pos);
+			CobblestoneGeneratorBlockEntity be = (CobblestoneGeneratorBlockEntity) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
 				be.changeRecipe(true);
 				be.setChanged();

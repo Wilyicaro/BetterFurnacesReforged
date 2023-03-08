@@ -4,7 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import wily.betterfurnaces.blockentity.AbstractSmeltingBlockEntity;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 
 import java.util.function.Supplier;
 
@@ -33,7 +33,7 @@ private BlockPos pos;
 	public void handle(Supplier<NetworkManager.PacketContext> ctx) {
 		ctx.get().queue(() -> {
 			ServerPlayer player = (ServerPlayer) ctx.get().getPlayer();
-			AbstractSmeltingBlockEntity be = (AbstractSmeltingBlockEntity) player.getLevel().getBlockEntity(pos);
+			SmeltingBlockEntity be = (SmeltingBlockEntity) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
 				be.furnaceSettings.set(index, set);
 				be.getLevel().setBlock(pos, be.getLevel().getBlockState(pos), 2, 3);
