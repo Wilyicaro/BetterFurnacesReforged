@@ -1,0 +1,96 @@
+{
+  "variants": {
+    "facing=north,state=0": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator"
+    },
+    "facing=east,state=0": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator",
+      "y": 90
+    },
+    "facing=south,state=0": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator",
+      "y": 180
+    },
+    "facing=west,state=0": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator",
+      "y": 270
+    },
+    "facing=up,state=0": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator",
+      "x": 270
+    },
+    "facing=down,state=0": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator",
+      "x": 90
+    },
+    "facing=north,state=1": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator1"
+    },
+    "facing=east,state=1": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator1",
+      "y": 90
+    },
+    "facing=south,state=1": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator1",
+      "y": 180
+    },
+    "facing=west,state=1": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator1",
+      "y": 270
+    },
+    "facing=up,state=1": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator1",
+      "x": 270
+    },
+    "facing=down,state=1": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator1",
+      "x": 90
+    },
+    "facing=north,state=2": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator2"
+    },
+    "facing=east,state=2": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator2",
+      "y": 90
+    },
+    "facing=south,state=2": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator2",
+      "y": 180
+    },
+    "facing=west,state=2": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator2",
+      "y": 270
+    },
+    "facing=up,state=2": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator2",
+      "x": 270
+    },
+    "facing=down,state=2": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator2",
+      "x": 90
+    },
+    "facing=north,state=3": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator3"
+    },
+    "facing=east,state=3": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator3",
+      "y": 90
+    },
+    "facing=south,state=3": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator3",
+      "y": 180
+    },
+    "facing=west,state=3": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator3",
+      "y": 270
+    },
+    "facing=up,state=3": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator3",
+      "x": 270
+    },
+    "facing=down,state=3": {
+      "model": "betterfurnacesreforged:block/cobblestone_generator3",
+      "x": 90
+    }
+  }
+}

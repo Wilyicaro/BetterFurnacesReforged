@@ -1,0 +1,10 @@
+{
+  "parent": "betterfurnacesreforged:block/forge",
+  "textures": {
+    "particle": "betterfurnacesreforged:block/copper_top",
+    "front": "betterfurnacesreforged:block/copper_forge_front",
+    "side": "betterfurnacesreforged:block/copper_forge_side",
+    "overlayfront": "betterfurnacesreforged:block/forge_front",
+    "overlayside": "betterfurnacesreforged:block/forge_side"
+  }
+}

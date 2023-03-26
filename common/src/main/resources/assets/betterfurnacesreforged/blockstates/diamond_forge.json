@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "betterfurnacesreforged:block/diamond_forge"
+    },
+    "lit=true": {
+      "model": "betterfurnacesreforged:block/diamond_forge_on"
+    }
+  }
+}

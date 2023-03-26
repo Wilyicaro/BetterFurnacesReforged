@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "betterfurnacesreforged",
+  "version": "${version}",
+  "name": "BetterFurnaces Reforged",
+  "description": "This mod is a remake of the outdated mod from 1.7.10 for fabric, Better Furnaces, presenting the concept used in the original mod",
+  "authors": [
+    "Wilyicaro"
+  ],
+  "contributors": [
+    "TheFrogMC(Original mod creator) and Qelifern (Iron Furnaces creator)"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/better-furnaces-reforged/",
+    "sources": "https://github.com/Wilyicaro/BetterFurnacesReforged"
+  },
+  "license": "MIT",
+  "icon": "bfr_icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "wily.betterfurnaces.fabric.BetterFurnacesFabric"
+    ],
+    "client": [
+      "wily.betterfurnaces.fabric.BetterFurnacesFabricClient"
+    ]
+  },
+  "mixins": [
+    "betterfurnaces.mixins.json",
+    "betterfurnaces-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.19.2",
+    "architectury": ">=7.0.0",
+    "factory_api": ">=0.1.5"
+  }
+}

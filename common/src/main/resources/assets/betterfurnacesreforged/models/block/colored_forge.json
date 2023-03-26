@@ -1,0 +1,10 @@
+{
+  "parent": "betterfurnacesreforged:block/forge_colored",
+  "textures": {
+    "particle": "betterfurnacesreforged:block/extreme_top",
+    "front": "betterfurnacesreforged:block/colored_forge_front",
+    "side": "betterfurnacesreforged:block/colored_forge_side",
+    "overlayfront": "betterfurnacesreforged:block/forge_front",
+    "overlayside": "betterfurnacesreforged:block/forge_side"
+  }
+}

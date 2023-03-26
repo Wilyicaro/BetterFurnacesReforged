@@ -1,0 +1,24 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "0 0",
+    "343",
+    "030"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "3": {
+      "tag": "c:glass_blocks"
+    },
+    "4": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:liquid_fuel_upgrade",
+    "count": 1
+  }
+}

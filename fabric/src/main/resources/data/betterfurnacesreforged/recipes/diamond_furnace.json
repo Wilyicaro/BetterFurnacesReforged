@@ -1,0 +1,24 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "141",
+    "010"
+  ],
+  "key": {
+    "0": {
+      "tag": "c:glass_blocks"
+    },
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:gold_furnace"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:diamond_furnace",
+    "count": 1
+  }
+}

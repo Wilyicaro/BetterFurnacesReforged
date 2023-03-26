@@ -1,0 +1,21 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "111",
+    "121"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:iron_ingot"
+    },
+    "2": {
+      "tag": "c:glass_blocks"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:piping_upgrade",
+    "count": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "betterfurnacesreforged:block/ultimate_forge"
+    },
+    "lit=true": {
+      "model": "betterfurnacesreforged:block/ultimate_forge_on"
+    }
+  }
+}

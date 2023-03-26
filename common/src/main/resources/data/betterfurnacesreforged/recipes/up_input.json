@@ -1,0 +1,24 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "131",
+    "121",
+    "131"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:gold_ingot"
+    },
+    "2": {
+      "item": "minecraft:diamond"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:piping_upgrade"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:autoinput_upgrade",
+    "count": 1
+  }
+}
