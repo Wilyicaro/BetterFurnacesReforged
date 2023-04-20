@@ -10,10 +10,12 @@ assignees: ''
 *Italic* = Optional
 
 **Mod Version-Minecraft Version**
+
 Mod Loader Version
 
 
 **Bug/Glitch Occurrence Context**
+
 *Crash Report
 
 
