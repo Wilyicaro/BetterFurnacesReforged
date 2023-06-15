@@ -52,7 +52,7 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
         }
     }
     @Override
-    public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
+    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new ForgeMenu(Registration.FORGE_CONTAINER.get(),i,level,getBlockPos(),playerInventory,playerEntity,fields);
     }
     @Override

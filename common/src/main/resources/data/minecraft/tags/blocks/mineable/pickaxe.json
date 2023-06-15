@@ -3,23 +3,7 @@
   "values": [
     "betterfurnacesreforged:fuel_verifier",
     "betterfurnacesreforged:cobblestone_generator",
-    "betterfurnacesreforged:iron_furnace",
-    "betterfurnacesreforged:gold_furnace",
-    "betterfurnacesreforged:diamond_furnace",
-    "betterfurnacesreforged:netherhot_furnace",
-    "betterfurnacesreforged:extreme_furnace",
-    "betterfurnacesreforged:extreme_forge",
-    "betterfurnacesreforged:iron_furnace",
-    "betterfurnacesreforged:copper_furnace",
-    "betterfurnacesreforged:steel_furnace",
-    "betterfurnacesreforged:copper_forge",
-    "betterfurnacesreforged:iron_forge",
-    "betterfurnacesreforged:amethyst_furnace",
-    "betterfurnacesreforged:platinum_furnace",
-    "betterfurnacesreforged:gold_forge",
-    "betterfurnacesreforged:diamond_forge",
-    "betterfurnacesreforged:netherhot_forge",
-    "betterfurnacesreforged:ultimate_furnace",
-    "betterfurnacesreforged:ultimate_forge"
+    "#betterfurnacesreforged:furnace",
+    "#betterfurnacesreforged:forge"
   ]
 }

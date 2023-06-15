@@ -45,11 +45,10 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
 
     @Override
     protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
-        Component invname = this.playerInv.getDisplayName();
         int actualMouseX = mouseX - relX();
         int actualMouseY = mouseY - relY();
-        this.minecraft.font.draw(matrix, this.playerInv.getDisplayName(), 7, this.imageHeight - 93, 4210752);
-        this.minecraft.font.draw(matrix, name, 7 + imageWidth / 2 - this.minecraft.font.width(name.getString()) / 2, 6, 4210752);
+        font.draw(matrix, this.playerInv.getDisplayName(), 7, this.imageHeight - 93, 4210752);
+        font.draw(matrix, name, 7 + imageWidth / 2 - font.width(name.getString()) / 2, 6, 4210752);
         addTooltips(matrix, actualMouseX, actualMouseY);
     }
 
@@ -65,12 +64,12 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
         double actualMouseY = mouseY - relY();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI);
-        this.blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
+        blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
         renderGuiItem(getMenu().be.getResult(),relX() + 80, relY() + 24, 0.75F, 0.75F);
         RenderSystem.setShaderTexture(0, WIDGETS);
             if (actualMouseX>= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39){
-                this.blit(matrix, relX() + 81, relY() + 25, 98, 157, 14, 14);
-        } else this.blit(matrix, relX() + 81, relY() + 25, 84, 157, 14, 14);
+                blit(matrix, relX() + 81, relY() + 25, 98, 157, 14, 14);
+        } else blit(matrix, relX() + 81, relY() + 25, 84, 157, 14, 14);
         int i;
         i = ((CobblestoneGeneratorMenu) this.getMenu()).getCobTimeScaled(16);
         if (i > 0) {
@@ -79,13 +78,13 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
             FluidRenderUtil.renderTiledFluid(matrix, this,  relX() + 58, relY() + 44, 17, 12, lava, false);
             FluidRenderUtil.renderTiledFluid(matrix, this,  relX() + 101, relY() + 44, 17, 12, water, true);
             RenderSystem.setShaderTexture(0, GUI);
-            this.blit(matrix, relX() + 58, relY() + 44, 176, 24, i + 1, 12);
-            this.blit(matrix, relX() + 117 - i, relY() + 44, 192 - i, 36, 17, 12);
+            blit(matrix, relX() + 58, relY() + 44, 176, 24, i + 1, 12);
+            blit(matrix, relX() + 117 - i, relY() + 44, 192 - i, 36, 17, 12);
 
         }
         RenderSystem.setShaderTexture(0, GUI);
-        this.blit(matrix, relX() + 58, relY() + 44, 176, 0, 17, 12);
-        this.blit(matrix, relX() + 101, relY() + 44, 176, 12, 17, 12);
+        blit(matrix, relX() + 58, relY() + 44, 176, 0, 17, 12);
+        blit(matrix, relX() + 101, relY() + 44, 176, 12, 17, 12);
     }
 
     @Override

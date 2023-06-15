@@ -26,7 +26,8 @@ import wily.betterfurnaces.network.PacketSettingsButton;
 import wily.betterfurnaces.network.PacketShowSettingsButton;
 import wily.betterfurnaces.util.StringHelper;
 import wily.factoryapi.ItemContainerUtil;
-import wily.factoryapi.base.ProgressType;
+import wily.factoryapi.base.IFactoryDrawableType;
+import wily.factoryapi.base.Progress;
 import wily.factoryapi.util.ProgressElementRenderUtil;
 import wily.factoryapi.util.StorageStringUtil;
 
@@ -48,13 +49,13 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     } // 16x34pixels
     protected int[] XPTank() { return new int[]{116,57};} // 16x16pixels
 
-    public static ProgressType MINI_FLUID_TANK = BFProgressType(ProgressType.Identifier.TANK,new int[]{192,0,16,16},true,false, ProgressType.Direction.VERTICAL);
+    public static IFactoryDrawableType.DrawableProgress MINI_FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,0,16,16},false, IFactoryDrawableType.Direction.VERTICAL);
 
-    public static ProgressType FLUID_TANK = BFProgressType(ProgressType.Identifier.TANK,new int[]{192,16,20,22},true,false, ProgressType.Direction.VERTICAL);
+    public static IFactoryDrawableType.DrawableProgress FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,16,20,22},false,IFactoryDrawableType.Direction.VERTICAL);
 
-    public static ProgressType ENERGY_CELL = BFProgressType(ProgressType.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false,false, ProgressType.Direction.VERTICAL);
-    public static ProgressType BFProgressType(ProgressType.Identifier identifier, int[] uvSize, boolean hasFluid, boolean reverse, ProgressType.Direction plane) {
-        return new ProgressType(identifier, WIDGETS, uvSize, hasFluid, reverse, plane);
+    public static IFactoryDrawableType.DrawableProgress ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false, IFactoryDrawableType.Direction.VERTICAL);
+    public static IFactoryDrawableType.DrawableProgress BFProgressType(Progress.Identifier identifier, int[] uvSize, boolean reverse, IFactoryDrawableType.Direction plane) {
+        return IFactoryDrawableType.create(WIDGETS,uvSize[0],uvSize[1],uvSize[2],uvSize[3]).asProgress(identifier, reverse, plane);
     }
     private boolean storedFactoryUpgradeType(int type){
         if (getMenu().be.hasUpgradeType(Registration.FACTORY.get())) {
@@ -235,21 +236,21 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         if (getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 34, 16, 34);
-            ProgressElementRenderUtil.renderDefaultProgress(matrix, this, relX() + EnergyTank()[0], relY() + EnergyTank()[1], this.getMenu().getEnergyStoredScaled(34), ENERGY_CELL);
+            ENERGY_CELL.drawProgress(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], this.getMenu().getEnergyStoredScaled(34));
         }if (getMenu().be.isLiquid()){
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 38, 20, 22);
-            ProgressElementRenderUtil.renderFluidTank(matrix,this,relX() + FluidTank()[0], relY() + FluidTank()[1], this.getMenu().getFluidStoredScaled(22,false),FLUID_TANK, this.getMenu().getFluidStackStored(false),false);
+            FLUID_TANK.drawAsFluidTank(matrix,relX() + FluidTank()[0], relY() + FluidTank()[1], this.getMenu().getFluidStoredScaled(22,false), this.getMenu().getFluidStackStored(false),false);
         }
 
         if (this.getMenu().be.hasXPTank()) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             this.blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16);
-            ProgressElementRenderUtil.renderFluidTank(matrix,this,relX() + XPTank()[0], relY() + XPTank()[1], this.getMenu().getFluidStoredScaled(16,true),MINI_FLUID_TANK, this.getMenu().getFluidStackStored(true),true);
+            MINI_FLUID_TANK.drawAsFluidTank(matrix,relX() + XPTank()[0], relY() + XPTank()[1], this.getMenu().getFluidStoredScaled(16,true), this.getMenu().getFluidStackStored(true),true);
         }
         if (this.getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             ItemStack generatorUp = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
-            ProgressElementRenderUtil.renderFluidTank(matrix,this,relX() + 54, relY() + 18, (int)(ItemContainerUtil.getFluid(generatorUp).getAmount() * 16 / (4 * FluidStack.bucketAmount())),MINI_FLUID_TANK,ItemContainerUtil.getFluid(generatorUp),true);
+            MINI_FLUID_TANK.drawAsFluidTank(matrix,relX() + 54, relY() + 18, (int)(ItemContainerUtil.getFluid(generatorUp).getAmount() * 16 / (4 * FluidStack.bucketAmount())),ItemContainerUtil.getFluid(generatorUp),true);
         }
         if (storedFactoryUpgradeType(0)) {
             RenderSystem.setShaderTexture(0, WIDGETS);

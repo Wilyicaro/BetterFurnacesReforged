@@ -44,6 +44,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -323,9 +324,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     @Override
-    public Component IgetName() {
+    public Component getDisplayName() {
         String tier = getBlockState().getBlock().arch$registryName().getPath().split("_")[0];
-        return getUpdatedType() != 0 ? Component.translatable("tooltip.betterfurnacesreforged." + tier +"_tier" ,getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? I18n.get("tooltip.betterfurnacesreforged.generator") : "") : super.IgetName();
+        return getUpdatedType() != 0 ? Component.translatable("tooltip.betterfurnacesreforged." + tier +"_tier" ,getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? Component.translatable("tooltip.betterfurnacesreforged.generator").getString() : "") : super.getDisplayName();
     }
 
     public Optional<AbstractCookingRecipe> irecipeSlot(int input){
@@ -692,7 +693,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     @Override
-    public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
+    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new SmeltingMenu(Registration.FURNACE_CONTAINER.get(),i,level,getBlockPos(),playerInventory,playerEntity,fields);
     }
 
@@ -991,10 +992,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return !Arrays.equals(this.provides, this.lastProvides);
     }
 
-    @Override
-    public Component getDisplayName() {
-        return super.getDisplayName();
-    }
 
     public void onUpdateSent() {
         System.arraycopy(this.provides, 0, this.lastProvides, 0, this.provides.length);

@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
-  "id": "betterfurnacesreforged",
+  "id": "${mod_id}",
   "version": "${version}",
-  "name": "BetterFurnaces Reforged",
+  "name": "${mod_name}",
   "description": "This mod is a remake of the outdated mod from 1.7.10 for fabric, Better Furnaces, presenting the concept used in the original mod",
   "authors": [
-    "Wilyicaro"
+    "${mod_authors}"
   ],
   "contributors": [
-    "TheFrogMC(Original mod creator) and Qelifern (Iron Furnaces creator)"
+    "${mod_credits}"
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/better-furnaces-reforged/",
-    "sources": "https://github.com/Wilyicaro/BetterFurnacesReforged"
+    "sources": "${mod_source}"
   },
-  "license": "MIT",
+  "license": "${mod_license}",
   "icon": "bfr_icon.png",
   "environment": "*",
   "entrypoints": {
@@ -23,6 +23,9 @@
     ],
     "client": [
       "wily.betterfurnaces.fabric.BetterFurnacesFabricClient"
+    ],
+    "jei_mod_plugin": [
+      "wily.betterfurnaces.compat.BfJeiPlugin"
     ]
   },
   "mixins": [
@@ -31,8 +34,8 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.19.2",
-    "architectury": ">=7.0.0",
-    "factory_api": ">=0.1.5"
+    "minecraft": ">=${mc_version}",
+    "architectury": ">=${architectury_version}",
+    "factory_api": ">=${factory_api_version}"
   }
 }

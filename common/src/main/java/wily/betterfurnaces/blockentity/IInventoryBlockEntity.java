@@ -11,15 +11,12 @@ import wily.factoryapi.base.TransportState;
 
 public interface IInventoryBlockEntity {
 
-    public Pair<int[], TransportState> getSlotsTransport(Direction side);
+    Pair<int[], TransportState> getSlotsTransport(Direction side);
 
-    public boolean IcanExtractItem(int index, ItemStack stack);
+    boolean IcanExtractItem(int index, ItemStack stack);
 
-    public Component IgetName();
 
-    public boolean IisItemValidForSlot(int index, ItemStack stack);
-
-    public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity);
+    boolean IisItemValidForSlot(int index, ItemStack stack);
 
 
 }

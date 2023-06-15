@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.NotNull;
 import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.blocks.CobblestoneGeneratorBlock;
 import wily.betterfurnaces.init.Registration;
@@ -76,7 +78,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         }
     };
     @Override
-    public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
+    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new CobblestoneGeneratorMenu(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
     public final int[] provides = new int[Direction.values().length];
@@ -217,6 +219,12 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         return 1;
 
     }
+
+    @Override
+    public @NotNull Component getDisplayName() {
+        return getBlockState().getBlock().getName();
+    }
+
     protected int getCobTime(){
         if (recipe != null) return recipe.duration / FuelEfficiencyMultiplier();
         return -1;

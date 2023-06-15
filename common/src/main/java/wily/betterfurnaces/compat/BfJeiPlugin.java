@@ -121,7 +121,6 @@ public class BfJeiPlugin implements IModPlugin {
 	}
 
 	public static class CobblestoneGeneratorCategory implements IRecipeCategory<CobblestoneGeneratorRecipes> {
-		private static final ResourceLocation Uid = new ResourceLocation(BetterFurnacesReforged.MOD_ID, "jei/rock_generating");
 		private final Component title;
 		private final IDrawable background;
 
@@ -132,7 +131,7 @@ public class BfJeiPlugin implements IModPlugin {
 
 		public CobblestoneGeneratorCategory(IGuiHelper guiHelper) {
 			this.title = Registration.COBBLESTONE_GENERATOR.get().getName();
-			this.background = guiHelper.createDrawable(GUI, 46, 21, 85, 52);
+			this.background = guiHelper.createDrawable(GUI, 18, 11, 139, 63);
 			this.guiHelper = guiHelper;
 			this.cachedProgressAnim = CacheBuilder.newBuilder()
 					.maximumSize(25)
@@ -183,8 +182,7 @@ public class BfJeiPlugin implements IModPlugin {
 			builder.addSlot(RecipeIngredientRole.OUTPUT,34, 24).addItemStack(recipe.getResultItem(RegistryAccess.EMPTY));
 			builder.addSlot(RecipeIngredientRole.INPUT, 7, 6).addItemStack(new ItemStack(Items.LAVA_BUCKET));
 			builder.addSlot(RecipeIngredientRole.INPUT,62, 6).addItemStack(new ItemStack(Items.WATER_BUCKET));
-			// ...
-			// ...
+
 		}
 	}
 }

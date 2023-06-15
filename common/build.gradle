@@ -12,7 +12,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modCompileOnly "mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}"
     modCompileOnly "wily.factory_api:factory_api-common:${minecraft_version}-${factory_api_version}"
-    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-common:5.0.7"
+    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-common:6.0.2"
 
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"

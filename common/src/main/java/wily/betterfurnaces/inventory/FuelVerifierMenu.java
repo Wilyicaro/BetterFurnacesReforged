@@ -1,5 +1,6 @@
 package wily.betterfurnaces.inventory;
 
+import dev.architectury.registry.fuel.FuelRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -7,8 +8,11 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import wily.betterfurnaces.blockentity.FuelVerifierBlockEntity;
 import wily.betterfurnaces.init.Registration;
+
+import java.util.Comparator;
 
 
 public class FuelVerifierMenu extends AbstractInventoryMenu<FuelVerifierBlockEntity> {
@@ -33,10 +37,10 @@ public class FuelVerifierMenu extends AbstractInventoryMenu<FuelVerifierBlockEnt
         return this.be.getBlockPos();
     }
 
-    public int getBurnTimeScaled(int pixels) {
-        int i = 20000;
+    static int maxFuelValue = FurnaceBlockEntity.getFuel().values().stream().max(Comparator.comparing(Integer::intValue)).orElse(20000);
 
-        return this.fields.get(0) * pixels / i;
+    public int getBurnTimeScaled(int pixels) {
+        return this.fields.get(0) * pixels / maxFuelValue;
     }
     public float getBurnTime() {
         return (float) this.fields.get(0) / 200;

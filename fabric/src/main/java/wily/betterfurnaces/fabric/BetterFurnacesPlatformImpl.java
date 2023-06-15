@@ -37,11 +37,10 @@ public class BetterFurnacesPlatformImpl {
             if (be.furnaceSettings.get(dir.ordinal()) == 1 || be.furnaceSettings.get(dir.ordinal()) == 2 || be.furnaceSettings.get(dir.ordinal()) == 3 || be.furnaceSettings.get(dir.ordinal()) == 4) {
                 if (tile != null) {
                     Storage<ItemVariant> other = ItemStorage.SIDED.find(be.getLevel(),be.getBlockPos().relative(dir),dir);
-                    Iterator<StorageView<ItemVariant>> storageView = other.iterator();
-
                     if (other == null) {
                         continue;
                     }
+                    Iterator<StorageView<ItemVariant>> storageView = other.iterator();
                     if (other != null) {
                         if (be.getAutoInput() != 0 || be.getAutoOutput() != 0) {
                             if (be.getAutoInput() == 1) {
