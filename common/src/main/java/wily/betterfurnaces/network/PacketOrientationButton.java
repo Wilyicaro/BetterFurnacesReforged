@@ -31,8 +31,8 @@ private BlockPos pos;
 	public void handle(Supplier<NetworkManager.PacketContext> ctx) {
 		ctx.get().queue(() -> {
 			ServerPlayer player = (ServerPlayer) ctx.get().getPlayer();
-			SmeltingBlockEntity be = (SmeltingBlockEntity) player.getLevel().getBlockEntity(pos);
-			if (player.level.isLoaded(pos)) {
+			SmeltingBlockEntity be = (SmeltingBlockEntity) player.level().getBlockEntity(pos);
+			if (player.level().isLoaded(pos)) {
 				be.showOrientation = state;
 				be.setChanged();
 			}

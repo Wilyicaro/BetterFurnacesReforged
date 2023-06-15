@@ -34,7 +34,7 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
         this.be = (T) world.getBlockEntity(pos);
 
         this.playerEntity = player;
-        this.world = playerInventory.player.level;
+        this.world = playerInventory.player.level();
         this.fields = fields;
         this.addInventorySlots();
         layoutPlayerInventorySlots(8, TOP_ROW);

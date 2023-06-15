@@ -82,7 +82,7 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
 
     @Override
     public Component getName() {
-        return (this.name != null ? this.name : IgetName());
+        return (this.name != null ? this.name : getDisplayName());
     }
 
 
@@ -119,7 +119,7 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
     }
 
     @Override
-    public Component IgetName() {
+    public Component getDisplayName() {
         return getBlockState().getBlock().getName();
     }
 
@@ -134,19 +134,11 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
         return this.name;
     }
 
-    @Override
-    public Component getDisplayName() {
-        return this.getName();
-    }
 
     public @NotNull IPlatformItemHandler getInv() {
         return inventory;
     }
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return IcreateMenu(i, playerInventory, playerEntity);
-    }
+
 
     public abstract boolean IcanExtractItem(int index, ItemStack stack);
 }

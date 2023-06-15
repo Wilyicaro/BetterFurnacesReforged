@@ -49,7 +49,7 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
         }
     };
     @Override
-    public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
+    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new FuelVerifierMenu(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
 

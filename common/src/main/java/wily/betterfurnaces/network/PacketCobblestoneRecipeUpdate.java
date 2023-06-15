@@ -27,8 +27,8 @@ private BlockPos pos;
 	public void handle(Supplier<NetworkManager.PacketContext> ctx) {
 		ctx.get().queue(() -> {
 			ServerPlayer player = (ServerPlayer) ctx.get().getPlayer();
-			CobblestoneGeneratorBlockEntity be = (CobblestoneGeneratorBlockEntity) player.getLevel().getBlockEntity(pos);
-			if (player.level.isLoaded(pos)) {
+			CobblestoneGeneratorBlockEntity be = (CobblestoneGeneratorBlockEntity) player.level().getBlockEntity(pos);
+			if (player.level().isLoaded(pos)) {
 				be.changeRecipe(true);
 				be.setChanged();
 			}

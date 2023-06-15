@@ -8,7 +8,6 @@ import dev.architectury.registry.fuel.FuelRegistry;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -33,7 +32,6 @@ import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.AirItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -323,9 +321,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     @Override
-    public Component IgetName() {
+    public Component getDisplayName() {
         String tier = getBlockState().getBlock().arch$registryName().getPath().split("_")[0];
-        return getUpdatedType() != 0 ? Component.translatable("tooltip.betterfurnacesreforged." + tier +"_tier" ,getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? I18n.get("tooltip.betterfurnacesreforged.generator") : "") : super.IgetName();
+        return getUpdatedType() != 0 ? Component.translatable("tooltip.betterfurnacesreforged." + tier +"_tier" ,getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? Component.translatable("tooltip.betterfurnacesreforged.generator").getString() : "") : super.getDisplayName();
     }
 
     public Optional<AbstractCookingRecipe> irecipeSlot(int input){
@@ -692,7 +690,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     @Override
-    public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
+    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new SmeltingMenu(Registration.FURNACE_CONTAINER.get(),i,level,getBlockPos(),playerInventory,playerEntity,fields);
     }
 
@@ -703,7 +701,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             if (!recipeOutput.isEmpty()) {
                 ItemStack output = this.getInv().getItem(OUTPUT);
                 if (output.isEmpty()) return true;
-                else if (!output.sameItem(recipeOutput)) return false;
+                else if (!ItemStack.isSameItemSameTags(output,recipeOutput)) return false;
                 else {
                     return output.getCount() + recipeOutput.getCount() * OreProcessingMultiplier(input) <= output.getMaxStackSize();
                 }
@@ -938,7 +936,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     public void unlockRecipes(Player player) {
 
-        List<Recipe<?>> list = this.grantStoredRecipeExperience(player.level, player.position());
+        List<Recipe<?>> list = this.grantStoredRecipeExperience(player.level(), player.position());
         player.awardRecipes(list);
         this.recipes.clear();
     }
@@ -991,10 +989,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return !Arrays.equals(this.provides, this.lastProvides);
     }
 
-    @Override
-    public Component getDisplayName() {
-        return super.getDisplayName();
-    }
+
 
     public void onUpdateSent() {
         System.arraycopy(this.provides, 0, this.lastProvides, 0, this.provides.length);

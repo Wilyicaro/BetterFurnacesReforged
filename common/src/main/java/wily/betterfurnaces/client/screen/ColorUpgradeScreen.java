@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -70,8 +71,14 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
+
     @Override
-    protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        renderColorFurnace(graphics,partialTicks,mouseX,mouseY);
+    }
+
+    protected void renderColorFurnace(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         if (red.isHoveredOrFocused()) sliderPacket(red, 1);
         if (green.isHoveredOrFocused()) sliderPacket(green, 2);
         if (blue.isHoveredOrFocused()) sliderPacket(blue, 3);
@@ -79,19 +86,19 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
             int actualMouseY = mouseY - relY();
             RenderSystem.setShaderTexture(0, WIDGETS);
             if (buttonstate == 0) {
-            this.blit(matrix, relX() + 8, relY() + 8, 126, 189, 14, 14);
+            graphics.blit(WIDGETS, relX() + 8, relY() + 8, 126, 189, 14, 14);
         }
         if (buttonstate == 1) {
-            this.blit(matrix, relX() + 8, relY() + 8, 112, 189, 14, 14);
+            graphics.blit(WIDGETS, relX() + 8, relY() + 8, 112, 189, 14, 14);
         }
         if (actualMouseX>= 8 && actualMouseX <= 22 && actualMouseY >= 6 && actualMouseY <= 20){
             if (buttonstate == 0) {
-                this.blit(matrix, relX() + 8, relY() + 8, 154, 189, 14, 14);
-                this.renderTooltip(matrix, Blocks.FURNACE.getName(), mouseX, mouseY);
+                graphics.blit(WIDGETS, relX() + 8, relY() + 8, 154, 189, 14, 14);
+                graphics.renderTooltip(font, Blocks.FURNACE.getName(), mouseX, mouseY);
             }
             if (buttonstate == 1) {
-                this.blit(matrix, relX() + 8, relY() + 8, 140, 189, 14, 14);
-                this.renderTooltip(matrix, Registration.EXTREME_FORGE.get().getName(), mouseX, mouseY);
+                graphics.blit(WIDGETS, relX() + 8, relY() + 8, 140, 189, 14, 14);
+                graphics.renderTooltip(font, Registration.EXTREME_FORGE.get().getName(), mouseX, mouseY);
             }
         }
         ItemStack stack = buttonstate == 0 ? new ItemStack(Registration.EXTREME_FURNACE.get().asItem()) : new ItemStack(Registration.EXTREME_FORGE.get().asItem());
@@ -99,8 +106,12 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
         CompoundTag tag = stack.getOrCreateTag();
         ItemColorsHandler.putColor(tag,red.getValueInt(),green.getValueInt(),blue.getValueInt());
         stack.setTag(tag);
-        renderGuiItem(stack, (width / 2 - 8), (this.relY() - 48), 4,4);
-
+        graphics.pose().pushPose();
+        graphics.pose().translate((width / 2 ), (this.relY() - 40),0);
+        graphics.pose().scale(4F,4F,1F);
+        graphics.pose().translate(-8, -8,0);
+        graphics.renderItem(stack, 0, 0);
+        graphics.pose().popPose();
     }
 
 }

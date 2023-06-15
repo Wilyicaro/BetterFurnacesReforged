@@ -38,8 +38,8 @@ public class PacketSyncFluid {
     public void apply(Supplier<NetworkManager.PacketContext> ctx) {
         ctx.get().queue(() -> {
             Player player = ctx.get().getPlayer();
-            BlockEntity be = player.getLevel().getBlockEntity(pos);
-            if (player.level.isLoaded(pos)) {
+            BlockEntity be = player.level().getBlockEntity(pos);
+            if (player.level().isLoaded(pos)) {
                 ((SmeltingBlockEntity)be).getStorage(Storages.FLUID,direction).ifPresent(t-> t.setFluid(stack));
                 be.setChanged();
             }

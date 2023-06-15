@@ -3,10 +3,10 @@ package wily.betterfurnaces.client.screen;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.fluid.FluidStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blocks.ForgeBlock;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.SmeltingMenu;
 import wily.betterfurnaces.items.FactoryUpgradeItem;
@@ -26,8 +25,8 @@ import wily.betterfurnaces.network.PacketSettingsButton;
 import wily.betterfurnaces.network.PacketShowSettingsButton;
 import wily.betterfurnaces.util.StringHelper;
 import wily.factoryapi.ItemContainerUtil;
-import wily.factoryapi.base.ProgressType;
-import wily.factoryapi.util.ProgressElementRenderUtil;
+import wily.factoryapi.base.IFactoryDrawableType;
+import wily.factoryapi.base.Progress;
 import wily.factoryapi.util.StorageStringUtil;
 
 import java.util.List;
@@ -48,13 +47,13 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     } // 16x34pixels
     protected int[] XPTank() { return new int[]{116,57};} // 16x16pixels
 
-    public static ProgressType MINI_FLUID_TANK = BFProgressType(ProgressType.Identifier.TANK,new int[]{192,0,16,16},true,false, ProgressType.Direction.VERTICAL);
+    public static IFactoryDrawableType.DrawableProgress MINI_FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,0,16,16},false, IFactoryDrawableType.Direction.VERTICAL);
 
-    public static ProgressType FLUID_TANK = BFProgressType(ProgressType.Identifier.TANK,new int[]{192,16,20,22},true,false, ProgressType.Direction.VERTICAL);
+    public static IFactoryDrawableType.DrawableProgress FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,16,20,22},false,IFactoryDrawableType.Direction.VERTICAL);
 
-    public static ProgressType ENERGY_CELL = BFProgressType(ProgressType.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false,false, ProgressType.Direction.VERTICAL);
-    public static ProgressType BFProgressType(ProgressType.Identifier identifier, int[] uvSize, boolean hasFluid, boolean reverse, ProgressType.Direction plane) {
-        return new ProgressType(identifier, WIDGETS, uvSize, hasFluid, reverse, plane);
+    public static IFactoryDrawableType.DrawableProgress ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false, IFactoryDrawableType.Direction.VERTICAL);
+    public static IFactoryDrawableType.DrawableProgress BFProgressType(Progress.Identifier identifier, int[] uvSize, boolean reverse, IFactoryDrawableType.Direction plane) {
+        return IFactoryDrawableType.create(WIDGETS,uvSize[0],uvSize[1],uvSize[2],uvSize[3]).asProgress(identifier, reverse, plane);
     }
     private boolean storedFactoryUpgradeType(int type){
         if (getMenu().be.hasUpgradeType(Registration.FACTORY.get())) {
@@ -81,10 +80,13 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     }
 
     @Override
-    public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrix);
-        super.render(matrix, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrix, mouseX, mouseY);
+    protected void init() {
+        super.init();
+        titleLabelX = (this.imageWidth - minecraft.font.width(getTitle().getString())) / 2;
+        if (getMenu().be.isForge())
+            inventoryLabelX = (this.imageWidth - this.minecraft.font.width(playerInventoryTitle.getString())) / 2;
+        inventoryLabelY = this.imageHeight - 94;
+        titleLabelY = imageHeight - 160;
     }
 
     @Override
@@ -93,39 +95,34 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     }
 
     @Override
-    protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawString(this.font, getTitle(), this.titleLabelX, this.titleLabelY, 4210752, false);
+        graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
         int actualMouseX = mouseX - relX();
         int actualMouseY = mouseY - relY();
-        int invX = 7;
-
-        int titleX = (this.imageWidth - this.minecraft.font.width(getTitle().getString())) / 2;
-        if (getMenu().be.isForge())
-            invX = (this.imageWidth - this.minecraft.font.width(playerInventoryTitle.getString())) / 2;
-        this.minecraft.font.draw(matrix, playerInventoryTitle, invX, this.imageHeight - 93, 4210752);
-        this.minecraft.font.draw(matrix, getTitle(), titleX, imageHeight - 160, 4210752);
         if (getMenu().be.isLiquid() && FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, FluidTank()[0], FluidTank()[1]))
-            this.renderTooltip(matrix, getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.fluidTank), actualMouseX, actualMouseY);
+            graphics.renderTooltip(font,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.fluidTank), actualMouseX, actualMouseY);
         if (getMenu().be.hasUpgrade(Registration.GENERATOR.get()) && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, 54, 18)){
             ItemStack gen = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
-            this.renderTooltip(matrix, getFluidTooltip("tooltip.factory_api.fluid_stored", ((GeneratorUpgradeItem)gen.getItem()).getFluidStorage(gen)), actualMouseX, actualMouseY);
-    }if ((getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) && ENERGY_CELL.inMouseLimit(actualMouseX,actualMouseY, EnergyTank()[0], EnergyTank()[1])){
-            this.renderTooltip(matrix, StorageStringUtil.getEnergyTooltip("tooltip.factory_api.energy_stored", getMenu().be.energyStorage), actualMouseX, actualMouseY);
+            graphics.renderTooltip(font, getFluidTooltip("tooltip.factory_api.fluid_stored", ((GeneratorUpgradeItem)gen.getItem()).getFluidStorage(gen)), actualMouseX, actualMouseY);
+        }if ((getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) && ENERGY_CELL.inMouseLimit(actualMouseX,actualMouseY, EnergyTank()[0], EnergyTank()[1])){
+            graphics.renderTooltip(font, StorageStringUtil.getEnergyTooltip("tooltip.factory_api.energy_stored", getMenu().be.energyStorage), actualMouseX, actualMouseY);
         }if (storedFactoryUpgradeType(0)) {
-            this.addFactoryTooltips(matrix, actualMouseX, actualMouseY);
+            this.addFactoryTooltips(graphics, actualMouseX, actualMouseY);
         }
         if (getMenu().be.hasXPTank() && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY,XPTank()[0], XPTank()[1]))
-            this.renderTooltip(matrix,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.xpTank), actualMouseX, actualMouseY);
+            graphics.renderTooltip(font,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.xpTank), actualMouseX, actualMouseY);
 
     }
 
-    private void addFactoryTooltips(PoseStack matrix, int mouseX, int mouseY) {
+    private void addFactoryTooltips(GuiGraphics graphics, int mouseX, int mouseY) {
         if (!getMenu().showInventoryButtons()) {
             if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() +13) {
-                this.renderTooltip(matrix, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_open"), mouseX, mouseY);
+                graphics.renderTooltip(font, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_open"), mouseX, mouseY);
             }
         } else {
             if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() +13) {
-                this.renderComponentTooltip(matrix, StringHelper.getShiftInfoGui(), mouseX, mouseY);
+                graphics.renderComponentTooltip(font, StringHelper.getShiftInfoGui(), mouseX, mouseY);
             }
             if (storedFactoryUpgradeType(3)){
                 if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71) {
@@ -133,25 +130,25 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
                         List<Component> list = Lists.newArrayList();
                         list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_input"));
                         list.add(Component.literal("" + this.getMenu().getAutoInput()));
-                        this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                        graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                     }
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 58 && mouseY <= 71) {
                     if (storedFactoryUpgradeType(2)) {
                         List<Component> list = Lists.newArrayList();
                         list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_output"));
                         list.add(Component.literal("" + this.getMenu().getAutoOutput()));
-                        this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                        graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                     }
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 74 && mouseY <= 87) {
                     List<Component> list = Lists.newArrayList();
                     list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_top"));
                     list.add(this.getMenu().getTooltip(1));
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 102 && mouseY <= 115) {
                     List<Component> list = Lists.newArrayList();
                     list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_bottom"));
                     list.add(this.getMenu().getTooltip(0));
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 88 && mouseY <= 101) {
                     List<Component> list = Lists.newArrayList();
                     if (isShiftKeyDown()) {
@@ -160,37 +157,37 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
                         list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_front"));
                         list.add(this.getMenu().getTooltip(this.getMenu().getIndexFront()));
                     }
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 } else if (mouseX >= -45 && mouseX <= -32 && mouseY >= 88 && mouseY <= 101) {
                     List<Component> list = Lists.newArrayList();
                     list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_left"));
                     list.add(this.getMenu().getTooltip(this.getMenu().getIndexLeft()));
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 } else if (mouseX >= -17 && mouseX <= -4 && mouseY >= 88 && mouseY <= 101) {
                     List<Component> list = Lists.newArrayList();
                     list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_right"));
                     list.add(this.getMenu().getTooltip(this.getMenu().getIndexRight()));
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 } else if (mouseX >= -45 && mouseX <= -32 && mouseY >= 102 && mouseY <= 115) {
                     List<Component> list = Lists.newArrayList();
                     list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_back"));
                     list.add(this.getMenu().getTooltip(this.getMenu().getIndexBack()));
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 }else if( mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
-                    this.renderTooltip(matrix, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_show_orientation"), mouseX, mouseY);
+                    graphics.renderTooltip(font, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_show_orientation"), mouseX, mouseY);
                 }
             }
             if (storedFactoryUpgradeType(4)) {
                 if (this.getMenu().showInventoryButtons() && this.getMenu().getRedstoneMode() == 4) {
                     int comSub = this.getMenu().getComSub();
                     int i = comSub > 9 ? 28 : 31;
-                    this.minecraft.font.draw(matrix, Component.literal("" + comSub), i - 42, 138, 4210752);
-                    this.minecraft.font.draw(matrix, Component.literal("" + comSub), i - 42, 138, ChatFormatting.WHITE.getColor());
+                    graphics.drawString(font, Component.literal("" + comSub), i - 42, 138, 4210752);
+                    graphics.drawString(font, Component.literal("" + comSub), i - 42, 138, ChatFormatting.WHITE.getColor());
                 }
                 if (mouseX >= -47 && mouseX <= -34 && mouseY >= 118 && mouseY <= 131) {
                     List<Component> list = Lists.newArrayList();
                     list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_ignored"));
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 118 && mouseY <= 131) {
                     List<Component> list = Lists.newArrayList();
                     if (isShiftKeyDown()) {
@@ -198,74 +195,68 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
                     } else {
                         list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_high"));
                     }
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 } else if (mouseX >= -15 && mouseX <= -2 && mouseY >= 118 && mouseY <= 131) {
                     List<Component> list = Lists.newArrayList();
                     list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator"));
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 } else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 134 && mouseY <= 147) {
                     List<Component> list = Lists.newArrayList();
                     list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator_sub"));
-                    this.renderComponentTooltip(matrix, list, mouseX, mouseY);
+                    graphics.renderComponentTooltip(font, list, mouseX, mouseY);
                 }
             }
 
         }
     }
-    protected void blitSmeltingSprites(PoseStack matrix) {
+    protected void blitSmeltingSprites(GuiGraphics graphics) {
         int i;
         if ((this.getMenu()).BurnTimeGet() > 0) {
             i = (this.getMenu()).getBurnLeftScaled(13);
-            this.blit(matrix, relX() + 55, relY() + 37 + 12 - i, 176, 12 - i, 14, i + 1);
+            graphics.blit(GUI(), relX() + 55, relY() + 37 + 12 - i, 176, 12 - i, 14, i + 1);
         }
         i = (this.getMenu()).getCookScaled(24);
-        this.blit(matrix, relX() + 79, relY() + 34, 176, 14, i + 1, 16);
-        RenderSystem.setShaderTexture(0, WIDGETS);
-        this.blit(matrix, relX() + 53, relY() + 17, 192, 60, 18, 18);
+        graphics.blit(GUI(), relX() + 79, relY() + 34, 176, 14, i + 1, 16);
+        graphics.blit(WIDGETS, relX() + 53, relY() + 17, 192, 60, 18, 18);
         if (!getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
-            this.blit(matrix, relX() + 111, relY() + 30, 210, 60, 26, 26);
+            graphics.blit(WIDGETS, relX() + 111, relY() + 30, 210, 60, 26, 26);
         }
     }
     @Override
-    protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI());
-        this.blit(matrix, relX(), relY(), 0, 0, imageWidth, imageHeight);
-        blitSmeltingSprites(matrix);
+        graphics.blit(GUI(), relX(), relY(), 0, 0, imageWidth, imageHeight);
+        blitSmeltingSprites(graphics);
         if (getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            this.blit(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 34, 16, 34);
-            ProgressElementRenderUtil.renderDefaultProgress(matrix, this, relX() + EnergyTank()[0], relY() + EnergyTank()[1], this.getMenu().getEnergyStoredScaled(34), ENERGY_CELL);
+            graphics.blit(WIDGETS, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 34, 16, 34);
+            ENERGY_CELL.drawProgress(graphics, relX() + EnergyTank()[0], relY() + EnergyTank()[1], this.getMenu().getEnergyStoredScaled(34));
         }if (getMenu().be.isLiquid()){
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            this.blit(matrix, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 38, 20, 22);
-            ProgressElementRenderUtil.renderFluidTank(matrix,this,relX() + FluidTank()[0], relY() + FluidTank()[1], this.getMenu().getFluidStoredScaled(22,false),FLUID_TANK, this.getMenu().getFluidStackStored(false),false);
+            graphics.blit(WIDGETS, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 38, 20, 22);
+            FLUID_TANK.drawAsFluidTank(graphics,relX() + FluidTank()[0], relY() + FluidTank()[1], this.getMenu().getFluidStoredScaled(22,false), this.getMenu().getFluidStackStored(false),false);
         }
 
         if (this.getMenu().be.hasXPTank()) {
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            this.blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16);
-            ProgressElementRenderUtil.renderFluidTank(matrix,this,relX() + XPTank()[0], relY() + XPTank()[1], this.getMenu().getFluidStoredScaled(16,true),MINI_FLUID_TANK, this.getMenu().getFluidStackStored(true),true);
+            graphics.blit(WIDGETS, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16);
+            MINI_FLUID_TANK.drawAsFluidTank(graphics,relX() + XPTank()[0], relY() + XPTank()[1], this.getMenu().getFluidStoredScaled(16,true), this.getMenu().getFluidStackStored(true),true);
         }
         if (this.getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             ItemStack generatorUp = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
-            ProgressElementRenderUtil.renderFluidTank(matrix,this,relX() + 54, relY() + 18, (int)(ItemContainerUtil.getFluid(generatorUp).getAmount() * 16 / (4 * FluidStack.bucketAmount())),MINI_FLUID_TANK,ItemContainerUtil.getFluid(generatorUp),true);
+            MINI_FLUID_TANK.drawAsFluidTank(graphics,relX() + 54, relY() + 18, (int)(ItemContainerUtil.getFluid(generatorUp).getAmount() * 16 / (4 * FluidStack.bucketAmount())),ItemContainerUtil.getFluid(generatorUp),true);
         }
         if (storedFactoryUpgradeType(0)) {
-            RenderSystem.setShaderTexture(0, WIDGETS);
             int actualMouseX = mouseX - relY();
             int actualMouseY = mouseY - relX();
 
-            this.addInventoryButtons(matrix, actualMouseX, actualMouseY);
+            this.addInventoryButtons(graphics, actualMouseX, actualMouseY);
             if (storedFactoryUpgradeType(4))
-                this.addRedstoneButtons(matrix, actualMouseX, actualMouseY);
+                this.addRedstoneButtons(graphics, actualMouseX, actualMouseY);
         }
     }
 
 
-    private void addRedstoneButtons(PoseStack matrix, int mouseX, int mouseY) {
+    private void addRedstoneButtons(GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.getMenu().showInventoryButtons()) {
-            this.blitRedstone(matrix);
+            this.blitRedstone(graphics);
             if (this.getMenu().getRedstoneMode() == 4) {
                 int comSub = getMenu().getComSub();
                 boolean flag = isShiftKeyDown();
@@ -273,26 +264,26 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
                     if (comSub > 0) {
                         this.sub_button = true;
                         if (mouseX >= -31 && mouseX <= -18 && mouseY >= 86 && mouseY <= 147) {
-                            this.blit(matrix, relX() - 31, relY() + 134, 14, 0, 14, 14);
+                            graphics.blit(WIDGETS, relX() - 31, relY() + 134, 14, 0, 14, 14);
                         } else {
-                            this.blit(matrix, relX() - 31, relY() + 134, 0, 0, 14, 14);
+                            graphics.blit(WIDGETS, relX() - 31, relY() + 134, 0, 0, 14, 14);
                         }
                     } else {
                         this.sub_button = false;
-                        this.blit(matrix, relX() - 31, relY() + 134, 28, 0, 14, 14);
+                        graphics.blit(WIDGETS, relX() - 31, relY() + 134, 28, 0, 14, 14);
                     }
 
                 } else {
                     if (comSub < 15) {
                         this.add_button = true;
                         if (mouseX >= -31 && mouseX <= -18 && mouseY >= 134 && mouseY <= 147) {
-                            this.blit(matrix, relX() - 31, relY() + 134, 14, 14, 14, 14);
+                            graphics.blit(WIDGETS, relX() - 31, relY() + 134, 14, 14, 14, 14);
                         } else {
-                            this.blit(matrix, relX() - 31, relY() + 134, 0, 14, 14, 14);
+                            graphics.blit(WIDGETS, relX() - 31, relY() + 134, 0, 14, 14, 14);
                         }
                     } else {
                         this.add_button = false;
-                        this.blit(matrix, relX() - 31, relY() + 134, 28, 14, 14, 14);
+                        graphics.blit(WIDGETS, relX() - 31, relY() + 134, 28, 14, 14, 14);
 
                     }
                 }
@@ -300,141 +291,141 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         }
     }
 
-    private void addInventoryButtons(PoseStack matrix, int mouseX, int mouseY) {
+    private void addInventoryButtons(GuiGraphics graphics, int mouseX, int mouseY) {
         if (!getMenu().showInventoryButtons()) {
-            this.blit(matrix, relX() + 7, relY() + FactoryShowButtonY(), 0, 28, 18, 14);
+            graphics.blit(WIDGETS, relX() + 7, relY() + FactoryShowButtonY(), 0, 28, 18, 14);
             if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() + 13)
-                this.blit(matrix, relX() + 7, relY() + FactoryShowButtonY(), 18, 28, 18, 14);
+                graphics.blit(WIDGETS, relX() + 7, relY() + FactoryShowButtonY(), 18, 28, 18, 14);
         } else if (getMenu().showInventoryButtons()) {
-            this.blit(matrix, relX() + 7, relY() + FactoryShowButtonY(), 18, 28, 18, 14);
-            this.blit(matrix, relX() - 53, relY() + 52, 0, 47, 59, 107);
+            graphics.blit(WIDGETS, relX() + 7, relY() + FactoryShowButtonY(), 18, 28, 18, 14);
+            graphics.blit(WIDGETS, relX() - 53, relY() + 52, 0, 47, 59, 107);
             if (storedFactoryUpgradeType(1)) {
-                this.blit(matrix, relX() - 47, relY() + 58, 56, 157, 14, 14);
+                graphics.blit(WIDGETS, relX() - 47, relY() + 58, 56, 157, 14, 14);
                 if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71 || this.getMenu().getAutoInput()) {
-                    this.blit(matrix, relX() - 47, relY() + 58, 0, 189, 14, 14);
+                    graphics.blit(WIDGETS, relX() - 47, relY() + 58, 0, 189, 14, 14);
                 }
             }
             if (storedFactoryUpgradeType(2)) {
-                this.blit(matrix, relX() - 31, relY() + 58, 70, 157, 14, 14);
+                graphics.blit(WIDGETS, relX() - 31, relY() + 58, 70, 157, 14, 14);
                 if (mouseX >= -31 && mouseX <= -18 && mouseY >= 58 && mouseY <= 71 || this.getMenu().getAutoOutput()) {
-                    this.blit(matrix, relX() - 31, relY() + 58, 14, 189, 14, 14);
+                    graphics.blit(WIDGETS, relX() - 31, relY() + 58, 14, 189, 14, 14);
                 }
             }
             if (storedFactoryUpgradeType(3)) {
-                    this.blit(matrix, relX() - 15, relY() + 58, 168, 189, 14, 14);
+                    graphics.blit(WIDGETS, relX() - 15, relY() + 58, 168, 189, 14, 14);
                     if ( (mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71 || this.getMenu().be.showOrientation)) {
-                        this.blit(matrix, relX() - 15, relY() + 58, 182, 189, 14, 14);
+                        graphics.blit(WIDGETS, relX() - 15, relY() + 58, 182, 189, 14, 14);
                     }
-                this.blitIO(matrix);
+                this.blitIO(graphics);
             }
         }
 
 
     }
 
-    private void blitRedstone(PoseStack matrix) {
+    private void blitRedstone(GuiGraphics graphics) {
         boolean flag = isShiftKeyDown();
-        this.blit(matrix, relX() - 47, relY() + 118, 28, 203, 14, 14);
-        this.blit(matrix, relX() - 31, relY() + 118, 42, 203, 14, 14);
-        this.blit(matrix, relX() - 15, relY() + 118, 56, 203, 14, 14);
-        this.blit(matrix, relX() - 47, relY() + 134, 70, 203, 14, 14);
+        graphics.blit(WIDGETS, relX() - 47, relY() + 118, 28, 203, 14, 14);
+        graphics.blit(WIDGETS, relX() - 31, relY() + 118, 42, 203, 14, 14);
+        graphics.blit(WIDGETS, relX() - 15, relY() + 118, 56, 203, 14, 14);
+        graphics.blit(WIDGETS, relX() - 47, relY() + 134, 70, 203, 14, 14);
         if (flag) {
-            this.blit(matrix, relX() - 31, relY() + 118, 84, 189, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 118, 84, 189, 14, 14);
         }
         int setting = this.getMenu().getRedstoneMode();
         if (setting == 0) {
-            this.blit(matrix, relX() - 47, relY() + 118, 28, 189, 14, 14);
+            graphics.blit(WIDGETS, relX() - 47, relY() + 118, 28, 189, 14, 14);
         } else if (setting == 1 && !flag) {
-            this.blit(matrix, relX() - 31, relY() + 118, 42, 189, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 118, 42, 189, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, relX() - 31, relY() + 118, 98, 189, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 118, 98, 189, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, relX() - 15, relY() + 118, 56, 189, 14, 14);
+            graphics.blit(WIDGETS, relX() - 15, relY() + 118, 56, 189, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, relX() - 47, relY() + 134, 70, 189, 14, 14);
+            graphics.blit(WIDGETS, relX() - 47, relY() + 134, 70, 189, 14, 14);
         }
 
     }
 
-    private void blitIO(PoseStack matrix) {
+    private void blitIO(GuiGraphics graphics) {
         int[] settings = new int[]{0, 0, 0, 0, 0, 0};
         int setting = this.getMenu().getSettingTop();
         if (setting == 0)
-            this.blit(matrix, relX() - 31, relY() + 74, 84, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 74, 84, 157, 14, 14);
         else if (setting == 1) {
-            this.blit(matrix, relX() - 31, relY() + 74, 0, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 74, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, relX() - 31, relY() + 74, 14, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 74, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, relX() - 31, relY() + 74, 28, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 74, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, relX() - 31, relY() + 74, 42, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 74, 42, 157, 14, 14);
         }
         settings[1] = setting;
 
         setting = this.getMenu().getSettingBottom();
         if (setting == 0)
-            this.blit(matrix, relX() - 31, relY() + 102, 84, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 102, 84, 157, 14, 14);
         else if (setting == 1) {
-            this.blit(matrix, relX() - 31, relY() + 102, 0, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 102, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, relX() - 31, relY() + 102, 14, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 102, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, relX() - 31, relY() + 102, 28, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 102, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, relX() - 31, relY() + 102, 42, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 102, 42, 157, 14, 14);
         }
         settings[0] = setting;
         setting = this.getMenu().getSettingFront();
         if (setting == 0)
-            this.blit(matrix, relX() - 31, relY() + 88, 84, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 88, 84, 157, 14, 14);
         else if (setting == 1) {
-            this.blit(matrix, relX() - 31, relY() + 88, 0, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 88, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, relX() - 31, relY() + 88, 14, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 88, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, relX() - 31, relY() + 88, 28, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 88, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, relX() - 31, relY() + 88, 42, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 31, relY() + 88, 42, 157, 14, 14);
         }
         settings[this.getMenu().getIndexFront()] = setting;
         setting = this.getMenu().getSettingBack();
         if (setting == 0)
-            this.blit(matrix, relX() - 45, relY() + 102, 84, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 102, 84, 157, 14, 14);
         else if (setting == 1) {
-            this.blit(matrix, relX() - 45, relY() + 102, 0, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 102, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, relX() - 45, relY() + 102, 14, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 102, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, relX() - 45, relY() + 102, 28, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 102, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, relX() - 45, relY() + 102, 42, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 102, 42, 157, 14, 14);
         }
         settings[this.getMenu().getIndexBack()] = setting;
         setting = this.getMenu().getSettingLeft();
         if (setting == 0)
-            this.blit(matrix, relX() - 45, relY() + 88, 84, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 88, 84, 157, 14, 14);
         else if (setting == 1) {
-            this.blit(matrix, relX() - 45, relY() + 88, 0, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 88, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, relX() - 45, relY() + 88, 14, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 88, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, relX() - 45, relY() + 88, 28, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 88, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, relX() - 45, relY() + 88, 42, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 45, relY() + 88, 42, 157, 14, 14);
         }
         settings[this.getMenu().getIndexLeft()] = setting;
         setting = this.getMenu().getSettingRight();
         if (setting == 0)
-            this.blit(matrix, relX() - 17, relY() + 88, 84, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 17, relY() + 88, 84, 157, 14, 14);
         else if (setting == 1) {
-            this.blit(matrix, relX() - 17, relY() + 88, 0, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 17, relY() + 88, 0, 157, 14, 14);
         } else if (setting == 2) {
-            this.blit(matrix, relX() - 17, relY() + 88, 14, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 17, relY() + 88, 14, 157, 14, 14);
         } else if (setting == 3) {
-            this.blit(matrix, relX() - 17, relY() + 88, 28, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 17, relY() + 88, 28, 157, 14, 14);
         } else if (setting == 4) {
-            this.blit(matrix, relX() - 17, relY() + 88, 42, 157, 14, 14);
+            graphics.blit(WIDGETS, relX() - 17, relY() + 88, 42, 157, 14, 14);
         }
         settings[this.getMenu().getIndexRight()] = setting;
         boolean input = false;
@@ -452,19 +443,19 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
                 fuel = true;
             }
         }
-        blitSlotsLayer(matrix, input, both, fuel, output);
+        blitSlotsLayer(graphics, input, both, fuel, output);
     }
-    protected void blitSlotsLayer(PoseStack matrix, boolean input, boolean both, boolean fuel, boolean output){
+    protected void blitSlotsLayer(GuiGraphics graphics, boolean input, boolean both, boolean fuel, boolean output){
         if (!getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             if (input || both) {
-                this.blit(matrix, relX() + 53, relY() + 17, 0, 171, 18, 18);
+                graphics.blit(WIDGETS, relX() + 53, relY() + 17, 0, 171, 18, 18);
             }
             if (output || both) {
-                this.blit(matrix, relX() + 111, relY() + 30, 0, 203, 26, 26);
+                graphics.blit(WIDGETS, relX() + 111, relY() + 30, 0, 203, 26, 26);
             }
         }
         if (fuel) {
-            this.blit(matrix, relX() + 53, relY() + 53, 18, 171, 18, 18);
+            graphics.blit(WIDGETS, relX() + 53, relY() + 53, 18, 171, 18, 18);
         }
     }
 

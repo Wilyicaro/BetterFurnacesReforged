@@ -154,7 +154,7 @@ public class TierUpgradeItem extends Item {
                 materials = new ItemStack(Items.IRON_INGOT, 8);
             }
         }
-        Level world = entity.level;
+        Level world = entity.level();
         if (!world.isClientSide) {
             List<ItemEntity> list = world.getEntities(EntityType.ITEM,
                     new AABB(entity.position().x - 0.5, entity.position().y - 0.5, entity.position().z - 0.5, entity.position().x + 0.5, entity.position().y + 0.5, entity.position().z + 0.5),

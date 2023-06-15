@@ -41,35 +41,80 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "mod_id", "${mod_id}"
+    inputs.property "mod_name", "${mod_name}"
+    inputs.property "mod_license", "${mod_license}"
+    inputs.property "mod_description", "${mod_description}"
+    inputs.property "mod_authors", "${mod_authors}"
+    inputs.property "mod_credits", "${mod_credits}"
+    inputs.property "mod_group", project.group
+    inputs.property "mod_source", "${mod_source}"
+    inputs.property "mc_version", "${minecraft_version}"
+    inputs.property "architectury_version", "${architectury_version}"
+    inputs.property "factory_api_version", "${factory_api_version}"
+    inputs.property "jei_version", "${jei_version}"
 
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
+        expand (
+                "version" : project.version,
+                "mod_id" : "${mod_id}",
+                "mod_name" : "${mod_name}",
+                "mod_license" : "${mod_license}",
+                "mod_description" : "${mod_description}",
+                "mod_authors" : "${mod_authors}",
+                "mod_credits" : "${mod_credits}",
+                "mod_group" : project.group,
+                "mod_source" : "${mod_source}",
+                "mc_version" : "${minecraft_version}",
+                "architectury_version" : "${architectury_version}",
+                "factory_api_version" : "${factory_api_version}",
+                "jei_version" : "${jei_version}"
+        )
     }
 }
 
 shadowJar {
     exclude "fabric.mod.json"
-    exclude "architectury.common.json"
+    exclude "betterfurnaces-common.accessWidener"
+    exclude "betterfurnaces.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
+
+    // Replace classes with forge's version
+    exclude "dev/architectury/core/block/ArchitecturyLiquidBlock.class"
+    exclude "dev/architectury/core/fluid/ArchitecturyFlowingFluid.class"
+    exclude 'dev/architectury/core/fluid/ArchitecturyFlowingFluid$Source.class'
+    exclude 'dev/architectury/core/fluid/ArchitecturyFlowingFluid$Flowing.class'
+    exclude 'dev/architectury/core/item/ArchitecturyBucketItem.class'
+    exclude 'dev/architectury/core/item/ArchitecturyMobBucketItem.class'
+    relocate "dev.architectury.core.block.forge.imitator", "dev.architectury.core.block"
+    relocate "dev.architectury.core.fluid.forge.imitator", "dev.architectury.core.fluid"
+    relocate "dev.architectury.core.item.forge.imitator", "dev.architectury.core.item"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier = null
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 sourcesJar {
-    def commonSources = project(":common").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
+    afterEvaluate {
+        [":common"].forEach {
+            def depSources = project(it).sourcesJar
+            dependsOn depSources
+            from(depSources.archiveFile.map { zipTree(it) }) {
+                exclude "betterfurnaces.accessWidener"
+            }
+        }
+    }
 }
+
 
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {

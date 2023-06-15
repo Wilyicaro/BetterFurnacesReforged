@@ -2,6 +2,7 @@ package wily.betterfurnaces.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,34 +23,27 @@ public class FuelVerifierScreen extends AbstractBasicScreen<FuelVerifierMenu> {
     }
 
 
-    @Override
-    public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrix);
-        super.render(matrix, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrix, mouseX, mouseY);
-    }
 
     @Override
-    protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         Component invname = this.playerInv.getDisplayName();
         Component burntime = Component.translatable("gui.betterfurnacesreforged.fuel.melts").append(Component.literal(String.valueOf(( this.getMenu()).getBurnTime()))).append( Component.translatable("gui.betterfurnacesreforged.fuel.items"));
-        this.minecraft.font.draw(matrix, invname, 7, this.imageHeight - 93, 4210752);
+        graphics.drawString(font, invname, 7, this.imageHeight - 93, 4210752,false);
         if (this.getMenu().getBurnTime() > 0)
-        this.minecraft.font.draw(matrix, burntime, this.imageWidth / 2 - this.minecraft.font.width(burntime.getString()) / 2, 6, 4210752);
-        else this.minecraft.font.draw(matrix, name, 7 + this.imageWidth / 2 - this.minecraft.font.width(name.getString()) / 2, 6, 4210752);
+            graphics.drawString(font, burntime, this.imageWidth / 2 - font.width(burntime.getString()) / 2, 6, 4210752,false);
+        else graphics.drawString(font, name, 7 + this.imageWidth / 2 - font.width(name.getString()) / 2, 6, 4210752,false);
     }
 
 
     @Override
-    protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI);
 
-        this.blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(GUI, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
         int i;
         i = (this.getMenu()).getBurnTimeScaled(26);
         if (i > 0) {
-            this.blit(matrix, relX() + 74, relY() + 13 + 26 - i, 176, 24 - i, 28, i + 2);
+            graphics.blit(GUI, relX() + 74, relY() + 13 + 26 - i, 176, 24 - i, 28, i + 2);
         }
     }
 

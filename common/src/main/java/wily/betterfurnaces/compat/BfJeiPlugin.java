@@ -24,6 +24,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -121,7 +122,6 @@ public class BfJeiPlugin implements IModPlugin {
 	}
 
 	public static class CobblestoneGeneratorCategory implements IRecipeCategory<CobblestoneGeneratorRecipes> {
-		private static final ResourceLocation Uid = new ResourceLocation(BetterFurnacesReforged.MOD_ID, "jei/rock_generating");
 		private final Component title;
 		private final IDrawable background;
 
@@ -132,7 +132,7 @@ public class BfJeiPlugin implements IModPlugin {
 
 		public CobblestoneGeneratorCategory(IGuiHelper guiHelper) {
 			this.title = Registration.COBBLESTONE_GENERATOR.get().getName();
-			this.background = guiHelper.createDrawable(GUI, 46, 21, 85, 52);
+			this.background = guiHelper.createDrawable(GUI, 18, 11, 139, 63);
 			this.guiHelper = guiHelper;
 			this.cachedProgressAnim = CacheBuilder.newBuilder()
 					.maximumSize(25)
@@ -146,16 +146,16 @@ public class BfJeiPlugin implements IModPlugin {
 					});
 		}
 		@Override
-		public void draw(CobblestoneGeneratorRecipes recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-			GuiUtil.renderScaled(stack,  (float) recipe.duration / 20 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
-			FluidRenderUtil.renderTiledFluid(stack,null, 12, 23, 17,12, FluidStack.create(Fluids.LAVA, 1000), false);
-			FluidRenderUtil.renderTiledFluid(stack,null, 55, 23, 17,12,FluidStack.create(Fluids.WATER, 1000), true);
+		public void draw(CobblestoneGeneratorRecipes recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+			GuiUtil.renderScaled(graphics.pose(),  (float) recipe.duration / 20 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
+			FluidRenderUtil.renderTiledFluid(graphics, 12, 23, 17,12, FluidStack.create(Fluids.LAVA, 1000), false);
+			FluidRenderUtil.renderTiledFluid(graphics, 55, 23, 17,12,FluidStack.create(Fluids.WATER, 1000), true);
 
 			Pair<IDrawableAnimated,IDrawableAnimated> cache = cachedProgressAnim.getUnchecked(recipe.duration);
-			cache.first.draw(stack, 12,23);
-			guiHelper.createDrawable(GUI, 176, 0, 17, 12).draw(stack, 12,23);
-			cache.second.draw(stack, 55,23);
-			guiHelper.createDrawable(GUI, 176, 12, 17, 12).draw(stack, 55,23);
+			cache.first.draw(graphics, 12,23);
+			guiHelper.createDrawable(GUI, 176, 0, 17, 12).draw(graphics, 12,23);
+			cache.second.draw(graphics, 55,23);
+			guiHelper.createDrawable(GUI, 176, 12, 17, 12).draw(graphics, 55,23);
 		}
 
 		@Override
@@ -183,8 +183,7 @@ public class BfJeiPlugin implements IModPlugin {
 			builder.addSlot(RecipeIngredientRole.OUTPUT,34, 24).addItemStack(recipe.getResultItem(RegistryAccess.EMPTY));
 			builder.addSlot(RecipeIngredientRole.INPUT, 7, 6).addItemStack(new ItemStack(Items.LAVA_BUCKET));
 			builder.addSlot(RecipeIngredientRole.INPUT,62, 6).addItemStack(new ItemStack(Items.WATER_BUCKET));
-			// ...
-			// ...
+
 		}
 	}
 }

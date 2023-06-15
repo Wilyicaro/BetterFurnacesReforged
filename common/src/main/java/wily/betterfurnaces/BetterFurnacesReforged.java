@@ -3,6 +3,7 @@ package wily.betterfurnaces;
 import com.google.common.base.Suppliers;
 import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import org.apache.logging.log4j.LogManager;
@@ -25,8 +26,6 @@ public class BetterFurnacesReforged
 
     public static final Supplier<RegistrarManager> REGISTRIES = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final CreativeTabRegistry.TabSupplier ITEM_GROUP = CreativeTabRegistry.create(new ResourceLocation(BetterFurnacesReforged.MOD_ID,"tab"), ()-> Registration.EXTREME_FURNACE.get().asItem().getDefaultInstance());
-
     public static void init(){
 
         Messages.registerMessages("betterfurnaces_network");

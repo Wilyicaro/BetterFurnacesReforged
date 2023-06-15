@@ -1,9 +1,12 @@
 package wily.ultimatefurnaces.init;
 
+import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -17,7 +20,6 @@ import wily.betterfurnaces.blocks.ForgeBlock;
 import wily.betterfurnaces.blocks.SmeltingBlock;
 import wily.betterfurnaces.items.OreProcessingUpgradeItem;
 import wily.betterfurnaces.util.registration.SmeltingBlocks;
-import wily.ultimatefurnaces.UltimateFurnaces;
 import wily.ultimatefurnaces.items.*;
 
 import static wily.betterfurnaces.init.Registration.BLOCK_ENTITIES;
@@ -26,14 +28,16 @@ import static wily.betterfurnaces.init.Registration.ITEMS;
 public class RegistrationUF {
 
     public static final DeferredRegister<Block> BLOCK_ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.BLOCK);
+    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.CREATIVE_MODE_TAB);
     public static void init() {
         BLOCK_ITEMS.register();
+        TABS.register();
         BLOCK_ITEMS.forEach((b)-> ITEMS.getRegistrar().register( b.getId(),() -> new BlockItem(b.get(), defaultItemProperties())));
     }
+    public static final RegistrySupplier<CreativeModeTab> ITEM_GROUP =  TABS.register("tab_ultimate_furnaces",()-> CreativeTabRegistry.create(Component.translatable("itemGroup."+ BetterFurnacesReforged.MOD_ID + ".tab_ultimate"), ()-> RegistrationUF.ULTIMATE_FURNACE.get().asItem().getDefaultInstance()));
 
 
-
-    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().arch$tab(UltimateFurnaces.ITEM_GROUP);}
+    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().arch$tab(ITEM_GROUP);}
     private static Item.Properties uniqueStackItemProperties(){ return  defaultItemProperties().stacksTo(1);}
     public static final RegistrySupplier<SmeltingBlock> COPPER_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.COPPER_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.COAL_BLOCK).strength(10.0F, 20.0F)));
     public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> COPPER_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.COPPER_FURNACE.getName(), () -> BlockEntityType.Builder.of((l, b)-> new SmeltingBlockEntity(l,b, Config.copperTierSpeed), COPPER_FURNACE.get()).build(null));

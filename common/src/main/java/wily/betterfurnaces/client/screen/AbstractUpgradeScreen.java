@@ -2,6 +2,7 @@ package wily.betterfurnaces.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,32 +24,23 @@ public abstract class AbstractUpgradeScreen<T extends AbstractUpgradeMenu> exten
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int i, int j) {
+    protected void renderLabels(GuiGraphics poseStack, int i, int j) {
 
     }
 
-    @Override
-    public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrix);
-        super.render(matrix, mouseX, mouseY, partialTicks);
-        renderColorFurnace(matrix, partialTicks, mouseX, mouseY);
-    }
 
     @Override
     protected void init() {
         super.init();
     }
     @Override
-    protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         ItemStack stack = ((ColorUpgradeItem.ContainerColorUpgrade) this.getMenu()).itemStackBeingHeld;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI);
 
-        this.blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
-        itemRenderer.renderGuiItem(matrix,stack, this.relX() + 154, this.relY() + 6);
-        this.font.draw(matrix, name, (width - this.font.width(name) )/2, this.relY() + 8, 4210752);
-    }
-    protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+        graphics.blit(GUI, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
+        graphics.renderItem(stack, this.relX() + 154, this.relY() + 6);
+        graphics.drawString(font, name, (width - this.font.width(name) )/2, this.relY() + 8, 4210752,false);
     }
 
 }
