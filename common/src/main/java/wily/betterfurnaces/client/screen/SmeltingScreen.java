@@ -52,6 +52,13 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     public static IFactoryDrawableType.DrawableProgress FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,16,20,22},false,IFactoryDrawableType.Direction.VERTICAL);
 
     public static IFactoryDrawableType.DrawableProgress ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false, IFactoryDrawableType.Direction.VERTICAL);
+
+    public static IFactoryDrawableType SLOT = IFactoryDrawableType.create(WIDGETS,192,60,18,18);
+    public static IFactoryDrawableType BIG_SLOT = IFactoryDrawableType.create(WIDGETS,210,60,26,26);
+    public static IFactoryDrawableType INPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,171,18,18);
+    public static IFactoryDrawableType FUEL_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,18,171,18,18);
+    public static IFactoryDrawableType OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,36,171,18,18);
+    public static IFactoryDrawableType BIG_OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,203,26,26);
     public static IFactoryDrawableType.DrawableProgress BFProgressType(Progress.Identifier identifier, int[] uvSize, boolean reverse, IFactoryDrawableType.Direction plane) {
         return IFactoryDrawableType.create(WIDGETS,uvSize[0],uvSize[1],uvSize[2],uvSize[3]).asProgress(identifier, reverse, plane);
     }
@@ -217,9 +224,15 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         }
         i = (this.getMenu()).getCookScaled(24);
         graphics.blit(GUI(), relX() + 79, relY() + 34, 176, 14, i + 1, 16);
-        graphics.blit(WIDGETS, relX() + 53, relY() + 17, 192, 60, 18, 18);
+        SLOT.draw(graphics, relX() + 53, relY() + 17);
+        boolean storage = menu.be.hasUpgrade(Registration.STORAGE.get());
+        if (storage) {
+            SLOT.draw(graphics, relX() + 35, relY() + 17);
+            SLOT.draw(graphics, relX() + 35, relY() + 53);
+        }
         if (!getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
-            graphics.blit(WIDGETS, relX() + 111, relY() + 30, 210, 60, 26, 26);
+            BIG_SLOT.draw(graphics, relX() + 111, relY() + 30);
+            if (storage) SLOT.draw(graphics, relX() + 137, relY() + 34);
         }
     }
     @Override
@@ -433,29 +446,28 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         boolean both = false;
         boolean fuel = false;
         for (int set : settings) {
-            if (set == 1) {
-                input = true;
-            } else if (set == 2) {
-                output = true;
-            } else if (set == 3) {
-                both = true;
-            } else if (set == 4) {
-                fuel = true;
-            }
+            if (set == 1) input = true;
+            else if (set == 2) output = true;
+             else if (set == 3) both = true;
+             else if (set == 4) fuel = true;
         }
         blitSlotsLayer(graphics, input, both, fuel, output);
     }
     protected void blitSlotsLayer(GuiGraphics graphics, boolean input, boolean both, boolean fuel, boolean output){
+        boolean storage = menu.be.hasUpgradeType(Registration.STORAGE.get());
         if (!getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             if (input || both) {
-                graphics.blit(WIDGETS, relX() + 53, relY() + 17, 0, 171, 18, 18);
+                if (storage) INPUT_SLOT_OUTLINE.draw(graphics, relX() + 35, relY() + 17);
+                INPUT_SLOT_OUTLINE.draw(graphics, relX() + 53, relY() + 17);
             }
             if (output || both) {
-                graphics.blit(WIDGETS, relX() + 111, relY() + 30, 0, 203, 26, 26);
+                if (storage) OUTPUT_SLOT_OUTLINE.draw(graphics, relX() + 137, relY() + 34);
+                BIG_OUTPUT_SLOT_OUTLINE.draw(graphics, relX() + 111, relY() + 30);
             }
         }
         if (fuel) {
-            graphics.blit(WIDGETS, relX() + 53, relY() + 53, 18, 171, 18, 18);
+            if (storage)  FUEL_SLOT_OUTLINE.draw(graphics, relX() + 35, relY() + 53);
+            FUEL_SLOT_OUTLINE.draw(graphics, relX() + 53, relY() + 53);
         }
     }
 

@@ -1,0 +1,23 @@
+{
+  "group": "betterfurnacesreforged",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "232",
+    "121"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:stone"
+    },
+    "2": {
+      "tag": "forge:glass"
+    },
+    "3": {
+      "tag": "forge:chests/wooden"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:storage_upgrade"
+  }
+}

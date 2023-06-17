@@ -347,7 +347,11 @@ public class SmeltingBlock extends Block implements EntityBlock {
     public RenderShape getRenderShape(BlockState blockState) {
         return RenderShape.INVISIBLE;
     }
-
+    public boolean triggerEvent(BlockState blockState, Level level, BlockPos blockPos, int i, int j) {
+        super.triggerEvent(blockState, level, blockPos, i, j);
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        return blockEntity == null ? false : blockEntity.triggerEvent(i, j);
+    }
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {

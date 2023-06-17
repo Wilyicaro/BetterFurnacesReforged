@@ -26,11 +26,6 @@ public class FuelVerifierMenu extends AbstractInventoryMenu<FuelVerifierBlockEnt
         checkContainerDataCount(this.fields, 1);
     }
 
-    @Override
-    public void addInventorySlots() {
-        this.addSlot(new SlotFuel(be, 0, 80, 48));
-    }
-
 
     public BlockPos getPos() {
         return this.be.getBlockPos();

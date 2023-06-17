@@ -63,44 +63,43 @@ public class BetterFurnacesPlatformImpl {
                                                 }
                                         }
                                     }
-                                if (be.furnaceSettings.get(dir.ordinal()) == 4) {
-                                    ItemStack fuel = be.inventory.getItem(be.FUEL());
-                                    if (fuel.getCount() >= fuel.getMaxStackSize()) {
-                                        continue;
-                                    }
-                                    while (storageView.hasNext()) {
-                                        StorageView<ItemVariant> view = storageView.next();
-                                        ItemVariant variant = view.getResource();
-                                        if (view.isResourceBlank() || !be.isItemFuel(view.getResource().toStack())) {
+                                for (int FUEL : be.FUEL())
+                                    if (be.furnaceSettings.get(dir.ordinal()) == 4) {
+                                        ItemStack fuel = be.inventory.getItem(FUEL);
+                                        if (fuel.getCount() >= fuel.getMaxStackSize()) {
                                             continue;
                                         }
-                                        if (variant.isOf(fuel.getItem()) || fuel.isEmpty())
-                                        try (Transaction transaction = Transaction.openOuter()) {
-                                            be.inventory.insertItem(be.FUEL(), variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(be.FUEL()).getCount(), transaction)), false);
-                                            transaction.commit();
-                                        }
+                                        while (storageView.hasNext()) {
+                                            StorageView<ItemVariant> view = storageView.next();
+                                            ItemVariant variant = view.getResource();
+                                            if (view.isResourceBlank() || !be.isItemFuel(view.getResource().toStack())) {
+                                                continue;
+                                            }
+                                            if (variant.isOf(fuel.getItem()) || fuel.isEmpty())
+                                                try (Transaction transaction = Transaction.openOuter()) {
+                                                    be.inventory.insertItem(FUEL, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(FUEL).getCount(), transaction)), false);
+                                                    transaction.commit();
+                                                }
                                         }
                                     }
                                 }
                             }
-
                             if (be.getAutoOutput() == 1) {
+                                for (int FUEL : be.FUEL())
+                                    if (be.furnaceSettings.get(dir.ordinal()) == 4) {
+                                        if (be.inventory.getItem(FUEL).isEmpty()) {
+                                            continue;
+                                        }
+                                        ItemStack fuel = be.inventory.getItem(FUEL);
+                                        if (be.isItemFuel(fuel)) {
+                                            continue;
+                                        }
+                                        try (Transaction transaction = Transaction.openOuter()) {
+                                            be.inventory.extractItem(FUEL, (int) other.insert(ItemVariant.of(fuel), fuel.getCount(), transaction), false);
+                                            transaction.commit();
+                                        }
 
-                                if (be.furnaceSettings.get(dir.ordinal()) == 4) {
-                                    if (be.inventory.getItem(be.FUEL()).isEmpty()) {
-                                        continue;
                                     }
-                                    ItemStack fuel = be.inventory.getItem(be.FUEL());
-                                    if (be.isItemFuel(fuel)) {
-                                        continue;
-                                    }
-                                    try (Transaction transaction = Transaction.openOuter()) {
-                                        be.inventory.extractItem(be.FUEL(), (int) other.insert(ItemVariant.of(fuel), fuel.getCount(), transaction), false);
-                                        transaction.commit();
-                                    }
-
-                                }
-
                                 for (int output : be.OUTPUTS()) {
                                     if (be.furnaceSettings.get(dir.ordinal()) == 2 || be.furnaceSettings.get(dir.ordinal()) == 3) {
                                         ItemStack o = be.inventory.getItem(output);

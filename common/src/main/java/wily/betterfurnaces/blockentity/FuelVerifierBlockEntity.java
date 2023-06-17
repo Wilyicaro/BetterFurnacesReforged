@@ -4,16 +4,20 @@ import dev.architectury.registry.fuel.FuelRegistry;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.FuelVerifierMenu;
+import wily.betterfurnaces.inventory.SlotFuel;
 import wily.factoryapi.base.IPlatformHandlerApi;
 import wily.factoryapi.base.Storages;
 import wily.factoryapi.base.TransportState;
@@ -60,7 +64,7 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
 
     public FuelVerifierBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.FUEL_VERIFIER_TILE.get(), pos, state, 1);
+        super(Registration.FUEL_VERIFIER_TILE.get(), pos, state);
 
     }
 
@@ -113,6 +117,11 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
             return isItemFuel(stack);
         }
         return false;
+    }
+
+    @Override
+    public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
+        slots.add(new SlotFuel(this, 0, 80, 48));
     }
 
 

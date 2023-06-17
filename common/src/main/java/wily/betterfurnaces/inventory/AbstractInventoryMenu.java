@@ -1,8 +1,6 @@
 package wily.betterfurnaces.inventory;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -12,38 +10,35 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
-import wily.betterfurnaces.network.Messages;
-import wily.betterfurnaces.network.PacketSyncEnergy;
-import wily.betterfurnaces.network.PacketSyncFluid;
-import wily.factoryapi.base.Storages;
 
 
 public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> extends AbstractContainerMenu {
 
     public T be;
     protected ContainerData fields;
-    public Player playerEntity;
-    protected final Level world;
+    public Player player;
+    protected final Level level;
     protected int TOP_ROW = 84;
 
 
 
-    public AbstractInventoryMenu(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
+    public AbstractInventoryMenu(MenuType<?> containerType, int windowId, Level level, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(containerType, windowId);
-        this.be = (T) world.getBlockEntity(pos);
+        this.be = (T) level.getBlockEntity(pos);
 
-        this.playerEntity = player;
-        this.world = playerInventory.player.level();
+        this.player = player;
+        this.level = playerInventory.player.level();
         this.fields = fields;
         this.addInventorySlots();
         layoutPlayerInventorySlots(8, TOP_ROW);
         this.addDataSlots(this.fields);
-        checkContainerSize(this.be.inventory, be.inventorySize);
+        checkContainerSize(this.be.inventory, be.getInventorySize());
     }
 
     public void addInventorySlots(){
-
+        be.getSlots(player).forEach((this::addSlot));
     }
     @Override
     public void broadcastChanges() {
@@ -57,7 +52,7 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
 
     }
     protected void updateChanges() {
-        be.syncAdditionalMenuData(this,playerEntity);
+        be.syncAdditionalMenuData(this, player);
     }
     @Override
     protected boolean moveItemStackTo(ItemStack itemStack, int i, int j, boolean bl) {
@@ -145,24 +140,25 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
     }
 
     @Override
-    public ItemStack quickMoveStack(Player playerIn, int index) {
+    public @NotNull ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot.hasItem()) {
             ItemStack stack = slot.getItem();
             itemstack = stack.copy();
-            if (index < be.inventorySize) {
-                if (!this.moveItemStackTo(stack, be.inventorySize, be.inventorySize + 36, true)) {
+            int inventorySize = be.getInventorySize();
+            if (index < inventorySize) {
+                if (!this.moveItemStackTo(stack, inventorySize, inventorySize + 36, true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickCraft(stack, itemstack);
-            } else if (!this.moveItemStackTo(stack, 0, be.inventorySize, false)){
-                if (index < be.inventorySize + 27) {
-                    if (!this.moveItemStackTo(stack, be.inventorySize + 27, be.inventorySize + 36, true)) {
+            } else if (!this.moveItemStackTo(stack, 0, inventorySize, false)){
+                if (index < inventorySize + 27) {
+                    if (!this.moveItemStackTo(stack, inventorySize + 27, inventorySize + 36, true)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (index < be.inventorySize + 36) {
-                    if (!this.moveItemStackTo(stack, be.inventorySize, be.inventorySize + 27, false)) {
+                } else if (index < inventorySize + 36) {
+                    if (!this.moveItemStackTo(stack, inventorySize, inventorySize + 27, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
@@ -204,11 +200,11 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
 
     protected void layoutPlayerInventorySlots(int leftCol, int topRow) {
         // Player inventory
-        addSlotBox(playerEntity.getInventory(), 9, leftCol, topRow, 9, 18, 3, 18);
+        addSlotBox(player.getInventory(), 9, leftCol, topRow, 9, 18, 3, 18);
 
         // Hotbar
         topRow += 58;
-        addSlotRange(playerEntity.getInventory(), 0, leftCol, topRow, 9, 18);
+        addSlotRange(player.getInventory(), 0, leftCol, topRow, 9, 18);
     }
 
     @Override

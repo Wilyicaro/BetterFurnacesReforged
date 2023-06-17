@@ -37,16 +37,6 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
         checkContainerDataCount(this.fields, 5);
     }
 
-    public void addInventorySlots(){
-        this.addSlot(new SlotFuel(be, 1, 54, 54));
-        this.addSlot(new SlotInput(be, 0, 54, 18, (s)-> !be.hasUpgrade(Registration.GENERATOR.get())));
-        this.addSlot(new SlotOutput(playerEntity, be, 2, 116, 35, (s)-> !be.hasUpgrade(Registration.GENERATOR.get())));
-
-        this.addSlot(new SlotUpgrade(be, 3, 8, 18));
-        this.addSlot(new SlotUpgrade(be, 4, 8, 36));
-        this.addSlot(new SlotUpgrade(be, 5, 8, 54));
-    }
-
 
     public boolean showInventoryButtons() {
         return this.fields.get(4) == 1;
@@ -180,7 +170,7 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
     }
     protected void updateChanges() {
         super.updateChanges();
-        if (playerEntity instanceof ServerPlayer sp) {
+        if (player instanceof ServerPlayer sp) {
             for (Direction d : Direction.values()) {
                 be.getStorage(Storages.FLUID, d).ifPresent(t-> Messages.INSTANCE.sendToPlayer(sp, new PacketSyncFluid(be.getBlockPos(), d, t.getFluidStack())));
             }
@@ -189,6 +179,6 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
     }
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), playerEntity, be.getBlockState().getBlock());
+        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), player, be.getBlockState().getBlock());
     }
 }

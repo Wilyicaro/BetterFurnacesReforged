@@ -1,6 +1,9 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.2+" apply false
+    id "me.shedaniel.unified-publishing" version "0.1.+" apply false
 }
 
 architectury {
@@ -28,7 +31,7 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    archivesBaseName = rootProject.archives_base_name + "-" + project.name[0].toUpperCase() + project.name.substring(1)
+    archivesBaseName = rootProject.archives_base_name
     version = minecraft_version + "-" + mod_version
     group = rootProject.maven_group
 
@@ -77,5 +80,91 @@ allprojects {
 
     java {
         withSourcesJar()
+    }
+}
+subprojects {
+    apply plugin: "me.shedaniel.unified-publishing"
+    ext {
+        releaseChangelog = {
+            def dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+            def branch
+            if (System.env.BRANCH_NAME) {
+                branch = System.env.BRANCH_NAME
+                branch = branch.substring(branch.lastIndexOf("/") + 1)
+            } else {
+                branch = "git rev-parse --abbrev-ref HEAD".execute().in.text.trim()
+            }
+            if (branch == "HEAD") {
+                branch = "git rev-parse --short HEAD".execute().in.text.trim()
+            }
+            def time = dateFormat.format(new Date())
+            def changes = new StringBuilder()
+            changes << "## Beta $version  \nUpdated at **$time**.  \n**Changelog**  "
+            def proc = "git log --max-count=200 --pretty=format:%s".execute()
+            proc.in.eachLine { line ->
+                def processedLine = line.toString()
+                if (!processedLine.contains("New translations") && !processedLine.contains("Merge") && !processedLine.contains("branch")) {
+                    def lines = processedLine.split(" -")
+                    changes << "\n**${lines[0]}**  "
+                    lines[0] = ""
+                    lines.each {s-> changes << "\n-" + s + "  "}
+                }
+            }
+            changes << "\n[Click here for complete changelog]($mod_source/commits/$branch)"
+            proc.waitFor()
+            return changes.toString()
+        }
+    }
+    task renameJarForPublication(type: Zip, dependsOn: remapJar) {
+        from remapJar.archiveFile.map { zipTree(it) }
+        archiveExtension = "jar"
+        metadataCharset "UTF-8"
+        destinationDirectory = base.libsDirectory
+        archiveClassifier = project.name
+    }
+
+    assemble.dependsOn renameJarForPublication
+    var modPlatformName = project.name.capitalize()
+
+
+    unifiedPublishing {
+        project {
+            displayName = "BFR [$modPlatformName] $project.version"
+            releaseType = "$stage"
+            changelog = releaseChangelog()
+            gameVersions = ["$minecraft_version"]
+            gameLoaders = ["$project.name"]
+            mainPublication renameJarForPublication
+
+            var CURSE_API_KEY = project.findProperty("CURSE_API_KEY") ?: System.getenv("CURSE_API_KEY")
+            if (CURSE_API_KEY != null) {
+                curseforge {
+                    token = CURSE_API_KEY
+                    id = rootProject.curseforge_id
+                    gameVersions.addAll "Java 17"
+                    relations{
+                        depends "architectury-api"
+                        depends "fabric-api"
+                        depends "factory-api"
+                    }
+                }
+            }
+
+
+            var MODRINTH_TOKEN = project.findProperty("gpr.token") ?: System.getenv("MODRINTH_TOKEN")
+            if (MODRINTH_TOKEN != null) {
+                modrinth {
+                    token = MODRINTH_TOKEN
+                    id = rootProject.modrinth_id
+                    version = "$project.version+$project.name"
+                    relations{
+                        depends "architectury-api"
+                        depends "fabric-api"
+                        depends "factory-api"
+                    }
+                }
+            }
+        }
     }
 }

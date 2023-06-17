@@ -31,13 +31,13 @@ import java.util.Optional;
 public abstract class InventoryBlockEntity extends BlockEntity implements IInventoryBlockEntity, ExtendedMenuProvider, Nameable {
 
     protected Component name;
-    public int inventorySize;
+
     public IPlatformItemHandler inventory;
 
-    public InventoryBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int sizeInventory) {
+    public InventoryBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
-        inventorySize = sizeInventory;
-        inventory = FactoryAPIPlatform.getItemHandlerApi(inventorySize,this);
+
+        inventory = FactoryAPIPlatform.getItemHandlerApi(getInventorySize(),this);
         inventory.setExtractableSlots(this::IcanExtractItem);
         inventory.setInsertableSlots(this::IisItemValidForSlot);
     }
@@ -52,6 +52,7 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
             load(tag);
         setChanged();
 
+
     }
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt){
         CompoundTag tag = pkt.getTag();
@@ -64,9 +65,7 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
     }
     @Override
     public CompoundTag getUpdateTag() {
-        CompoundTag tag = new CompoundTag();
-        this.saveAdditional(tag);
-        return tag;
+        return saveWithoutMetadata();
     }
     public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
         return Optional.empty();

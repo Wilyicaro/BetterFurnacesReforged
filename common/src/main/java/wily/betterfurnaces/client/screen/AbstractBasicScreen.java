@@ -1,23 +1,10 @@
 package wily.betterfurnaces.client.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import wily.betterfurnaces.inventory.AbstractInventoryMenu;
 
 public abstract class AbstractBasicScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
@@ -31,7 +18,7 @@ public abstract class AbstractBasicScreen<T extends AbstractContainerMenu> exten
 
     @Override
     public void render(GuiGraphics graphics, int i, int j, float f) {
-        if (getMenu()instanceof AbstractInventoryMenu<?> menu) menu.be.syncAdditionalMenuData(menu, menu.playerEntity);
+        if (getMenu()instanceof AbstractInventoryMenu<?> menu) menu.be.syncAdditionalMenuData(menu, menu.player);
         renderBackground(graphics);
         super.render(graphics, i, j, f);
         renderTooltip(graphics,i,j);

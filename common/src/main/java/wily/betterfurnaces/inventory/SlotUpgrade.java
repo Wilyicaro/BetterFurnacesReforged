@@ -4,6 +4,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
+import wily.betterfurnaces.items.UpgradeItem;
 
 public class SlotUpgrade extends Slot {
 
@@ -15,11 +16,9 @@ public class SlotUpgrade extends Slot {
 
     }
 
-    /**
-     * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
-     */
+
     public boolean mayPlace(ItemStack stack) {
-        return be.IisItemValidForSlot(index, stack);
+        return (be instanceof SmeltingBlockEntity s && stack.getItem() instanceof UpgradeItem upg && !s.hasUpgrade(upg) && upg.isValid(s) && (!s.hasUpgradeType((UpgradeItem) stack.getItem()) || (be.inventory.getItem(index).getItem() instanceof UpgradeItem upg2 && upg2.isSameType(upg))));
     }
 
 
