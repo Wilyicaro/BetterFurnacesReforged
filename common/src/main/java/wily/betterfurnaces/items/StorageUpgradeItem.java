@@ -21,6 +21,10 @@ public class StorageUpgradeItem extends UpgradeItem {
     }
 
     @Override
+    public boolean isValid(SmeltingBlockEntity blockEntity) {
+        return super.isValid(blockEntity) && !blockEntity.isForge();
+    }
+    @Override
     public boolean isUpgradeCompatibleWith(UpgradeItem upg) {
         return upg != Registration.GENERATOR.get();
     }

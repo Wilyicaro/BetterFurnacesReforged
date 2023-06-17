@@ -1,13 +1,13 @@
 {
   "advancements.colortime.descr": "Color your furnace for the first time",
-  "advancements.colortime.title": "Coloring time!",
+  "advancements.colortime.title": "It's Colorin time!",
   "advancements.dupeores.descr": "Craft a Ore Processing Upgrade to double your ores",
   "advancements.dupeores.title": "Is this allowed?",
   "advancements.forges.descr": "Make your first Extreme Forge",
   "advancements.forges.title": "Better than Furnaces",
   "advancements.overcooked.descr": "Make your first Iron Furnace",
   "advancements.overcooked.title": "Overcooked",
-  "advancements.thebestfurnace.descr": "Craft a Extreme Furnace, the best furnace in the Minecraft",
+  "advancements.thebestfurnace.descr": "Craft a Extreme Furnace, the official best furnace in the Minecraft",
   "advancements.thebestfurnace.title": "The Best Furnace",
   "advancements.useless.descr": "After all, this is not so useless",
   "advancements.useless.title": "Useless",
@@ -151,5 +151,6 @@
   "tooltip.betterfurnacesreforged.upgrade.generator": "Makes the furnace instead of smelt items generate %s from water evaporation",
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Right-click to insert upgrade",
   "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Right-click holding shift to insert tier upgrade",
-  "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruples the amount that each molten ore gives"
+  "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruples the amount that each molten ore gives",
+  "tooltip.ultimate_furnaces_bfr.upgrade.storage": "Adds an additional storage slot for fuel, input, and output"
 }

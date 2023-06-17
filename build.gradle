@@ -104,7 +104,10 @@ allprojects {
                 proc.in.eachLine { line ->
                     def processedLine = line.toString()
                     if (!processedLine.contains("New translations") && !processedLine.contains("Merge") && !processedLine.contains("branch")) {
-                        changes << "\n${processedLine.capitalize()}  "
+                        def lines = processedLine.split(" -")
+                        changes << "\n**${lines[0]}**  "
+                        lines[0] = ""
+                        lines.each {s-> changes << "\n-" + s + "  "}
                     }
                 }
                 changes << "\n[Click here for complete changelog]($mod_source/commits/$branch)"
@@ -131,6 +134,7 @@ allprojects {
                 changelog = releaseChangelog()
                 gameVersions = ["$minecraft_version"]
                 gameLoaders = ["$project.name"]
+                if (project.name ==  "fabric") gameLoaders.addAll "quilt"
                 mainPublication renameJarForPublication
 
                 var CURSE_API_KEY = project.findProperty("CURSE_API_KEY") ?: System.getenv("CURSE_API_KEY")
@@ -138,10 +142,9 @@ allprojects {
                     curseforge {
                         token = CURSE_API_KEY
                         id = rootProject.curseforge_id
-                        gameVersions.addAll "Java 17"
+                        gameVersions.addAll(["Java 17", "Java 18"])
                         relations{
                             depends "architectury-api"
-                            depends "fabric-api"
                             depends "factory-api"
                         }
                     }
