@@ -28,17 +28,17 @@ public class ForgeScreen extends SmeltingScreen<ForgeMenu> {
     }
 
     @Override
-    protected void blitSlotsLayer(PoseStack matrix, boolean input, boolean both, boolean fuel, boolean output){
+    protected void blitSlotsLayer(PoseStack stack, boolean input, boolean both, boolean fuel, boolean output){
         if (input || both) {
-            this.blit(matrix, relX() + 26, relY() + 61, 0, 171, 18, 18);
-            this.blit(matrix, relX() + 44, relY() + 61, 0, 171, 18, 18);
-            this.blit(matrix, relX() + 62, relY() + 61, 0, 171, 18, 18);
+            this.blit(stack, relX() + 26, relY() + 61, 0, 171, 18, 18);
+            this.blit(stack, relX() + 44, relY() + 61, 0, 171, 18, 18);
+            this.blit(stack, relX() + 62, relY() + 61, 0, 171, 18, 18);
         }
         if (output || both) {
-            this.blit(matrix, relX() + 103, relY() + 75, 0, 229, 62, 26);
+            this.blit(stack, relX() + 103, relY() + 75, 0, 229, 62, 26);
         }
         if (fuel) {
-            this.blit(matrix, relX() + 7, relY() + 99, 18, 171, 18, 18);
+            this.blit(stack, relX() + 7, relY() + 99, 18, 171, 18, 18);
         }
     }
     @Override

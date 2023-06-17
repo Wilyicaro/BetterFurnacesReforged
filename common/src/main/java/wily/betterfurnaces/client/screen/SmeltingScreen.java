@@ -54,6 +54,13 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     public static IFactoryDrawableType.DrawableProgress FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,16,20,22},false,IFactoryDrawableType.Direction.VERTICAL);
 
     public static IFactoryDrawableType.DrawableProgress ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false, IFactoryDrawableType.Direction.VERTICAL);
+
+    public static IFactoryDrawableType SLOT = IFactoryDrawableType.create(WIDGETS,192,60,18,18);
+    public static IFactoryDrawableType BIG_SLOT = IFactoryDrawableType.create(WIDGETS,210,60,26,26);
+    public static IFactoryDrawableType INPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,171,18,18);
+    public static IFactoryDrawableType FUEL_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,18,171,18,18);
+    public static IFactoryDrawableType OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,36,171,18,18);
+    public static IFactoryDrawableType BIG_OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,203,26,26);
     public static IFactoryDrawableType.DrawableProgress BFProgressType(Progress.Identifier identifier, int[] uvSize, boolean reverse, IFactoryDrawableType.Direction plane) {
         return IFactoryDrawableType.create(WIDGETS,uvSize[0],uvSize[1],uvSize[2],uvSize[3]).asProgress(identifier, reverse, plane);
     }
@@ -217,35 +224,41 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         int i;
         if ((this.getMenu()).BurnTimeGet() > 0) {
             i = (this.getMenu()).getBurnLeftScaled(13);
-            this.blit(matrix, relX() + 55, relY() + 37 + 12 - i, 176, 12 - i, 14, i + 1);
+            blit(matrix, relX() + 55, relY() + 37 + 12 - i, 176, 12 - i, 14, i + 1);
         }
         i = (this.getMenu()).getCookScaled(24);
-        this.blit(matrix, relX() + 79, relY() + 34, 176, 14, i + 1, 16);
+        blit(matrix, relX() + 79, relY() + 34, 176, 14, i + 1, 16);
         RenderSystem.setShaderTexture(0, WIDGETS);
-        this.blit(matrix, relX() + 53, relY() + 17, 192, 60, 18, 18);
+        SLOT.draw(matrix, relX() + 53, relY() + 17);
+        boolean storage = menu.be.hasUpgradeType(Registration.STORAGE.get());
+        if (storage){
+            SLOT.draw(matrix, relX() + 35, relY() + 17);
+            SLOT.draw(matrix, relX() + 35, relY() + 53);
+        }
         if (!getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
-            this.blit(matrix, relX() + 111, relY() + 30, 210, 60, 26, 26);
+            BIG_SLOT.draw(matrix, relX() + 111, relY() + 30);
+            if (storage) SLOT.draw(matrix, relX() + 137, relY() + 34);
         }
     }
     @Override
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI());
-        this.blit(matrix, relX(), relY(), 0, 0, imageWidth, imageHeight);
+        blit(matrix, relX(), relY(), 0, 0, imageWidth, imageHeight);
         blitSmeltingSprites(matrix);
         if (getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             RenderSystem.setShaderTexture(0, WIDGETS);
-            this.blit(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 34, 16, 34);
+            blit(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 34, 16, 34);
             ENERGY_CELL.drawProgress(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], this.getMenu().getEnergyStoredScaled(34));
         }if (getMenu().be.isLiquid()){
             RenderSystem.setShaderTexture(0, WIDGETS);
-            this.blit(matrix, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 38, 20, 22);
+            blit(matrix, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 38, 20, 22);
             FLUID_TANK.drawAsFluidTank(matrix,relX() + FluidTank()[0], relY() + FluidTank()[1], this.getMenu().getFluidStoredScaled(22,false), this.getMenu().getFluidStackStored(false),false);
         }
 
         if (this.getMenu().be.hasXPTank()) {
             RenderSystem.setShaderTexture(0, WIDGETS);
-            this.blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16);
+            blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16);
             MINI_FLUID_TANK.drawAsFluidTank(matrix,relX() + XPTank()[0], relY() + XPTank()[1], this.getMenu().getFluidStoredScaled(16,true), this.getMenu().getFluidStackStored(true),true);
         }
         if (this.getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
@@ -443,29 +456,28 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         boolean both = false;
         boolean fuel = false;
         for (int set : settings) {
-            if (set == 1) {
-                input = true;
-            } else if (set == 2) {
-                output = true;
-            } else if (set == 3) {
-                both = true;
-            } else if (set == 4) {
-                fuel = true;
-            }
+            if (set == 1) input = true;
+            else if (set == 2) output = true;
+            else if (set == 3) both = true;
+            else if (set == 4) fuel = true;
         }
         blitSlotsLayer(matrix, input, both, fuel, output);
     }
-    protected void blitSlotsLayer(PoseStack matrix, boolean input, boolean both, boolean fuel, boolean output){
+    protected void blitSlotsLayer(PoseStack stack, boolean input, boolean both, boolean fuel, boolean output){
+        boolean storage = menu.be.hasUpgradeType(Registration.STORAGE.get());
         if (!getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             if (input || both) {
-                this.blit(matrix, relX() + 53, relY() + 17, 0, 171, 18, 18);
+                if (storage) INPUT_SLOT_OUTLINE.draw(stack, relX() + 35, relY() + 17);
+                INPUT_SLOT_OUTLINE.draw(stack, relX() + 53, relY() + 17);
             }
             if (output || both) {
-                this.blit(matrix, relX() + 111, relY() + 30, 0, 203, 26, 26);
+                if (storage) OUTPUT_SLOT_OUTLINE.draw(stack, relX() + 137, relY() + 34);
+                BIG_OUTPUT_SLOT_OUTLINE.draw(stack, relX() + 111, relY() + 30);
             }
         }
         if (fuel) {
-            this.blit(matrix, relX() + 53, relY() + 53, 18, 171, 18, 18);
+            if (storage)  FUEL_SLOT_OUTLINE.draw(stack, relX() + 35, relY() + 53);
+            FUEL_SLOT_OUTLINE.draw(stack, relX() + 53, relY() + 53);
         }
     }
 

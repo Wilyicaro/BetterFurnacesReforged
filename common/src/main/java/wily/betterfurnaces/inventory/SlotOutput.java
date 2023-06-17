@@ -4,8 +4,8 @@ import dev.architectury.event.events.common.PlayerEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 
 import java.util.function.Predicate;
 
@@ -47,14 +47,16 @@ public class SlotOutput extends HideableSlot {
 
     @Override
     protected void onQuickCraft(ItemStack stack, int p_75210_2_) {
-        stack.onCraftedBy(this.player.level, this.player, this.removeCount);
-        if (!this.player.level.isClientSide && this.be instanceof SmeltingBlockEntity smeltBe) {
-            smeltBe.unlockRecipes(this.player);
+        if (player != null) {
+            stack.onCraftedBy(this.player.level, this.player, this.removeCount);
+            if (!this.player.level.isClientSide && this.be instanceof SmeltingBlockEntity smeltBe) {
+                smeltBe.unlockRecipes(this.player);
 
+            }
+
+            this.removeCount = 0;
+            PlayerEvent.SMELT_ITEM.invoker().smelt(this.player, stack);
         }
-
-        this.removeCount = 0;
-        PlayerEvent.SMELT_ITEM.invoker().smelt(this.player, stack);
     }
 
     /**

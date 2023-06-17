@@ -53,43 +53,43 @@ public class BetterFurnacesPlatformImpl {
                                                 be.inventory.insertItem(INPUT, other.extractItem(i, other.getStackInSlot(i).getMaxStackSize() - be.inventory.getItem(INPUT).getCount(), false), false);
                                         }
                                     }
-                                if (be.furnaceSettings.get(dir.ordinal()) == 4) {
-                                    if (be.inventory.getItem(be.FUEL()).getCount() >= be.inventory.getItem(be.FUEL()).getMaxStackSize()) {
-                                        continue;
-                                    }
-                                    for (int i = 0; i < other.getSlots(); i++) {
-                                        if (!be.isItemFuel(other.getStackInSlot(i))){
+                                for (int FUEL : be.FUEL())
+                                    if (be.furnaceSettings.get(dir.ordinal()) == 4) {
+                                        if (be.inventory.getItem(FUEL).getCount() >= be.inventory.getItem(FUEL).getMaxStackSize()) {
                                             continue;
                                         }
-                                        if (other.getStackInSlot(i).isEmpty()) {
-                                            continue;
-                                        }
-                                        ItemStack stack = other.extractItem(i, other.getStackInSlot(i).getMaxStackSize(), true);
-                                        if (be.isItemFuel(stack) && be.inventory.getItem(be.FUEL()).isEmpty() || ItemHandlerHelper.canItemStacksStack(be.inventory.getItem(be.FUEL()), stack)) {
-                                            be.inventory.insertItem(be.FUEL(), other.extractItem(i, other.getStackInSlot(i).getMaxStackSize() - be.inventory.getItem(be.FUEL()).getCount(), false), false);
+                                        for (int i = 0; i < other.getSlots(); i++) {
+                                            if (!be.isItemFuel(other.getStackInSlot(i))){
+                                                continue;
+                                            }
+                                            if (other.getStackInSlot(i).isEmpty()) {
+                                                continue;
+                                            }
+                                            ItemStack stack = other.extractItem(i, other.getStackInSlot(i).getMaxStackSize(), true);
+                                            if (be.isItemFuel(stack) && be.inventory.getItem(FUEL).isEmpty() || ItemHandlerHelper.canItemStacksStack(be.inventory.getItem(FUEL), stack)) {
+                                                be.inventory.insertItem(FUEL, other.extractItem(i, other.getStackInSlot(i).getMaxStackSize() - be.inventory.getItem(FUEL).getCount(), false), false);
+                                            }
                                         }
                                     }
-                                }
                             }
 
                             if (be.getAutoOutput() == 1) {
-
-                                if (be.furnaceSettings.get(dir.ordinal()) == 4) {
-                                    if (be.inventory.getItem(be.FUEL()).isEmpty()) {
-                                        continue;
-                                    }
-                                    ItemStack fuel = be.inventory.getItem(be.FUEL());
-                                    if (be.isItemFuel(fuel)) {
-                                        continue;
-                                    }
-                                    for (int i = 0; i < other.getSlots(); i++) {
-                                        ItemStack stack = be.inventory.extractItem(be.FUEL(), be.inventory.getItem(be.FUEL()).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
-                                        if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && (ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i)))) {
-                                            other.insertItem(i, be.inventory.extractItem(be.FUEL(), stack.getCount(), false), false);
+                                for (int FUEL : be.FUEL())
+                                    if (be.furnaceSettings.get(dir.ordinal()) == 4) {
+                                        if (be.inventory.getItem(FUEL).isEmpty()) {
+                                            continue;
+                                        }
+                                        ItemStack fuel = be.inventory.getItem(FUEL);
+                                        if (be.isItemFuel(fuel)) {
+                                            continue;
+                                        }
+                                        for (int i = 0; i < other.getSlots(); i++) {
+                                            ItemStack stack = be.inventory.extractItem(FUEL, be.inventory.getItem(FUEL).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
+                                            if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || other.isItemValid(i, stack) && (ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i)))) {
+                                                other.insertItem(i, be.inventory.extractItem(FUEL, stack.getCount(), false), false);
+                                            }
                                         }
                                     }
-                                }
-
                                 for (int output : be.OUTPUTS()) {
                                     if (be.furnaceSettings.get(dir.ordinal()) == 2 || be.furnaceSettings.get(dir.ordinal()) == 3) {
                                         if (be.inventory.getItem(output).isEmpty()) {
@@ -125,7 +125,7 @@ public class BetterFurnacesPlatformImpl {
             IItemHandler other = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, dir.getOpposite()).map(other1 -> other1).orElse(null);
 
             if (other == null) {
-                continue; 
+                continue;
             }
 
             if (be.inventory.getItem(be.OUTPUT).isEmpty()) {
