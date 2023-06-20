@@ -11,14 +11,13 @@
       "item": "minecraft:iron_block"
     },
     "3": {
-      "tag": "c:glass_blocks"
+      "item": "minecraft:glass"
     },
     "4": {
       "item": "minecraft:experience_bottle"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:xp_tank_upgrade",
-    "count": 1
+    "item": "betterfurnacesreforged:xp_tank_upgrade"
   }
 }

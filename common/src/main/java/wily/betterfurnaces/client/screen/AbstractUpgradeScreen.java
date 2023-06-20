@@ -41,11 +41,11 @@ public abstract class AbstractUpgradeScreen<T extends AbstractUpgradeMenu> exten
     @Override
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
         ItemStack stack = ((ColorUpgradeItem.ContainerColorUpgrade) this.getMenu()).itemStackBeingHeld;
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        minecraft.getTextureManager().bind(GUI);
 
         this.blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
-        itemRenderer.renderGuiItem(matrix,stack, this.relX() + 154, this.relY() + 6);
+        renderGuiItem(stack, this.relX() + 154, this.relY() + 6,1,1);
         this.font.draw(matrix, name, (width - this.font.width(name) )/2, this.relY() + 8, 4210752);
     }
     protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {

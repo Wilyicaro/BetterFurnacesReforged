@@ -2,19 +2,19 @@
   "group": "ultimatefurnaces",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "   ",
     "000",
-    "040"
+    "040",
+    "000"
   ],
   "key": {
     "0": {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:ingots/copper"
     },
     "4": {
-      "item": "betterfurnacesreforged:steel_furnace"
+      "item": "minecraft:furnace"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:steel_gold_upgrade"
+    "item": "betterfurnacesreforged:copper_furnace"
   }
 }

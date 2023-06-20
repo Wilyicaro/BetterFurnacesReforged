@@ -1,9 +1,11 @@
 package wily.betterfurnaces.items;
 
-import dev.architectury.registry.menu.MenuRegistry;
+
+import me.shedaniel.architectury.registry.MenuRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -58,7 +60,7 @@ public class ColorUpgradeItem extends UpgradeItem {
 
         @Override
         public Component getDisplayName() {
-            return Component.translatable("item.betterfurnacesreforged.color_upgrade");
+            return new TranslatableComponent("item.betterfurnacesreforged.color_upgrade");
         }
 
         @Override

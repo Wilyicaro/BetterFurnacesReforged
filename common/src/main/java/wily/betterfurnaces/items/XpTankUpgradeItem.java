@@ -1,6 +1,6 @@
 package wily.betterfurnaces.items;
 
-import dev.architectury.platform.Platform;
+import me.shedaniel.architectury.platform.Platform;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;

@@ -1,6 +1,6 @@
 package wily.betterfurnaces.blockentity;
 
-import it.unimi.dsi.fastutil.Pair;
+import com.ibm.icu.impl.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;

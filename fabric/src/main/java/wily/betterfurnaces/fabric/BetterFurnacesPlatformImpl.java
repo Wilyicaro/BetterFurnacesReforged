@@ -6,16 +6,17 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.fabricmc.fabric.impl.tag.convention.TagRegistration;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import team.reborn.energy.api.EnergyStorage;
+import team.reborn.energy.Energy;
+import team.reborn.energy.EnergyHandler;
 import wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 
@@ -40,7 +41,8 @@ public class BetterFurnacesPlatformImpl {
                     if (other == null) {
                         continue;
                     }
-                    Iterator<StorageView<ItemVariant>> storageView = other.iterator();
+                    try (Transaction transaction = Transaction.openOuter()){
+                    Iterator<StorageView<ItemVariant>> storageView = other.iterator(transaction);
                     if (other != null) {
                         if (be.getAutoInput() != 0 || be.getAutoOutput() != 0) {
                             if (be.getAutoInput() == 1) {
@@ -53,13 +55,13 @@ public class BetterFurnacesPlatformImpl {
                                         while (storageView.hasNext()) {
                                             StorageView<ItemVariant> view = storageView.next();
                                             ItemVariant variant = view.getResource();
-                                            if (view.isResourceBlank() || !be.IisItemValidForSlot(INPUT,variant.toStack())) {
+                                            if (view.isResourceBlank() || !be.IisItemValidForSlot(INPUT, variant.toStack())) {
                                                 continue;
                                             }
                                             if (variant.isOf(input.getItem()) || input.isEmpty())
-                                                try (Transaction transaction = Transaction.openOuter()) {
-                                                    be.inventory.insertItem(INPUT, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(INPUT).getCount(), transaction)), false);
-                                                    transaction.commit();
+                                                try (Transaction nested = transaction.openNested()) {
+                                                    be.inventory.insertItem(INPUT, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(INPUT).getCount(), nested)), false);
+                                                    nested.commit();
                                                 }
                                         }
                                     }
@@ -76,14 +78,15 @@ public class BetterFurnacesPlatformImpl {
                                                 continue;
                                             }
                                             if (variant.isOf(fuel.getItem()) || fuel.isEmpty())
-                                                try (Transaction transaction = Transaction.openOuter()) {
-                                                    be.inventory.insertItem(FUEL, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(FUEL).getCount(), transaction)), false);
-                                                    transaction.commit();
+                                                try (Transaction nested = transaction.openNested()) {
+                                                    be.inventory.insertItem(FUEL, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(FUEL).getCount(), nested)), false);
+                                                    nested.commit();
                                                 }
                                         }
                                     }
                             }
                         }
+                    }
                         if (be.getAutoOutput() == 1) {
                             for (int FUEL : be.FUEL())
                                 if (be.furnaceSettings.get(dir.ordinal()) == 4) {
@@ -94,9 +97,9 @@ public class BetterFurnacesPlatformImpl {
                                     if (be.isItemFuel(fuel)) {
                                         continue;
                                     }
-                                    try (Transaction transaction = Transaction.openOuter()) {
-                                        be.inventory.extractItem(FUEL, (int) other.insert(ItemVariant.of(fuel), fuel.getCount(), transaction), false);
-                                        transaction.commit();
+                                    try (Transaction nested = transaction.openNested()) {
+                                        be.inventory.extractItem(FUEL, (int) other.insert(ItemVariant.of(fuel), fuel.getCount(), nested), false);
+                                        nested.commit();
                                     }
 
                                 }
@@ -106,17 +109,18 @@ public class BetterFurnacesPlatformImpl {
                                     if (o.isEmpty()) {
                                         continue;
                                     }
-                                    if (BuiltInRegistries.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
+                                    if (Registry.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
                                         continue;
                                     }
-                                    try (Transaction transaction = Transaction.openOuter()) {
-                                        be.inventory.extractItem(output, (int) other.insert(ItemVariant.of(o), o.getCount(), transaction), false);
-                                        transaction.commit();
+                                    try (Transaction nested = transaction.openNested()) {
+                                        be.inventory.extractItem(output, (int) other.insert(ItemVariant.of(o), o.getCount(), nested), false);
+                                        nested.commit();
                                     }
 
                                 }
                             }
                         }
+                        transaction.commit();
                     }
                 }
             }
@@ -140,7 +144,7 @@ public class BetterFurnacesPlatformImpl {
             if (be.inventory.getItem(be.OUTPUT).isEmpty()) {
                 continue;
             }
-            if (BuiltInRegistries.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
+            if (Registry.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
                 continue;
             }
             try (Transaction transaction = Transaction.openOuter()) {
@@ -152,18 +156,16 @@ public class BetterFurnacesPlatformImpl {
 
     public static void transferEnergySides(SmeltingBlockEntity be) {
         for (Direction dir : Direction.values()) {
-            EnergyStorage storage= EnergyStorage.SIDED.find(be.getLevel(),be.getBlockPos().relative(dir),dir);
-            if (storage == null) continue;
-            try (Transaction transaction = Transaction.openOuter()){
-                int i = (int) storage.insert(be.energyStorage.getEnergyStored(),transaction);
-                transaction.commit();
-                be.energyStorage.consumeEnergy(i,false);
-            }
+            BlockEntity other = be.getLevel().getBlockEntity(be.getBlockPos().relative(dir));
+            if (other == null || !Energy.valid(other)) continue;
+            EnergyHandler storage= Energy.of(be.getLevel().getBlockEntity(be.getBlockPos().relative(dir)));
+            int i = (int) storage.insert(be.energyStorage.getEnergyStored());
+            be.energyStorage.consumeEnergy(i,false);
         }
     }
 
-    public static TagKey<Item> getCommonItemTag(String tag) {
-        return TagRegistration.ITEM_TAG_REGISTRATION.registerCommon(tag);
+    public static Tag<Item> getCommonItemTag(String tag) {
+        return ItemTags.getAllTags().getTag( new ResourceLocation("c",tag));
     }
 
     public static void registerModel(ResourceLocation modelResourceLocation){

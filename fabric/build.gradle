@@ -10,9 +10,6 @@ architectury {
 tasks.remapJar{
     archiveClassifier.set("fabric")
 }
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-}
 
 configurations {
     common
@@ -24,13 +21,13 @@ configurations {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modApi( "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}") { exclude group: 'net.fabricmc', module: 'fabric-loader' }
 
-    modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
+    modApi( "me.shedaniel:architectury-fabric:${rootProject.architectury_version}"){ exclude group: 'net.fabricmc', module: 'fabric-loader' }
     modApi "wily.factory_api:factory_api-fabric:${minecraft_version}-${factory_api_version}"
-    modCompileOnly "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:6.0.2"
-    modCompileOnly "mezz.jei:jei-${jei_minecraft_version}-fabric-api:${jei_version}"
-    modRuntimeOnly "mezz.jei:jei-${jei_minecraft_version}-fabric:${jei_version}"
+    modCompileOnly( "net.minecraftforge:forgeconfigapiport-fabric:1.0.2")
+    implementation('com.electronwill.night-config:core:3.6.5')
+    implementation('com.electronwill.night-config:toml:3.6.5')
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

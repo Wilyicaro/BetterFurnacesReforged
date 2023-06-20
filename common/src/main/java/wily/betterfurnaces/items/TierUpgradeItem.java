@@ -1,11 +1,12 @@
 package wily.betterfurnaces.items;
 
-import dev.architectury.platform.Platform;
+import me.shedaniel.architectury.platform.Platform;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -49,8 +50,8 @@ public class TierUpgradeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_shift_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
-        tooltip.add(Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", from.getName().getString(), to.getName().getString())).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
+        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_shift_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
+        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", from.getName().getString(), to.getName().getString()).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
     }
 
     @Override
@@ -60,7 +61,7 @@ public class TierUpgradeItem extends Item {
         if (!world.isClientSide) {
             if ((ctx.getItemInHand().getItem() instanceof IronUpgradeItem) && Platform.isModLoaded("fastfurnace"))
             {
-                ctx.getPlayer().displayClientMessage(Component.literal("FastFurnace Mod is loaded, will not upgrade, drop the upgrade on the floor together with one cobblestone to get your materials back."), false);
+                ctx.getPlayer().displayClientMessage(new TextComponent("FastFurnace Mod is loaded, will not upgrade, drop the upgrade on the floor together with one cobblestone to get your materials back."), false);
                 return super.useOn(ctx);
             }
             BlockEntity be = world.getBlockEntity(pos);
@@ -72,7 +73,8 @@ public class TierUpgradeItem extends Item {
                 int furnaceBurnTime = be.getUpdateTag().getInt("BurnTime");
                 int show = 0;
                 int[] settings = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-                if (be instanceof SmeltingBlockEntity smeltBe) {
+                if (be instanceof SmeltingBlockEntity) {
+                    SmeltingBlockEntity smeltBe = (SmeltingBlockEntity) be;
                     furnaceBurnTime = smeltBe.fields.get(0);
                     currentItemBurnTime = smeltBe.fields.get(1);
                     cooktime = smeltBe.fields.get(2);
@@ -97,7 +99,8 @@ public class TierUpgradeItem extends Item {
                 ItemStack upgrade  = ItemStack.EMPTY;
                 ItemStack upgrade1  = ItemStack.EMPTY;
                 ItemStack upgrade2  = ItemStack.EMPTY;
-                if (be instanceof SmeltingBlockEntity smeltBe) {
+                if (be instanceof SmeltingBlockEntity) {
+                    SmeltingBlockEntity smeltBe = (SmeltingBlockEntity) be;
                     inv = smeltBe.getInv();
                     upgrade = inv.getItem(3).copy();
                     upgrade1 = inv.getItem(4).copy();
@@ -112,9 +115,10 @@ public class TierUpgradeItem extends Item {
                 world.setBlock(pos, next.setValue(BlockStateProperties.LIT, be.getBlockState().getValue(BlockStateProperties.LIT)), 3);
                 world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 BlockEntity newBe = world.getBlockEntity(pos);
-                newBe.load(be.getUpdateTag().merge(newBe.getUpdateTag()));
+                newBe.load(be.getBlockState(),be.getUpdateTag().merge(newBe.getUpdateTag()));
                 Container newInv;
-                if (newBe instanceof SmeltingBlockEntity smeltBe) {
+                if (newBe instanceof SmeltingBlockEntity) {
+                    SmeltingBlockEntity smeltBe = (SmeltingBlockEntity) be;
                     newInv = smeltBe.inventory;
                     smeltBe.inventory.setItem(3, upgrade);
                     smeltBe.inventory.setItem(4, upgrade1);
@@ -167,9 +171,9 @@ public class TierUpgradeItem extends Item {
             }
             if (one) {
 
-                BlockPos pos = entity.getOnPos();
+                BlockPos pos = entity.blockPosition();
                 for (int i = 0; i < list.size(); i++) {
-                    list.get(i).remove(Entity.RemovalReason.DISCARDED);
+                    list.get(i).remove();
                 }
                 LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(world);
                 lightningboltentity.moveTo(pos.getX(), pos.getY(), pos.getZ());

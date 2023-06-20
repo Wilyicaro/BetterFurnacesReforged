@@ -1,7 +1,7 @@
 package wily.betterfurnaces.blocks;
 
-import dev.architectury.registry.menu.ExtendedMenuProvider;
-import dev.architectury.registry.menu.MenuRegistry;
+import me.shedaniel.architectury.registry.MenuRegistry;
+import me.shedaniel.architectury.registry.menu.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,11 +11,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -34,7 +33,7 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
 
     public FuelVerifierBlock(Properties properties) {
-        super(properties.destroyTime(3f));
+        super(properties.strength(3f));
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
     }
 
@@ -65,8 +64,8 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
 
     private void interactWith(Level world, BlockPos pos, Player player) {
         BlockEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof ExtendedMenuProvider menu) {
-            MenuRegistry.openExtendedMenu((ServerPlayer) player, menu);
+        if (tileEntity instanceof ExtendedMenuProvider) {
+            MenuRegistry.openExtendedMenu((ServerPlayer) player, (ExtendedMenuProvider) tileEntity);
         }
     }
 
@@ -101,20 +100,10 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
         builder.add(BlockStateProperties.FACING);
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return (level1, pos, state1, tile) -> {
-            if (tile instanceof FuelVerifierBlockEntity be) {
-                be.tick(state1);
-            }
-        };
-    }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new FuelVerifierBlockEntity(p_153215_, p_153216_);
+    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
+        return new FuelVerifierBlockEntity();
     }
-
 }

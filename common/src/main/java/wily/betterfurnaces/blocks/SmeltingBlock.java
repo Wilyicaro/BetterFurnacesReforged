@@ -1,20 +1,21 @@
 package wily.betterfurnaces.blocks;
 
-import dev.architectury.fluid.FluidStack;
-import dev.architectury.registry.menu.ExtendedMenuProvider;
-import dev.architectury.registry.menu.MenuRegistry;
+import me.shedaniel.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.registry.MenuRegistry;
+import me.shedaniel.architectury.registry.menu.ExtendedMenuProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,8 +31,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -53,6 +52,7 @@ import wily.factoryapi.base.Storages;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class SmeltingBlock extends Block implements EntityBlock {
 
@@ -63,7 +63,7 @@ public class SmeltingBlock extends Block implements EntityBlock {
     public boolean shouldDropContent = true;
 
     public SmeltingBlock(Properties properties) {
-        super(properties.destroyTime(3f).lightLevel((b) -> b.getValue(BlockStateProperties.LIT) ? 14 : 0).noOcclusion().emissiveRendering(SmeltingBlock::getOrientation));
+        super(properties.strength(3f).lightLevel((b) -> b.getValue(BlockStateProperties.LIT) ? 14 : 0).noOcclusion().emissiveRendering(SmeltingBlock::getOrientation));
         this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.LIT, false).setValue(COLORED,false));
     }
 
@@ -109,14 +109,14 @@ public class SmeltingBlock extends Block implements EntityBlock {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if (hand.getItem() instanceof UpgradeItem upg && upg.isEnabled() && !(player.isCrouching())) {
+            if (hand.getItem() instanceof UpgradeItem  && ((UpgradeItem)hand.getItem()).isEnabled() && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }if (ItemContainerUtil.isFluidContainer(hand) &&  !(player.isCrouching())) {
-                if ((be.hasUpgrade(Registration.GENERATOR.get()) && ItemContainerUtil.getFluid(stack).getFluid().isSame(Fluids.WATER) && ItemContainerUtil.getFluid(be.getUpgradeSlotItem(Registration.GENERATOR.get())).getAmount() <= 3 * FluidStack.bucketAmount())){
-                    ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.fillItem(be.getUpgradeSlotItem(Registration.GENERATOR.get()), ItemContainerUtil.drainItem(FluidStack.bucketAmount(), player, handIn));
-                    be.inventory.setItem(be.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container());
+                if ((be.hasUpgrade(Registration.GENERATOR.get()) && ItemContainerUtil.getFluid(stack).getFluid().isSame(Fluids.WATER) && ItemContainerUtil.getFluid(be.getUpgradeSlotItem(Registration.GENERATOR.get())).getAmount().longValue() <= 3 * FluidStack.bucketAmount().longValue())){
+                    ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.fillItem(be.getUpgradeSlotItem(Registration.GENERATOR.get()), ItemContainerUtil.drainItem(FluidStack.bucketAmount().longValue(), player, handIn));
+                    be.inventory.setItem(be.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container);
                 }else if ((be.hasUpgrade(Registration.LIQUID.get()) && SmeltingBlockEntity.isItemFuel(hand)))
-                    be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getFluidStack().isFluidEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) e.fill(ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn), false);});
+                    be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getFluidStack().isFluidStackEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) e.fill(ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn), false);});
             }else {
                 this.interactWith(world, pos, player);
             }
@@ -130,9 +130,10 @@ public class SmeltingBlock extends Block implements EntityBlock {
         if (!(hand.getItem() instanceof UpgradeItem)){
             return InteractionResult.SUCCESS;
         }
-        if (!(world.getBlockEntity(pos) instanceof SmeltingBlockEntity be)) {
+        if (!(world.getBlockEntity(pos) instanceof SmeltingBlockEntity)) {
             return InteractionResult.SUCCESS;
         }
+        SmeltingBlockEntity be = (SmeltingBlockEntity) world.getBlockEntity(pos);
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
 
@@ -163,8 +164,8 @@ public class SmeltingBlock extends Block implements EntityBlock {
 
     private void interactWith(Level world, BlockPos pos, Player player) {
         BlockEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof ExtendedMenuProvider menu) {
-            MenuRegistry.openExtendedMenu((ServerPlayer) player, menu);
+        if (tileEntity instanceof ExtendedMenuProvider) {
+            MenuRegistry.openExtendedMenu((ServerPlayer) player, (ExtendedMenuProvider) tileEntity);
             player.awardStat(Stats.INTERACT_WITH_FURNACE);
         }
     }
@@ -174,14 +175,14 @@ public class SmeltingBlock extends Block implements EntityBlock {
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 
         if (stack.getOrCreateTag().getInt("type") == 1)
-            tooltip.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.BLAST.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
+            tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.BLAST.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
         else if (stack.getOrCreateTag().getInt("type") == 2)
-            tooltip.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.SMOKE.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
+            tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.SMOKE.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
 
-    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource rand) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random rand) {
         if (state.getValue(BlockStateProperties.LIT)) {
             int type = state.getValue(TYPE);
             if (type == 0  || type == 3) {
@@ -253,11 +254,11 @@ public class SmeltingBlock extends Block implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {
         if (state.getBlock() != oldState.getBlock()) {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof SmeltingBlockEntity smeltBe) {
+            if (world.getBlockEntity(pos) instanceof SmeltingBlockEntity) {
+                SmeltingBlockEntity be = (SmeltingBlockEntity) world.getBlockEntity(pos);
                 if (shouldDropContent) {
-                    Containers.dropContents(world, pos, smeltBe.inventory);
-                    smeltBe.grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
+                    Containers.dropContents(world, pos, be.inventory);
+                    be.grantStoredRecipeExperience(world, Vec3.atCenterOf(pos));
                 }
                 world.updateNeighbourForOutputSignal(pos, this);
             }
@@ -331,15 +332,11 @@ public class SmeltingBlock extends Block implements EntityBlock {
         builder.add(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.LIT, COLORED, TYPE);
     }
 
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
-    }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return Registration.BLOCK_ENTITIES.getRegistrar().get(arch$registryName()).create(blockPos,blockState);
+    public BlockEntity newBlockEntity(BlockGetter getter) {
+        return Registry.BLOCK_ENTITY_TYPE.get(Registry.BLOCK.getKey(this)).create();
     }
 
     @Override
@@ -347,13 +344,4 @@ public class SmeltingBlock extends Block implements EntityBlock {
         return RenderShape.INVISIBLE;
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createFurnaceTicker(level, type,(BlockEntityType<? extends SmeltingBlockEntity>) Registration.BLOCK_ENTITIES.getRegistrar().get(state.getBlock().arch$registryName()));
-    }
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends SmeltingBlockEntity> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, SmeltingBlockEntity::tick);
-    }
 }

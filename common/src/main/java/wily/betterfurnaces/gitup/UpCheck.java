@@ -1,7 +1,7 @@
 package wily.betterfurnaces.gitup;
 
-import dev.architectury.event.events.client.ClientTickEvent;
-import dev.architectury.platform.Platform;
+import me.shedaniel.architectury.event.events.client.ClientTickEvent;
+import me.shedaniel.architectury.platform.Platform;
 import net.fabricmc.api.EnvType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;

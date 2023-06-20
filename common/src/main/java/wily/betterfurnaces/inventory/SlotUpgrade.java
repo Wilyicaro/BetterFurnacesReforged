@@ -18,7 +18,7 @@ public class SlotUpgrade extends Slot {
 
 
     public boolean mayPlace(ItemStack stack) {
-        return (be instanceof SmeltingBlockEntity s && stack.getItem() instanceof UpgradeItem upg && !s.hasUpgrade(upg) && upg.isValid(s) && (!s.hasUpgradeType((UpgradeItem) stack.getItem()) || (be.inventory.getItem(index).getItem() instanceof UpgradeItem upg2 && upg2.isSameType(upg))));
+        return (be instanceof SmeltingBlockEntity && stack.getItem() instanceof UpgradeItem && !((SmeltingBlockEntity) be).hasUpgrade((UpgradeItem) stack.getItem()) && ((UpgradeItem) stack.getItem()).isValid((SmeltingBlockEntity) be) && (!((SmeltingBlockEntity) be).hasUpgradeType((UpgradeItem) stack.getItem()) || (be.inventory.getItem(index).getItem() instanceof UpgradeItem  && ((UpgradeItem) be.inventory.getItem(index).getItem()).isSameType((UpgradeItem) stack.getItem()))));
     }
 
 
@@ -29,8 +29,8 @@ public class SlotUpgrade extends Slot {
 
     @Override
     public void setChanged() {
-        if (be instanceof SmeltingBlockEntity smeltingBe) {
-            smeltingBe.onUpdateSent();
+        if (be instanceof SmeltingBlockEntity) {
+            ((SmeltingBlockEntity) be).onUpdateSent();
         }
     }
 

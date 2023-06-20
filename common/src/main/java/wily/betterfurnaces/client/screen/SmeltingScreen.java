@@ -4,18 +4,19 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blocks.ForgeBlock;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.SmeltingMenu;
 import wily.betterfurnaces.items.FactoryUpgradeItem;
@@ -26,9 +27,8 @@ import wily.betterfurnaces.network.PacketSettingsButton;
 import wily.betterfurnaces.network.PacketShowSettingsButton;
 import wily.betterfurnaces.util.StringHelper;
 import wily.factoryapi.ItemContainerUtil;
-import wily.factoryapi.base.IFactoryDrawableType;
+import wily.factoryapi.base.FactoryDrawableType;
 import wily.factoryapi.base.Progress;
-import wily.factoryapi.util.ProgressElementRenderUtil;
 import wily.factoryapi.util.StorageStringUtil;
 
 import java.util.List;
@@ -42,27 +42,31 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     Inventory playerInv;
 
     // Widgets x and y pos
-    protected int FactoryShowButtonY() {return 3;}
-    protected int[] FluidTank() {return new int[]{73,49};} // 20x22pixels
-    protected int[] EnergyTank() {
-        return getMenu().be.hasUpgrade(Registration.GENERATOR.get()) ? new int[]{116,26} : new int[]{31,17};
+    protected int factoryShowButtonY() {return 3;}
+    protected int[] fluidTankPos() {return new int[]{73,49};} // 20x22pixels
+    protected int[] energyCellPos() {
+        return getMenu().be.hasUpgrade(Registration.GENERATOR.get()) ? new int[]{116,26} : new int[]{31-(menu.be.hasUpgradeType(Registration.STORAGE.get()) ? 5 : 0),17};
     } // 16x34pixels
-    protected int[] XPTank() { return new int[]{116,57};} // 16x16pixels
+    protected int[] xpTankPos() { return new int[]{116,57};} // 16x16pixels
 
-    public static IFactoryDrawableType.DrawableProgress MINI_FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,0,16,16},false, IFactoryDrawableType.Direction.VERTICAL);
+    public static FactoryDrawableType.DrawableProgress MINI_FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,0,16,16},false, FactoryDrawableType.Direction.VERTICAL);
 
-    public static IFactoryDrawableType.DrawableProgress FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,16,20,22},false,IFactoryDrawableType.Direction.VERTICAL);
+    public static FactoryDrawableType.DrawableProgress FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,16,20,22},false,FactoryDrawableType.Direction.VERTICAL);
 
-    public static IFactoryDrawableType.DrawableProgress ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false, IFactoryDrawableType.Direction.VERTICAL);
+    public static FactoryDrawableType.DrawableProgress ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false, FactoryDrawableType.Direction.VERTICAL);
+    public static FactoryDrawableType.DrawableProgress THIN_ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{248,102,8,34},false, FactoryDrawableType.Direction.VERTICAL);
 
-    public static IFactoryDrawableType SLOT = IFactoryDrawableType.create(WIDGETS,192,60,18,18);
-    public static IFactoryDrawableType BIG_SLOT = IFactoryDrawableType.create(WIDGETS,210,60,26,26);
-    public static IFactoryDrawableType INPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,171,18,18);
-    public static IFactoryDrawableType FUEL_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,18,171,18,18);
-    public static IFactoryDrawableType OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,36,171,18,18);
-    public static IFactoryDrawableType BIG_OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,203,26,26);
-    public static IFactoryDrawableType.DrawableProgress BFProgressType(Progress.Identifier identifier, int[] uvSize, boolean reverse, IFactoryDrawableType.Direction plane) {
-        return IFactoryDrawableType.create(WIDGETS,uvSize[0],uvSize[1],uvSize[2],uvSize[3]).asProgress(identifier, reverse, plane);
+    public static FactoryDrawableType SLOT = FactoryDrawableType.create(WIDGETS,192,60,18,18);
+    public static FactoryDrawableType BIG_SLOT = FactoryDrawableType.create(WIDGETS,210,60,26,26);
+    public static FactoryDrawableType INPUT_SLOT_OUTLINE = FactoryDrawableType.create(WIDGETS,0,171,18,18);
+    public static FactoryDrawableType FUEL_SLOT_OUTLINE = FactoryDrawableType.create(WIDGETS,18,171,18,18);
+    public static FactoryDrawableType OUTPUT_SLOT_OUTLINE = FactoryDrawableType.create(WIDGETS,36,171,18,18);
+    public static FactoryDrawableType BIG_OUTPUT_SLOT_OUTLINE = FactoryDrawableType.create(WIDGETS,0,203,26,26);
+    public static FactoryDrawableType.DrawableProgress BFProgressType(Progress.Identifier identifier, int[] uvSize, boolean reverse, FactoryDrawableType.Direction plane) {
+        return FactoryDrawableType.create(WIDGETS,uvSize[0],uvSize[1],uvSize[2],uvSize[3]).asProgress(identifier, reverse, plane);
+    }
+    protected FactoryDrawableType.DrawableProgress energyCellDrawable(){
+        return menu.be.hasUpgradeType(Registration.STORAGE.get()) ? THIN_ENERGY_CELL : ENERGY_CELL;
     }
     private boolean storedFactoryUpgradeType(int type){
         if (getMenu().be.hasUpgradeType(Registration.FACTORY.get())) {
@@ -108,112 +112,112 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
 
         int titleX = (this.imageWidth - this.minecraft.font.width(getTitle().getString())) / 2;
         if (getMenu().be.isForge())
-            invX = (this.imageWidth - this.minecraft.font.width(playerInventoryTitle.getString())) / 2;
-        this.minecraft.font.draw(matrix, playerInventoryTitle, invX, this.imageHeight - 93, 4210752);
+            invX = (this.imageWidth - this.minecraft.font.width(inventory.getName().getString())) / 2;
+        this.minecraft.font.draw(matrix, inventory.getName(), invX, this.imageHeight - 93, 4210752);
         this.minecraft.font.draw(matrix, getTitle(), titleX, imageHeight - 160, 4210752);
-        if (getMenu().be.isLiquid() && FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, FluidTank()[0], FluidTank()[1]))
+        if (getMenu().be.isLiquid() && FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, fluidTankPos()[0], fluidTankPos()[1]))
             this.renderTooltip(matrix, getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.fluidTank), actualMouseX, actualMouseY);
         if (getMenu().be.hasUpgrade(Registration.GENERATOR.get()) && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, 54, 18)){
             ItemStack gen = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
             this.renderTooltip(matrix, getFluidTooltip("tooltip.factory_api.fluid_stored", ((GeneratorUpgradeItem)gen.getItem()).getFluidStorage(gen)), actualMouseX, actualMouseY);
-    }if ((getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) && ENERGY_CELL.inMouseLimit(actualMouseX,actualMouseY, EnergyTank()[0], EnergyTank()[1])){
+    }if ((getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) && ENERGY_CELL.inMouseLimit(actualMouseX,actualMouseY, energyCellPos()[0], energyCellPos()[1])){
             this.renderTooltip(matrix, StorageStringUtil.getEnergyTooltip("tooltip.factory_api.energy_stored", getMenu().be.energyStorage), actualMouseX, actualMouseY);
         }if (storedFactoryUpgradeType(0)) {
             this.addFactoryTooltips(matrix, actualMouseX, actualMouseY);
         }
-        if (getMenu().be.hasXPTank() && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY,XPTank()[0], XPTank()[1]))
+        if (getMenu().be.hasXPTank() && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, xpTankPos()[0], xpTankPos()[1]))
             this.renderTooltip(matrix,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.xpTank), actualMouseX, actualMouseY);
 
     }
 
     private void addFactoryTooltips(PoseStack matrix, int mouseX, int mouseY) {
         if (!getMenu().showInventoryButtons()) {
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() +13) {
-                this.renderTooltip(matrix, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_open"), mouseX, mouseY);
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() +13) {
+                this.renderTooltip(matrix, new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_open"), mouseX, mouseY);
             }
         } else {
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() +13) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() +13) {
                 this.renderComponentTooltip(matrix, StringHelper.getShiftInfoGui(), mouseX, mouseY);
             }
             if (storedFactoryUpgradeType(3)){
                 if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71) {
                     if (storedFactoryUpgradeType(1)) {
                         List<Component> list = Lists.newArrayList();
-                        list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_input"));
-                        list.add(Component.literal("" + this.getMenu().getAutoInput()));
+                        list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_input"));
+                        list.add(new TextComponent("" + this.getMenu().getAutoInput()));
                         this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                     }
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 58 && mouseY <= 71) {
                     if (storedFactoryUpgradeType(2)) {
                         List<Component> list = Lists.newArrayList();
-                        list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_output"));
-                        list.add(Component.literal("" + this.getMenu().getAutoOutput()));
+                        list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_output"));
+                        list.add(new TextComponent("" + this.getMenu().getAutoOutput()));
                         this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                     }
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 74 && mouseY <= 87) {
                     List<Component> list = Lists.newArrayList();
-                    list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_top"));
+                    list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_top"));
                     list.add(this.getMenu().getTooltip(1));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 102 && mouseY <= 115) {
                     List<Component> list = Lists.newArrayList();
-                    list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_bottom"));
+                    list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_bottom"));
                     list.add(this.getMenu().getTooltip(0));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 88 && mouseY <= 101) {
                     List<Component> list = Lists.newArrayList();
                     if (isShiftKeyDown()) {
-                        list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_reset"));
+                        list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_reset"));
                     } else {
-                        list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_front"));
+                        list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_front"));
                         list.add(this.getMenu().getTooltip(this.getMenu().getIndexFront()));
                     }
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -45 && mouseX <= -32 && mouseY >= 88 && mouseY <= 101) {
                     List<Component> list = Lists.newArrayList();
-                    list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_left"));
+                    list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_left"));
                     list.add(this.getMenu().getTooltip(this.getMenu().getIndexLeft()));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -17 && mouseX <= -4 && mouseY >= 88 && mouseY <= 101) {
                     List<Component> list = Lists.newArrayList();
-                    list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_right"));
+                    list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_right"));
                     list.add(this.getMenu().getTooltip(this.getMenu().getIndexRight()));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -45 && mouseX <= -32 && mouseY >= 102 && mouseY <= 115) {
                     List<Component> list = Lists.newArrayList();
-                    list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_back"));
+                    list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_back"));
                     list.add(this.getMenu().getTooltip(this.getMenu().getIndexBack()));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 }else if( mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
-                    this.renderTooltip(matrix, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_show_orientation"), mouseX, mouseY);
+                    this.renderTooltip(matrix, new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_show_orientation"), mouseX, mouseY);
                 }
             }
             if (storedFactoryUpgradeType(4)) {
                 if (this.getMenu().showInventoryButtons() && this.getMenu().getRedstoneMode() == 4) {
                     int comSub = this.getMenu().getComSub();
                     int i = comSub > 9 ? 28 : 31;
-                    this.minecraft.font.draw(matrix, Component.literal("" + comSub), i - 42, 138, 4210752);
-                    this.minecraft.font.draw(matrix, Component.literal("" + comSub), i - 42, 138, ChatFormatting.WHITE.getColor());
+                    this.minecraft.font.draw(matrix, new TextComponent("" + comSub), i - 42, 138, 4210752);
+                    this.minecraft.font.draw(matrix, new TextComponent("" + comSub), i - 42, 138, ChatFormatting.WHITE.getColor());
                 }
                 if (mouseX >= -47 && mouseX <= -34 && mouseY >= 118 && mouseY <= 131) {
                     List<Component> list = Lists.newArrayList();
-                    list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_ignored"));
+                    list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_ignored"));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 118 && mouseY <= 131) {
                     List<Component> list = Lists.newArrayList();
                     if (isShiftKeyDown()) {
-                        list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_low"));
+                        list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_low"));
                     } else {
-                        list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_high"));
+                        list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_high"));
                     }
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -15 && mouseX <= -2 && mouseY >= 118 && mouseY <= 131) {
                     List<Component> list = Lists.newArrayList();
-                    list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator"));
+                    list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator"));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 } else if (mouseX >= -47 && mouseX <= -34 && mouseY >= 134 && mouseY <= 147) {
                     List<Component> list = Lists.newArrayList();
-                    list.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator_sub"));
+                    list.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_redstone_comparator_sub"));
                     this.renderComponentTooltip(matrix, list, mouseX, mouseY);
                 }
             }
@@ -228,7 +232,7 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         }
         i = (this.getMenu()).getCookScaled(24);
         blit(matrix, relX() + 79, relY() + 34, 176, 14, i + 1, 16);
-        RenderSystem.setShaderTexture(0, WIDGETS);
+        minecraft.getTextureManager().bind( WIDGETS);
         SLOT.draw(matrix, relX() + 53, relY() + 17);
         boolean storage = menu.be.hasUpgradeType(Registration.STORAGE.get());
         if (storage){
@@ -241,38 +245,38 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         }
     }
     @Override
-    protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI());
-        blit(matrix, relX(), relY(), 0, 0, imageWidth, imageHeight);
-        blitSmeltingSprites(matrix);
+    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        minecraft.getTextureManager().bind(GUI());
+        blit(stack, relX(), relY(), 0, 0, imageWidth, imageHeight);
+        blitSmeltingSprites(stack);
         if (getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            blit(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 34, 16, 34);
-            ENERGY_CELL.drawProgress(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], this.getMenu().getEnergyStoredScaled(34));
+            boolean storage = menu.be.hasUpgradeType(Registration.STORAGE.get());
+            blit(stack, relX() + energyCellPos()[0], relY() + energyCellPos()[1], 240 + (storage ? 8 : 0), 34 * (storage ? 2 : 1), 16 - (storage ? 8 : 0), 34);
+            energyCellDrawable().drawProgress(stack, relX() + energyCellPos()[0], relY() + energyCellPos()[1], this.getMenu().getEnergyStoredScaled(34));
         }if (getMenu().be.isLiquid()){
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            blit(matrix, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 38, 20, 22);
-            FLUID_TANK.drawAsFluidTank(matrix,relX() + FluidTank()[0], relY() + FluidTank()[1], this.getMenu().getFluidStoredScaled(22,false), this.getMenu().getFluidStackStored(false),false);
+            minecraft.getTextureManager().bind(WIDGETS);
+            blit(stack, relX() + fluidTankPos()[0], relY() + fluidTankPos()[1], 192, 38, 20, 22);
+            FLUID_TANK.drawAsFluidTank(stack,relX() + fluidTankPos()[0], relY() + fluidTankPos()[1], this.getMenu().getFluidStoredScaled(22,false), this.getMenu().getFluidStackStored(false),false);
         }
 
         if (this.getMenu().be.hasXPTank()) {
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16);
-            MINI_FLUID_TANK.drawAsFluidTank(matrix,relX() + XPTank()[0], relY() + XPTank()[1], this.getMenu().getFluidStoredScaled(16,true), this.getMenu().getFluidStackStored(true),true);
+            minecraft.getTextureManager().bind( WIDGETS);
+            blit(stack, relX() + xpTankPos()[0], relY() + xpTankPos()[1], 208, 0, 16, 16);
+            MINI_FLUID_TANK.drawAsFluidTank(stack,relX() + xpTankPos()[0], relY() + xpTankPos()[1], this.getMenu().getFluidStoredScaled(16,true), this.getMenu().getFluidStackStored(true),true);
         }
         if (this.getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             ItemStack generatorUp = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
-            MINI_FLUID_TANK.drawAsFluidTank(matrix,relX() + 54, relY() + 18, (int)(ItemContainerUtil.getFluid(generatorUp).getAmount() * 16 / (4 * FluidStack.bucketAmount())),ItemContainerUtil.getFluid(generatorUp),true);
+            MINI_FLUID_TANK.drawAsFluidTank(stack,relX() + 54, relY() + 18, (ItemContainerUtil.getFluid(generatorUp).getAmount().intValue() * 16 / (4 * FluidStack.bucketAmount().intValue())),ItemContainerUtil.getFluid(generatorUp),true);
         }
         if (storedFactoryUpgradeType(0)) {
-            RenderSystem.setShaderTexture(0, WIDGETS);
+            minecraft.getTextureManager().bind( WIDGETS);
             int actualMouseX = mouseX - relY();
             int actualMouseY = mouseY - relX();
 
-            this.addInventoryButtons(matrix, actualMouseX, actualMouseY);
+            this.addInventoryButtons(stack, actualMouseX, actualMouseY);
             if (storedFactoryUpgradeType(4))
-                this.addRedstoneButtons(matrix, actualMouseX, actualMouseY);
+                this.addRedstoneButtons(stack, actualMouseX, actualMouseY);
         }
     }
 
@@ -316,11 +320,11 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
 
     private void addInventoryButtons(PoseStack matrix, int mouseX, int mouseY) {
         if (!getMenu().showInventoryButtons()) {
-            this.blit(matrix, relX() + 7, relY() + FactoryShowButtonY(), 0, 28, 18, 14);
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() + 13)
-                this.blit(matrix, relX() + 7, relY() + FactoryShowButtonY(), 18, 28, 18, 14);
+            this.blit(matrix, relX() + 7, relY() + factoryShowButtonY(), 0, 28, 18, 14);
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() + 13)
+                this.blit(matrix, relX() + 7, relY() + factoryShowButtonY(), 18, 28, 18, 14);
         } else if (getMenu().showInventoryButtons()) {
-            this.blit(matrix, relX() + 7, relY() + FactoryShowButtonY(), 18, 28, 18, 14);
+            this.blit(matrix, relX() + 7, relY() + factoryShowButtonY(), 18, 28, 18, 14);
             this.blit(matrix, relX() - 53, relY() + 52, 0, 47, 59, 107);
             if (storedFactoryUpgradeType(1)) {
                 this.blit(matrix, relX() - 47, relY() + 58, 56, 157, 14, 14);
@@ -497,40 +501,40 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     public void mouseClickedInventoryButtons(int button, double mouseX, double mouseY) {
         boolean flag = button == GLFW.GLFW_MOUSE_BUTTON_2;
         if (!getMenu().showInventoryButtons()) {
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() + 13) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() + 13) {
                 Messages.INSTANCE.sendToServer(new PacketShowSettingsButton(this.getMenu().getPos(), 1));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1F));
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
             }
         } else {
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() + 13) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() + 13) {
                 Messages.INSTANCE.sendToServer(new PacketShowSettingsButton(this.getMenu().getPos(), 0));
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1F));
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
             }
             if (storedFactoryUpgradeType(3)) {
                 if (mouseX >= -47 && mouseX <= -34 && mouseY >= 58 && mouseY <= 71) {
                     if (storedFactoryUpgradeType(1)) {
                         if (!this.getMenu().getAutoInput()) {
                             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 6, 1));
-                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                         } else {
                             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 6, 0));
-                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                         }
                     }
                 } else if (mouseX >= -31 && mouseX <= -18 && mouseY >= 58 && mouseY <= 71) {
                     if (storedFactoryUpgradeType(2)) {
                         if (!this.getMenu().getAutoOutput()) {
                             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 7, 1));
-                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                         } else {
                             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 7, 0));
-                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                         }
                     }
                 }
                 if ( mouseX >= -15 && mouseX <= -2 && mouseY >= 58 && mouseY <= 71) {
                     Messages.INSTANCE.sendToServer(new PacketOrientationButton(this.getMenu().getPos(), getMenu().be.showOrientation = !this.getMenu().be.showOrientation));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                 }
 
                 if (mouseX >= -31 && mouseX <= -18 && mouseY >= 74 && mouseY <= 87) {
@@ -553,7 +557,7 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
                         Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 3, 0));
                         Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 4, 0));
                         Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 5, 0));
-                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.8F, 0.3F));
+                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.8F, 0.3F));
                     } else {
                         if (flag) {
                             sendToServerInverted(this.getMenu().getSettingFront(), this.getMenu().getIndexFront());
@@ -585,7 +589,7 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     }
 
     private void sendToServer(int setting, int index) {
-        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
         if (setting <= 0) {
             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), index, 1));
         } else if (setting == 1) {
@@ -600,7 +604,7 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     }
 
     private void sendToServerInverted(int setting, int index) {
-        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 0.3F));
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
         if (setting <= 0) {
             Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), index, 4));
         } else if (setting == 1) {
@@ -619,44 +623,44 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
             if (mouseX >= -31 && mouseX <= -18 && mouseY >= 132 && mouseY <= 147) {
                 if (this.sub_button && isShiftKeyDown()) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 9, this.getMenu().getComSub() - 1));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
                 }
             }
             if (mouseX >= -31 && mouseX <= -18 && mouseY >= 132 && mouseY <= 147) {
                 if (this.add_button && !isShiftKeyDown()) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 9, this.getMenu().getComSub() + 1));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                 }
             }
             if (mouseX >= -47 && mouseX <= -34 && mouseY >= 118 && mouseY <= 131) {
                 if (this.getMenu().getRedstoneMode() != 0) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 0));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                 }
             }
 
             if (mouseX >= -31 && mouseX <= -18 && mouseY >= 118 && mouseY <= 131) {
                 if (this.getMenu().getRedstoneMode() != 1 && !isShiftKeyDown()) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 1));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                 }
                 if (this.getMenu().getRedstoneMode() != 2 && isShiftKeyDown()) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 2));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                 }
             }
 
             if (mouseX >= -15 && mouseX <= -2 && mouseY >= 118 && mouseY <= 131) {
                 if (this.getMenu().getRedstoneMode() != 3) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 3));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                 }
             }
 
             if (mouseX >= -47 && mouseX <= -34 && mouseY >= 134 && mouseY <= 147) {
                 if (this.getMenu().getRedstoneMode() != 4) {
                     Messages.INSTANCE.sendToServer(new PacketSettingsButton(this.getMenu().getPos(), 8, 4));
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.6F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.6F, 0.3F));
                 }
 
             }

@@ -30,8 +30,8 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
         return this.getBlockState().getValue(BlockStateProperties.FACING);
     }
 
-    public ForgeBlockEntity(BlockPos pos, BlockState state, Supplier<Integer> cookTime) {
-        super(pos, state, cookTime);
+    public ForgeBlockEntity(Supplier<Integer> cookTime) {
+        super(cookTime);
     }
 
     public int getIndexBottom() {

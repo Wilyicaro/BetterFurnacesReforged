@@ -1,23 +1,21 @@
 package wily.betterfurnaces.blockentity;
 
 import com.google.common.collect.Lists;
-import dev.architectury.fluid.FluidStack;
-import dev.architectury.platform.Platform;
-import dev.architectury.registry.fuel.FuelRegistry;
-import it.unimi.dsi.fastutil.Pair;
+import com.ibm.icu.impl.Pair;
+import me.shedaniel.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.platform.Platform;
+import me.shedaniel.architectury.registry.fuel.FuelRegistry;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.Registries;
+import me.shedaniel.architectury.utils.Fraction;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
@@ -35,6 +33,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
@@ -97,7 +96,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     protected int timer;
 
     public int EnergyUse() {return 500;}
-    public long LiquidCapacity() {return 4 * FluidStack.bucketAmount();}
+    public long LiquidCapacity() {return 4 * FluidStack.bucketAmount().longValue();}
     public int EnergyCapacity() {return 16000;}
     private int furnaceBurnTime;
     public int cookTime;
@@ -119,8 +118,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
 
-    public SmeltingBlockEntity(BlockPos pos, BlockState state, final Supplier<Integer> cookTime) {
-        super(Registration.BLOCK_ENTITIES.getRegistrar().get(state.getBlock().arch$registryName()), pos, state);
+    public SmeltingBlockEntity(final Supplier<Integer> cookTime) {
+        super(Registration.IRON_FURNACE_TILE.get());
         this.defaultCookTime = cookTime;
         this.recipeType = RecipeType.SMELTING;
         furnaceSettings = new FactoryUpgradeSettings(()->getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
@@ -135,6 +134,10 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         };
     }
 
+    @Override
+    public BlockEntityType<?> getType() {
+        return Registry.BLOCK_ENTITY_TYPE.get(Registry.BLOCK.getKey(getBlockState().getBlock()));
+    }
 
     private int getFromCache(LRUCache<Item, Optional<AbstractCookingRecipe>> c, Item key) {
         if (c == null) return 0;
@@ -277,7 +280,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public List<UpgradeItem> getUpgrades() {
         List<UpgradeItem> list = new ArrayList<>();
         for (int slot : UPGRADES())
-            if (inventory.getItem(slot).getItem() instanceof UpgradeItem upg )list.add(upg);
+            if (inventory.getItem(slot).getItem() instanceof UpgradeItem ){
+                list.add((UpgradeItem)inventory.getItem(slot).getItem());
+            }
         return list;
     }
     public boolean hasUpgrade(UpgradeItem upg) {
@@ -296,7 +301,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
     public int getUpgradeTypeSlot(UpgradeItem upg) {
         for (int slot : UPGRADES())
-            if (inventory.getItem(slot).getItem() instanceof UpgradeItem upgradeItem &&  upgradeItem.isEnabled() && upg.isSameType(upgradeItem)) return slot;
+            if (inventory.getItem(slot).getItem() instanceof UpgradeItem &&  ((UpgradeItem)inventory.getItem(slot).getItem()).isEnabled() && upg.isSameType(((UpgradeItem)inventory.getItem(slot).getItem()))) {
+                return slot;
+            }
         return -1;
     }
 
@@ -309,7 +316,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return stack == null ? 0 : FuelRegistry.get(stack.getFluid().getBucket().getDefaultInstance());
     }
     public final IPlatformFluidHandler fluidTank = FactoryAPIPlatform.getFluidHandlerApi(LiquidCapacity(), this,fs -> (getBurnTime(new ItemStack(fs.getFluid().getBucket())) > 0), SlotsIdentifier.LAVA, TransportState.EXTRACT_INSERT);
-    public final IPlatformFluidHandler xpTank = FactoryAPIPlatform.getFluidHandlerApi(2*FluidStack.bucketAmount(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), SlotsIdentifier.GENERIC, TransportState.EXTRACT_INSERT);
+    public final IPlatformFluidHandler xpTank = FactoryAPIPlatform.getFluidHandlerApi(2*FluidStack.bucketAmount().longValue(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), SlotsIdentifier.GENERIC, TransportState.EXTRACT_INSERT);
     public final IPlatformEnergyStorage energyStorage = FactoryAPIPlatform.getEnergyStorageApi(EnergyCapacity(),this);
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
@@ -336,8 +343,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     @Override
     public Component getDisplayName() {
-        String tier = getBlockState().getBlock().arch$registryName().getPath().split("_")[0];
-        return getUpdatedType() != 0 ? Component.translatable("tooltip.betterfurnacesreforged." + tier +"_tier" ,getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? Component.translatable("tooltip.betterfurnacesreforged.generator").getString() : "") : super.getDisplayName();
+        String tier = Registry.ITEM.getKey(getBlockState().getBlock().asItem()).getPath().split("_")[0];
+        return getUpdatedType() != 0 ? new TranslatableComponent("tooltip.betterfurnacesreforged." + tier +"_tier" ,getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? new TranslatableComponent("tooltip.betterfurnacesreforged.generator").getString() : "") : super.getDisplayName();
     }
 
 
@@ -375,7 +382,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public boolean canGeneratorWork(){
         if (hasUpgrade(Registration.GENERATOR.get())){
             ItemStack stack = getUpgradeSlotItem(Registration.GENERATOR.get());
-            return (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).getAmount() > 0) && energyStorage.getSpace() > 0;
+            return (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).getAmount().longValue() > 0) && energyStorage.getSpace() > 0;
         }
         return false;
     }
@@ -387,78 +394,79 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         }
         return false;
     }
-    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, SmeltingBlockEntity e) {
 
-        boolean wasBurning = e.isBurning();
+    public void tick() {
+
+        boolean wasBurning = this.isBurning();
         boolean flag1 = false;
         boolean flag2 = false;
 
-        if (e.isBurning()) {
-            --e.furnaceBurnTime;
+        if (this.isBurning()) {
+            --this.furnaceBurnTime;
         }
 
 
-        if (e.hasXPTank()) e.grantStoredRecipeExperience(level, null);
+        if (this.hasXPTank()) this.grantStoredRecipeExperience(level, null);
 
-        if (!e.hasUpgradeType(Registration.FACTORY.get()) && e.showOrientation) e.showOrientation = false;
+        if (!this.hasUpgradeType(Registration.FACTORY.get()) && this.showOrientation) this.showOrientation = false;
 
-        ItemStack fuel = e.inventory.getItem(e.FUEL()[0]);
-        if ((e.hasUpgrade(Registration.COLOR.get()))) {
-            if (!(level.getBlockState(e.getBlockPos()).getValue(SmeltingBlock.COLORED)))
-                level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(SmeltingBlock.COLORED, true), 3);
-        } else if ((level.getBlockState(e.getBlockPos()).getValue(SmeltingBlock.COLORED))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(SmeltingBlock.COLORED, false), 3);
+        ItemStack fuel = this.inventory.getItem(this.FUEL()[0]);
+        if ((this.hasUpgrade(Registration.COLOR.get()))) {
+            if (!(level.getBlockState(this.getBlockPos()).getValue(SmeltingBlock.COLORED)))
+                level.setBlock(this.getBlockPos(), level.getBlockState(this.getBlockPos()).setValue(SmeltingBlock.COLORED, true), 3);
+        } else if ((level.getBlockState(this.getBlockPos()).getValue(SmeltingBlock.COLORED))) level.setBlock(this.getBlockPos(), level.getBlockState(this.getBlockPos()).setValue(SmeltingBlock.COLORED, false), 3);
 
-        int updatedType = e.getUpdatedType();
+        int updatedType = this.getUpdatedType();
         RecipeType<? extends AbstractCookingRecipe>[] recipeTypes = new RecipeType[]{RecipeType.SMELTING,RecipeType.BLASTING, RecipeType.SMOKING};
         if (updatedType == 3) {
-            for (int i : new int[]{e.FINPUT(), e.FOUTPUT()}){
-                ItemStack stack = e.inventory.getItem(i);
-                if (!stack.isEmpty())Containers.dropItemStack(level, e.getBlockPos().getX(), e.getBlockPos().getY() + 1, e.getBlockPos().getZ(), stack);
+            for (int i : new int[]{this.FINPUT(), this.FOUTPUT()}){
+                ItemStack stack = this.inventory.getItem(i);
+                if (!stack.isEmpty())Containers.dropItemStack(level, this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ(), stack);
             }
-        }else if (e.recipeType != recipeTypes[updatedType]) e.recipeType = recipeTypes[updatedType];
+        }else if (this.recipeType != recipeTypes[updatedType]) this.recipeType = recipeTypes[updatedType];
 
-        if (!e.isForge() &&   level.getBlockState(e.getBlockPos()).getValue(SmeltingBlock.TYPE) != updatedType)
-            level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(SmeltingBlock.TYPE, updatedType), 3);
+        if (!this.isForge() &&   level.getBlockState(this.getBlockPos()).getValue(SmeltingBlock.TYPE) != updatedType)
+            level.setBlock(this.getBlockPos(), level.getBlockState(this.getBlockPos()).setValue(SmeltingBlock.TYPE, updatedType), 3);
 
         if (!level.isClientSide) {
-            int get_cook_time = e.getCookTime();
-            e.timer++;
-            if (e.hasUpgrade(Registration.GENERATOR.get()))
-                BetterFurnacesPlatform.transferEnergySides(e);
+            int get_cook_time = this.getCookTime();
+            this.timer++;
+            if (this.hasUpgrade(Registration.GENERATOR.get()))
+                BetterFurnacesPlatform.transferEnergySides(this);
 
-            if (e.hasUpgradeType(Registration.STORAGE.get())) {
-                ItemStack storageInput = e.inventory.getItem(6);
+            if (this.hasUpgradeType(Registration.STORAGE.get())) {
+                ItemStack storageInput = this.inventory.getItem(6);
                 if (!storageInput.isEmpty()){
-                    int added = e.addOrSetItem(storageInput,e.inventory,e.FINPUT());
-                    if (added > 0) e.inventory.extractItem(6, added,false);
+                    int added = this.addOrSetItem(storageInput,this.inventory,this.FINPUT());
+                    if (added > 0) this.inventory.extractItem(6, added,false);
                 }
-                ItemStack storageFuel = e.inventory.getItem(7);
+                ItemStack storageFuel = this.inventory.getItem(7);
                 if (!storageFuel.isEmpty()){
-                    int added = e.addOrSetItem(storageFuel,e.inventory,e.FUEL()[0]);
-                    if (added > 0) e.inventory.extractItem(7, added,false);
+                    int added = this.addOrSetItem(storageFuel,this.inventory,this.FUEL()[0]);
+                    if (added > 0) this.inventory.extractItem(7, added,false);
                 }
             }
-            else if (!e.isForge()){
+            else if (!this.isForge()){
                 for (int i : new int[]{6,7,8}){
-                    ItemStack stack = e.inventory.getItem(i);
-                    if (!stack.isEmpty())Containers.dropItemStack(level, e.getBlockPos().getX(), e.getBlockPos().getY() + 1, e.getBlockPos().getZ(), stack);
+                    ItemStack stack = this.inventory.getItem(i);
+                    if (!stack.isEmpty())Containers.dropItemStack(level, this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ(), stack);
                 }
             }
 
 
-            if (e.hasUpgrade(Registration.ENERGY.get())) {
+            if (this.hasUpgrade(Registration.ENERGY.get())) {
                 if (ItemContainerUtil.isEnergyContainer(fuel) && ItemContainerUtil.getEnergy(fuel) > 0) {
-                    if (e.energyStorage.getSpace() > 0) {
-                        ItemContainerUtil.extractEnergy(e.energyStorage.receiveEnergy(ItemContainerUtil.getEnergy(fuel), false), fuel);
-                        e.inventory.setItem(e.FUEL()[0], fuel);
+                    if (this.energyStorage.getSpace() > 0) {
+                        ItemContainerUtil.extractEnergy(this.energyStorage.receiveEnergy(ItemContainerUtil.getEnergy(fuel), false), fuel);
+                        this.inventory.setItem(this.FUEL()[0], fuel);
 
                     }
                 }
             }
-            if (e.totalCookTime != get_cook_time) {
-                e.totalCookTime = get_cook_time;
+            if (this.totalCookTime != get_cook_time) {
+                this.totalCookTime = get_cook_time;
             }
-            int mode = e.getRedstoneSetting();
+            int mode = this.getRedstoneSetting();
             if (mode != 0) {
                 if (mode == 2) {
                     int i = 0;
@@ -468,9 +476,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                         }
                     }
                     if (i != 0) {
-                        e.cookTime = 0;
-                        e.furnaceBurnTime = 0;
-                        e.forceUpdateAllStates();
+                        this.cookTime = 0;
+                        this.furnaceBurnTime = 0;
+                        this.forceUpdateAllStates();
                         return;
                     }
                 }
@@ -483,119 +491,119 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                         }
                     }
                     if (!flag) {
-                        e.cookTime = 0;
-                        e.furnaceBurnTime = 0;
-                        e.forceUpdateAllStates();
+                        this.cookTime = 0;
+                        this.furnaceBurnTime = 0;
+                        this.forceUpdateAllStates();
                         return;
                     }
                 }
                 for (int i = 0; i < Direction.values().length; i++)
-                    e.provides[i] = e.getBlockState().getDirectSignal(e.level, worldPosition, Direction.values()[i]);
+                    this.provides[i] = this.getBlockState().getDirectSignal(this.level, worldPosition, Direction.values()[i]);
 
             } else {
                 for (int i = 0; i < Direction.values().length; i++)
-                    e.provides[i] = 0;
+                    this.provides[i] = 0;
             }
-            if (e.doesNeedUpdateSend()) {
-                e.onUpdateSent();
+            if (this.doesNeedUpdateSend()) {
+                this.onUpdateSent();
             }
 
-            if (e.isLiquid() && ItemContainerUtil.isFluidContainer(fuel) && isItemFuel(fuel)) {
-                ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(e.fluidTank.getTotalSpace(),fuel);
-                    long amount = e.fluidTank.fill(context.fluidStack(), false);
+            if (this.isLiquid() && ItemContainerUtil.isFluidContainer(fuel) && isItemFuel(fuel)) {
+                ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(this.fluidTank.getTotalSpace(),fuel);
+                    long amount = this.fluidTank.fill(context.fluidStack, false);
                     if (amount > 0) {
                         level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
-                        e.inventory.setItem(e.FUEL()[0], context.container());
+                        this.inventory.setItem(this.FUEL()[0], context.container);
                     }
 
 
             }
-            if ((e.isBurning() || !fuel.isEmpty() || e.isLiquid() || (e.isEnergy() && !e.canGeneratorWork())) &&  (e.arraySlotFilled(e.INPUTS(), true)|| e.canGeneratorWork()))  {
-                boolean valid = e.smeltValid() || e.canGeneratorWork();
-                if (!e.isBurning() && (valid)) {
-                    if (e.isLiquid() && !e.fluidTank.getFluidStack().isEmpty() && getFluidBurnTime(e.fluidTank.getFluidStack()) > 0){
-                        int fluidAmount= 200000 / getFluidBurnTime(e.fluidTank.getFluidStack());
-                        if ( e.fluidTank.getFluidStack().getAmount() >= fluidAmount) {
-                            e.furnaceBurnTime = e.getEnderMultiplier() * get_cook_time;
-                            e.recipesUsed = e.furnaceBurnTime;
-                            e.fluidTank.drain(fluidAmount, false);
+            if ((this.isBurning() || !fuel.isEmpty() || this.isLiquid() || (this.isEnergy() && !this.canGeneratorWork())) &&  (this.arraySlotFilled(this.INPUTS(), true)|| this.canGeneratorWork()))  {
+                boolean valid = this.smeltValid() || this.canGeneratorWork();
+                if (!this.isBurning() && (valid)) {
+                    if (this.isLiquid() && !this.fluidTank.getFluidStack().isEmpty() && getFluidBurnTime(this.fluidTank.getFluidStack()) > 0){
+                        int fluidAmount= 200000 / getFluidBurnTime(this.fluidTank.getFluidStack());
+                        if ( this.fluidTank.getFluidStack().getAmount().longValue() >= fluidAmount) {
+                            this.furnaceBurnTime = this.getEnderMultiplier() * get_cook_time;
+                            this.recipesUsed = this.furnaceBurnTime;
+                            this.fluidTank.drain(fluidAmount, false);
                         }
-                    }else if (e.isEnergy()){
-                        e.furnaceBurnTime = e.getEnderMultiplier() * get_cook_time;
-                        e.recipesUsed = e.furnaceBurnTime;
-                        for (int a : e.INPUTS())
-                            e.energyStorage.consumeEnergy(e.EnergyUse() * e.OreProcessingMultiplier(e.inventory.getItem(a)), false);
+                    }else if (this.isEnergy()){
+                        this.furnaceBurnTime = this.getEnderMultiplier() * get_cook_time;
+                        this.recipesUsed = this.furnaceBurnTime;
+                        for (int a : this.INPUTS())
+                            this.energyStorage.consumeEnergy(this.EnergyUse() * this.OreProcessingMultiplier(this.inventory.getItem(a)), false);
                     }else{
-                        e.furnaceBurnTime =  e.getEnderMultiplier() * getBurnTime(fuel) * get_cook_time / 200;
-                        e.recipesUsed = e.furnaceBurnTime;
+                        this.furnaceBurnTime =  this.getEnderMultiplier() * getBurnTime(fuel) * get_cook_time / 200;
+                        this.recipesUsed = this.furnaceBurnTime;
                     }
-                    if (e.isBurning()) {
+                    if (this.isBurning()) {
                         flag1 = true;
-                        if (e.hasEnder()) {
-                            if (e.hasUpgrade(Registration.FUEL.get())) {
-                                e.breakDurabilityItem(e.getUpgradeSlotItem(Registration.FUEL.get()));
+                        if (this.hasEnder()) {
+                            if (this.hasUpgrade(Registration.FUEL.get())) {
+                                this.breakDurabilityItem(this.getUpgradeSlotItem(Registration.FUEL.get()));
                             }
                         }
-                        if ((!e.isLiquid() || e.fluidTank.getFluidStack().getAmount() < 10) && !e.isEnergy()) {
+                        if ((!this.isLiquid() || this.fluidTank.getFluidStack().getAmount().longValue() < 10) && !this.isEnergy()) {
                             if (ItemContainerUtil.isFluidContainer(fuel)){
-                                ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(e.fluidTank.getTotalSpace(),fuel);
-                                e.inventory.setItem(e.FUEL()[0],context.container());
+                                ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(this.fluidTank.getTotalSpace(),fuel);
+                                this.inventory.setItem(this.FUEL()[0],context.container);
                             }
 
                             if (!fuel.isEmpty() && isItemFuel(fuel)) {
                                 fuel.shrink(1);
-                                if (e.hasUpgrade(Registration.FUEL.get())) {
-                                    e.breakDurabilityItem(e.getUpgradeSlotItem(Registration.FUEL.get()));
+                                if (this.hasUpgrade(Registration.FUEL.get())) {
+                                    this.breakDurabilityItem(this.getUpgradeSlotItem(Registration.FUEL.get()));
                                 }
                             }
                         }
                     }
                 }
-                if (e.isBurning() && valid ) {
-                    ++e.cookTime;
-                    if (e.hasUpgrade(Registration.GENERATOR.get())){
-                        ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(FluidStack.bucketAmount() / 1000, e.getUpgradeSlotItem(Registration.GENERATOR.get()));
-                        if (!context.fluidStack().isEmpty()) e.inventory.setItem(e.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container());
-                        e.energyStorage.receiveEnergy(Math.round((float)500 / get_cook_time),false);
+                if (this.isBurning() && valid ) {
+                    ++this.cookTime;
+                    if (this.hasUpgrade(Registration.GENERATOR.get())){
+                        ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(FluidStack.bucketAmount().longValue() / 1000, this.getUpgradeSlotItem(Registration.GENERATOR.get()));
+                        if (!context.fluidStack.isEmpty()) this.inventory.setItem(this.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container);
+                        this.energyStorage.receiveEnergy(Math.round((float)500 / get_cook_time),false);
                     }
-                    if (e.cookTime >= e.totalCookTime) {
-                        e.cookTime = 0;
-                        e.totalCookTime = e.getCookTime();
-                        if (!e.hasUpgrade(Registration.GENERATOR.get())) {
-                            e.trySmelt();
-                            if (e.hasUpgradeType(Registration.FACTORY.get()))
-                                BetterFurnacesPlatform.smeltingAutoIO(e);
+                    if (this.cookTime >= this.totalCookTime) {
+                        this.cookTime = 0;
+                        this.totalCookTime = this.getCookTime();
+                        if (!this.hasUpgrade(Registration.GENERATOR.get())) {
+                            this.trySmelt();
+                            if (this.hasUpgradeType(Registration.FACTORY.get()))
+                                BetterFurnacesPlatform.smeltingAutoIO(this);
                         }
                         flag1 = true;
                     }
                 } else {
-                    e.cookTime = 0;
+                    this.cookTime = 0;
                 }
-            } else if (!e.isBurning() && e.cookTime > 0) {
-                e.cookTime = Mth.clamp(e.cookTime - 2, 0, e.totalCookTime);
+            } else if (!this.isBurning() && this.cookTime > 0) {
+                this.cookTime = Mth.clamp(this.cookTime - 2, 0, this.totalCookTime);
             }
-            if (wasBurning != e.isBurning()) {
+            if (wasBurning != this.isBurning()) {
                 flag1 = true;
-                e.level.setBlock(e.worldPosition, e.level.getBlockState(e.worldPosition).setValue(BlockStateProperties.LIT, e.isBurning()), 3);
+                this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(BlockStateProperties.LIT, this.isBurning()), 3);
             }
-            if ((e.timer % 24 == 0) && (e.hasUpgradeType(Registration.FACTORY.get()))){
-                if (e.cookTime <= 0) {
-                    if (e.arraySlotFilled(e.INPUTS(), false)) {
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
+            if ((this.timer % 24 == 0) && (this.hasUpgradeType(Registration.FACTORY.get()))){
+                if (this.cookTime <= 0) {
+                    if (this.arraySlotFilled(this.INPUTS(), false)) {
+                        BetterFurnacesPlatform.smeltingAutoIO(this);
                         flag1 = true;
-                    } else if (e.hasArraySlotSpace(e.INPUTS())) {
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
-                        flag1 = true;
-                    }
-                    if (e.arraySlotFilled(e.OUTPUTS(), true)) {
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
+                    } else if (this.hasArraySlotSpace(this.INPUTS())) {
+                        BetterFurnacesPlatform.smeltingAutoIO(this);
                         flag1 = true;
                     }
-                    if (e.inventory.getItem(e.FUEL()[0]).isEmpty() && !e.isLiquid() && !e.isEnergy()) {
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
+                    if (this.arraySlotFilled(this.OUTPUTS(), true)) {
+                        BetterFurnacesPlatform.smeltingAutoIO(this);
                         flag1 = true;
-                    } else if (e.inventory.getItem(e.FUEL()[0]).getCount() < e.inventory.getItem(e.FUEL()[0]).getMaxStackSize() || ItemContainerUtil.isFluidContainer(fuel) && ItemContainerUtil.getFluid(fuel).getAmount() < e.fluidTank.getTotalSpace()){
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
+                    }
+                    if (this.inventory.getItem(this.FUEL()[0]).isEmpty() && !this.isLiquid() && !this.isEnergy()) {
+                        BetterFurnacesPlatform.smeltingAutoIO(this);
+                        flag1 = true;
+                    } else if (this.inventory.getItem(this.FUEL()[0]).getCount() < this.inventory.getItem(this.FUEL()[0]).getMaxStackSize() || ItemContainerUtil.isFluidContainer(fuel) && ItemContainerUtil.getFluid(fuel).getAmount().longValue() < this.fluidTank.getTotalSpace()){
+                        BetterFurnacesPlatform.smeltingAutoIO(this);
                         flag1 = true;
                     }
                 }
@@ -603,7 +611,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         }
 
         if (flag1) {
-            e.setChanged();
+            this.setChanged();
         }
 
     }
@@ -692,33 +700,21 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return this.furnaceBurnTime > 0;
     }
 
-    TagKey<Item> ore = getItemTag(new ResourceLocation(Platform.isForge() ? "forge" : "c", "ores"));
+    Tag<Item> ore = getItemTag(new ResourceLocation(Platform.isForge() ? "forge" : "c", "ores"));
 
 
-
-    private TagKey<Item> getItemTag(ResourceLocation resourceLocation) {
-        return TagKey.create(Registries.ITEM,resourceLocation);
+    private Tag<Item> getItemTag(ResourceLocation resourceLocation) {
+        return ItemTags.getAllTags().getTag(resourceLocation);
     }
-    private boolean hasRawOreTag(ItemStack stack){
-        if(Platform.isForge()) return stack.is(getItemTag( new ResourceLocation("forge","raw_materials")));
-        else {
-            for (TagKey<Item> tag: stack.getTags().toList()){
-                if (!tag.location().toString().contains("raw_") ||!tag.location().toString().contains("_ores")) continue;
-                return true;
-            }
-            return false;
-        }
-    }
+
     protected boolean isOre(ItemStack input){
-        return (input.is(ore));
+        return (input.getItem().is(ore));
     }
-    protected boolean isRaw(ItemStack input){
-        return (hasRawOreTag(input));
-    }
+
     protected int OreProcessingMultiplier(ItemStack input){
         if (hasUpgradeType(Registration.ORE_PROCESSING.get())){
             OreProcessingUpgradeItem oreup = (OreProcessingUpgradeItem)getUpgradeTypeSlotItem(Registration.ORE_PROCESSING.get()).getItem();
-            if  ((isRaw(input) && oreup.acceptRaw) || (isOre( input) && oreup.acceptOre)) return oreup.getMultiplier;
+            if  (isOre( input)) return oreup.getMultiplier;
 
         } else if (input == ItemStack.EMPTY) return 0;
         return 1;
@@ -732,11 +728,11 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     protected boolean canSmelt(@Nullable Recipe<?> recipe, int INPUT, int OUTPUT) {
         ItemStack input = this.getInv().getItem(INPUT);
         if (OUTPUT >= 0 && !input.isEmpty() && recipe != null) {
-            ItemStack recipeOutput = recipe.getResultItem(RegistryAccess.EMPTY);
+            ItemStack recipeOutput = recipe.getResultItem();
             if (!recipeOutput.isEmpty()) {
                 ItemStack output = this.getInv().getItem(OUTPUT);
                 if (output.isEmpty()) return true;
-                else if (!ItemStack.isSameItemSameTags(output,recipeOutput)) return false;
+                else if (!output.sameItem(recipeOutput)) return false;
                 else {
                     return output.getCount() + recipeOutput.getCount() * OreProcessingMultiplier(input) <= output.getMaxStackSize();
                 }
@@ -745,7 +741,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return false;
     }
     private ItemStack getResult(@Nullable Recipe<?> recipe, ItemStack input) {
-        ItemStack out = recipe.getResultItem(RegistryAccess.EMPTY).copy();
+        ItemStack out = recipe.getResultItem().copy();
         out.setCount(out.getCount() * OreProcessingMultiplier(input));
         return out;
     }
@@ -758,7 +754,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         } else {
             int resultCount =  slotStack.getCount() + stack.getCount();
             int maxStack = Math.min(inv.getMaxStackSize(),slotStack.getMaxStackSize());
-            if (slotStack.is(stack.getItem()) && slotStack.getCount() < maxStack) {
+            if (slotStack.sameItem(stack) && slotStack.getCount() < maxStack) {
                 if (resultCount <= maxStack) {
                     slotStack.grow(Math.max(stack.getCount(), 1));
                     return Math.max(stack.getCount(), 1);
@@ -775,7 +771,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         if (recipe != null && this.canSmelt(recipe, INPUT, OUTPUT)) {
             ItemStack input = this.getInv().getItem(INPUT);
 
-            if (addOrSetItem(recipe.getResultItem(RegistryAccess.EMPTY),inventory,OUTPUT) > 0 && hasUpgrade(Registration.ORE_PROCESSING.get()) && (isOre(input))) {
+            if (addOrSetItem(recipe.getResultItem(),inventory,OUTPUT) > 0 && hasUpgrade(Registration.ORE_PROCESSING.get()) && (isOre(input))) {
                 breakDurabilityItem(getUpgradeSlotItem(Registration.ORE_PROCESSING.get()));
             }
 
@@ -786,20 +782,20 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             ItemStack fuel = inventory.getItem(FUEL()[0]);
             if (input.getItem() == Blocks.WET_SPONGE.asItem() && !fuel.isEmpty()) {
                 if (ItemContainerUtil.isFluidContainer(fuel)){
-                    ItemContainerUtil.fillItem(fuel,FluidStack.create(Fluids.WATER, 1000));
+                    ItemContainerUtil.fillItem(fuel,FluidStack.create(Fluids.WATER, FluidStack.bucketAmount()));
                     inventory.setItem(FUEL()[0],fuel);
                 }
             }
 
-            if (Platform.isModLoaded("pmmo")) {
-                ProjectMMO.burnEvent(input,level,worldPosition);
-            }
+            if (Platform.isModLoaded("pmmo"))
+                ProjectMMO.burnEvent(input,  level, worldPosition, getRecipe(input, RecipeType.SMOKING).isPresent() ? 1:0);
+
             input.shrink(1);
         }
     }
     @Override
-    public void load( CompoundTag tag) {
-        super.load(tag);
+    public void load(BlockState blockState, CompoundTag tag) {
+        super.load(blockState, tag);
         this.furnaceBurnTime = tag.getInt("BurnTime");
         this.cookTime = tag.getInt("CookTime");
         this.totalCookTime = tag.getInt("CookTimeTotal");
@@ -817,7 +813,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag.putInt("BurnTime", this.furnaceBurnTime);
         tag.putInt("CookTime", this.cookTime);
         tag.putInt("CookTimeTotal", this.totalCookTime);
@@ -831,7 +827,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             compoundnbt.putInt(recipeId.toString(), craftedAmount);
         });
         tag.put("RecipesUsed", compoundnbt);
-        super.saveAdditional(tag);
+        return super.save(tag);
     }
 
 
@@ -860,14 +856,14 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             else {
                 if (hasUpgrade(Registration.GENERATOR.get())) {
                     ItemStack gen = getUpgradeSlotItem(Registration.GENERATOR.get());
-                    return ((Optional<T>) Optional.ofNullable(gen.getItem() instanceof GeneratorUpgradeItem item ? item.getFluidStorage(gen) : null));
+                    return ((Optional<T>) Optional.ofNullable(gen.getItem() instanceof GeneratorUpgradeItem ? ((GeneratorUpgradeItem) gen.getItem()).getFluidStorage(gen) : null));
                 } else if (hasXPTank())
                     return ((Optional<T>) Optional.of( xpTank));
             }
         }
         if (storage == Storages.ITEM){
             if (facing != null)
-                return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).key(), getSlotsTransport(facing).value()));
+                return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).first, getSlotsTransport(facing).second));
             else return (Optional<T>) Optional.of(inventory);
         }
         if (storage == Storages.ENERGY && (hasUpgrade(Registration.ENERGY.get()) ||  hasUpgrade(Registration.GENERATOR.get()))){
@@ -991,7 +987,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                     if (hasXPTank()) {
                         int amountLiquidXp = Mth.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h).getExperience()) * 5;
                         if (amountLiquidXp >= 1) {
-                          xpTank.fill(FluidStack.create(Config.getLiquidXP(), amountLiquidXp * FluidStack.bucketAmount() /1000), false);
+                          xpTank.fill(FluidStack.create(Config.getLiquidXP(), Fraction.ofWhole(amountLiquidXp * FluidStack.bucketAmount().longValue() /1000)), false);
                             recipes.clear();
                         }
                     }else {

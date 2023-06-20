@@ -11,14 +11,13 @@
       "item": "minecraft:iron_ingot"
     },
     "1": {
-      "tag": "c:glass_blocks"
+      "item": "minecraft:glass"
     },
     "4": {
       "item": "minecraft:gold_ingot"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:iron_conductor_block",
-    "count": 1
+    "item": "betterfurnacesreforged:iron_conductor_block"
   }
 }

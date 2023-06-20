@@ -1,6 +1,6 @@
 package wily.betterfurnaces.network;
 
-import dev.architectury.networking.NetworkManager;
+import me.shedaniel.architectury.networking.NetworkManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

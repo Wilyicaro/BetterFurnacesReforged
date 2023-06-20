@@ -7,15 +7,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import wily.betterfurnaces.inventory.AbstractInventoryMenu;
 
 public abstract class AbstractBasicScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
@@ -29,31 +28,39 @@ public abstract class AbstractBasicScreen<T extends AbstractContainerMenu> exten
 
     @Override
     public void render(PoseStack poseStack, int i, int j, float f) {
-        if (getMenu()instanceof AbstractInventoryMenu<?> menu) menu.be.syncAdditionalMenuData(menu, menu.player);
+        if (menu instanceof AbstractInventoryMenu<?> ) {
+            ((AbstractInventoryMenu<?>) menu).be.syncAdditionalMenuData(menu, ((AbstractInventoryMenu<?>) menu).player);
+        }
         super.render(poseStack, i, j, f);
     }
 
-    protected void renderGuiItem(ItemStack stack, int Posx, int Posy, float scaleX, float scaleY) {
+    protected void renderGuiItem(ItemStack stack, int i, int j, float scaleX, float scaleY) {
+        RenderSystem.pushMatrix();
+        minecraft.getTextureManager().bind(TextureAtlas.LOCATION_BLOCKS);
         minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
-        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.defaultAlphaFunc();
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        PoseStack posestack = RenderSystem.getModelViewStack();
-        posestack.pushPose();
-        posestack.translate(Posx, Posy, (double)(100.0F));
-        posestack.translate(8.0D, 8.0D, 0.0D);
-        posestack.scale(1.0F, -1.0F, 1.0F);
-        posestack.scale(16.0F, 16.0F, 16.0F);
-        RenderSystem.applyModelViewMatrix();
-        PoseStack posestack1 = new PoseStack();
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
-        posestack1.scale(scaleX,scaleY,0.5F);
-        itemRenderer.render(stack, ItemDisplayContext.GUI, false, posestack1, multibuffersource$buffersource, 15728880, OverlayTexture.NO_OVERLAY, itemRenderer.getModel(stack, (Level)null, (LivingEntity)null, 0));
-        multibuffersource$buffersource.endBatch();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.translatef((float)i, (float)j, 100.0F + this.getBlitOffset());
+        RenderSystem.translatef(8.0F, 8.0F, 0.0F);
+        RenderSystem.scalef(1.0F, -1.0F, 1.0F);
+        RenderSystem.scalef(16.0F, 16.0F, 16.0F);
+        PoseStack poseStack = new PoseStack();
+        poseStack.scale(scaleX, scaleY, 0.5F);
+        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+        if (!(stack.getItem() instanceof BlockItem) )Lighting.setupForFlatItems();
+        itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, itemRenderer.getModel(stack, null, null));
+        bufferSource.endBatch();
         RenderSystem.enableDepthTest();
         Lighting.setupFor3DItems();
-        posestack.popPose();
-        RenderSystem.applyModelViewMatrix();
+
+
+        RenderSystem.disableAlphaTest();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.popMatrix();
+
     }
 }

@@ -23,9 +23,6 @@
     ],
     "client": [
       "wily.betterfurnaces.fabric.BetterFurnacesFabricClient"
-    ],
-    "jei_mod_plugin": [
-      "wily.betterfurnaces.compat.BfJeiPlugin"
     ]
   },
   "mixins": [

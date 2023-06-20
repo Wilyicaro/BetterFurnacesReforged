@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -37,6 +36,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.items.UpgradeItem;
 import wily.factoryapi.util.VoxelShapeUtil;
+
+import java.util.Random;
 
 public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock {
 
@@ -77,18 +78,19 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
         if (!(hand instanceof UpgradeItem)){
             return InteractionResult.SUCCESS;
         }
-        BlockEntity be = world.getBlockEntity(pos);
-        if (!(be instanceof SmeltingBlockEntity smelt)) {
+
+        if (!(world.getBlockEntity(pos) instanceof SmeltingBlockEntity)) {
             return InteractionResult.SUCCESS;
         }
+        SmeltingBlockEntity be = (SmeltingBlockEntity) world.getBlockEntity(pos);
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
 
         if (((UpgradeItem) hand).upgradeType == 1) {
-            if ((!(smelt.inventory.getItem(10).isEmpty())) && (!player.isCreative())) {
+            if ((!(be.inventory.getItem(10).isEmpty())) && (!player.isCreative())) {
                 Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) be).getItem(10));
             }
-            smelt.inventory.setItem(10, newStack);
+            be.inventory.setItem(10, newStack);
             world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);
             if (!player.isCreative()) {
                 player.getItemInHand(handIn).shrink(1);
@@ -102,7 +104,7 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource rand) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random rand) {
         if (state.getValue(BlockStateProperties.LIT)) {
             if (world.getBlockEntity(pos) == null)
             {

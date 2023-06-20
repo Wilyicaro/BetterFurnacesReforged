@@ -8,17 +8,16 @@
   ],
   "key": {
     "0": {
-      "tag": "c:glass_blocks"
+      "item": "minecraft:glass"
     },
     "1": {
       "item": "minecraft:diamond"
     },
     "2": {
-      "item": "minecraft:amethyst_shard"
+      "tag": "c:amethysts"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:amethyst_diamond_upgrade",
-    "count": 1
+    "item": "betterfurnacesreforged:amethyst_diamond_upgrade"
   }
 }

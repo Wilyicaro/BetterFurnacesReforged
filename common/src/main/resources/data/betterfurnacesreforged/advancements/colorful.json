@@ -20,19 +20,17 @@
       "conditions": {
         "location": {
           "block": {
-            "tag": "betterfurnacesreforged:furnaces"
+            "tag": "betterfurnacesreforged:furnace_like"
           }
         },
         "item": {
-          "items": ["betterfurnacesreforged:color_upgrade"]
+          "item": "betterfurnacesreforged:color_upgrade"
         }
       }
     }
   },
-  "requirements": [
-    [
-      "colortime"
-    ]
-  ],
+  "rewards": {
+    "experience": 1
+  },
   "parent": "betterfurnacesreforged:overcooked"
 }

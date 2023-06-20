@@ -1,18 +1,20 @@
 package wily.betterfurnaces.init;
 
 import com.mojang.datafixers.types.Type;
-import dev.architectury.registry.menu.MenuRegistry;
-import dev.architectury.registry.registries.DeferredRegister;
-import dev.architectury.registry.registries.RegistrySupplier;
+import me.shedaniel.architectury.registry.DeferredRegister;
+import me.shedaniel.architectury.registry.MenuRegistry;
+import me.shedaniel.architectury.registry.RegistrySupplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -30,30 +32,29 @@ import wily.betterfurnaces.util.registration.SmeltingBlocks;
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.ultimatefurnaces.init.RegistrationUF;
 
+import java.util.function.Supplier;
+
 public class Registration {
 
-    public static final DeferredRegister<Block> BLOCK_ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.BLOCK);
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.ITEM);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
-    public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.MENU);
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPES_SERIALIZERS = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registries.RECIPE_SERIALIZER);
-    private static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registries.RECIPE_TYPE);
-
+    public static final DeferredRegister<Block> BLOCK_ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.BLOCK_REGISTRY);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.ITEM_REGISTRY);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY);
+    public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.MENU_REGISTRY);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPES_SERIALIZERS = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registry.RECIPE_SERIALIZER_REGISTRY);
     public static void init() {
         BLOCK_ITEMS.register();
         if (Config.enableUltimateFurnaces.get()) RegistrationUF.init();
-        BLOCK_ITEMS.forEach((b)-> ITEMS.getRegistrar().register( b.getId(),() -> new BlockItem(b.get(), defaultItemProperties())));
+        BLOCK_ITEMS.forEach((b)-> BetterFurnacesReforged.REGISTRIES.get().forRegistry(Registry.ITEM_REGISTRY, i-> i.register( b.getId(),() -> new BlockItem(b.get(), defaultItemProperties()))));
         ITEMS.register();
         BLOCK_ENTITIES.register();
         CONTAINERS.register();
         RECIPES_SERIALIZERS.register();
-        RECIPES.register();
-
+        recipeRegister("rock_generating");
 
     }
 
 
-    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().arch$tab(BetterFurnacesReforged.ITEM_GROUP);}
+    private static Item.Properties defaultItemProperties(){ return  new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP);}
 
     private static Item.Properties uniqueStackItemProperties(){ return  defaultItemProperties().stacksTo(1);}
     private static Type<?> blockEntityType(String name){
@@ -62,7 +63,16 @@ public class Registration {
 
     public static final RegistrySupplier<RecipeSerializer<CobblestoneGeneratorRecipes>> COB_GENERATION_SERIALIZER = RECIPES_SERIALIZERS.register("rock_generating", () -> CobblestoneGeneratorRecipes.SERIALIZER);
 
-    public static final RegistrySupplier<RecipeType<CobblestoneGeneratorRecipes>> ROCK_GENERATING_RECIPE = RECIPES.register("rock_generating", () -> new RecipeType<>() {});
+    private static <T extends Recipe<?>> RecipeType<T> recipeRegister(final String key) {
+        return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(BetterFurnacesReforged.MOD_ID, key), new RecipeType<T>() {
+            @Override
+            public String toString() {
+                return key;
+            }
+        });
+    }
+
+    public static final Supplier<RecipeType<CobblestoneGeneratorRecipes>> ROCK_GENERATING_RECIPE = ()-> (RecipeType<CobblestoneGeneratorRecipes>) Registry.RECIPE_TYPE.get(CobblestoneGeneratorRecipes.UID);
 
     public static final RegistrySupplier<MenuType<SmeltingMenu>> FURNACE_CONTAINER = CONTAINERS.register("furnace", () -> MenuRegistry.ofExtended((windowId, inv, data) -> new SmeltingMenu(windowId, inv.player.level, data.readBlockPos(), inv, inv.player)));
 
@@ -70,28 +80,28 @@ public class Registration {
 
     
     public static final RegistrySupplier<SmeltingBlock> IRON_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.IRON_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
-    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> IRON_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.IRON_FURNACE.getName(), () -> BlockEntityType.Builder.of((l, b)-> new SmeltingBlockEntity(l,b,Config.ironTierSpeed), IRON_FURNACE.get()).build(null));
+    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> IRON_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.IRON_FURNACE.getName(), () -> BlockEntityType.Builder.of(()-> new SmeltingBlockEntity(Config.ironTierSpeed), IRON_FURNACE.get()).build(null));
     
     public static final RegistrySupplier<SmeltingBlock> GOLD_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.GOLD_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)));
-    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> GOLD_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.GOLD_FURNACE.getName(), () -> BlockEntityType.Builder.of((l, b)-> new SmeltingBlockEntity(l,b,Config.goldTierSpeed), GOLD_FURNACE.get()).build(null));
+    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> GOLD_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.GOLD_FURNACE.getName(), () -> BlockEntityType.Builder.of(()-> new SmeltingBlockEntity(Config.goldTierSpeed), GOLD_FURNACE.get()).build(null));
 
 
     public static final RegistrySupplier<MenuType<ColorUpgradeItem.ContainerColorUpgrade>> COLOR_UPGRADE_CONTAINER = CONTAINERS.register("color_upgrade", () -> MenuRegistry.ofExtended((windowId, inv, data) -> new ColorUpgradeItem.ContainerColorUpgrade(windowId, inv, inv.player.getMainHandItem())));
 
     public static final RegistrySupplier<SmeltingBlock> DIAMOND_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.DIAMOND_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.DIAMOND_BLOCK).noOcclusion()));
-    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> DIAMOND_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.DIAMOND_FURNACE.getName(), () -> BlockEntityType.Builder.of((l, b)-> new SmeltingBlockEntity(l,b,Config.diamondTierSpeed), DIAMOND_FURNACE.get()).build(null));
+    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> DIAMOND_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.DIAMOND_FURNACE.getName(), () -> BlockEntityType.Builder.of(()-> new SmeltingBlockEntity(Config.diamondTierSpeed), DIAMOND_FURNACE.get()).build(null));
 
 
     public static final RegistrySupplier<SmeltingBlock> NETHERHOT_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.NETHERHOT_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.REDSTONE_BLOCK)));
-    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> NETHERHOT_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.NETHERHOT_FURNACE.getName(), () -> BlockEntityType.Builder.of((l, b)-> new SmeltingBlockEntity(l,b,Config.netherhotTierSpeed), NETHERHOT_FURNACE.get()).build(null));
+    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> NETHERHOT_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.NETHERHOT_FURNACE.getName(), () -> BlockEntityType.Builder.of(()-> new SmeltingBlockEntity(Config.netherhotTierSpeed), NETHERHOT_FURNACE.get()).build(null));
 
 
     public static final RegistrySupplier<SmeltingBlock> EXTREME_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.EXTREME_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.DIAMOND_BLOCK).strength(20.0F, 3000.0F)));
-    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> EXTREME_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.EXTREME_FURNACE.getName(), () -> BlockEntityType.Builder.of((l, b)-> new SmeltingBlockEntity(l,b,Config.extremeTierSpeed), EXTREME_FURNACE.get()).build(null));
+    public static final RegistrySupplier<BlockEntityType<SmeltingBlockEntity>> EXTREME_FURNACE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.EXTREME_FURNACE.getName(), () -> BlockEntityType.Builder.of(()-> new SmeltingBlockEntity(Config.extremeTierSpeed), EXTREME_FURNACE.get()).build(null));
 
 
     public static final RegistrySupplier<ForgeBlock> EXTREME_FORGE = BLOCK_ITEMS.register(SmeltingBlocks.EXTREME_FORGE.getName(), () -> new ForgeBlock(BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK).strength(30.0F, 6000.0F)));
-    public static final RegistrySupplier<BlockEntityType<ForgeBlockEntity>> EXTREME_FORGE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.EXTREME_FORGE.getName(), () -> BlockEntityType.Builder.of((l, b)-> new ForgeBlockEntity(l,b,Config.extremeTierSpeed), EXTREME_FORGE.get()).build(null));
+    public static final RegistrySupplier<BlockEntityType<ForgeBlockEntity>> EXTREME_FORGE_TILE = BLOCK_ENTITIES.register(SmeltingBlocks.EXTREME_FORGE.getName(), () -> BlockEntityType.Builder.of(()-> new ForgeBlockEntity(Config.extremeTierSpeed), EXTREME_FORGE.get()).build(null));
 
 
     public static final RegistrySupplier<CobblestoneGeneratorBlock> COBBLESTONE_GENERATOR = BLOCK_ITEMS.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> new CobblestoneGeneratorBlock(BlockBehaviour.Properties.copy(Blocks.BLACKSTONE)));
@@ -100,7 +110,7 @@ public class Registration {
     public static final RegistrySupplier<MenuType<CobblestoneGeneratorMenu>> COB_GENERATOR_CONTAINER = CONTAINERS.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> MenuRegistry.ofExtended((windowId, inv, data) -> new CobblestoneGeneratorMenu(windowId, inv.player.level, data.readBlockPos(), inv, inv.player)));
 
     public static final RegistrySupplier<FuelVerifierBlock> FUEL_VERIFIER = BLOCK_ITEMS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> new FuelVerifierBlock(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)));
-    public static final RegistrySupplier<BlockEntityType<FuelVerifierBlockEntity>> FUEL_VERIFIER_TILE = BLOCK_ENTITIES.register(FuelVerifierBlock.FUEL_VERIFIER, () -> BlockEntityType.Builder.of(FuelVerifierBlockEntity::new, FUEL_VERIFIER.get()).build(blockEntityType(FuelVerifierBlock.FUEL_VERIFIER)));
+    public static final RegistrySupplier<BlockEntityType<FuelVerifierBlockEntity>> FUEL_VERIFIER_TILE = BLOCK_ENTITIES.register(FuelVerifierBlock.FUEL_VERIFIER, () -> BlockEntityType.Builder.of(FuelVerifierBlockEntity::new, FUEL_VERIFIER.get()).build(null));
 
     public static final RegistrySupplier<MenuType<FuelVerifierMenu>> FUEL_VERIFIER_CONTAINER = CONTAINERS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> MenuRegistry.ofExtended((windowId, inv, data) -> new FuelVerifierMenu(windowId, inv.player.level,data.readBlockPos(), inv, inv.player) {
     }));
@@ -119,10 +129,9 @@ public class Registration {
     public static final RegistrySupplier<ExtremeUpgradeItem> EXTREME_UPGRADE = ITEMS.register("extreme_upgrade", () -> new ExtremeUpgradeItem(uniqueStackItemProperties()));
 
     public static final RegistrySupplier<FuelEfficiencyUpgradeItem> FUEL = ITEMS.register("fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(uniqueStackItemProperties().durability(256),2));
-    public static final RegistrySupplier<OreProcessingUpgradeItem> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties().durability(128),2,true,false));
-    public static final RegistrySupplier<OreProcessingUpgradeItem> RAWORE_PROCESSING = ITEMS.register("raw_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(),2,false,true));
+    public static final RegistrySupplier<OreProcessingUpgradeItem> ORE_PROCESSING = ITEMS.register("ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties().durability(128),2));
     public static final RegistrySupplier<FuelEfficiencyUpgradeItem> ADVFUEL = ITEMS.register("advanced_fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(uniqueStackItemProperties(),2));
-    public static final RegistrySupplier<OreProcessingUpgradeItem> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(),2,true,false));
+    public static final RegistrySupplier<OreProcessingUpgradeItem> ADVORE_PROCESSING = ITEMS.register("advanced_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(),2));
     public static final RegistrySupplier<FactoryUpgradeItem> FACTORY = ITEMS.register("factory_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(), "factory", true,true,true,true));
     public static final RegistrySupplier<FactoryUpgradeItem> PIPING = ITEMS.register("piping_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(), "piping", false,false,false,true));
     public static final RegistrySupplier<FactoryUpgradeItem> OUTPUT = ITEMS.register("autooutput_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(), "output", true,false,true,false));
@@ -130,7 +139,7 @@ public class Registration {
     public static final RegistrySupplier<FactoryUpgradeItem> REDSTONE = ITEMS.register("redstone_signal_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(), "redstone", false,false,false,true));
     public static final RegistrySupplier<ColorUpgradeItem> COLOR = ITEMS.register("color_upgrade", () -> new ColorUpgradeItem(uniqueStackItemProperties(),"color"));
     public static final RegistrySupplier<LiquidFuelUpgradeItem> LIQUID = ITEMS.register("liquid_fuel_upgrade", () -> new LiquidFuelUpgradeItem(uniqueStackItemProperties(),"liquid"));
-    public static final RegistrySupplier<EnergyFuelUpgradeItem> ENERGY = ITEMS.register("energy_upgrade", () -> new EnergyFuelUpgradeItem(uniqueStackItemProperties(), Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.energy", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY)))));
+    public static final RegistrySupplier<EnergyFuelUpgradeItem> ENERGY = ITEMS.register("energy_upgrade", () -> new EnergyFuelUpgradeItem(uniqueStackItemProperties(), new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.energy", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY)))));
     public static final RegistrySupplier<XpTankUpgradeItem> XP = ITEMS.register("xp_tank_upgrade", () -> new XpTankUpgradeItem(uniqueStackItemProperties(),"xp"));
     public static final RegistrySupplier<TypeUpgradeItem> BLAST = ITEMS.register("blasting_upgrade", () -> new TypeUpgradeItem(uniqueStackItemProperties(),"blasting"));
     public static final RegistrySupplier<TypeUpgradeItem> SMOKE = ITEMS.register("smoking_upgrade", () -> new TypeUpgradeItem(uniqueStackItemProperties(),"smoking"));

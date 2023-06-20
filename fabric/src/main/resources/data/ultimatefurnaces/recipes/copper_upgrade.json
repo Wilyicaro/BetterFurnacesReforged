@@ -8,14 +8,13 @@
   ],
   "key": {
     "0": {
-      "item": "minecraft:copper_ingot"
+      "tag": "c:copper_ingots"
     },
     "4": {
-      "item": "minecraft:furnace"
+      "item": "minecraft:cobblestone"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:copper_furnace",
-    "count": 1
+    "item": "betterfurnacesreforged:copper_upgrade"
   }
 }

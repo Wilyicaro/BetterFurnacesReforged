@@ -1,6 +1,6 @@
 package wily.betterfurnaces.blockentity;
 
-import dev.architectury.registry.menu.ExtendedMenuProvider;
+import me.shedaniel.architectury.registry.menu.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,6 +16,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,15 +27,14 @@ import wily.factoryapi.base.Storages;
 
 import java.util.Optional;
 
-public abstract class InventoryBlockEntity extends BlockEntity implements IInventoryBlockEntity, ExtendedMenuProvider, Nameable {
+public abstract class InventoryBlockEntity extends BlockEntity implements TickableBlockEntity,IInventoryBlockEntity, ExtendedMenuProvider, Nameable {
 
     protected Component name;
 
     public IPlatformItemHandler inventory;
 
-    public InventoryBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
-        super(tileEntityTypeIn, pos, state);
-
+    public InventoryBlockEntity(BlockEntityType<?> tileEntityTypeIn) {
+        super(tileEntityTypeIn);
         inventory = FactoryAPIPlatform.getItemHandlerApi(getInventorySize(),this);
         inventory.setExtractableSlots(this::IcanExtractItem);
         inventory.setInsertableSlots(this::IisItemValidForSlot);
@@ -43,18 +43,18 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         this.setChanged();
-        return ClientboundBlockEntityDataPacket.create(this);
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), -1, getUpdateTag());
     }
     public void handleUpdateTag(CompoundTag tag){
         if (tag != null)
-            load(tag);
+            load(getBlockState(),tag);
         setChanged();
 
 
     }
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt){
         CompoundTag tag = pkt.getTag();
-        this.load(tag);
+        this.load(getBlockState(),tag);
         this.setChanged();
         level.setBlock(worldPosition, level.getBlockState(worldPosition), 2, 3);
     }
@@ -63,7 +63,9 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
     }
     @Override
     public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
+        CompoundTag tag = new CompoundTag();
+        save(tag);
+        return tag;
     }
     public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
         return Optional.empty();
@@ -98,21 +100,23 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
 
     }
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void load(BlockState blockState,CompoundTag tag) {
+        super.load(blockState,tag);
         inventory.deserializeTag(tag.getCompound("inventory"));
         if (tag.contains("CustomName", 8)) {
             this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
     }
 
+
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public CompoundTag save(CompoundTag tag) {
+        super.save(tag);
         tag.put("inventory", inventory.serializeTag());
         if (this.name != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
+        return tag;
     }
 
     @Override

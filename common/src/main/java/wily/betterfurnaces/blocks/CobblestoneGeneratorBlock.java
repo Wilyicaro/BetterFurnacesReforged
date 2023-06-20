@@ -1,7 +1,7 @@
 package wily.betterfurnaces.blocks;
 
-import dev.architectury.registry.menu.ExtendedMenuProvider;
-import dev.architectury.registry.menu.MenuRegistry;
+import me.shedaniel.architectury.registry.menu.ExtendedMenuProvider;
+import me.shedaniel.architectury.registry.MenuRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,10 +15,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -69,7 +69,7 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof UpgradeItem upg && (upg.upgradeType == 3 || upg.upgradeType == 2))) {
+            if ((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof UpgradeItem && (((UpgradeItem) hand.getItem()).upgradeType == 3 || ((UpgradeItem) hand.getItem()).upgradeType == 2))) {
                 interactInsert(world, pos, player, handIn, stack);
             } else this.interactWith(world, pos, player);
         }
@@ -79,19 +79,20 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
 
     private void interactWith(Level world, BlockPos pos, Player player) {
         BlockEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof ExtendedMenuProvider menu) {
-            MenuRegistry.openExtendedMenu((ServerPlayer) player, menu);
+        if (tileEntity instanceof ExtendedMenuProvider) {
+            MenuRegistry.openExtendedMenu((ServerPlayer) player, (ExtendedMenuProvider) tileEntity);
         }
     }
     private InteractionResult interactInsert(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack hand = player.getItemInHand(handIn);
-        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof UpgradeItem upg && (upg.upgradeType == 3 || upg.upgradeType == 2)))){
+        if (!((hand.getItem() == Items.LAVA_BUCKET) || (hand.getItem() == Items.WATER_BUCKET) || (hand.getItem() instanceof UpgradeItem  && (((UpgradeItem) hand.getItem()).upgradeType == 3 || ((UpgradeItem) hand.getItem()).upgradeType == 2)))){
             return InteractionResult.SUCCESS;
         }
 
-        if (!(world.getBlockEntity(pos) instanceof CobblestoneGeneratorBlockEntity be)) {
+        if (!(world.getBlockEntity(pos) instanceof CobblestoneGeneratorBlockEntity)) {
             return InteractionResult.SUCCESS;
         }
+        CobblestoneGeneratorBlockEntity be = (CobblestoneGeneratorBlockEntity) world.getBlockEntity(pos);
         ItemStack newStack = new ItemStack(stack.getItem(), 1);
         newStack.setTag(stack.getTag());
 
@@ -139,17 +140,9 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new CobblestoneGeneratorBlockEntity(p_153215_, p_153216_);
+    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
+        return new CobblestoneGeneratorBlockEntity();
     }
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return (level1, pos, state1, tile) -> {
-            if (tile instanceof CobblestoneGeneratorBlockEntity be) {
-                be.tick(state1);
-            }
-        };
-    }
+
 
 }

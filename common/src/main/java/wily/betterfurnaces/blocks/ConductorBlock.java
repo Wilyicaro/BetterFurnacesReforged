@@ -12,7 +12,7 @@ public class ConductorBlock extends Block {
 
 
     public ConductorBlock(Properties properties) {
-        super(properties.destroyTime(3f));
+        super(properties.strength(3f));
     }
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {

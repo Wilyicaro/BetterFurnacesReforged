@@ -1,9 +1,10 @@
 package wily.betterfurnaces;
 
+
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import dev.architectury.platform.Platform;
+import me.shedaniel.architectury.platform.Platform;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.nio.file.Path;
@@ -200,21 +201,21 @@ public class ForgeConfigCompat {
         loadConfig(COMMON_CONFIG, BetterFurnacesPlatform.getConfigDirectory().resolve(BetterFurnacesReforged.MOD_ID + "-common.toml"));
     }
     public static void onServerConfigLoad(){
-        Config.cacheCapacity = cache_capacity;
-        Config.copperTierSpeed = copperTierSpeed;
-        Config.ironTierSpeed = ironTierSpeed;
-        Config.steelTierSpeed = steelTierSpeed;
-        Config.goldTierSpeed = goldTierSpeed;
-        Config.amethystTierSpeed = amethystTierSpeed;
-        Config.diamondTierSpeed = diamondTierSpeed;
-        Config.platinumTierSpeed = platinumTierSpeed;
-        Config.netherhotTierSpeed = netherhotTierSpeed;
-        Config.extremeTierSpeed = extremeTierSpeed;
-        Config.ultimateTierSpeed = ultimateTierSpeed;
+        Config.cacheCapacity = cache_capacity::get;
+        Config.copperTierSpeed = copperTierSpeed::get;
+        Config.ironTierSpeed = ironTierSpeed::get;
+        Config.steelTierSpeed = steelTierSpeed::get;
+        Config.goldTierSpeed = goldTierSpeed::get;
+        Config.amethystTierSpeed = amethystTierSpeed::get;
+        Config.diamondTierSpeed = diamondTierSpeed::get;
+        Config.platinumTierSpeed = platinumTierSpeed::get;
+        Config.netherhotTierSpeed = netherhotTierSpeed::get;
+        Config.extremeTierSpeed = extremeTierSpeed::get;
+        Config.ultimateTierSpeed = ultimateTierSpeed::get;
 
-        Config.furnaceXPDropValue = furnaceXPDropValue;
-        Config.furnaceXPDropValue2 = furnaceXPDropValue2;
-        Config.xpFluidType = xpFluidType;
+        Config.furnaceXPDropValue = furnaceXPDropValue::get;
+        Config.furnaceXPDropValue2 = furnaceXPDropValue2::get;
+        Config.xpFluidType = xpFluidType::get;
     }
 
     @ExpectPlatform
@@ -224,12 +225,12 @@ public class ForgeConfigCompat {
     public static void setupPlatformConfig(){
         registerConfig();
         loadAllSyncConfigs();
-        Config.checkUpdates = checkUpdates;
-        Config.enableUltimateFurnaces = enableUltimateFurnaces;
+        Config.checkUpdates = checkUpdates::get;
+        Config.enableUltimateFurnaces = enableUltimateFurnaces::get;
 
-        Config.enableJeiPlugin = enableJeiPlugin;
-        Config.enableJeiCatalysts = enableJeiCatalysts;
-        Config.enableJeiClickArea = enableJeiClickArea;
+        Config.enableJeiPlugin = enableJeiPlugin::get;
+        Config.enableJeiCatalysts = enableJeiCatalysts::get;
+        Config.enableJeiClickArea = enableJeiClickArea::get;
     }
 
 }

@@ -1,11 +1,12 @@
 package wily.betterfurnaces.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -16,11 +17,11 @@ import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.blocks.SmeltingBlock;
 import wily.betterfurnaces.util.DirectionUtil;
 
-public class FurnaceRenderer implements BlockEntityRenderer<SmeltingBlockEntity> {
-    BlockEntityRendererProvider.Context context;
+public class FurnaceRenderer extends BlockEntityRenderer<SmeltingBlockEntity> {
+    Minecraft minecraft = Minecraft.getInstance();
 
-    public FurnaceRenderer(BlockEntityRendererProvider.Context context) {
-        this.context = context;
+    public FurnaceRenderer(BlockEntityRenderDispatcher blockEntityRenderDispatcher) {
+        super(blockEntityRenderDispatcher);
     }
 
     public static ModelResourceLocation getFront(int type, boolean active){
@@ -28,7 +29,7 @@ public class FurnaceRenderer implements BlockEntityRenderer<SmeltingBlockEntity>
     }
     @Override
     public void render(SmeltingBlockEntity be, float f, PoseStack stack, MultiBufferSource multiBufferSource, int i, int j) {
-        BlockRenderDispatcher dispatcher = context.getBlockRenderDispatcher();
+        BlockRenderDispatcher dispatcher = minecraft.getBlockRenderer();
         ModelManager modelManager = dispatcher.getBlockModelShaper().getModelManager();
         BakedModel furnace = be.getBlockState().getValue(SmeltingBlock.COLORED) ? modelManager.getModel(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_furnace"),"")): dispatcher.getBlockModel(be.getBlockState());
         BakedModel front = modelManager.getModel(getFront(be.getBlockState().getValue(SmeltingBlock.TYPE),be.getBlockState().getValue(BlockStateProperties.LIT)));

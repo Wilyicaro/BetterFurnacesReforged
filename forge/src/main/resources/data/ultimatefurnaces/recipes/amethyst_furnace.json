@@ -11,7 +11,7 @@
       "tag": "forge:glass"
     },
     "1": {
-      "item": "minecraft:amethyst_block"
+      "tag": "forge:storage_blocks/amethyst"
     },
     "2": {
       "item": "betterfurnacesreforged:gold_conductor_block"
@@ -21,7 +21,6 @@
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:amethyst_furnace",
-    "count": 1
+    "item": "betterfurnacesreforged:amethyst_furnace"
   }
 }

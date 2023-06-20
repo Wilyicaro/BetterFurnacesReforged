@@ -11,14 +11,13 @@
       "item": "minecraft:iron_ingot"
     },
     "3": {
-      "tag": "c:glass_blocks"
+      "item": "minecraft:glass"
     },
     "4": {
       "item": "minecraft:bucket"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:liquid_fuel_upgrade",
-    "count": 1
+    "item": "betterfurnacesreforged:liquid_fuel_upgrade"
   }
 }

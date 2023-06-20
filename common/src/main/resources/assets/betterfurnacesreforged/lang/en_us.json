@@ -152,5 +152,5 @@
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Right-click to insert upgrade",
   "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Right-click holding shift to insert tier upgrade",
   "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruples the amount that each molten ore gives",
-  "tooltip.ultimate_furnaces_bfr.upgrade.storage": "Adds an additional storage slot for fuel, input, and output"
+  "tooltip.betterfurnacesreforged.upgrade.storage": "Adds an additional storage slot for fuel, input, and output"
 }

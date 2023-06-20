@@ -1,11 +1,10 @@
 package wily.betterfurnaces.forge;
 
-import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import wily.betterfurnaces.ForgeConfigCompat;
 
 
@@ -19,12 +18,12 @@ public class ForgeConfigCompatImpl {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER,SERVER_CONFIG);
     }
     @SubscribeEvent
-    public static void onServerConfigLoad(final ModConfigEvent event) {
-       if(event.getConfig().getSpec().equals(SERVER_CONFIG))
+    public static void onLoad(final ModConfig.Loading configEvent) {
+       if(configEvent.getConfig().getSpec().equals(SERVER_CONFIG))
            ForgeConfigCompat.onServerConfigLoad();
     }
     @SubscribeEvent
-    public static void onLevelLoad(final LevelEvent.Load event) {
+    public static void onWorldLoad(final WorldEvent.Load event) {
         ForgeConfigCompat.onServerConfigLoad();
     }
 }

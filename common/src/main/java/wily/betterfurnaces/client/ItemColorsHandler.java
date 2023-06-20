@@ -23,7 +23,7 @@ public class ItemColorsHandler implements ItemColor {
             handler.deserializeTag(invTag);
             for (int i = 0; i < handler.getContainerSize() ; i++) {
                 ItemStack stack = handler.getItem(i);
-                if (!stack.is(Registration.COLOR.get())) continue;
+                if (stack.getItem() != Registration.COLOR.get()) continue;
                 return stack.getOrCreateTag();
             }
         }

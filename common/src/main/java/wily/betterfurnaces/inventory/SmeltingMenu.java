@@ -1,9 +1,10 @@
 package wily.betterfurnaces.inventory;
 
-import dev.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -62,15 +63,15 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
         switch (be.furnaceSettings.get(index))
         {
             case 1:
-                return Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input");
             case 2:
-                return Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_output");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_output");
             case 3:
-                return Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input_output");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input_output");
             case 4:
-                return Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_fuel");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_fuel");
             default:
-                return Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_none");
+                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_none");
         }
     }
 
@@ -145,7 +146,7 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
     public int getFluidStoredScaled(int pixels, boolean isXp) {
         Direction facing = null;
         if (isXp) facing = Direction.values()[be.getIndexFront()];
-        int cur = (int) getFluidStackStored(isXp).getAmount();
+        int cur = getFluidStackStored(isXp).getAmount().intValue();
         int max = (int) be.getStorage(Storages.FLUID,facing).get().getMaxFluid();
         return cur * pixels / max;
     }
@@ -170,11 +171,11 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
     }
     protected void updateChanges() {
         super.updateChanges();
-        if (player instanceof ServerPlayer sp) {
+        if (player instanceof ServerPlayer) {
             for (Direction d : Direction.values()) {
-                be.getStorage(Storages.FLUID, d).ifPresent(t-> Messages.INSTANCE.sendToPlayer(sp, new PacketSyncFluid(be.getBlockPos(), d, t.getFluidStack())));
+                be.getStorage(Storages.FLUID, d).ifPresent(t-> Messages.INSTANCE.sendToPlayer((ServerPlayer) player, new PacketSyncFluid(be.getBlockPos(), d, t.getFluidStack())));
             }
-            Messages.INSTANCE.sendToPlayer(sp, new PacketSyncEnergy(be.getBlockPos(),  be.energyStorage.getEnergyStored()));
+            Messages.INSTANCE.sendToPlayer((ServerPlayer) player, new PacketSyncEnergy(be.getBlockPos(),  be.energyStorage.getEnergyStored()));
         }
     }
     @Override

@@ -1,6 +1,6 @@
 
 
-package wily.betterfurnaces.compat;
+package wily.betterfurnaces.forge.compat;
 
 
 import com.google.common.cache.CacheBuilder;
@@ -8,29 +8,29 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.ibm.icu.impl.Pair;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.fluid.FluidStack;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
-import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
@@ -48,6 +48,8 @@ import wily.betterfurnaces.util.GuiUtil;
 import wily.betterfurnaces.util.RecipeUtil;
 import wily.ultimatefurnaces.init.RegistrationUF;
 
+import java.util.ArrayList;
+
 
 @JeiPlugin
 public class BfJeiPlugin implements IModPlugin {
@@ -63,22 +65,22 @@ public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
 		if (Config.enableJeiCatalysts.get() && Config.enableJeiPlugin.get()) {
-			registry.addRecipeCatalyst(new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), BFRRecipeTypes.ROCK_GENERATING_JEI);
+			registry.addRecipeCatalyst(new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), CobblestoneGeneratorRecipes.UID);
 
 			Block[] blocks = {Registration.IRON_FURNACE.get(), Registration.GOLD_FURNACE.get(), Registration.DIAMOND_FURNACE.get(), Registration.NETHERHOT_FURNACE.get(), Registration.EXTREME_FURNACE.get(), Registration.EXTREME_FORGE.get()};
 			if (Config.enableUltimateFurnaces.get()) blocks = ArrayUtils.addAll(blocks, RegistrationUF.COPPER_FURNACE.get(), RegistrationUF.STEEL_FURNACE.get(),RegistrationUF.AMETHYST_FURNACE.get(),RegistrationUF.PLATINUM_FURNACE.get(), RegistrationUF.ULTIMATE_FURNACE.get(), RegistrationUF.COPPER_FORGE.get(), RegistrationUF.IRON_FORGE.get(), RegistrationUF.GOLD_FORGE.get(), RegistrationUF.DIAMOND_FORGE.get(), RegistrationUF.NETHERHOT_FORGE.get(), RegistrationUF.ULTIMATE_FORGE.get());
 			for (Block i : blocks) {
 				ItemStack smelting = new ItemStack(i);
-				registry.addRecipeCatalyst(smelting, RecipeTypes.SMELTING);
-				registry.addRecipeCatalyst(smelting, RecipeTypes.FUELING);
+				registry.addRecipeCatalyst(smelting, VanillaRecipeCategoryUid.FURNACE);
+				registry.addRecipeCatalyst(smelting, VanillaRecipeCategoryUid.FUEL);
 
 				ItemStack blasting = smelting.copy();
 				blasting.getOrCreateTag().putInt("type", 1);
-				registry.addRecipeCatalyst(blasting, RecipeTypes.BLASTING);
+				registry.addRecipeCatalyst(blasting, VanillaRecipeCategoryUid.BLASTING);
 
 				ItemStack smoking = smelting.copy();
 				smoking.getOrCreateTag().putInt("type", 2);
-				registry.addRecipeCatalyst(smoking, RecipeTypes.SMOKING);
+				registry.addRecipeCatalyst(smoking, VanillaRecipeCategoryUid.SMOKING);
 
 			}
 
@@ -87,7 +89,7 @@ public class BfJeiPlugin implements IModPlugin {
 
 	private void addDescription(IRecipeRegistration registry, ItemStack itemDefinition,
 								Component... message) {
-		registry.addIngredientInfo(itemDefinition, VanillaTypes.ITEM_STACK, message);
+		registry.addIngredientInfo(itemDefinition, VanillaTypes.ITEM, message);
 	}
 
 	@Override
@@ -99,13 +101,15 @@ public class BfJeiPlugin implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		Level world = Minecraft.getInstance().level;
 		RecipeManager recipeManager = world.getRecipeManager();
-		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes(recipeManager, Registration.ROCK_GENERATING_RECIPE.get()));
+		registration.addRecipes(RecipeUtil.getRecipes(recipeManager, Registration.ROCK_GENERATING_RECIPE.get()),CobblestoneGeneratorRecipes.UID);
 
 		Registration.ITEMS.forEach((item)-> {
-			if (item.get() instanceof TierUpgradeItem i) addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
+			if (item.get() instanceof TierUpgradeItem) {
+				addDescription(registration, new ItemStack(item.get()), new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", ((TierUpgradeItem)item.get()).from.getName().getString(),((TierUpgradeItem)item.get()).to.getName().getString())));
+			}
 		});
 		if (Config.enableUltimateFurnaces.get()) Registration.ITEMS.forEach((item)-> {
-			if (item.get() instanceof TierUpgradeItem i) addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
+			if (item.get() instanceof TierUpgradeItem) addDescription(registration, new ItemStack(item.get()), new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", ((TierUpgradeItem)item.get()).from.getName().getString(),((TierUpgradeItem)item.get()).to.getName().getString())));
 		});
 
 	}
@@ -113,10 +117,10 @@ public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
 		if (Config.enableJeiClickArea.get() && Config.enableJeiPlugin.get()) {
-			registry.addRecipeClickArea(FurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(ForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
-			registry.addRecipeClickArea(CobblestoneGeneratorScreen.class, 58, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
-			registry.addRecipeClickArea(CobblestoneGeneratorScreen.class, 101, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);
+			registry.addRecipeClickArea(FurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FURNACE, VanillaRecipeCategoryUid.FUEL);
+			registry.addRecipeClickArea(ForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FURNACE, VanillaRecipeCategoryUid.FUEL);
+			registry.addRecipeClickArea(CobblestoneGeneratorScreen.class, 58, 44, 17, 12, CobblestoneGeneratorRecipes.UID);
+			registry.addRecipeClickArea(CobblestoneGeneratorScreen.class, 101, 44, 17, 12, CobblestoneGeneratorRecipes.UID);
 		}
 	}
 
@@ -131,11 +135,11 @@ public class BfJeiPlugin implements IModPlugin {
 
 		public CobblestoneGeneratorCategory(IGuiHelper guiHelper) {
 			this.title = Registration.COBBLESTONE_GENERATOR.get().getName();
-			this.background = guiHelper.createDrawable(GUI, 18, 11, 139, 63);
+			this.background = guiHelper.createDrawable(GUI, 46, 21, 85, 52);
 			this.guiHelper = guiHelper;
 			this.cachedProgressAnim = CacheBuilder.newBuilder()
 					.maximumSize(25)
-					.build(new CacheLoader<>() {
+					.build(new CacheLoader<Integer, Pair<IDrawableAnimated,IDrawableAnimated>>() {
 						@Override
 						public Pair<IDrawableAnimated, IDrawableAnimated> load(Integer cookTime) {
 							return Pair.of( guiHelper.drawableBuilder(GUI, 176, 24, 17, 12)
@@ -145,10 +149,10 @@ public class BfJeiPlugin implements IModPlugin {
 					});
 		}
 		@Override
-		public void draw(CobblestoneGeneratorRecipes recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+		public void draw(CobblestoneGeneratorRecipes recipe,PoseStack stack, double mouseX, double mouseY) {
 			GuiUtil.renderScaled(stack,  (float) recipe.duration / 20 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
-			FluidRenderUtil.renderTiledFluid(stack,null, 12, 23, 17,12, FluidStack.create(Fluids.LAVA, 1000), false);
-			FluidRenderUtil.renderTiledFluid(stack,null, 55, 23, 17,12,FluidStack.create(Fluids.WATER, 1000), true);
+			FluidRenderUtil.renderTiledFluid(stack, 12, 23, 17,12, FluidStack.create(Fluids.LAVA,  FluidStack.bucketAmount()), false);
+			FluidRenderUtil.renderTiledFluid(stack, 55, 23, 17,12,FluidStack.create(Fluids.WATER, FluidStack.bucketAmount()), true);
 
 			Pair<IDrawableAnimated,IDrawableAnimated> cache = cachedProgressAnim.getUnchecked(recipe.duration);
 			cache.first.draw(stack, 12,23);
@@ -158,13 +162,18 @@ public class BfJeiPlugin implements IModPlugin {
 		}
 
 		@Override
-		public RecipeType<CobblestoneGeneratorRecipes> getRecipeType() {
-			return BFRRecipeTypes.ROCK_GENERATING_JEI;
+		public ResourceLocation getUid() {
+			return CobblestoneGeneratorRecipes.UID;
 		}
 
 		@Override
-		public Component getTitle() {
-			return title;
+		public Class<? extends CobblestoneGeneratorRecipes> getRecipeClass() {
+			return CobblestoneGeneratorRecipes.class;
+		}
+
+		@Override
+		public String getTitle() {
+			return title.getString();
 		}
 
 		@Override
@@ -178,10 +187,23 @@ public class BfJeiPlugin implements IModPlugin {
 		}
 
 		@Override
-		public void setRecipe(IRecipeLayoutBuilder builder, CobblestoneGeneratorRecipes recipe, IFocusGroup focuses) {
-			builder.addSlot(RecipeIngredientRole.OUTPUT,34, 24).addItemStack(recipe.getResultItem(RegistryAccess.EMPTY));
-			builder.addSlot(RecipeIngredientRole.INPUT, 7, 6).addItemStack(new ItemStack(Items.LAVA_BUCKET));
-			builder.addSlot(RecipeIngredientRole.INPUT,62, 6).addItemStack(new ItemStack(Items.WATER_BUCKET));
+		public void setIngredients(CobblestoneGeneratorRecipes recipe, IIngredients ingredients) {
+			ArrayList<ItemStack> fluid = new ArrayList<>();
+			fluid.add(new ItemStack(Items.LAVA_BUCKET));
+			fluid.add(new ItemStack(Items.WATER_BUCKET));
+			ingredients.setInputs(VanillaTypes.ITEM, fluid);
+			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+		}
+
+		public void setRecipe(IRecipeLayout layout, CobblestoneGeneratorRecipes recipe, IIngredients ingredients) {
+			IGuiItemStackGroup stacks = layout.getItemStacks();
+			stacks.init(0, true, 6, 5);
+			stacks.init(1, true, 61, 5);
+			stacks.init(2, false, 33, 23);
+			// ...
+			stacks.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+			stacks.set(1, ingredients.getInputs(VanillaTypes.ITEM).get(1));
+			stacks.set(2, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
 
 		}
 	}

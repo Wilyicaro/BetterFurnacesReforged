@@ -1,6 +1,6 @@
 package wily.betterfurnaces.inventory;
 
-import dev.architectury.event.events.common.PlayerEvent;
+import me.shedaniel.architectury.event.events.PlayerEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -31,9 +31,9 @@ public class SlotOutput extends HideableSlot {
         return false;
     }
 
-    public void onTake(Player thePlayer, ItemStack stack) {
+    public ItemStack onTake(Player thePlayer, ItemStack stack) {
         this.checkTakeAchievements(stack);
-        super.onTake(thePlayer, stack);
+        return super.onTake(thePlayer, stack);
     }
 
     /**
@@ -49,8 +49,8 @@ public class SlotOutput extends HideableSlot {
     protected void onQuickCraft(ItemStack stack, int p_75210_2_) {
         if (player != null) {
             stack.onCraftedBy(this.player.level, this.player, this.removeCount);
-            if (!this.player.level.isClientSide && this.be instanceof SmeltingBlockEntity smeltBe) {
-                smeltBe.unlockRecipes(this.player);
+            if (!this.player.level.isClientSide && this.be instanceof SmeltingBlockEntity) {
+                ((SmeltingBlockEntity)be).unlockRecipes(this.player);
 
             }
 

@@ -13,10 +13,7 @@ import java.util.stream.Collectors;
 
 public class RecipeUtil {
     public static <T extends Recipe<Container>> List<T> getRecipes(RecipeManager manager, RecipeType<?> type) {
-        Collection<Recipe<?>> recipes = manager.getRecipes();
-        return (List)recipes.stream().filter((iRecipe) -> {
-            return iRecipe.getType() == type;
-        }).collect(Collectors.toList());
+        return (List) manager.getRecipes().stream().filter((iRecipe) -> iRecipe.getType() == type).collect(Collectors.toList());
     }
 
 

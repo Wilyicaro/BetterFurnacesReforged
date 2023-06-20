@@ -2,20 +2,18 @@ architectury {
     common(rootProject.enabled_platforms.split(","))
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/betterfurnaces.accesswidener")
-}
 
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modCompileOnly "mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}"
+    modCompileOnly "mezz.jei:jei-${minecraft_version}:${jei_version}:api"
     modCompileOnly "wily.factory_api:factory_api-common:${minecraft_version}-${factory_api_version}"
-    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-common:6.0.2"
-
+    modImplementation( "net.minecraftforge:forgeconfigapiport-fabric:1.0.2")
+    compileOnly('com.electronwill.night-config:core:3.6.5')
+    compileOnly('com.electronwill.night-config:toml:3.6.5')
     // Remove the next line if you don't want to depend on the API
-    modApi "dev.architectury:architectury:${rootProject.architectury_version}"
+    modApi "me.shedaniel:architectury:${rootProject.architectury_version}"
 }
 
 

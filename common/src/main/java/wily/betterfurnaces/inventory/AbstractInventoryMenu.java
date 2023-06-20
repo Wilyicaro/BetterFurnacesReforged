@@ -45,12 +45,7 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
         super.broadcastChanges();
         updateChanges();
     }
-    @Override
-    public void sendAllDataToRemote() {
-        super.sendAllDataToRemote();
-        updateChanges();
 
-    }
     protected void updateChanges() {
         be.syncAdditionalMenuData(this, player);
     }
@@ -76,7 +71,7 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
 
                 slot = this.slots.get(k);
                 itemStack2 = slot.getItem();
-                if (!itemStack2.isEmpty() && ItemStack.isSameItemSameTags(itemStack, itemStack2) && slot.mayPlace(itemStack)) {
+                if (!itemStack2.isEmpty() && itemStack.sameItem(itemStack2) && slot.mayPlace(itemStack)) {
                     int l = itemStack2.getCount() + itemStack.getCount();
                     if (l <= itemStack.getMaxStackSize()) {
                         itemStack.setCount(0);
@@ -200,11 +195,11 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
 
     protected void layoutPlayerInventorySlots(int leftCol, int topRow) {
         // Player inventory
-        addSlotBox(player.getInventory(), 9, leftCol, topRow, 9, 18, 3, 18);
+        addSlotBox(player.inventory, 9, leftCol, topRow, 9, 18, 3, 18);
 
         // Hotbar
         topRow += 58;
-        addSlotRange(player.getInventory(), 0, leftCol, topRow, 9, 18);
+        addSlotRange(player.inventory, 0, leftCol, topRow, 9, 18);
     }
 
     @Override

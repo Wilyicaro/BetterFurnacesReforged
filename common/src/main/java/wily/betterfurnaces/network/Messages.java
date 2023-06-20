@@ -1,6 +1,6 @@
 package wily.betterfurnaces.network;
 
-import dev.architectury.networking.NetworkChannel;
+import me.shedaniel.architectury.networking.NetworkChannel;
 import net.minecraft.resources.ResourceLocation;
 import wily.betterfurnaces.BetterFurnacesReforged;
 

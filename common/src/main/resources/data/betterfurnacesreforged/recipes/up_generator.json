@@ -11,14 +11,13 @@
       "item": "minecraft:iron_ingot"
     },
     "1": {
-      "item": "minecraft:lightning_rod"
+      "item": "minecraft:blaze_rod"
     },
     "2": {
       "item": "betterfurnacesreforged:energy_upgrade"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:generator_upgrade",
-    "count": 1
+    "item": "betterfurnacesreforged:generator_upgrade"
   }
 }

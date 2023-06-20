@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 public class ProjectMMO {
     @ExpectPlatform
-    public static void burnEvent(ItemStack itemStack, Level level, BlockPos worldPosition){
+    public static void burnEvent(ItemStack itemStack, Level level, BlockPos worldPosition,int i){
         throw new AssertionError();
     }
 }

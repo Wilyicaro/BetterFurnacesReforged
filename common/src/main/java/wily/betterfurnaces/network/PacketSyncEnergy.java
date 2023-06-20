@@ -1,6 +1,6 @@
 package wily.betterfurnaces.network;
 
-import dev.architectury.networking.NetworkManager;
+import me.shedaniel.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -33,9 +33,9 @@ public class PacketSyncEnergy {
     public void apply(Supplier<NetworkManager.PacketContext> ctx) {
         ctx.get().queue(() -> {
             Player player = ctx.get().getPlayer();
-            BlockEntity be = player.getLevel().getBlockEntity(pos);
+            BlockEntity be = player.level.getBlockEntity(pos);
             if (player.level.isLoaded(pos)) {
-                if (be instanceof SmeltingBlockEntity sBe) sBe.energyStorage.setEnergyStored(energy);
+                if (be instanceof SmeltingBlockEntity) ((SmeltingBlockEntity) be).energyStorage.setEnergyStored(energy);
                 be.setChanged();
             }
         });

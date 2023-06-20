@@ -20,18 +20,18 @@
       "conditions": {
         "items": [
           {
-            "items": [
-            "betterfurnacesreforged:iron_furnace"
-            ]
+            "item": "betterfurnacesreforged:iron_furnace",
+            "count": {
+              "min": 0,
+              "max": 1
+            }
           }
         ]
       }
     }
   },
-  "requirements": [
-    [
-      "overcooked"
-    ]
-  ],
+  "rewards": {
+    "experience": 1
+  },
   "parent": "minecraft:story/smelt_iron"
 }

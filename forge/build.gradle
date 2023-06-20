@@ -9,11 +9,8 @@ architectury {
 
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
 
     forge {
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfig "betterfurnaces-common.mixins.json"
         mixinConfig "betterfurnaces.mixins.json"
@@ -31,9 +28,11 @@ configurations {
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
     // Remove the next line if you don't want to depend on the API
-    modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
+    modApi "me.shedaniel:architectury-forge:${rootProject.architectury_version}"
     modApi "wily.factory_api:factory_api-forge:${minecraft_version}-${factory_api_version}"
-    compileOnly "curse.maven:project-mmo-${pmmo_version}"
+    modCompileOnly "curse.maven:project-mmo-${pmmo_version}"
+    modCompileOnly "mezz.jei:jei-${minecraft_version}:${jei_version}:api"
+    modRuntimeOnly "mezz.jei:jei-${minecraft_version}:${jei_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
@@ -88,9 +87,9 @@ shadowJar {
     exclude 'dev/architectury/core/fluid/ArchitecturyFlowingFluid$Flowing.class'
     exclude 'dev/architectury/core/item/ArchitecturyBucketItem.class'
     exclude 'dev/architectury/core/item/ArchitecturyMobBucketItem.class'
-    relocate "dev.architectury.core.block.forge.imitator", "dev.architectury.core.block"
-    relocate "dev.architectury.core.fluid.forge.imitator", "dev.architectury.core.fluid"
-    relocate "dev.architectury.core.item.forge.imitator", "dev.architectury.core.item"
+    relocate "me.shedaniel.architectury.core.block.forge.imitator", "me.shedaniel.architectury.core.block"
+    relocate "me.shedaniel.architectury.core.fluid.forge.imitator", "me.shedaniel.architectury.core.fluid"
+    relocate "me.shedaniel.architectury.core.item.forge.imitator", "me.shedaniel.architectury.core.item"
 }
 
 remapJar {

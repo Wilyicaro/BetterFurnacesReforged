@@ -1,7 +1,7 @@
 package wily.betterfurnaces.blockentity;
 
-import dev.architectury.fluid.FluidStack;
-import it.unimi.dsi.fastutil.Pair;
+import com.ibm.icu.impl.Pair;
+import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -10,7 +10,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -38,11 +37,9 @@ import wily.factoryapi.base.IPlatformHandlerApi;
 import wily.factoryapi.base.Storages;
 import wily.factoryapi.base.TransportState;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
@@ -57,7 +54,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     public static Predicate<ItemStack> HAS_WATER = s-> hasFluidAsBucket(s,Fluids.WATER);
 
     public static boolean hasFluidAsBucket(ItemStack stack, Fluid fluid){
-        return  (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).isFluidEqual(FluidStack.create(fluid,FluidStack.bucketAmount())));
+        return  (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).isFluidStackEqual(FluidStack.create(fluid,FluidStack.bucketAmount())));
     }
 
     @Override
@@ -109,8 +106,8 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     public int resultType = 0;
 
 
-    public CobblestoneGeneratorBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.COB_GENERATOR_TILE.get(), pos, state);
+    public CobblestoneGeneratorBlockEntity() {
+        super(Registration.COB_GENERATOR_TILE.get());
 
     }
     public void forceUpdateAllStates() {
@@ -120,14 +117,14 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         }
     }
     protected List<CobblestoneGeneratorRecipes> getSortedCobRecipes(){
-        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(Registration.ROCK_GENERATING_RECIPE.get()).stream().sorted(Comparator.comparing(o -> o.recipeId.getPath())).toList();
+        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(Registration.ROCK_GENERATING_RECIPE.get()).stream().sorted(Comparator.comparing(o -> o.recipeId.getPath())).collect(Collectors.toList());
     }
     public void initRecipes() {
         recipes = getSortedCobRecipes();
     }
     public void setRecipe(int index) {
         if (level != null) {
-            this.recipe = Objects.requireNonNullElseGet(recipes, this::getSortedCobRecipes).get(index);
+            this.recipe = (recipes == null ? getSortedCobRecipes() : recipes).get(index);
         }
     }
     public void changeRecipe(boolean next) {
@@ -143,7 +140,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         }
 
     }
-    public void tick(BlockState state) {
+    public void tick() {
 
         if (actualCobTime != getCobTime()){
             actualCobTime = getCobTime();
@@ -198,12 +195,12 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
             }
             cobTime = 0;
 
-            RandomSource rand = level.random;
+            Random rand = level.random;
             double d0 = (double) worldPosition.getX() + 0.5D;
             double d1 = (double) worldPosition.getY() + 0.5D;
             double d2 = (double) worldPosition.getZ() + 0.5D;
 
-            Direction direction = state.getValue(BlockStateProperties.FACING);
+            Direction direction = getBlockState().getValue(BlockStateProperties.FACING);
             Direction.Axis direction$axis = direction.getAxis();
             double d4 = rand.nextDouble() * 0.6D - 0.3D;
             double d5 = direction$axis == Direction.Axis.X ? (double) direction.getStepX() * 0.52D : d4;
@@ -239,7 +236,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     }
     public ItemStack getResult(){
         ItemStack result;
-        if (recipe != null) result = new ItemStack(recipe.getResultItem(RegistryAccess.EMPTY).getItem());
+        if (recipe != null) result = new ItemStack(recipe.getResultItem().getItem());
         else result = new ItemStack(Items.COBBLESTONE);
         result.setCount(getResultCount());
         return result;
@@ -251,8 +248,8 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         else return 1;
     }
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void load(BlockState blockState,CompoundTag tag) {
+        super.load(blockState,tag);
         this.cobTime = tag.getInt("CobTime");
         this.resultType = tag.getInt("ResultType");
         this.actualCobTime = tag.getInt("ActualCobTime");
@@ -262,12 +259,12 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag.putInt("CobTime", this.cobTime);
         tag.putInt("ResultType", this.resultType);
         tag.putInt("ActualCobTime", this.actualCobTime);
 
-        super.saveAdditional(tag);
+        return super.save(tag);
     }
 
     @Override

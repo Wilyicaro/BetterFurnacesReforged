@@ -1,13 +1,13 @@
 package wily.betterfurnaces;
 
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
-import dev.architectury.platform.Platform;
+
+import com.google.common.collect.Lists;
+import me.shedaniel.architectury.platform.Platform;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import wily.betterfurnaces.init.Registration;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +25,13 @@ public class Config {
     public static final String CATEGORY_UPDATES = "updates";
     public static final String CATEGORY_MISC = "misc";
 
-    public static final List<String> supportedLiquidXps = new ArrayList<>(List.of("mob_grinding_utils:fluid_xp","industrialforegoing:essence","cyclic:xpjuice","reliquary:xp_juice","kibe:liquid_xp"));
+    public static final List<String> supportedLiquidXps = Lists.newArrayList("mob_grinding_utils:fluid_xp", "industrialforegoing:essence", "cyclic:xpjuice", "reliquary:xp_juice", "kibe:liquid_xp");
 
     public static String getLiquidXPType() {
         return supportedLiquidXps.size() > xpFluidType.get() ? supportedLiquidXps.get(xpFluidType.get()) : supportedLiquidXps.get(0);
     }
     public static Fluid getLiquidXP() {
-        return REGISTRIES.get().get(Registries.FLUID).get(new ResourceLocation(getLiquidXPType()));
+        return REGISTRIES.get().get(Registry.FLUID).get(new ResourceLocation(getLiquidXPType()));
     }
 
     public static String getLiquidXPMod() {

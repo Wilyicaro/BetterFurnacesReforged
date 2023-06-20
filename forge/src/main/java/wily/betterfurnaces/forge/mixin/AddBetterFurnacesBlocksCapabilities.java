@@ -18,8 +18,8 @@ import java.util.Optional;
 
 @Mixin(InventoryBlockEntity.class)
 public class AddBetterFurnacesBlocksCapabilities extends BlockEntity {
-    public AddBetterFurnacesBlocksCapabilities(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
-        super(arg, arg2, arg3);
+    public AddBetterFurnacesBlocksCapabilities(BlockEntityType<?> arg) {
+        super(arg);
 
     }
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction direction) {

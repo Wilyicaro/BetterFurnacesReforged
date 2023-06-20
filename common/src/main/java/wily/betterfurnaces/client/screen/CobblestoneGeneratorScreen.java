@@ -2,7 +2,7 @@ package wily.betterfurnaces.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -62,27 +62,27 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
         double actualMouseX = mouseX - relX();
         double actualMouseY = mouseY - relY();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        minecraft.getTextureManager().bind(GUI);
         blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
         renderGuiItem(getMenu().be.getResult(),relX() + 80, relY() + 24, 0.75F, 0.75F);
-        RenderSystem.setShaderTexture(0, WIDGETS);
+        minecraft.getTextureManager().bind( WIDGETS);
             if (actualMouseX>= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39){
                 blit(matrix, relX() + 81, relY() + 25, 98, 157, 14, 14);
         } else blit(matrix, relX() + 81, relY() + 25, 84, 157, 14, 14);
         int i;
         i = ((CobblestoneGeneratorMenu) this.getMenu()).getCobTimeScaled(16);
         if (i > 0) {
-            FluidStack lava = FluidStack.create(Fluids.FLOWING_LAVA, 1000);
-            FluidStack water = FluidStack.create(Fluids.WATER, 1000);
-            FluidRenderUtil.renderTiledFluid(matrix, this,  relX() + 58, relY() + 44, 17, 12, lava, false);
-            FluidRenderUtil.renderTiledFluid(matrix, this,  relX() + 101, relY() + 44, 17, 12, water, true);
-            RenderSystem.setShaderTexture(0, GUI);
+            FluidStack lava = FluidStack.create(Fluids.FLOWING_LAVA,FluidStack.bucketAmount());
+            FluidStack water = FluidStack.create(Fluids.WATER,FluidStack.bucketAmount());
+            FluidRenderUtil.renderTiledFluid(matrix,   relX() + 58, relY() + 44, 17, 12, lava, false);
+            FluidRenderUtil.renderTiledFluid(matrix,  relX() + 101, relY() + 44, 17, 12, water, true);
+            minecraft.getTextureManager().bind(GUI);
             blit(matrix, relX() + 58, relY() + 44, 176, 24, i + 1, 12);
             blit(matrix, relX() + 117 - i, relY() + 44, 192 - i, 36, 17, 12);
 
         }
-        RenderSystem.setShaderTexture(0, GUI);
+        minecraft.getTextureManager().bind( GUI);
         blit(matrix, relX() + 58, relY() + 44, 176, 0, 17, 12);
         blit(matrix, relX() + 101, relY() + 44, 176, 12, 17, 12);
     }
@@ -92,7 +92,7 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
         double actualMouseX = mouseX - relX();
         double actualMouseY = mouseY - relY();
         if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39) {
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 0.3F));
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
             Messages.INSTANCE.sendToServer(new PacketCobblestoneRecipeUpdate(this.getMenu().getPos()));
         }
 

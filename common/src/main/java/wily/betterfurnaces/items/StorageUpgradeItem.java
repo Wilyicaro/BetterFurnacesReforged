@@ -1,6 +1,6 @@
 package wily.betterfurnaces.items;
 
-import dev.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -17,7 +17,7 @@ import wily.factoryapi.base.TransportState;
 
 public class StorageUpgradeItem extends UpgradeItem {
     public StorageUpgradeItem(Properties properties) {
-        super(properties, 8);
+        super(properties, 8,"storage");
     }
 
     @Override

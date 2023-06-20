@@ -11,7 +11,7 @@
       "item": "minecraft:iron_ingot"
     },
     "2": {
-      "tag": "c:glass_blocks"
+      "item": "minecraft:glass"
     },
     "3": {
       "item": "betterfurnacesreforged:piping_upgrade"
@@ -21,7 +21,6 @@
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:autooutput_upgrade",
-    "count": 1
+    "item": "betterfurnacesreforged:autooutput_upgrade"
   }
 }

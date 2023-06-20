@@ -1,6 +1,6 @@
 package wily.betterfurnaces.network;
 
-import dev.architectury.networking.NetworkManager;
+import me.shedaniel.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

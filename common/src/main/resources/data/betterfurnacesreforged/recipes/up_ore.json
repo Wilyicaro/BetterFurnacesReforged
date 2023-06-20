@@ -36,7 +36,6 @@
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:ore_processing_upgrade",
-    "count": 1
+    "item": "betterfurnacesreforged:ore_processing_upgrade"
   }
 }

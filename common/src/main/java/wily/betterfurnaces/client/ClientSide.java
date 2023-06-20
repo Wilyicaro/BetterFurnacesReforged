@@ -1,11 +1,7 @@
 package wily.betterfurnaces.client;
 
-import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
-import dev.architectury.registry.client.rendering.ColorHandlerRegistry;
-import dev.architectury.registry.client.rendering.RenderTypeRegistry;
-import dev.architectury.registry.item.ItemPropertiesRegistry;
-import dev.architectury.registry.menu.MenuRegistry;
-import dev.architectury.registry.registries.DeferredRegister;
+import com.google.common.collect.Lists;
+import me.shedaniel.architectury.registry.*;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +24,7 @@ import java.util.List;
 public class ClientSide {
 
     public static void init() {
-        SmeltingBlock.TYPE.getPossibleValues().forEach((i)-> List.of(false,true).forEach((b)-> BetterFurnacesPlatform.registerModel(FurnaceRenderer.getFront(i,b))));
+        SmeltingBlock.TYPE.getPossibleValues().forEach((i)-> Lists.newArrayList(false,true).forEach((b)-> BetterFurnacesPlatform.registerModel(FurnaceRenderer.getFront(i,b))));
         BetterFurnacesPlatform.registerModel(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_furnace"),""));
         BetterFurnacesPlatform.registerModel(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_forge"),""));
         BetterFurnacesPlatform.registerModel(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_forge_on"),""));
@@ -40,8 +36,8 @@ public class ClientSide {
         MenuRegistry.registerScreenFactory(Registration.COB_GENERATOR_CONTAINER.get(), CobblestoneGeneratorScreen::new);
         registerBetterFurnacesBlocksClientSide(Registration.BLOCK_ITEMS);
         Registration.BLOCK_ENTITIES.forEach((b)->{
-            if(b.getId().getPath().contains("forge")) BlockEntityRendererRegistry.register((BlockEntityType<ForgeBlockEntity>) b.get(), ForgeRenderer::new);
-            else if(b.getId().getPath().contains("furnace")) BlockEntityRendererRegistry.register((BlockEntityType<SmeltingBlockEntity>) b.get(), FurnaceRenderer::new);
+            if(b.getId().getPath().contains("forge")) BlockEntityRenderers.registerRenderer((BlockEntityType<ForgeBlockEntity>) b.get(), ForgeRenderer::new);
+            else if(b.getId().getPath().contains("furnace")) BlockEntityRenderers.registerRenderer((BlockEntityType<SmeltingBlockEntity>) b.get(), FurnaceRenderer::new);
         });
         if (Config.enableUltimateFurnaces.get())
             wily.ultimatefurnaces.init.ClientSide.init();
@@ -53,11 +49,11 @@ public class ClientSide {
     public static void registerBetterFurnacesBlocksClientSide(DeferredRegister<Block> blocks){
         blocks.forEach((block)->{
             if (block.get() instanceof SmeltingBlock) {
-                RenderTypeRegistry.register(RenderType.cutoutMipped(),block.get());
+                RenderTypes.register(RenderType.cutoutMipped(),block.get());
                 ItemPropertiesRegistry.register(block.get().asItem(),
-                        new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
+                        new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
             }
-            ColorHandlerRegistry.registerItemColors(ItemColorsHandler.COLOR,block.get().asItem());
+            ColorHandlers.registerItemColors(ItemColorsHandler.COLOR,block.get().asItem());
         });
     }
 

@@ -7,6 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,16 +40,16 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
     @Override
     protected void init() {
         super.init();
-        this.clearWidgets();
+
         ItemStack itemStack = this.getMenu().itemStackBeingHeld;
         CompoundTag nbt;
         nbt = itemStack.getOrCreateTag();
-        red = new BetterSlider( width / 2 - (imageWidth - 8) / 2, relY() + 24, imageWidth - 8, 20, Component.translatable("gui.betterfurnacesreforged.color.red") , Component.empty(), 0, 255, nbt.getInt("red"),  true);
-        green = new BetterSlider( width / 2 - (imageWidth - 8) / 2, relY() + 46, imageWidth - 8, 20, Component.translatable("gui.betterfurnacesreforged.color.green") , Component.empty(), 0, 255, nbt.getInt("green"), true);
-        blue = new BetterSlider( width / 2 - (imageWidth - 8) / 2, relY() + 68, imageWidth - 8, 20, Component.translatable("gui.betterfurnacesreforged.color.blue") , Component.empty(), 0, 255, nbt.getInt("blue"), true);
-        this.addRenderableWidget(red);
-        this.addRenderableWidget(green);
-        this.addRenderableWidget(blue);
+        red = new BetterSlider( width / 2 - (imageWidth - 8) / 2, relY() + 24, imageWidth - 8, 20, new TranslatableComponent("gui.betterfurnacesreforged.color.red") , TextComponent.EMPTY, 0, 255, nbt.getInt("red"),  true);
+        green = new BetterSlider( width / 2 - (imageWidth - 8) / 2, relY() + 46, imageWidth - 8, 20, new TranslatableComponent("gui.betterfurnacesreforged.color.green") , TextComponent.EMPTY, 0, 255, nbt.getInt("green"), true);
+        blue = new BetterSlider( width / 2 - (imageWidth - 8) / 2, relY() + 68, imageWidth - 8, 20, new TranslatableComponent("gui.betterfurnacesreforged.color.blue") , TextComponent.EMPTY, 0, 255, nbt.getInt("blue"), true);
+        this.addButton(red);
+        this.addButton(green);
+        this.addButton(blue);
 
     }
     protected void sliderPacket(BetterSlider slider, int diff){
@@ -59,11 +61,11 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
         double actualMouseY = mouseY - relY();
         if (actualMouseX>= 8 && actualMouseX <= 22 && actualMouseY >= 6 && actualMouseY <= 20) {
             if (buttonstate == 1) {
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 0.3F));
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
                 buttonstate = 0;
             } else {
                 if (buttonstate == 0) {
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 0.3F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
                     buttonstate = 1;
                 }
             }
@@ -72,12 +74,12 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
     }
     @Override
     protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-        if (red.isHoveredOrFocused()) sliderPacket(red, 1);
-        if (green.isHoveredOrFocused()) sliderPacket(green, 2);
-        if (blue.isHoveredOrFocused()) sliderPacket(blue, 3);
+        if (red.isHovered() || red.isFocused()) sliderPacket(red, 1);
+        if (green.isHovered() || green.isFocused()) sliderPacket(green, 2);
+        if (blue.isHovered() || blue.isFocused()) sliderPacket(blue, 3);
         int actualMouseX = mouseX - relX();
             int actualMouseY = mouseY - relY();
-            RenderSystem.setShaderTexture(0, WIDGETS);
+            minecraft.getTextureManager().bind(WIDGETS);
             if (buttonstate == 0) {
             this.blit(matrix, relX() + 8, relY() + 8, 126, 189, 14, 14);
         }

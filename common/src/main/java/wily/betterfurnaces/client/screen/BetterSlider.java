@@ -2,6 +2,7 @@ package wily.betterfurnaces.client.screen;
 
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 
 import java.text.DecimalFormat;
@@ -16,7 +17,7 @@ public class BetterSlider extends AbstractSliderButton {
     private final DecimalFormat format;
 
     public BetterSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
-        super(x, y, width, height, Component.empty(), 0.0);
+        super(x, y, width, height, TextComponent.EMPTY, 0.0);
         this.prefix = prefix;
         this.suffix = suffix;
         this.minValue = minValue;
@@ -98,7 +99,7 @@ public class BetterSlider extends AbstractSliderButton {
     }
 
     private void m_93585_(double mouseX) {
-        this.setSliderValue((mouseX - (double)(getX() + 4)) / (double)(this.width - 8));
+        this.setSliderValue((mouseX - (double)(x + 4)) / (double)(this.width - 8));
     }
 
     private void setSliderValue(double value) {
@@ -122,16 +123,15 @@ public class BetterSlider extends AbstractSliderButton {
             } else {
                 value = Mth.clamp(value, this.minValue, this.maxValue);
             }
-
-            return Mth.map(value, this.minValue, this.maxValue, 0.0, 1.0);
+            return Mth.lerp(Mth.inverseLerp(value, minValue, maxValue), 0.0, 1.0);
         }
     }
 
     protected void updateMessage() {
         if (this.drawString) {
-            this.setMessage(Component.literal("").append(this.prefix).append(this.getValueString()).append(this.suffix));
+            this.setMessage(new TextComponent("").append(this.prefix).append(this.getValueString()).append(this.suffix));
         } else {
-            this.setMessage(Component.empty());
+            this.setMessage(TextComponent.EMPTY);
         }
 
     }

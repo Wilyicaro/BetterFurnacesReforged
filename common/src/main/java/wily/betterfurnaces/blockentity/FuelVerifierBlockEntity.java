@@ -1,8 +1,7 @@
 package wily.betterfurnaces.blockentity;
 
-import dev.architectury.registry.fuel.FuelRegistry;
-import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.core.BlockPos;
+import com.ibm.icu.impl.Pair;
+import me.shedaniel.architectury.registry.fuel.FuelRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -62,12 +61,12 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
     private int burnTime;
 
 
-    public FuelVerifierBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.FUEL_VERIFIER_TILE.get(), pos, state);
+    public FuelVerifierBlockEntity() {
+        super(Registration.FUEL_VERIFIER_TILE.get());
 
     }
 
-    public void tick(BlockState blockState) {
+    public void tick() {
         if (!level.isClientSide) {
             ItemStack fuel = inventory.getItem(0);
             if (!(fuel.isEmpty()))
@@ -77,15 +76,15 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
     }
     @Override
-    public void load(CompoundTag tag) {
+    public void load(BlockState blockState,CompoundTag tag) {
         this.burnTime = tag.getInt("BurnTime");
-        super.load(tag);
+        super.load(blockState ,tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag.putInt("BurnTime", this.burnTime);
-        super.saveAdditional(tag);
+        return super.save(tag);
     }
 
     protected static int getBurnTime(ItemStack stack) {

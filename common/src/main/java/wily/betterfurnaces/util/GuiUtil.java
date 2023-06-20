@@ -45,7 +45,7 @@ public class GuiUtil {
             poseStack.scale(scale, scale, scale);
             runnable.accept(poseStack);
             poseStack.popPose();
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderSystem.color4f(1, 1, 1, 1);
         }
 
 

@@ -2,9 +2,9 @@
   "group": "ultimatefurnaces",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "000",
+    "010",
     "121",
-    "000"
+    "010"
   ],
   "key": {
     "0": {
@@ -14,11 +14,10 @@
       "item": "minecraft:diamond"
     },
     "2": {
-      "item": "minecraft:amethyst_shard"
+      "tag": "forge:gems/amethyst"
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:amethyst_diamond_upgrade",
-    "count": 1
+    "item": "betterfurnacesreforged:amethyst_diamond_upgrade"
   }
 }

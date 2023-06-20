@@ -3,6 +3,8 @@ package wily.betterfurnaces.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import wily.betterfurnaces.BetterFurnacesReforged;
@@ -32,7 +34,7 @@ public class FuelVerifierScreen extends AbstractBasicScreen<FuelVerifierMenu> {
     @Override
     protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
         Component invname = this.playerInv.getDisplayName();
-        Component burntime = Component.translatable("gui.betterfurnacesreforged.fuel.melts").append(Component.literal(String.valueOf(( this.getMenu()).getBurnTime()))).append( Component.translatable("gui.betterfurnacesreforged.fuel.items"));
+        Component burntime = new TranslatableComponent("gui.betterfurnacesreforged.fuel.melts").append(new TextComponent(String.valueOf(( this.getMenu()).getBurnTime()))).append( new TranslatableComponent("gui.betterfurnacesreforged.fuel.items"));
         this.minecraft.font.draw(matrix, invname, 7, this.imageHeight - 93, 4210752);
         if (this.getMenu().getBurnTime() > 0)
         this.minecraft.font.draw(matrix, burntime, this.imageWidth / 2 - this.minecraft.font.width(burntime.getString()) / 2, 6, 4210752);
@@ -42,8 +44,8 @@ public class FuelVerifierScreen extends AbstractBasicScreen<FuelVerifierMenu> {
 
     @Override
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        minecraft.getTextureManager().bind( GUI);
 
         this.blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
         int i;

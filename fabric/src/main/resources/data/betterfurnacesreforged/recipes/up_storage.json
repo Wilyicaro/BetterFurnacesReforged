@@ -11,7 +11,7 @@
       "item": "minecraft:stone"
     },
     "2": {
-      "tag": "c:glass_blocks"
+      "item": "minecraft:glass"
     },
     "3": {
       "item": "minecraft:chest"
