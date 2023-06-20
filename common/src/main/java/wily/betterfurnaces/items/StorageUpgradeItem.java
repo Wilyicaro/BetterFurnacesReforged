@@ -17,7 +17,7 @@ import wily.factoryapi.base.TransportState;
 
 public class StorageUpgradeItem extends UpgradeItem {
     public StorageUpgradeItem(Properties properties) {
-        super(properties, 8);
+        super(properties, 8,"storage");
     }
 
     @Override

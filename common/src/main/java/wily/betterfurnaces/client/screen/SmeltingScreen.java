@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blocks.ForgeBlock;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.SmeltingMenu;
 import wily.betterfurnaces.items.FactoryUpgradeItem;
@@ -28,7 +27,6 @@ import wily.betterfurnaces.util.StringHelper;
 import wily.factoryapi.ItemContainerUtil;
 import wily.factoryapi.base.IFactoryDrawableType;
 import wily.factoryapi.base.Progress;
-import wily.factoryapi.util.ProgressElementRenderUtil;
 import wily.factoryapi.util.StorageStringUtil;
 
 import java.util.List;
@@ -42,18 +40,19 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     Inventory playerInv;
 
     // Widgets x and y pos
-    protected int FactoryShowButtonY() {return 3;}
-    protected int[] FluidTank() {return new int[]{73,49};} // 20x22pixels
-    protected int[] EnergyTank() {
-        return getMenu().be.hasUpgrade(Registration.GENERATOR.get()) ? new int[]{116,26} : new int[]{31,17};
+    protected int factoryShowButtonY() {return 3;}
+    protected int[] fluidTankPos() {return new int[]{73,49};} // 20x22pixels
+    protected int[] energyCellPos() {
+        return getMenu().be.hasUpgrade(Registration.GENERATOR.get()) ? new int[]{116,26} : new int[]{31-(menu.be.hasUpgradeType(Registration.STORAGE.get()) ? 5 : 0),17};
     } // 16x34pixels
-    protected int[] XPTank() { return new int[]{116,57};} // 16x16pixels
+    protected int[] xpTankPos() { return new int[]{116,57};} // 16x16pixels
 
     public static IFactoryDrawableType.DrawableProgress MINI_FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,0,16,16},false, IFactoryDrawableType.Direction.VERTICAL);
 
     public static IFactoryDrawableType.DrawableProgress FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,16,20,22},false,IFactoryDrawableType.Direction.VERTICAL);
 
     public static IFactoryDrawableType.DrawableProgress ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false, IFactoryDrawableType.Direction.VERTICAL);
+    public static IFactoryDrawableType.DrawableProgress THIN_ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{248,102,8,34},false, IFactoryDrawableType.Direction.VERTICAL);
 
     public static IFactoryDrawableType SLOT = IFactoryDrawableType.create(WIDGETS,192,60,18,18);
     public static IFactoryDrawableType BIG_SLOT = IFactoryDrawableType.create(WIDGETS,210,60,26,26);
@@ -63,6 +62,10 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     public static IFactoryDrawableType BIG_OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,203,26,26);
     public static IFactoryDrawableType.DrawableProgress BFProgressType(Progress.Identifier identifier, int[] uvSize, boolean reverse, IFactoryDrawableType.Direction plane) {
         return IFactoryDrawableType.create(WIDGETS,uvSize[0],uvSize[1],uvSize[2],uvSize[3]).asProgress(identifier, reverse, plane);
+    }
+
+    protected IFactoryDrawableType.DrawableProgress energyCellDrawable(){
+        return menu.be.hasUpgradeType(Registration.STORAGE.get()) ? THIN_ENERGY_CELL : ENERGY_CELL;
     }
     private boolean storedFactoryUpgradeType(int type){
         if (getMenu().be.hasUpgradeType(Registration.FACTORY.get())) {
@@ -111,28 +114,28 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
             invX = (this.imageWidth - this.minecraft.font.width(playerInventoryTitle.getString())) / 2;
         this.minecraft.font.draw(matrix, playerInventoryTitle, invX, this.imageHeight - 93, 4210752);
         this.minecraft.font.draw(matrix, getTitle(), titleX, imageHeight - 160, 4210752);
-        if (getMenu().be.isLiquid() && FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, FluidTank()[0], FluidTank()[1]))
+        if (getMenu().be.isLiquid() && FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, fluidTankPos()[0], fluidTankPos()[1]))
             this.renderTooltip(matrix, getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.fluidTank), actualMouseX, actualMouseY);
         if (getMenu().be.hasUpgrade(Registration.GENERATOR.get()) && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, 54, 18)){
             ItemStack gen = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
             this.renderTooltip(matrix, getFluidTooltip("tooltip.factory_api.fluid_stored", ((GeneratorUpgradeItem)gen.getItem()).getFluidStorage(gen)), actualMouseX, actualMouseY);
-    }if ((getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) && ENERGY_CELL.inMouseLimit(actualMouseX,actualMouseY, EnergyTank()[0], EnergyTank()[1])){
+    }if ((getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) && energyCellDrawable().inMouseLimit(actualMouseX,actualMouseY, energyCellPos()[0], energyCellPos()[1])){
             this.renderTooltip(matrix, StorageStringUtil.getEnergyTooltip("tooltip.factory_api.energy_stored", getMenu().be.energyStorage), actualMouseX, actualMouseY);
         }if (storedFactoryUpgradeType(0)) {
             this.addFactoryTooltips(matrix, actualMouseX, actualMouseY);
         }
-        if (getMenu().be.hasXPTank() && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY,XPTank()[0], XPTank()[1]))
+        if (getMenu().be.hasXPTank() && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, xpTankPos()[0], xpTankPos()[1]))
             this.renderTooltip(matrix,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.xpTank), actualMouseX, actualMouseY);
 
     }
 
     private void addFactoryTooltips(PoseStack matrix, int mouseX, int mouseY) {
         if (!getMenu().showInventoryButtons()) {
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() +13) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() +13) {
                 this.renderTooltip(matrix, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_open"), mouseX, mouseY);
             }
         } else {
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() +13) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() +13) {
                 this.renderComponentTooltip(matrix, StringHelper.getShiftInfoGui(), mouseX, mouseY);
             }
             if (storedFactoryUpgradeType(3)){
@@ -241,38 +244,38 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         }
     }
     @Override
-    protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI());
-        blit(matrix, relX(), relY(), 0, 0, imageWidth, imageHeight);
-        blitSmeltingSprites(matrix);
+        blit(stack, relX(), relY(), 0, 0, imageWidth, imageHeight);
+        blitSmeltingSprites(stack);
         if (getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
-            RenderSystem.setShaderTexture(0, WIDGETS);
-            blit(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], 240, 34, 16, 34);
-            ENERGY_CELL.drawProgress(matrix, relX() + EnergyTank()[0], relY() + EnergyTank()[1], this.getMenu().getEnergyStoredScaled(34));
+            boolean storage = menu.be.hasUpgradeType(Registration.STORAGE.get());
+            blit(stack, relX() + energyCellPos()[0], relY() + energyCellPos()[1], 240 + (storage ? 8 : 0), 34 * (storage ? 2 : 1), 16 - (storage ? 8 : 0), 34);
+            energyCellDrawable().drawProgress(stack, relX() + energyCellPos()[0], relY() + energyCellPos()[1], this.getMenu().getEnergyStoredScaled(34));
         }if (getMenu().be.isLiquid()){
             RenderSystem.setShaderTexture(0, WIDGETS);
-            blit(matrix, relX() + FluidTank()[0], relY() + FluidTank()[1], 192, 38, 20, 22);
-            FLUID_TANK.drawAsFluidTank(matrix,relX() + FluidTank()[0], relY() + FluidTank()[1], this.getMenu().getFluidStoredScaled(22,false), this.getMenu().getFluidStackStored(false),false);
+            blit(stack, relX() + fluidTankPos()[0], relY() + fluidTankPos()[1], 192, 38, 20, 22);
+            FLUID_TANK.drawAsFluidTank(stack,relX() + fluidTankPos()[0], relY() + fluidTankPos()[1], this.getMenu().getFluidStoredScaled(22,false), this.getMenu().getFluidStackStored(false),false);
         }
 
         if (this.getMenu().be.hasXPTank()) {
             RenderSystem.setShaderTexture(0, WIDGETS);
-            blit(matrix, relX() + XPTank()[0], relY() + XPTank()[1], 208, 0, 16, 16);
-            MINI_FLUID_TANK.drawAsFluidTank(matrix,relX() + XPTank()[0], relY() + XPTank()[1], this.getMenu().getFluidStoredScaled(16,true), this.getMenu().getFluidStackStored(true),true);
+            blit(stack, relX() + xpTankPos()[0], relY() + xpTankPos()[1], 208, 0, 16, 16);
+            MINI_FLUID_TANK.drawAsFluidTank(stack,relX() + xpTankPos()[0], relY() + xpTankPos()[1], this.getMenu().getFluidStoredScaled(16,true), this.getMenu().getFluidStackStored(true),true);
         }
         if (this.getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             ItemStack generatorUp = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
-            MINI_FLUID_TANK.drawAsFluidTank(matrix,relX() + 54, relY() + 18, (int)(ItemContainerUtil.getFluid(generatorUp).getAmount() * 16 / (4 * FluidStack.bucketAmount())),ItemContainerUtil.getFluid(generatorUp),true);
+            MINI_FLUID_TANK.drawAsFluidTank(stack,relX() + 54, relY() + 18, (int)(ItemContainerUtil.getFluid(generatorUp).getAmount() * 16 / (4 * FluidStack.bucketAmount())),ItemContainerUtil.getFluid(generatorUp),true);
         }
         if (storedFactoryUpgradeType(0)) {
             RenderSystem.setShaderTexture(0, WIDGETS);
             int actualMouseX = mouseX - relY();
             int actualMouseY = mouseY - relX();
 
-            this.addInventoryButtons(matrix, actualMouseX, actualMouseY);
+            this.addInventoryButtons(stack, actualMouseX, actualMouseY);
             if (storedFactoryUpgradeType(4))
-                this.addRedstoneButtons(matrix, actualMouseX, actualMouseY);
+                this.addRedstoneButtons(stack, actualMouseX, actualMouseY);
         }
     }
 
@@ -316,11 +319,11 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
 
     private void addInventoryButtons(PoseStack matrix, int mouseX, int mouseY) {
         if (!getMenu().showInventoryButtons()) {
-            this.blit(matrix, relX() + 7, relY() + FactoryShowButtonY(), 0, 28, 18, 14);
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() + 13)
-                this.blit(matrix, relX() + 7, relY() + FactoryShowButtonY(), 18, 28, 18, 14);
+            this.blit(matrix, relX() + 7, relY() + factoryShowButtonY(), 0, 28, 18, 14);
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() + 13)
+                this.blit(matrix, relX() + 7, relY() + factoryShowButtonY(), 18, 28, 18, 14);
         } else if (getMenu().showInventoryButtons()) {
-            this.blit(matrix, relX() + 7, relY() + FactoryShowButtonY(), 18, 28, 18, 14);
+            this.blit(matrix, relX() + 7, relY() + factoryShowButtonY(), 18, 28, 18, 14);
             this.blit(matrix, relX() - 53, relY() + 52, 0, 47, 59, 107);
             if (storedFactoryUpgradeType(1)) {
                 this.blit(matrix, relX() - 47, relY() + 58, 56, 157, 14, 14);
@@ -497,12 +500,12 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     public void mouseClickedInventoryButtons(int button, double mouseX, double mouseY) {
         boolean flag = button == GLFW.GLFW_MOUSE_BUTTON_2;
         if (!getMenu().showInventoryButtons()) {
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() + 13) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() + 13) {
                 Messages.INSTANCE.sendToServer(new PacketShowSettingsButton(this.getMenu().getPos(), 1));
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1F));
             }
         } else {
-            if (mouseX >= 7 && mouseX <= 24 && mouseY >= FactoryShowButtonY() && mouseY <= FactoryShowButtonY() + 13) {
+            if (mouseX >= 7 && mouseX <= 24 && mouseY >= factoryShowButtonY() && mouseY <= factoryShowButtonY() + 13) {
                 Messages.INSTANCE.sendToServer(new PacketShowSettingsButton(this.getMenu().getPos(), 0));
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1F));
             }

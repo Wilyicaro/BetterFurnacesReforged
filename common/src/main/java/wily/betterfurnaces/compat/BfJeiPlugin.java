@@ -131,7 +131,7 @@ public class BfJeiPlugin implements IModPlugin {
 
 		public CobblestoneGeneratorCategory(IGuiHelper guiHelper) {
 			this.title = Registration.COBBLESTONE_GENERATOR.get().getName();
-			this.background = guiHelper.createDrawable(GUI, 18, 11, 139, 63);
+			this.background = guiHelper.createDrawable(GUI, 46, 21, 85, 52);
 			this.guiHelper = guiHelper;
 			this.cachedProgressAnim = CacheBuilder.newBuilder()
 					.maximumSize(25)

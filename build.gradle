@@ -129,12 +129,13 @@ allprojects {
 
         unifiedPublishing {
             project {
+                def isFabric = project.name ==  "fabric"
                 displayName = "BFR [$modPlatformName] $project.version"
                 releaseType = "$stage"
                 changelog = releaseChangelog()
                 gameVersions = ["$minecraft_version"]
                 gameLoaders = ["$project.name"]
-                if (project.name ==  "fabric") gameLoaders.addAll "quilt"
+                if (isFabric) gameLoaders.addAll "quilt"
                 mainPublication renameJarForPublication
 
                 var CURSE_API_KEY = project.findProperty("CURSE_API_KEY") ?: System.getenv("CURSE_API_KEY")
@@ -145,6 +146,7 @@ allprojects {
                         gameVersions.addAll(["Java 17", "Java 18"])
                         relations{
                             depends "architectury-api"
+                            if (isFabric) depends "fabric-api"
                             depends "factory-api"
                         }
                     }
@@ -159,7 +161,7 @@ allprojects {
                         version = "$project.version+$project.name"
                         relations{
                             depends "architectury-api"
-                            depends "fabric-api"
+                            if (isFabric) depends "fabric-api"
                             depends "factory-api"
                         }
                     }

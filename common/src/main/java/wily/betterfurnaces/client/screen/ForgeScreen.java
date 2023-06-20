@@ -12,10 +12,10 @@ import wily.betterfurnaces.inventory.ForgeMenu;
 public class ForgeScreen extends SmeltingScreen<ForgeMenu> {
 
     public ResourceLocation GUI() { return new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/forge_gui.png");}
-    protected int FactoryShowButtonY(){return 44;}
-    protected int[] FluidTank() { return new int[]{26,98};} // 20x22pixels
-    protected int[] EnergyTank() { return new int[]{8,62};} // 16x34pixels
-    protected int[] XPTank() { return new int[]{126,102};} // 16x16pixels
+    protected int factoryShowButtonY(){return 44;}
+    protected int[] fluidTankPos() { return new int[]{26,98};} // 20x22pixels
+    protected int[] energyCellPos() { return new int[]{8,62};} // 16x34pixels
+    protected int[] xpTankPos() { return new int[]{126,102};} // 16x16pixels
 
     public ForgeScreen(ForgeMenu t, Inventory inv, Component name) {
         super(t, inv, name);
