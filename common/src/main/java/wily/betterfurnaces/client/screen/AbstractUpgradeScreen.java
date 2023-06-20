@@ -21,6 +21,7 @@ public abstract class AbstractUpgradeScreen<T extends AbstractUpgradeMenu> exten
         super(t, inv, name);
         imageHeight = 94;
         this.name = name;
+
     }
 
     @Override

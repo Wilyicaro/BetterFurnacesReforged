@@ -20,7 +20,7 @@
       "conditions": {
         "location": {
           "block": {
-            "tag": "betterfurnacesreforged:furnaces"
+            "tag": "betterfurnacesreforged:furnace_like"
           }
         },
         "item": {
