@@ -9,6 +9,7 @@ import com.google.common.cache.LoadingCache;
 import com.ibm.icu.impl.Pair;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.shedaniel.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.utils.Fraction;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
@@ -46,6 +47,7 @@ import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.GuiUtil;
 import wily.betterfurnaces.util.RecipeUtil;
+import wily.factoryapi.FactoryAPIPlatform;
 import wily.ultimatefurnaces.init.RegistrationUF;
 
 import java.util.ArrayList;
@@ -151,8 +153,8 @@ public class BfJeiPlugin implements IModPlugin {
 		@Override
 		public void draw(CobblestoneGeneratorRecipes recipe,PoseStack stack, double mouseX, double mouseY) {
 			GuiUtil.renderScaled(stack,  (float) recipe.duration / 20 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
-			FluidRenderUtil.renderTiledFluid(stack, 12, 23, 17,12, FluidStack.create(Fluids.LAVA,  FluidStack.bucketAmount()), false);
-			FluidRenderUtil.renderTiledFluid(stack, 55, 23, 17,12,FluidStack.create(Fluids.WATER, FluidStack.bucketAmount()), true);
+			FluidRenderUtil.renderTiledFluid(stack, 12, 23, 17,12, FluidStack.create(Fluids.LAVA, Fraction.ofWhole(FactoryAPIPlatform.getBucketAmount())), false);
+			FluidRenderUtil.renderTiledFluid(stack, 55, 23, 17,12,FluidStack.create(Fluids.WATER, Fraction.ofWhole(FactoryAPIPlatform.getBucketAmount())), true);
 
 			Pair<IDrawableAnimated,IDrawableAnimated> cache = cachedProgressAnim.getUnchecked(recipe.duration);
 			cache.first.draw(stack, 12,23);

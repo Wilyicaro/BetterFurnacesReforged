@@ -96,7 +96,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     protected int timer;
 
     public int EnergyUse() {return 500;}
-    public long LiquidCapacity() {return 4 * FluidStack.bucketAmount().longValue();}
+    public long LiquidCapacity() {return 4 * FactoryAPIPlatform.getBucketAmount();}
     public int EnergyCapacity() {return 16000;}
     private int furnaceBurnTime;
     public int cookTime;
@@ -316,7 +316,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return stack == null ? 0 : FuelRegistry.get(stack.getFluid().getBucket().getDefaultInstance());
     }
     public final IPlatformFluidHandler fluidTank = FactoryAPIPlatform.getFluidHandlerApi(LiquidCapacity(), this,fs -> (getBurnTime(new ItemStack(fs.getFluid().getBucket())) > 0), SlotsIdentifier.LAVA, TransportState.EXTRACT_INSERT);
-    public final IPlatformFluidHandler xpTank = FactoryAPIPlatform.getFluidHandlerApi(2*FluidStack.bucketAmount().longValue(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), SlotsIdentifier.GENERIC, TransportState.EXTRACT_INSERT);
+    public final IPlatformFluidHandler xpTank = FactoryAPIPlatform.getFluidHandlerApi(2*FactoryAPIPlatform.getBucketAmount(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), SlotsIdentifier.GENERIC, TransportState.EXTRACT_INSERT);
     public final IPlatformEnergyStorage energyStorage = FactoryAPIPlatform.getEnergyStorageApi(EnergyCapacity(),this);
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
@@ -411,10 +411,10 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         if (!this.hasUpgradeType(Registration.FACTORY.get()) && this.showOrientation) this.showOrientation = false;
 
         ItemStack fuel = this.inventory.getItem(this.FUEL()[0]);
-        if ((this.hasUpgrade(Registration.COLOR.get()))) {
-            if (!(level.getBlockState(this.getBlockPos()).getValue(SmeltingBlock.COLORED)))
-                level.setBlock(this.getBlockPos(), level.getBlockState(this.getBlockPos()).setValue(SmeltingBlock.COLORED, true), 3);
-        } else if ((level.getBlockState(this.getBlockPos()).getValue(SmeltingBlock.COLORED))) level.setBlock(this.getBlockPos(), level.getBlockState(this.getBlockPos()).setValue(SmeltingBlock.COLORED, false), 3);
+        if (this.hasUpgrade(Registration.COLOR.get()) != level.getBlockState(this.getBlockPos()).getValue(SmeltingBlock.COLORED)) {
+            level.setBlock(this.getBlockPos(), level.getBlockState(this.getBlockPos()).setValue(SmeltingBlock.COLORED, this.hasUpgrade(Registration.COLOR.get())), 3);
+            setChanged();
+        }
 
         int updatedType = this.getUpdatedType();
         RecipeType<? extends AbstractCookingRecipe>[] recipeTypes = new RecipeType[]{RecipeType.SMELTING,RecipeType.BLASTING, RecipeType.SMOKING};
@@ -457,7 +457,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             if (this.hasUpgrade(Registration.ENERGY.get())) {
                 if (ItemContainerUtil.isEnergyContainer(fuel) && ItemContainerUtil.getEnergy(fuel) > 0) {
                     if (this.energyStorage.getSpace() > 0) {
-                        ItemContainerUtil.extractEnergy(this.energyStorage.receiveEnergy(ItemContainerUtil.getEnergy(fuel), false), fuel);
+                        energyStorage.receiveEnergy(ItemContainerUtil.extractEnergy(energyStorage.getSpace(),fuel).contextEnergy, false);
                         this.inventory.setItem(this.FUEL()[0], fuel);
 
                     }
@@ -562,7 +562,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 if (this.isBurning() && valid ) {
                     ++this.cookTime;
                     if (this.hasUpgrade(Registration.GENERATOR.get())){
-                        ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(FluidStack.bucketAmount().longValue() / 1000, this.getUpgradeSlotItem(Registration.GENERATOR.get()));
+                        ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(FactoryAPIPlatform.getBucketAmount() / 1000, this.getUpgradeSlotItem(Registration.GENERATOR.get()));
                         if (!context.fluidStack.isEmpty()) this.inventory.setItem(this.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container);
                         this.energyStorage.receiveEnergy(Math.round((float)500 / get_cook_time),false);
                     }
@@ -782,7 +782,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             ItemStack fuel = inventory.getItem(FUEL()[0]);
             if (input.getItem() == Blocks.WET_SPONGE.asItem() && !fuel.isEmpty()) {
                 if (ItemContainerUtil.isFluidContainer(fuel)){
-                    ItemContainerUtil.fillItem(fuel,FluidStack.create(Fluids.WATER, FluidStack.bucketAmount()));
+                    ItemContainerUtil.fillItem(fuel,FluidStack.create(Fluids.WATER, Fraction.ofWhole(FactoryAPIPlatform.getBucketAmount())));
                     inventory.setItem(FUEL()[0],fuel);
                 }
             }
@@ -849,7 +849,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
         if (storage == Storages.FLUID){
-            if ((facing == null || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom())) {
+            if (facing == null || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()) {
                 if(isLiquid())
                     return ((Optional<T>) Optional.of(fluidTank));
             }
@@ -987,7 +987,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                     if (hasXPTank()) {
                         int amountLiquidXp = Mth.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h).getExperience()) * 5;
                         if (amountLiquidXp >= 1) {
-                          xpTank.fill(FluidStack.create(Config.getLiquidXP(), Fraction.ofWhole(amountLiquidXp * FluidStack.bucketAmount().longValue() /1000)), false);
+                          xpTank.fill(FluidStack.create(Config.getLiquidXP(), Fraction.ofWhole(amountLiquidXp * FactoryAPIPlatform.getBucketAmount() /1000)), false);
                             recipes.clear();
                         }
                     }else {

@@ -1,6 +1,7 @@
 package wily.betterfurnaces.blocks;
 
 import me.shedaniel.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.hooks.FluidStackHooks;
 import me.shedaniel.architectury.registry.MenuRegistry;
 import me.shedaniel.architectury.registry.menu.ExtendedMenuProvider;
 import net.minecraft.ChatFormatting;
@@ -46,6 +47,7 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.UpgradeItem;
+import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.ItemContainerUtil;
 import wily.factoryapi.base.Storages;
 
@@ -112,8 +114,8 @@ public class SmeltingBlock extends Block implements EntityBlock {
             if (hand.getItem() instanceof UpgradeItem  && ((UpgradeItem)hand.getItem()).isEnabled() && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }if (ItemContainerUtil.isFluidContainer(hand) &&  !(player.isCrouching())) {
-                if ((be.hasUpgrade(Registration.GENERATOR.get()) && ItemContainerUtil.getFluid(stack).getFluid().isSame(Fluids.WATER) && ItemContainerUtil.getFluid(be.getUpgradeSlotItem(Registration.GENERATOR.get())).getAmount().longValue() <= 3 * FluidStack.bucketAmount().longValue())){
-                    ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.fillItem(be.getUpgradeSlotItem(Registration.GENERATOR.get()), ItemContainerUtil.drainItem(FluidStack.bucketAmount().longValue(), player, handIn));
+                if ((be.hasUpgrade(Registration.GENERATOR.get()) && ItemContainerUtil.getFluid(stack).getFluid().isSame(Fluids.WATER) && ItemContainerUtil.getFluid(be.getUpgradeSlotItem(Registration.GENERATOR.get())).getAmount().longValue() <= 3 * FactoryAPIPlatform.getBucketAmount())){
+                    ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.fillItem(be.getUpgradeSlotItem(Registration.GENERATOR.get()), ItemContainerUtil.drainItem(FactoryAPIPlatform.getBucketAmount(), player, handIn));
                     be.inventory.setItem(be.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container);
                 }else if ((be.hasUpgrade(Registration.LIQUID.get()) && SmeltingBlockEntity.isItemFuel(hand)))
                     be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getFluidStack().isFluidStackEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) e.fill(ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn), false);});
@@ -121,7 +123,6 @@ public class SmeltingBlock extends Block implements EntityBlock {
                 this.interactWith(world, pos, player);
             }
         }
-
         return InteractionResult.SUCCESS;
     }
 

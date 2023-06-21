@@ -2,6 +2,7 @@ package wily.betterfurnaces.blockentity;
 
 import com.ibm.icu.impl.Pair;
 import me.shedaniel.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.utils.Fraction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -54,7 +55,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     public static Predicate<ItemStack> HAS_WATER = s-> hasFluidAsBucket(s,Fluids.WATER);
 
     public static boolean hasFluidAsBucket(ItemStack stack, Fluid fluid){
-        return  (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).isFluidStackEqual(FluidStack.create(fluid,FluidStack.bucketAmount())));
+        return  (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).isFluidStackEqual(FluidStack.create(fluid, Fraction.ofWhole(FactoryAPIPlatform.getBucketAmount()))));
     }
 
     @Override

@@ -24,7 +24,7 @@ public class GeneratorUpgradeItem extends UpgradeItem implements IFluidItem<IPla
 
     @Override
     public FluidStorageBuilder getFluidStorageBuilder(ItemStack stack) {
-        return new FluidStorageBuilder(4* FluidStack.bucketAmount().longValue(), (f)->f.getFluid().isSame(Fluids.WATER), TransportState.EXTRACT_INSERT);
+        return new FluidStorageBuilder(4* FactoryAPIPlatform.getBucketAmount(), (f)->f.getFluid().isSame(Fluids.WATER), TransportState.EXTRACT_INSERT);
     }
 
     @Override

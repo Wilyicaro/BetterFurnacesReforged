@@ -26,6 +26,7 @@ import wily.betterfurnaces.network.PacketOrientationButton;
 import wily.betterfurnaces.network.PacketSettingsButton;
 import wily.betterfurnaces.network.PacketShowSettingsButton;
 import wily.betterfurnaces.util.StringHelper;
+import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.ItemContainerUtil;
 import wily.factoryapi.base.FactoryDrawableType;
 import wily.factoryapi.base.Progress;
@@ -267,7 +268,7 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         }
         if (this.getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             ItemStack generatorUp = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
-            MINI_FLUID_TANK.drawAsFluidTank(stack,relX() + 54, relY() + 18, (ItemContainerUtil.getFluid(generatorUp).getAmount().intValue() * 16 / (4 * FluidStack.bucketAmount().intValue())),ItemContainerUtil.getFluid(generatorUp),true);
+            MINI_FLUID_TANK.drawAsFluidTank(stack,relX() + 54, relY() + 18, (int) (ItemContainerUtil.getFluid(generatorUp).getAmount().intValue() * 16 / (4 * FactoryAPIPlatform.getBucketAmount())),ItemContainerUtil.getFluid(generatorUp),true);
         }
         if (storedFactoryUpgradeType(0)) {
             minecraft.getTextureManager().bind( WIDGETS);

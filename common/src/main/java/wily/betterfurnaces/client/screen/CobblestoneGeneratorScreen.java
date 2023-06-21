@@ -3,6 +3,7 @@ package wily.betterfurnaces.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.shedaniel.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.utils.Fraction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -15,6 +16,7 @@ import wily.betterfurnaces.inventory.CobblestoneGeneratorMenu;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketCobblestoneRecipeUpdate;
 import wily.betterfurnaces.util.FluidRenderUtil;
+import wily.factoryapi.FactoryAPIPlatform;
 
 public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneGeneratorMenu> {
 
@@ -71,10 +73,10 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
                 blit(matrix, relX() + 81, relY() + 25, 98, 157, 14, 14);
         } else blit(matrix, relX() + 81, relY() + 25, 84, 157, 14, 14);
         int i;
-        i = ((CobblestoneGeneratorMenu) this.getMenu()).getCobTimeScaled(16);
+        i = this.getMenu().getCobTimeScaled(16);
         if (i > 0) {
-            FluidStack lava = FluidStack.create(Fluids.FLOWING_LAVA,FluidStack.bucketAmount());
-            FluidStack water = FluidStack.create(Fluids.WATER,FluidStack.bucketAmount());
+            FluidStack lava = FluidStack.create(Fluids.FLOWING_LAVA, Fraction.ofWhole(FactoryAPIPlatform.getBucketAmount()));
+            FluidStack water = FluidStack.create(Fluids.WATER, Fraction.ofWhole(FactoryAPIPlatform.getBucketAmount()));
             FluidRenderUtil.renderTiledFluid(matrix,   relX() + 58, relY() + 44, 17, 12, lava, false);
             FluidRenderUtil.renderTiledFluid(matrix,  relX() + 101, relY() + 44, 17, 12, water, true);
             minecraft.getTextureManager().bind(GUI);

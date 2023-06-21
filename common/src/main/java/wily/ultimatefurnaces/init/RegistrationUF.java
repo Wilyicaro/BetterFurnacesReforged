@@ -28,7 +28,7 @@ public class RegistrationUF {
     public static final DeferredRegister<Block> BLOCK_ITEMS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.BLOCK_REGISTRY);
     public static void init() {
         BLOCK_ITEMS.register();
-        BLOCK_ITEMS.forEach((b)-> ITEMS.register( b.getId(),() -> new BlockItem(b.get(), defaultItemProperties())));
+        BLOCK_ITEMS.forEach((b)-> BetterFurnacesReforged.REGISTRIES.get().forRegistry(Registry.ITEM_REGISTRY, i-> i.register( b.getId(),() -> new BlockItem(b.get(), defaultItemProperties()))));
     }
 
 
