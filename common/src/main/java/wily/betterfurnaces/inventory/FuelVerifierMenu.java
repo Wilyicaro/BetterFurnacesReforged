@@ -6,37 +6,34 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import wily.betterfurnaces.blockentity.FuelVerifierBlockEntity;
 import wily.betterfurnaces.init.Registration;
+
+import java.util.Comparator;
 
 
 public class FuelVerifierMenu extends AbstractInventoryMenu<FuelVerifierBlockEntity> {
 
 
     public FuelVerifierMenu(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
-        this(windowId, world, pos, playerInventory, player, new SimpleContainerData(1));
+        this( windowId, world, pos, playerInventory, player, new SimpleContainerData(1));
     }
 
-    public FuelVerifierMenu(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
+    public FuelVerifierMenu( int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(Registration.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
         checkContainerDataCount(this.fields, 1);
     }
-
-    @Override
-    public void addInventorySlots() {
-        this.addSlot(new SlotFuel(be, 0, 80, 48));
-    }
-
 
 
     public BlockPos getPos() {
         return this.be.getBlockPos();
     }
 
-    public int getBurnTimeScaled(int pixels) {
-        int i = 20000;
+    static int maxFuelValue = FurnaceBlockEntity.getFuel().values().stream().max(Comparator.comparing(Integer::intValue)).orElse(20000);
 
-        return this.fields.get(0) * pixels / i;
+    public int getBurnTimeScaled(int pixels) {
+        return this.fields.get(0) * pixels / maxFuelValue;
     }
     public float getBurnTime() {
         return (float) this.fields.get(0) / 200;

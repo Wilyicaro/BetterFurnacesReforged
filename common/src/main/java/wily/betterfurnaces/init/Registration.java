@@ -37,7 +37,7 @@ public class Registration {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY);
     public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.MENU_REGISTRY);
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES_SERIALIZERS = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registry.RECIPE_SERIALIZER_REGISTRY);
-    private static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registry.RECIPE_TYPE_REGISTRY);
+    private static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registry.RECIPE_TYPE_REGISTRY);
 
     public static void init() {
         BLOCK_ITEMS.register();
@@ -131,8 +131,9 @@ public class Registration {
     public static final RegistrySupplier<XpTankUpgradeItem> XP = ITEMS.register("xp_tank_upgrade", () -> new XpTankUpgradeItem(uniqueStackItemProperties(),"xp"));
     public static final RegistrySupplier<TypeUpgradeItem> BLAST = ITEMS.register("blasting_upgrade", () -> new TypeUpgradeItem(uniqueStackItemProperties(),"blasting"));
     public static final RegistrySupplier<TypeUpgradeItem> SMOKE = ITEMS.register("smoking_upgrade", () -> new TypeUpgradeItem(uniqueStackItemProperties(),"smoking"));
-
     public static final RegistrySupplier<GeneratorUpgradeItem> GENERATOR = ITEMS.register("generator_upgrade", () -> new GeneratorUpgradeItem(uniqueStackItemProperties()));
+
+    public static final RegistrySupplier<StorageUpgradeItem> STORAGE = ITEMS.register("storage_upgrade", () -> new StorageUpgradeItem(uniqueStackItemProperties()));
 
 
 

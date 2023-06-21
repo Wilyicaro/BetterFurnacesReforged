@@ -1,9 +1,7 @@
 {
   "replace": false,
   "values": [
-    "betterfurnacesreforged:extreme_furnace",
-    "betterfurnacesreforged:extreme_forge",
-    "betterfurnacesreforged:ultimate_furnace",
-    "betterfurnacesreforged:ultimate_forge"
+    "#betterfurnacesreforged:tier/extreme",
+    "#betterfurnacesreforged:tier/ultimate"
   ]
 }

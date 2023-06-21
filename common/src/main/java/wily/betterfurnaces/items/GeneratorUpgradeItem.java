@@ -4,6 +4,7 @@ import dev.architectury.fluid.FluidStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.ForgeBlockEntity;
@@ -21,7 +22,7 @@ public class GeneratorUpgradeItem extends UpgradeItem implements IFluidItem<IPla
     }
 
     @Override
-    public FluidStorageBuilder getFluidStorageBuilder() {
+    public FluidStorageBuilder getFluidStorageBuilder(ItemStack stack) {
         return new FluidStorageBuilder(4* FluidStack.bucketAmount(), (f)->f.getFluid().isSame(Fluids.WATER), TransportState.EXTRACT_INSERT);
     }
 
@@ -32,6 +33,6 @@ public class GeneratorUpgradeItem extends UpgradeItem implements IFluidItem<IPla
 
     @Override
     public boolean isUpgradeCompatibleWith(UpgradeItem upg) {
-        return upg != Registration.ENERGY.get() && upg.upgradeType != 3;
+        return upg != Registration.ENERGY.get() && upg.upgradeType != 3 && upg.upgradeType != 6 && upg.upgradeType != 8;
     }
 }

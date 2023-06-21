@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
@@ -34,16 +35,6 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
     public SmeltingMenu(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(containerType, windowId, world, pos, playerInventory, player, fields);
         checkContainerDataCount(this.fields, 5);
-    }
-
-    public void addInventorySlots(){
-        this.addSlot(new SlotFuel(be, 1, 54, 54));
-        this.addSlot(new SlotInput(be, 0, 54, 18, (s)-> !be.hasUpgrade(Registration.GENERATOR.get())));
-        this.addSlot(new SlotOutput(playerEntity, be, 2, 116, 35, (s)-> !be.hasUpgrade(Registration.GENERATOR.get())));
-
-        this.addSlot(new SlotUpgrade(be, 3, 8, 18));
-        this.addSlot(new SlotUpgrade(be, 4, 8, 36));
-        this.addSlot(new SlotUpgrade(be, 5, 8, 54));
     }
 
 
@@ -179,12 +170,15 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
     }
     protected void updateChanges() {
         super.updateChanges();
-        if (playerEntity instanceof ServerPlayer sp) {
+        if (player instanceof ServerPlayer sp) {
             for (Direction d : Direction.values()) {
                 be.getStorage(Storages.FLUID, d).ifPresent(t-> Messages.INSTANCE.sendToPlayer(sp, new PacketSyncFluid(be.getBlockPos(), d, t.getFluidStack())));
             }
             Messages.INSTANCE.sendToPlayer(sp, new PacketSyncEnergy(be.getBlockPos(),  be.energyStorage.getEnergyStored()));
         }
     }
-
+    @Override
+    public boolean stillValid(Player playerIn) {
+        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), player, be.getBlockState().getBlock());
+    }
 }

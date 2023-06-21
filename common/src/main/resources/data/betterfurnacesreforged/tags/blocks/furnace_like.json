@@ -1,8 +1,6 @@
 {
   "replace": false,
   "values": [
-    "betterfurnacesreforged:fuel_verifier",
-    "betterfurnacesreforged:cobblestone_generator",
     "#betterfurnacesreforged:furnace",
     "#betterfurnacesreforged:forge"
   ]

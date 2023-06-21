@@ -1,8 +1,11 @@
 package wily.betterfurnaces.blockentity;
 
+import dev.architectury.fluid.FluidStack;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -12,19 +15,25 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.blocks.CobblestoneGeneratorBlock;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.CobblestoneGeneratorMenu;
+import wily.betterfurnaces.inventory.SlotOutput;
+import wily.betterfurnaces.inventory.SlotUpgrade;
 import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
 import wily.betterfurnaces.items.OreProcessingUpgradeItem;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.factoryapi.FactoryAPIPlatform;
+import wily.factoryapi.ItemContainerUtil;
 import wily.factoryapi.base.IPlatformHandlerApi;
 import wily.factoryapi.base.Storages;
 import wily.factoryapi.base.TransportState;
@@ -33,6 +42,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
@@ -42,6 +52,12 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     @Override
     public Pair<int[], TransportState> getSlotsTransport(Direction side) {
         return Pair.of( new int[0],TransportState.EXTRACT);
+    }
+    public static Predicate<ItemStack> HAS_LAVA = s-> hasFluidAsBucket(s,Fluids.LAVA);
+    public static Predicate<ItemStack> HAS_WATER = s-> hasFluidAsBucket(s,Fluids.WATER);
+
+    public static boolean hasFluidAsBucket(ItemStack stack, Fluid fluid){
+        return  (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).isFluidEqual(FluidStack.create(fluid,FluidStack.bucketAmount())));
     }
 
     @Override
@@ -53,21 +69,21 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         public int get(int index) {
 
             if (index == 0)
-                return wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity.this.cobTime;
+                return CobblestoneGeneratorBlockEntity.this.cobTime;
             if (index == 1)
-                return wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity.this.resultType;
+                return CobblestoneGeneratorBlockEntity.this.resultType;
             if (index == 2)
-                return wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity.this.actualCobTime;
+                return CobblestoneGeneratorBlockEntity.this.actualCobTime;
             else return 0;
         }
 
         public void set(int index, int value) {
             if (index == 0)
-                wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity.this.cobTime = value;
+                CobblestoneGeneratorBlockEntity.this.cobTime = value;
             if (index == 1)
-                wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity.this.resultType = value;
+                CobblestoneGeneratorBlockEntity.this.resultType = value;
             if (index == 2)
-                wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity.this.actualCobTime = value;
+                CobblestoneGeneratorBlockEntity.this.actualCobTime = value;
         }
 
         @Override
@@ -76,7 +92,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         }
     };
     @Override
-    public AbstractContainerMenu IcreateMenu(int i, Inventory playerInventory, Player playerEntity) {
+    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new CobblestoneGeneratorMenu(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
     public final int[] provides = new int[Direction.values().length];
@@ -93,8 +109,8 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     public int resultType = 0;
 
 
-    public CobblestoneGeneratorBlockEntity( BlockPos pos, BlockState state) {
-        super(Registration.COB_GENERATOR_TILE.get(), pos, state, 5);
+    public CobblestoneGeneratorBlockEntity(BlockPos pos, BlockState state) {
+        super(Registration.COB_GENERATOR_TILE.get(), pos, state);
 
     }
     public void forceUpdateAllStates() {
@@ -203,11 +219,11 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
         ItemStack input = this.getInv().getItem(0);
         ItemStack input1 = this.getInv().getItem(1);
-        if (input.getItem() == Items.LAVA_BUCKET && input1.isEmpty()){
+        if (HAS_LAVA.test(input) && input1.isEmpty()){
             return 1;
-        }else if (input1.getItem() == Items.WATER_BUCKET && input.isEmpty()){
+        }else if (HAS_WATER.test(input1) && input.isEmpty()){
             return 2;
-        }else if (input.getItem() == Items.LAVA_BUCKET && input1.getItem() == Items.WATER_BUCKET){
+        }else if (HAS_LAVA.test(input)  && HAS_WATER.test(input1) ){
             return 3;
         }else return 0;
     }
@@ -301,6 +317,35 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
         }
         return false;
+    }
+
+    @Override
+    public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
+        slots.add(new Slot(inventory, 0, 53, 27){
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return CobblestoneGeneratorBlockEntity.HAS_LAVA.test(stack);
+            }
+        });
+        slots.add(new Slot(inventory, 1, 108, 27){
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return CobblestoneGeneratorBlockEntity.HAS_WATER.test(stack);
+            }
+        });
+        slots.add(new SlotOutput(player, this, 2, 80, 45));
+        slots.add(new SlotUpgrade(this, 3, 8, 18){
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return ( stack.getItem() instanceof FuelEfficiencyUpgradeItem);
+            }
+        });
+        slots.add(new SlotUpgrade(this, 4, 8, 36){
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return ( stack.getItem() instanceof OreProcessingUpgradeItem);
+            }
+        });
     }
 
     public void onUpdateSent() {
