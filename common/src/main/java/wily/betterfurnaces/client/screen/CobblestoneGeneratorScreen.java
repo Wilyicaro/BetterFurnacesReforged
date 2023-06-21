@@ -75,8 +75,8 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
         if (i > 0) {
             FluidStack lava = FluidStack.create(Fluids.FLOWING_LAVA, 1000);
             FluidStack water = FluidStack.create(Fluids.WATER, 1000);
-            FluidRenderUtil.renderTiledFluid(matrix, this,  relX() + 58, relY() + 44, 17, 12, lava, false);
-            FluidRenderUtil.renderTiledFluid(matrix, this,  relX() + 101, relY() + 44, 17, 12, water, true);
+            FluidRenderUtil.renderTiledFluid(matrix, relX() + 58, relY() + 44, 17, 12, lava, false);
+            FluidRenderUtil.renderTiledFluid(matrix, relX() + 101, relY() + 44, 17, 12, water, true);
             RenderSystem.setShaderTexture(0, GUI);
             blit(matrix, relX() + 58, relY() + 44, 176, 24, i + 1, 12);
             blit(matrix, relX() + 117 - i, relY() + 44, 192 - i, 36, 17, 12);

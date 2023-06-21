@@ -13,15 +13,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.jetbrains.annotations.Nullable;
 
 public class FluidRenderUtil {
-    public static void renderTiledFluid(PoseStack matrix, @Nullable AbstractContainerScreen abstractContainerScreen, int x, int y, int sizeX, int sizeY, FluidStack fluid, boolean hasColor){
-        Screen screen = Minecraft.getInstance().screen;
-
-        if (abstractContainerScreen !=null){
-            screen = abstractContainerScreen;
-        }
+    public static void renderTiledFluid(PoseStack matrix, int x, int y, int sizeX, int sizeY, FluidStack fluid, boolean hasColor){
         TextureAtlasSprite fluidSprite = fluidSprite(fluid, hasColor);
         RenderSystem.setShaderTexture(0, fluidSprite.atlasLocation());
-            GuiComponent.blit(matrix, x, y, 0, sizeX, sizeY, fluidSprite);
+        GuiComponent.blit(matrix, x, y, 0, sizeX, sizeY, fluidSprite);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
