@@ -450,9 +450,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             if (e.hasUpgrade(Registration.ENERGY.get())) {
                 if (ItemContainerUtil.isEnergyContainer(fuel) && ItemContainerUtil.getEnergy(fuel) > 0) {
                     if (e.energyStorage.getSpace() > 0) {
-                        ItemContainerUtil.extractEnergy(e.energyStorage.receiveEnergy(ItemContainerUtil.getEnergy(fuel), false), fuel);
+                        e.energyStorage.receiveEnergy(ItemContainerUtil.extractEnergy(e.energyStorage.getSpace(),fuel).contextEnergy(), false);
                         e.inventory.setItem(e.FUEL()[0], fuel);
-
                     }
                 }
             }

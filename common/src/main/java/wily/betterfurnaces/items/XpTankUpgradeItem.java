@@ -24,4 +24,9 @@ public class XpTankUpgradeItem extends UpgradeItem {
     public boolean isEnabled() {
         return Platform.isModLoaded(Config.getLiquidXPMod());
     }
+
+    @Override
+    public boolean isUpgradeCompatibleWith(UpgradeItem upg) {
+        return upg.upgradeType != 7;
+    }
 }
