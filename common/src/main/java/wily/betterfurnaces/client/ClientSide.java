@@ -1,12 +1,17 @@
 package wily.betterfurnaces.client;
 
+import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.architectury.registry.client.rendering.ColorHandlerRegistry;
 import dev.architectury.registry.item.ItemPropertiesRegistry;
 import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import wily.betterfurnaces.BetterFurnacesPlatform;
@@ -18,6 +23,7 @@ import wily.betterfurnaces.blocks.SmeltingBlock;
 import wily.betterfurnaces.client.renderer.ForgeRenderer;
 import wily.betterfurnaces.client.renderer.FurnaceRenderer;
 import wily.betterfurnaces.client.screen.*;
+import wily.betterfurnaces.gitup.UpCheck;
 import wily.betterfurnaces.init.Registration;
 
 import java.util.List;
@@ -46,6 +52,26 @@ public class ClientSide {
 
                 
 
+    }
+
+    public static void updateClientTick(){
+        ClientTickEvent.Client listener = instance -> {
+            if(instance.player != null){
+                Player player = Minecraft.getInstance().player;
+                if(UpCheck.checkFailed){
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.failed")), false);
+                }
+                else if(UpCheck.needsUpdateNotify){
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.speech")), false);
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION, UpCheck.updateVersionString)), false);
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.buttons", UpCheck.DOWNLOAD_LINK)), false);
+                }
+            }
+        };
+        ClientTickEvent.CLIENT_PRE.register(listener);
+        ClientTickEvent.CLIENT_LEVEL_POST.register((i)->{
+            if(UpCheck.threadFinished && ClientTickEvent.CLIENT_PRE.isRegistered(listener)) ClientTickEvent.CLIENT_PRE.unregister(listener);
+        });
     }
     public static void registerBetterFurnacesBlocksClientSide(DeferredRegister<Block> blocks){
         blocks.forEach((block)->{
