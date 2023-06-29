@@ -46,4 +46,12 @@ public class FurnaceRenderer implements BlockEntityRenderer<SmeltingBlockEntity>
         stack.popPose();
     }
 
+    public int getViewDistance() {
+        return 256;
+    }
+
+    @Override
+    public boolean shouldRender(SmeltingBlockEntity be, Vec3 vec) {
+        return Vec3.atCenterOf(be.getBlockPos()).multiply(1.0, 0.0, 1.0).closerThan(vec.multiply(1.0, 0.0, 1.0), this.getViewDistance());
+    }
 }

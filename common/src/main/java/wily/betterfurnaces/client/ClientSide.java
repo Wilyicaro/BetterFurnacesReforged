@@ -2,11 +2,9 @@ package wily.betterfurnaces.client;
 
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.architectury.registry.client.rendering.ColorHandlerRegistry;
-import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import dev.architectury.registry.item.ItemPropertiesRegistry;
 import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -53,7 +51,6 @@ public class ClientSide {
     public static void registerBetterFurnacesBlocksClientSide(DeferredRegister<Block> blocks){
         blocks.forEach((block)->{
             if (block.get() instanceof SmeltingBlock) {
-                RenderTypeRegistry.register(RenderType.cutoutMipped(),block.get());
                 ItemPropertiesRegistry.register(block.get().asItem(),
                         new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
             }
