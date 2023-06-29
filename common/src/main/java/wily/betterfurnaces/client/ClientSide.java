@@ -1,9 +1,14 @@
 package wily.betterfurnaces.client;
 
 import com.google.common.collect.Lists;
+import me.shedaniel.architectury.event.events.client.ClientTickEvent;
 import me.shedaniel.architectury.registry.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import wily.betterfurnaces.BetterFurnacesPlatform;
@@ -15,6 +20,7 @@ import wily.betterfurnaces.blocks.SmeltingBlock;
 import wily.betterfurnaces.client.renderer.ForgeRenderer;
 import wily.betterfurnaces.client.renderer.FurnaceRenderer;
 import wily.betterfurnaces.client.screen.*;
+import wily.betterfurnaces.gitup.UpCheck;
 import wily.betterfurnaces.init.Registration;
 
 
@@ -52,5 +58,23 @@ public class ClientSide {
             ColorHandlers.registerItemColors(ItemColorsHandler.COLOR,block.get().asItem());
         });
     }
-
+    public static void updateClientTick(){
+        ClientTickEvent.Client listener = instance -> {
+            if(instance.player != null){
+                Player player = Minecraft.getInstance().player;
+                if(UpCheck.checkFailed){
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.failed")), false);
+                }
+                else if(UpCheck.needsUpdateNotify){
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.speech")), false);
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION, UpCheck.updateVersionString)), false);
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.buttons", UpCheck.DOWNLOAD_LINK)), false);
+                }
+            }
+        };
+        ClientTickEvent.CLIENT_PRE.register(listener);
+        ClientTickEvent.CLIENT_WORLD_POST.register((i)->{
+            if(UpCheck.threadFinished && ClientTickEvent.CLIENT_PRE.isRegistered(listener)) ClientTickEvent.CLIENT_PRE.unregister(listener);
+        });
+    }
 }
