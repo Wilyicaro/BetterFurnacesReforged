@@ -1,17 +1,12 @@
 package wily.betterfurnaces;
 
 import com.google.common.base.Suppliers;
-import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wily.betterfurnaces.gitup.UpCheck;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
-import wily.ultimatefurnaces.UltimateFurnaces;
 
 import java.util.function.Supplier;
 
@@ -21,7 +16,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "0.1.5";
+    public static final String VERSION = "0.1.6";
     public static final String MC_VERSION = "1.20.1";
 
     public static final Supplier<RegistrarManager> REGISTRIES = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
