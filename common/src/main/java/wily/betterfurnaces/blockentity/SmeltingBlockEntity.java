@@ -182,8 +182,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return (hasUpgrade(Registration.ENERGY.get()) && energyStorage.getEnergyStored() >= EnergyUse());
     }
     public int getCookTime() {
-        if (!hasUpgrade(Registration.GENERATOR.get()) && arraySlotAllEmpty(INPUTS())) {
-            return totalCookTime;
+        if (hasUpgrade(Registration.GENERATOR.get()) || arraySlotAllEmpty(INPUTS())) {
+            return Optional.ofNullable(defaultCookTime).orElse(()->totalCookTime).get();
         }
         int speed = getSpeed();
         if (speed == -1) {
@@ -194,7 +194,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     protected int getSpeed() {
-        if (hasUpgrade(Registration.GENERATOR.get())) return defaultCookTime.get();
         int j = 0;
             int length = INPUTS().length;
             for (int i : INPUTS()) {
@@ -496,7 +495,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 e.onUpdateSent();
             }
 
-            if (e.isLiquid() && ItemContainerUtil.isFluidContainer(fuel) && isItemFuel(fuel)) {
+            if (e.isLiquid() && ItemContainerUtil.isFluidContainer(fuel) && SmeltingBlockEntity.isItemFuel(ItemContainerUtil.getFluid(fuel).getFluid().getBucket().getDefaultInstance())) {
                 ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(e.fluidTank.getTotalSpace(),fuel);
                     long amount = e.fluidTank.fill(context.fluidStack(), false);
                     if (amount > 0) {

@@ -20,6 +20,6 @@ public class SlotInput extends HideableSlot {
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-            return !(be instanceof SmeltingBlockEntity sBe) || sBe.hasRecipe(stack);
+            return super.mayPlace(stack) && (!(be instanceof SmeltingBlockEntity sBe) || sBe.hasRecipe(stack));
     }
 }

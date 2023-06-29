@@ -15,7 +15,7 @@ import net.fabricmc.api.ModInitializer;
 import wily.betterfurnaces.init.Registration;
 import wily.factoryapi.base.IFluidItem;
 import wily.factoryapi.base.Storages;
-import wily.factoryapi.fabriclike.base.FabricItemFluidStorage;
+import wily.factoryapi.fabric.base.FabricItemFluidStorage;
 import wily.ultimatefurnaces.init.RegistrationUF;
 
 import java.util.ArrayList;

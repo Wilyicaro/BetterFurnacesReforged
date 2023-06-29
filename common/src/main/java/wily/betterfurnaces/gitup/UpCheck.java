@@ -2,6 +2,8 @@ package wily.betterfurnaces.gitup;
 
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.platform.Platform;
+import dev.architectury.utils.Env;
+import dev.architectury.utils.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
@@ -22,30 +24,31 @@ public class UpCheck {
     public UpCheck() {
         BetterFurnacesReforged.LOGGER.info("Initializing Update Checker...");
         new UpThreadCheck();
-        if (Platform.getEnv().equals(EnvType.CLIENT)) {
-            ClientTickEvent.CLIENT_PRE.register(new ClientTickEvent.Client() {
-                @Override
-                public void tick(Minecraft instance) {
-                    if(instance.player != null){
-                        Player player = Minecraft.getInstance().player;
-                        if(UpCheck.checkFailed){
-                            player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.failed")), false);
-                        }
-                        else if(UpCheck.needsUpdateNotify){
-                            player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.speech")), false);
-                            player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION, UpCheck.updateVersionString)), false);
-                            player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.buttons", UpCheck.DOWNLOAD_LINK)), false);
-                        }
+        EnvExecutor.runInEnv(Env.CLIENT,()->this::clientTick);
+    }
 
-                        if(threadFinished) ClientTickEvent.CLIENT_PRE.unregister(this);
-                    }
+    public void clientTick(){
+        ClientTickEvent.Client listener = instance -> {
+            if(instance.player != null){
+                Player player = Minecraft.getInstance().player;
+                if(UpCheck.checkFailed){
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.failed")), false);
                 }
-            });
-        }
+                else if(UpCheck.needsUpdateNotify){
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.speech")), false);
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION, UpCheck.updateVersionString)), false);
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.buttons", UpCheck.DOWNLOAD_LINK)), false);
+                }
+            }
+        };
+        ClientTickEvent.CLIENT_PRE.register(listener);
+        ClientTickEvent.CLIENT_LEVEL_POST.register((i)->{
+            if(UpCheck.threadFinished && ClientTickEvent.CLIENT_PRE.isRegistered(listener)) ClientTickEvent.CLIENT_PRE.unregister(listener);
+        });
     }
 
 
-    }
+}
 
 
 

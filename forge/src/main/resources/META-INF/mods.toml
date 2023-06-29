@@ -1,53 +1,47 @@
 modLoader="javafml"
 loaderVersion="[41,)"
-license="MIT"
+license="${mod_license}"
+issueTrackerURL="https://github.com/MinecraftForge/MinecraftForge/issues"
 
 [[mods]]
-modId="betterfurnacesreforged"
+modId="${mod_id}"
 version="${version}"
-displayName="BetterFurnaces Reforged"
-credits=" TheFrogMC(Original mod creator) and Qelifern (Iron Furnaces creator)"
+displayName="${mod_name}"
+credits="${mod_credits}"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/better-furnaces-reforged/"
 logoFile="bfr_icon.png"
-authors="Wilyicaro"
-description='''
-This mod is a remake of the outdated mod from 1.7.10, Better Furnaces, presenting the concept used in the original mod
-'''
+authors="${mc_version}"
+description="${mod_description}"
+
 
 [[dependencies.betterfurnacesreforged]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.2]"
+    versionRange="[${mc_version}]"
     ordering="NONE"
     side="BOTH"
 [[dependencies.betterfurnacesreforged]]
 modId="factory_api"
 mandatory=true
-versionRange="[0.1.5,]"
+versionRange="[${factory_api_version},]"
 ordering="NONE"
 side="BOTH"
 [[dependencies.betterfurnacesreforged]]
 modId="architectury"
 mandatory=true
-versionRange="[6.5.69]"
+versionRange="[${architectury_version},]"
 ordering="NONE"
 side="BOTH"
 [[dependencies.betterfurnacesreforged]]
 modId="pmmo"
 mandatory=false
-versionRange="[1.19.3-,)"
+versionRange="[3,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.betterfurnacesreforged]]
    modId="jei"
    mandatory=false
-   versionRange="[8,)"
-   ordering="NONE"
-   side="BOTH"
-[[dependencies.betterfurnacesreforged]]
-   modId="ftbguilibrary"
-   mandatory=false
-   versionRange="[1,)"
+   versionRange="[${jei_version},)"
    ordering="NONE"
    side="BOTH"
 

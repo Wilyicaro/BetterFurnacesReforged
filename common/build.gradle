@@ -7,14 +7,12 @@ loom {
 }
 
 dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modCompileOnly "mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}"
     modCompileOnly "wily.factory_api:factory_api-common:${minecraft_version}-${factory_api_version}"
     modImplementation "net.minecraftforge:forgeconfigapiport-fabric:${forgeconfigapiport_version}"
-
-    // Remove the next line if you don't want to depend on the API
+    compileOnly('com.electronwill.night-config:core:3.6.5')
+    compileOnly('com.electronwill.night-config:toml:3.6.5')
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 }
 

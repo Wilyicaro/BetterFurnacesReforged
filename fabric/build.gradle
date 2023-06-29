@@ -16,7 +16,7 @@ loom {
 
 configurations {
     common
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    shadowCommon
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentFabric.extendsFrom common
@@ -28,9 +28,11 @@ dependencies {
 
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
     modApi "wily.factory_api:factory_api-fabric:${minecraft_version}-${factory_api_version}"
-    modCompileOnly "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:6.0.2"
+    modCompileOnly "net.minecraftforge:forgeconfigapiport-fabric:${forgeconfigapiport_version}"
     modCompileOnly "mezz.jei:jei-${jei_minecraft_version}-fabric-api:${jei_version}"
     modRuntimeOnly "mezz.jei:jei-${jei_minecraft_version}-fabric:${jei_version}"
+    compileOnly('com.electronwill.night-config:core:3.6.5')
+    compileOnly('com.electronwill.night-config:toml:3.6.5')
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
@@ -110,6 +112,6 @@ publishing {
 
     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
+
     }
 }
