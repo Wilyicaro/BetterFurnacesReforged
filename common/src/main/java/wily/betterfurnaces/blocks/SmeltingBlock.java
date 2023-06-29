@@ -49,13 +49,14 @@ import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.UpgradeItem;
 import wily.factoryapi.ItemContainerUtil;
+import wily.factoryapi.base.Bearer;
 import wily.factoryapi.base.Storages;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class SmeltingBlock extends Block implements EntityBlock {
+public class SmeltingBlock extends BaseEntityBlock{
 
     public static final BooleanProperty COLORED = BooleanProperty.create("colored");
     // 0= Furnace, 1= Blast Furnace, 2= Smoker
@@ -113,17 +114,19 @@ public class SmeltingBlock extends Block implements EntityBlock {
             if (hand.getItem() instanceof UpgradeItem upg && upg.isEnabled() && !(player.isCrouching())) {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }if (ItemContainerUtil.isFluidContainer(hand) &&  !(player.isCrouching())) {
+                Bearer<FluidStack> fluid = Bearer.of(FluidStack.empty());
                 if ((be.hasUpgrade(Registration.GENERATOR.get()) && ItemContainerUtil.getFluid(stack).getFluid().isSame(Fluids.WATER) && ItemContainerUtil.getFluid(be.getUpgradeSlotItem(Registration.GENERATOR.get())).getAmount() <= 3 * FluidStack.bucketAmount())){
                     ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.fillItem(be.getUpgradeSlotItem(Registration.GENERATOR.get()), ItemContainerUtil.drainItem(FluidStack.bucketAmount(), player, handIn));
                     be.inventory.setItem(be.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container());
-                }else if ((be.hasUpgrade(Registration.LIQUID.get()) && SmeltingBlockEntity.isItemFuel(hand)))
-                    be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getFluidStack().isFluidEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) e.fill(ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn), false);});
-            }else {
-                this.interactWith(world, pos, player);
+                    fluid.set(context.fluidStack());
+                }else if (be.hasUpgrade(Registration.LIQUID.get()) && SmeltingBlockEntity.isItemFuel(ItemContainerUtil.getFluid(hand).getFluid().getBucket().getDefaultInstance()))
+                    be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getTotalSpace() > 0 && e.getFluidStack().isFluidEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) fluid.set(ItemContainerUtil.getFluid(hand).copyWithAmount(e.fill((ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn)), false)));});
+                if (fluid.get().getAmount() > 0) return InteractionResult.SUCCESS;
             }
+            this.interactWith(world, pos, player);
         }
 
-        return InteractionResult.SUCCESS;
+        return InteractionResult.FAIL;
     }
 
     protected InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
@@ -343,15 +346,6 @@ public class SmeltingBlock extends Block implements EntityBlock {
         return Registration.BLOCK_ENTITIES.getRegistrar().get(arch$registryName()).create(blockPos,blockState);
     }
 
-    @Override
-    public RenderShape getRenderShape(BlockState blockState) {
-        return RenderShape.INVISIBLE;
-    }
-    public boolean triggerEvent(BlockState blockState, Level level, BlockPos blockPos, int i, int j) {
-        super.triggerEvent(blockState, level, blockPos, i, j);
-        BlockEntity blockEntity = level.getBlockEntity(blockPos);
-        return blockEntity == null ? false : blockEntity.triggerEvent(i, j);
-    }
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {

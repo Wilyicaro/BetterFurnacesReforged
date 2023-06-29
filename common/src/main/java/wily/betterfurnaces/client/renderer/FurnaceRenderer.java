@@ -11,6 +11,8 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
@@ -43,8 +45,15 @@ public class FurnaceRenderer implements BlockEntityRenderer<SmeltingBlockEntity>
         stack.scale(1.001F,1.001F,1.001F);
         stack.translate(-0.5,-0.5,-0.5);
         dispatcher.getModelRenderer().renderModel(stack.last(), multiBufferSource.getBuffer(Sheets.cutoutBlockSheet()),be.getBlockState(),front,1,1,1,i,j);
-
         stack.popPose();
+    }
+    public int getViewDistance() {
+        return 256;
+    }
+
+    @Override
+    public boolean shouldRender(SmeltingBlockEntity be, Vec3 vec) {
+        return Vec3.atCenterOf(be.getBlockPos()).multiply(1.0, 0.0, 1.0).closerThan(vec.multiply(1.0, 0.0, 1.0), this.getViewDistance());
     }
 
 }

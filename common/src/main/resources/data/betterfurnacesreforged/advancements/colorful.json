@@ -14,18 +14,29 @@
     "announce_to_chat": true,
     "hidden": false
   },
+  "parent": "betterfurnacesreforged:overcooked",
   "criteria": {
     "colortime": {
       "trigger": "minecraft:item_used_on_block",
       "conditions": {
-        "location": {
-          "block": {
-            "tag": "betterfurnacesreforged:furnace_like"
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "tag": "betterfurnacesreforged:furnace_like"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "betterfurnacesreforged:color_upgrade"
+              ]
+            }
           }
-        },
-        "item": {
-          "items": ["betterfurnacesreforged:color_upgrade"]
-        }
+        ]
       }
     }
   },
@@ -33,6 +44,5 @@
     [
       "colortime"
     ]
-  ],
-  "parent": "betterfurnacesreforged:overcooked"
+  ]
 }
