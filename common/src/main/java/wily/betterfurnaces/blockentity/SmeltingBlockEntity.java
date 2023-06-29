@@ -189,8 +189,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return (hasUpgrade(Registration.ENERGY.get()) && energyStorage.getEnergyStored() >= EnergyUse());
     }
     public int getCookTime() {
-        if (!hasUpgrade(Registration.GENERATOR.get()) && arraySlotAllEmpty(INPUTS())) {
-            return totalCookTime;
+        if (hasUpgrade(Registration.GENERATOR.get()) || arraySlotAllEmpty(INPUTS())) {
+            return Optional.ofNullable(defaultCookTime).orElse(()->totalCookTime).get();
         }
         int speed = getSpeed();
         if (speed == -1) {
@@ -201,7 +201,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     protected int getSpeed() {
-        if (hasUpgrade(Registration.GENERATOR.get())) return defaultCookTime.get();
         int j = 0;
             int length = INPUTS().length;
             for (int i : INPUTS()) {

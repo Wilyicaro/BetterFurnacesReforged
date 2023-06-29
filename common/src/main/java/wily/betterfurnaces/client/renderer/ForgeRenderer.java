@@ -12,6 +12,7 @@ import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
 import wily.betterfurnaces.blockentity.ForgeBlockEntity;
 import wily.betterfurnaces.blocks.SmeltingBlock;
 import wily.betterfurnaces.util.DirectionUtil;
@@ -38,4 +39,5 @@ public class ForgeRenderer extends BlockEntityRenderer<ForgeBlockEntity> {
 
         stack.popPose();
     }
+
 }
