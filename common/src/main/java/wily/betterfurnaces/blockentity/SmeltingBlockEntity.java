@@ -314,9 +314,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public static int getFluidBurnTime(FluidStack stack) {
         return stack == null ? 0 : FuelRegistry.get(stack.getFluid().getBucket().getDefaultInstance());
     }
-    public final IPlatformFluidHandler fluidTank = FactoryAPIPlatform.getFluidHandlerApi(LiquidCapacity(), this,fs -> (getBurnTime(new ItemStack(fs.getFluid().getBucket())) > 0), SlotsIdentifier.LAVA, TransportState.EXTRACT_INSERT);
-    public final IPlatformFluidHandler xpTank = FactoryAPIPlatform.getFluidHandlerApi(2*FactoryAPIPlatform.getBucketAmount(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), SlotsIdentifier.GENERIC, TransportState.EXTRACT_INSERT);
-    public final IPlatformEnergyStorage energyStorage = FactoryAPIPlatform.getEnergyStorageApi(EnergyCapacity(),this);
+    public final IPlatformFluidHandler<?> fluidTank = FactoryAPIPlatform.getFluidHandlerApi(LiquidCapacity(), this,fs -> (getBurnTime(new ItemStack(fs.getFluid().getBucket())) > 0), SlotsIdentifier.LAVA, TransportState.EXTRACT_INSERT);
+    public final IPlatformFluidHandler<?> xpTank = FactoryAPIPlatform.getFluidHandlerApi(2*FactoryAPIPlatform.getBucketAmount(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), SlotsIdentifier.GENERIC, TransportState.EXTRACT_INSERT);
+    public final IPlatformEnergyStorage<?> energyStorage = FactoryAPIPlatform.getEnergyStorageApi(EnergyCapacity(),this);
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
         if (state.getValue(BlockStateProperties.LIT) != this.isBurning()) {
@@ -707,9 +707,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     protected boolean isOre(ItemStack input){
-        return (input.getItem().is(ore));
+        if (Config.checkOresName.get()) return Registry.ITEM.getKey(input.getItem()).getPath().endsWith("_ore");
+        return (ore != null && input.getItem().is(ore));
     }
-
     protected int OreProcessingMultiplier(ItemStack input){
         if (hasUpgradeType(Registration.ORE_PROCESSING.get())){
             OreProcessingUpgradeItem oreup = (OreProcessingUpgradeItem)getUpgradeTypeSlotItem(Registration.ORE_PROCESSING.get()).getItem();
@@ -739,7 +739,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         }
         return false;
     }
-    private ItemStack getResult(@Nullable Recipe<?> recipe, ItemStack input) {
+    private ItemStack getResult(Recipe<?> recipe, ItemStack input) {
         ItemStack out = recipe.getResultItem().copy();
         out.setCount(out.getCount() * OreProcessingMultiplier(input));
         return out;
@@ -770,7 +770,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         if (recipe != null && this.canSmelt(recipe, INPUT, OUTPUT)) {
             ItemStack input = this.getInv().getItem(INPUT);
 
-            if (addOrSetItem(recipe.getResultItem(),inventory,OUTPUT) > 0 && hasUpgrade(Registration.ORE_PROCESSING.get()) && (isOre(input))) {
+            if (addOrSetItem(getResult(recipe,input),inventory,OUTPUT) > 0 && hasUpgrade(Registration.ORE_PROCESSING.get()) && (isOre(input))) {
                 breakDurabilityItem(getUpgradeSlotItem(Registration.ORE_PROCESSING.get()));
             }
 

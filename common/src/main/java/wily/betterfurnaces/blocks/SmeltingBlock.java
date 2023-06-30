@@ -129,7 +129,7 @@ public class SmeltingBlock extends Block implements EntityBlock {
             this.interactWith(world, pos, player);
         }
 
-        return InteractionResult.FAIL;
+        return InteractionResult.SUCCESS;
     }
 
     protected InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {

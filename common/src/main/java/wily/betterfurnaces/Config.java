@@ -58,6 +58,8 @@ public class Config {
 
     public static Supplier<Boolean> enableJeiClickArea =()-> true;
 
+    public static Supplier<Boolean> checkOresName =()-> false;
+
     public static Supplier<Integer> copperTierSpeed =()-> 175;
     public static Supplier<Integer>  ironTierSpeed =()-> 150;
     public static Supplier<Integer> steelTierSpeed =()-> 125;

@@ -38,6 +38,8 @@ public class ForgeConfigCompat {
     public static ForgeConfigSpec.BooleanValue enableJeiCatalysts;
     public static ForgeConfigSpec.BooleanValue enableJeiClickArea;
 
+    public static ForgeConfigSpec.BooleanValue checkOresName;
+
     public static ForgeConfigSpec.IntValue xpFluidType;
 
     public static ForgeConfigSpec.BooleanValue checkUpdates;
@@ -151,9 +153,13 @@ public class ForgeConfigCompat {
                 .comment(" This value indicates when the furnace or forge should 'overload' and spit out the xp stored. \n Default: 100000, Single recipe uses")
                 .defineInRange("furnace_xp_drop.value_two", 100000, 1, 1000000);
 
-        xpFluidType = COMMON_BUILDER
+        xpFluidType = SERVER_BUILDER
                 .comment(" Value referring to the mod used for the xp fluid generated with the Xp Tank Upgrade. \n 0 = Mob Grinding Utils(Default) \n 1 = Industrial Foregoing \n 2 = Cyclic \n 3 = Reliquary \n 4 = Kibe Utilities")
                 .defineInRange("upgrade.xp_fluid_type", getDefaultLiquidXpMod(), 0, supportedLiquidXps.size() - 1);
+
+        checkOresName = SERVER_BUILDER
+                .comment("When true, upgrades of the Ore Processing type now use the registry name as a check instead of the \"ore\" tag present in the smelted item. \n Default: false")
+                .define("check_ores.common", false);
     }
 
     public static int getDefaultLiquidXpMod(){
@@ -215,6 +221,7 @@ public class ForgeConfigCompat {
 
         Config.furnaceXPDropValue = furnaceXPDropValue::get;
         Config.furnaceXPDropValue2 = furnaceXPDropValue2::get;
+        Config.checkOresName = checkOresName::get;
         Config.xpFluidType = xpFluidType::get;
     }
 
