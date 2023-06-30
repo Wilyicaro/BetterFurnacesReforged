@@ -33,12 +33,12 @@ public class Config {
 
     public static String getLiquidXPMod() {
         String s = getLiquidXPType();
-        return s.substring(0, s.indexOf(":"));
+            return s.substring(0, s.indexOf(":"));
     }
 
     public static void setupPlatformConfig(){
-        if (Platform.isModLoaded("forgeconfigapiport") || Platform.isForge()) ForgeConfigCompat.setupPlatformConfig();
-        else BetterFurnacesReforged.LOGGER.warn("Currently ForgeConfigApiPort isn't installed, to config  BetterFurnaces options, please consider install it!");
+    if (Platform.isModLoaded("forgeconfigapiport") || Platform.isForge()) ForgeConfigCompat.setupPlatformConfig();
+    else BetterFurnacesReforged.LOGGER.warn("Currently ForgeConfigApiPort isn't installed, to config  BetterFurnaces options, please consider install it!");
     }
 
 
@@ -47,6 +47,10 @@ public class Config {
     public static Supplier<Integer> cacheCapacity = ()-> 10;
     public static Supplier<Integer> furnaceXPDropValue =()-> 1;
     public static Supplier<Integer> furnaceXPDropValue2 =()-> 100000;
+
+    public static Supplier<Boolean> checkCommonOresName =()-> false;
+
+    public static Supplier<Boolean> checkRawOresName =()-> false;
 
     public static Supplier<Boolean> enableUltimateFurnaces =()-> true;
     public static Supplier<Boolean> enableJeiPlugin =()-> true;

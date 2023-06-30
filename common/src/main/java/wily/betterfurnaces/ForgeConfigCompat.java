@@ -45,6 +45,10 @@ public class ForgeConfigCompat {
 
     public static ForgeConfigSpec.BooleanValue enableUltimateFurnaces;
 
+    public static ForgeConfigSpec.BooleanValue checkCommonOresName;
+
+    public static ForgeConfigSpec.BooleanValue checkRawOresName;
+
 
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
@@ -150,9 +154,19 @@ public class ForgeConfigCompat {
                 .comment(" This value indicates when the furnace or forge should 'overload' and spit out the xp stored. \n Default: 100000, Single recipe uses")
                 .defineInRange("furnace_xp_drop.value_two", 100000, 1, 1000000);
 
-        xpFluidType = COMMON_BUILDER
+        checkCommonOresName = SERVER_BUILDER
+                .comment("When true, upgrades of the Ore Processing type now use the registry name as a check instead of the \"ore\" tag present in the smelted item. \n Default: false, Only Common(Block) Ores")
+                .define("check_ores.common", false);
+
+        checkRawOresName = SERVER_BUILDER
+                .comment("When true, upgrades of the Raw Ore Processing type now use the registry name as a check instead of the \"raw_ore\" tag present in the smelted item. \n Default: false, Only Raw Ores")
+                .define("check_ores.raw", false);
+
+
+        xpFluidType = SERVER_BUILDER
                 .comment(" Value referring to the mod used for the xp fluid generated with the Xp Tank Upgrade. \n 0 = Mob Grinding Utils(Default) \n 1 = Industrial Foregoing \n 2 = Cyclic \n 3 = Reliquary \n 4 = Kibe Utilities")
                 .defineInRange("upgrade.xp_fluid_type", getDefaultLiquidXpMod(), 0, supportedLiquidXps.size() - 1);
+
     }
 
     public static int getDefaultLiquidXpMod(){
@@ -211,6 +225,9 @@ public class ForgeConfigCompat {
         Config.netherhotTierSpeed = netherhotTierSpeed;
         Config.extremeTierSpeed = extremeTierSpeed;
         Config.ultimateTierSpeed = ultimateTierSpeed;
+        Config.checkCommonOresName = checkCommonOresName;
+        Config.checkRawOresName = checkRawOresName;
+
 
         Config.furnaceXPDropValue = furnaceXPDropValue;
         Config.furnaceXPDropValue2 = furnaceXPDropValue2;
