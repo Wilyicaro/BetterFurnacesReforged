@@ -128,7 +128,7 @@
   "tooltip.betterfurnacesreforged.hold": "Hold ",
   "tooltip.betterfurnacesreforged.upgrade.allore": "ore type",
   "tooltip.betterfurnacesreforged.upgrade.color": "Change the color of the furnace",
-  "tooltip.betterfurnacesreforged.upgrade.double": "Double",
+  "tooltip.betterfurnacesreforged.upgrade.double": "Doubles",
   "tooltip.betterfurnacesreforged.upgrade.energy": "Uses %s instead of solid fuel in Extreme Forge",
   "tooltip.betterfurnacesreforged.upgrade.factory": "Adds the possibility to enter and exit items automatically, from the sides configured within the furnace interface, and alters its functioning by the redstone signal",
   "tooltip.betterfurnacesreforged.upgrade.fuel": "%s %sthe fuel efficiency",
@@ -138,10 +138,10 @@
   "tooltip.betterfurnacesreforged.upgrade.liquid": "Uses liquid fuel instead of solid fuel",
   "tooltip.betterfurnacesreforged.upgrade.multiple": "Multiplies",
   "tooltip.betterfurnacesreforged.upgrade.ore": "ore",
-  "tooltip.betterfurnacesreforged.upgrade.ores": "%s %sthe amount that each molten %s gives",
+  "tooltip.betterfurnacesreforged.upgrade.ores": "%s %sthe amount that each smelted %s gives",
   "tooltip.betterfurnacesreforged.upgrade.output": "Adds a side management in the furnace/forge where items automatically go out to nearby inventory",
   "tooltip.betterfurnacesreforged.upgrade.piping": "Changes the way hoppers and Pipes interact with your furnace, the sides you specify are the side where they put stuff into / take stuff out of.",
-  "tooltip.betterfurnacesreforged.upgrade.quadruple": "Quadruple",
+  "tooltip.betterfurnacesreforged.upgrade.quadruple": "Quadruples",
   "tooltip.betterfurnacesreforged.upgrade.raw": "raw ore",
   "tooltip.betterfurnacesreforged.upgrade.redstone": "Modifies furnace/forge operation from redstone signal",
   "tooltip.betterfurnacesreforged.upgrade.tier": "Upgrade tier from %s to %s",
@@ -151,6 +151,5 @@
   "tooltip.betterfurnacesreforged.upgrade.generator": "Makes the furnace instead of smelt items generate %s from water evaporation",
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Right-click to insert upgrade",
   "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Right-click holding shift to insert tier upgrade",
-  "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruples the amount that each molten ore gives",
   "tooltip.betterfurnacesreforged.upgrade.storage": "Adds an additional storage slot for fuel, input, and output"
 }

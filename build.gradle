@@ -134,7 +134,7 @@ subprojects {
             displayName = "BFR [$modPlatformName] $project.version"
             releaseType = "$stage"
             changelog = releaseChangelog()
-            gameVersions = ["$minecraft_version"]
+            gameVersions = ["1.20","$minecraft_version"]
             gameLoaders = ["$project.name"]
             if (isFabric) gameLoaders.addAll "quilt"
             mainPublication renameJarForPublication
