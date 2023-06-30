@@ -11,13 +11,13 @@
   "advancements.thebestfurnace.title": "The Best Furnace",
   "advancements.useless.descr": "After all, this is not so useless",
   "advancements.useless.title": "Useless",
-  
+
   "_comment": "Updates",
   "betterfurnacesreforged.update.buttons": "[{\"text\":\"[✓]\",\"color\":\"green\"},{\"text\":\"Clique for Download\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}}]",
   "betterfurnacesreforged.update.failed": "[{\"text\":\"The Update Check for \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"blue\"},{\"text\":\"failed! Check Logs for more Info!\",\"color\":\"none\"}]",
   "betterfurnacesreforged.update.speech": "[{\"text\":\"There is an Update for \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"dark_aqua\"},{\"text\":\"available!\",\"color\":\"none\"}]",
   "betterfurnacesreforged.update.version": "[{\"text\":\"Current Version: \"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\", newest Version: \",\"color\":\"none\"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
-  
+
   "block.betterfurnacesreforged.cobblestone_generator": "Cobblestone Generator",
   "block.betterfurnacesreforged.diamond_furnace": "Diamond Furnace",
   "block.betterfurnacesreforged.extreme_forge": "Extreme Forge",
@@ -43,13 +43,13 @@
   "block.betterfurnacesreforged.ultimate_forge": "Ultimate Forge",
 
   "description.betterfurnacesreforged.fuel_verifier": "It only shows how much each fuel is capable of smelting (Useless)",
-  
+
   "gui.betterfurnacesreforged.color.blue": "Blue: ",
   "gui.betterfurnacesreforged.color.green": "Green: ",
   "gui.betterfurnacesreforged.color.red": "Red: ",
   "gui.betterfurnacesreforged.fuel.items": " item(s)",
   "gui.betterfurnacesreforged.fuel.melts": "Smelts ",
-  
+
   "item.betterfurnacesreforged.advanced_fuel_efficiency_upgrade": "Advanced Fuel Efficiency Upgrade",
   "item.betterfurnacesreforged.advanced_ore_processing_upgrade": "Advanced Ore Processing Upgrade",
   "item.betterfurnacesreforged.autoinput_upgrade": "Auto-Input Upgrade",
@@ -84,7 +84,7 @@
   "item.betterfurnacesreforged.platinum_netherhot_upgrade": "Netherhot Upgrade",
   "item.betterfurnacesreforged.ultimate_upgrade": "Ultimate Upgrade",
   "item.betterfurnacesreforged.ultimate_ore_processing_upgrade": "Ultimate Ore Processing Upgrade",
-  
+
   "itemGroup.betterfurnacesreforged.tab": "Better Furnaces Reforged",
   "itemGroup.betterfurnacesreforged.tab_ultimate": "Ultimate Furnaces",
 
@@ -128,7 +128,7 @@
   "tooltip.betterfurnacesreforged.hold": "Hold ",
   "tooltip.betterfurnacesreforged.upgrade.allore": "ore type",
   "tooltip.betterfurnacesreforged.upgrade.color": "Change the color of the furnace",
-  "tooltip.betterfurnacesreforged.upgrade.double": "Double",
+  "tooltip.betterfurnacesreforged.upgrade.double": "Doubles",
   "tooltip.betterfurnacesreforged.upgrade.energy": "Uses %s instead of solid fuel in Extreme Forge",
   "tooltip.betterfurnacesreforged.upgrade.factory": "Adds the possibility to enter and exit items automatically, from the sides configured within the furnace interface, and alters its functioning by the redstone signal",
   "tooltip.betterfurnacesreforged.upgrade.fuel": "%s %sthe fuel efficiency",
@@ -138,10 +138,10 @@
   "tooltip.betterfurnacesreforged.upgrade.liquid": "Uses liquid fuel instead of solid fuel",
   "tooltip.betterfurnacesreforged.upgrade.multiple": "Multiplies",
   "tooltip.betterfurnacesreforged.upgrade.ore": "ore",
-  "tooltip.betterfurnacesreforged.upgrade.ores": "%s %sthe amount that each molten %s gives",
+  "tooltip.betterfurnacesreforged.upgrade.ores": "%s %sthe amount that each smelted %s gives",
   "tooltip.betterfurnacesreforged.upgrade.output": "Adds a side management in the furnace/forge where items automatically go out to nearby inventory",
   "tooltip.betterfurnacesreforged.upgrade.piping": "Changes the way hoppers and Pipes interact with your furnace, the sides you specify are the side where they put stuff into / take stuff out of.",
-  "tooltip.betterfurnacesreforged.upgrade.quadruple": "Quadruple",
+  "tooltip.betterfurnacesreforged.upgrade.quadruple": "Quadruples",
   "tooltip.betterfurnacesreforged.upgrade.raw": "raw ore",
   "tooltip.betterfurnacesreforged.upgrade.redstone": "Modifies furnace/forge operation from redstone signal",
   "tooltip.betterfurnacesreforged.upgrade.tier": "Upgrade tier from %s to %s",
@@ -151,6 +151,5 @@
   "tooltip.betterfurnacesreforged.upgrade.generator": "Makes the furnace instead of smelt items generate %s from water evaporation",
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Right-click to insert upgrade",
   "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Right-click holding shift to insert tier upgrade",
-  "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruples the amount that each molten ore gives",
   "tooltip.betterfurnacesreforged.upgrade.storage": "Adds an additional storage slot for fuel, input, and output"
 }

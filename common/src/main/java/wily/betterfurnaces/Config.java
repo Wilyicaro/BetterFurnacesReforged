@@ -1,13 +1,11 @@
 package wily.betterfurnaces;
 
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import dev.architectury.platform.Platform;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import wily.betterfurnaces.init.Registration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +48,10 @@ public class Config {
     public static Supplier<Integer> cacheCapacity = ()-> 10;
     public static Supplier<Integer> furnaceXPDropValue =()-> 1;
     public static Supplier<Integer> furnaceXPDropValue2 =()-> 100000;
+
+    public static Supplier<Boolean> checkCommonOresName =()-> false;
+
+    public static Supplier<Boolean> checkRawOresName =()-> false;
 
     public static Supplier<Boolean> enableUltimateFurnaces =()-> true;
     public static Supplier<Boolean> enableJeiPlugin =()-> true;

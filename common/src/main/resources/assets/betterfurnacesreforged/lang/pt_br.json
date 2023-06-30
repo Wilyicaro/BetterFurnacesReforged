@@ -11,13 +11,13 @@
   "advancements.thebestfurnace.title": "A melhor fornalha",
   "advancements.useless.descr": "Afinal, isso não é tão inútil assim",
   "advancements.useless.title": "Inútil",
-  
+
   "_comment": "Updates",
   "betterfurnacesreforged.update.buttons": "[{\"text\":\"[✓]\",\"color\":\"green\"},{\"text\":\"Clique para fazer Download\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}}]",
   "betterfurnacesreforged.update.failed": "[{\"text\":\"O gerenciador de updates do \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"blue\"},{\"text\":\"falhou! Observe os Logs para mais informações!\",\"color\":\"none\"}]",
   "betterfurnacesreforged.update.speech": "[{\"text\":\"Há um update disponível para \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"dark_aqua\"},{\"text\":\"!\",\"color\":\"none\"}]",
   "betterfurnacesreforged.update.version": "[{\"text\":\"Versão atual: \"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\", Nova versão: \",\"color\":\"none\"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
-  
+
   "block.betterfurnacesreforged.cobblestone_generator": "Gerador de pedregulho",
   "block.betterfurnacesreforged.diamond_furnace": "Fornalha de diamante",
   "block.betterfurnacesreforged.extreme_forge": "Forja extrema",
@@ -42,7 +42,7 @@
   "block.betterfurnacesreforged.ultimate_forge": "Forja ultimate",
 
   "description.betterfurnacesreforged.fuel_verifier": "Apenas mostra a quantidade que cada combustível é capaz de derreter(Inútil)",
-  
+
   "gui.betterfurnacesreforged.color.blue": "Azul: ",
   "gui.betterfurnacesreforged.color.green": "Verde: ",
   "gui.betterfurnacesreforged.color.red": "Vermelho: ",
@@ -145,6 +145,5 @@
   "tooltip.betterfurnacesreforged.upgrade.blasting": "Muda o tipo da fornalha para alto-forno",
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Clique direito para inserir o upgrade",
   "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Clique direito segurando SHIFT para aplicar o upgrade",
-  "tooltip.ultimate_furnaces_bfr.upgrade.ultore": "Quadruplica a quantidade resultante de cada minério derretido",
-  "tooltip.betterfurnacesreforged.upgrade.storage": "Adiciona um slot adicional de armazenamento para fuel, input e output "
+  "tooltip.betterfurnacesreforged.upgrade.storage": "Adiciona um slot adicional de armazenamento para combustível, entrada e saída"
 }
