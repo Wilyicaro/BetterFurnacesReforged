@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 import wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity;
+import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 
 import java.nio.file.Path;
@@ -124,7 +125,7 @@ public class BetterFurnacesPlatformImpl {
         }
     }
 
-    public static void outputAutoIO(CobblestoneGeneratorBlockEntity be) {
+    public static void autoOutput(InventoryBlockEntity be, int output) {
         for (Direction dir : Direction.values()) {
             BlockEntity tile = be.getLevel().getBlockEntity(be.getBlockPos().offset(dir.getNormal()));
             if (tile == null) {
@@ -136,15 +137,15 @@ public class BetterFurnacesPlatformImpl {
                 continue;
             }
 
-            ItemStack o = be.inventory.getItem(be.OUTPUT);
-            if (be.inventory.getItem(be.OUTPUT).isEmpty()) {
+            ItemStack o = be.inventory.getItem(output);
+            if (be.inventory.getItem(output).isEmpty()) {
                 continue;
             }
             if (Registry.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
                 continue;
             }
             try (Transaction transaction = Transaction.openOuter()) {
-                be.inventory.extractItem(be.OUTPUT, (int) other.insert(ItemVariant.of(o), o.getCount(), transaction), false);
+                be.inventory.extractItem(output, (int) other.insert(ItemVariant.of(o), o.getCount(), transaction), false);
                 transaction.commit();
             }
         }
@@ -169,5 +170,6 @@ public class BetterFurnacesPlatformImpl {
     public static void registerModel(ResourceLocation modelResourceLocation){
         ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> out.accept(modelResourceLocation));
     }
+
 
 }
