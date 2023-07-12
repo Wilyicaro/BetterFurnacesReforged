@@ -179,22 +179,13 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
         if ((cobTime >= getCobTime() && ((can  && can3)|| can1))){
             if (!level.isClientSide) {
-                if (can1) {
-                    getInv().setItem(OUTPUT, getResult());
-                    if (upgrade1.getItem() instanceof OreProcessingUpgradeItem) {
-                        breakDurabilityItem(upgrade1);
-                    }
-                }else {
-                    if (can && can3) {
-                        output.grow(getResult().getCount());
-                        if (upgrade1.getItem() instanceof OreProcessingUpgradeItem) {
-                            breakDurabilityItem(upgrade1);
-                        }
-                    }
-                }
+                if (can1) getInv().setItem(OUTPUT, getResult());
+                else output.grow(getResult().getCount());
+                if (upgrade1.getItem() == Registration.ORE_PROCESSING.get())
+                    breakDurabilityItem(upgrade1);
                 level.playSound(null, getBlockPos(), SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 0.3F, 0.3F);
-                breakDurabilityItem(upgrade);
-                BetterFurnacesPlatform.outputAutoIO(this);
+                if (upgrade.getItem() == Registration.FUEL.get())
+                    breakDurabilityItem(upgrade);
             }
             cobTime = 0;
 
@@ -213,7 +204,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
                 level.addParticle(ParticleTypes.LARGE_SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
             }
         }
-        if (!output.isEmpty() && !level.isClientSide) BetterFurnacesPlatform.outputAutoIO(this);
+        if (!output.isEmpty() && !level.isClientSide) BetterFurnacesPlatform.autoOutput(this,OUTPUT);
     }
     protected int cobGen(){
 
