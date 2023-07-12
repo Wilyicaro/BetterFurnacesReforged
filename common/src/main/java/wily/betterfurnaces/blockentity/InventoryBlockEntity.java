@@ -87,14 +87,13 @@ public abstract class InventoryBlockEntity extends BlockEntity implements Tickab
 
 
     public void breakDurabilityItem(ItemStack stack){
-        if (stack.isDamageableItem()) {
-            stack.hurt(1, null, null);
+        if (!stack.isEmpty() && stack.isDamageableItem()) {
+            stack.hurt(1, level.random, null);
             if (stack.getDamageValue() >= stack.getMaxDamage()) {
                 stack.shrink(1);
                 this.getLevel().playSound(null, this.getBlockPos(), SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
         }
-
     }
     public void syncAdditionalMenuData(AbstractContainerMenu menu, Player player){
 

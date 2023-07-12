@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity;
+import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 
 import java.nio.file.Path;
@@ -25,7 +26,7 @@ public class BetterFurnacesPlatform {
         throw new AssertionError();
     }
     @ExpectPlatform
-    public static void outputAutoIO(CobblestoneGeneratorBlockEntity be){
+    public static void autoOutput(InventoryBlockEntity be, int output) {
         throw new AssertionError();
     }
     @ExpectPlatform

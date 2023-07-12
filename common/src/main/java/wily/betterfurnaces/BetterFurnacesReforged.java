@@ -20,7 +20,7 @@ public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
-    public static final String VERSION = "0.1.4";
+    public static final String VERSION = "1.0.0";
     public static final String MC_VERSION = "1.16.5A";
 
     public static final Supplier<Registries> REGISTRIES = Suppliers.memoize(() -> Registries.get(MOD_ID));
