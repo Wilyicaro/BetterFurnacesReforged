@@ -14,8 +14,8 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity;
+import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 
 import java.nio.file.Path;
@@ -116,7 +116,7 @@ public class BetterFurnacesPlatformImpl {
         }
     }
 
-    public static void outputAutoIO(CobblestoneGeneratorBlockEntity be) {
+    public static void autoOutput(InventoryBlockEntity be, int output) {
         for (Direction dir : Direction.values()) {
             BlockEntity tile = be.getLevel().getBlockEntity(be.getBlockPos().relative(dir));
             if (tile == null) {
@@ -128,17 +128,17 @@ public class BetterFurnacesPlatformImpl {
                 continue; 
             }
 
-            if (be.inventory.getItem(be.OUTPUT).isEmpty()) {
+            if (be.inventory.getItem(output).isEmpty()) {
                 continue;
             }
             if (ForgeRegistries.BLOCKS.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
                 continue;
             }
             for (int i = 0; i < other.getSlots(); i++) {
-                ItemStack stack = be.inventory.extractItem(be.OUTPUT, be.inventory.getItem(be.OUTPUT).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
+                ItemStack stack = be.inventory.extractItem(output, be.inventory.getItem(output).getMaxStackSize() - other.getStackInSlot(i).getCount(), true);
 
                 if (other.isItemValid(i, stack) && (other.getStackInSlot(i).isEmpty() || ItemHandlerHelper.canItemStacksStack(other.getStackInSlot(i), stack) && other.getStackInSlot(i).getCount() + stack.getCount() <= other.getSlotLimit(i))) {
-                    be.inventory.extractItem(be.OUTPUT,stack.getCount() - other.insertItem(i, stack, false).getCount(),false);
+                    be.inventory.extractItem(output,stack.getCount() - other.insertItem(i, stack, false).getCount(),false);
                 }
             }
         }
