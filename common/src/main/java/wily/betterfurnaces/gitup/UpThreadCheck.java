@@ -35,7 +35,7 @@ public class UpThreadCheck extends Thread {
             UpCheck.updateVersionString = currentMcVersion + "-" + newestVersionProp;
 
 
-            int clientVersion = Integer.parseInt(BetterFurnacesReforged.VERSION.replace(".",""));
+            int clientVersion = Integer.parseInt(BetterFurnacesReforged.VERSION.get().replace(".",""));
             if (UpCheck.updateVersionInt > clientVersion) {
 
                 UpCheck.needsUpdateNotify = true;
@@ -50,7 +50,7 @@ public class UpThreadCheck extends Thread {
         if (!UpCheck.checkFailed) {
             if (UpCheck.needsUpdateNotify) {
                 BetterFurnacesReforged.LOGGER.info("There is an update for the BetterFurnaces mod!");
-                BetterFurnacesReforged.LOGGER.info("Current Version: " + BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION + ", newest Version: " + UpCheck.updateVersionString + "!");
+                BetterFurnacesReforged.LOGGER.info("Current Version: " + BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION.get() + ", newest Version: " + UpCheck.updateVersionString + "!");
                 BetterFurnacesReforged.LOGGER.info("Download at " + UpCheck.DOWNLOAD_LINK);
             } else {
                 BetterFurnacesReforged.LOGGER.info("Now BetterFurnaces is updated!");

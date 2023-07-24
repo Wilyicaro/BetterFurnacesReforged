@@ -167,9 +167,5 @@ public class BetterFurnacesPlatformImpl {
         return TagRegistration.ITEM_TAG_REGISTRATION.registerCommon(tag);
     }
 
-    public static void registerModel(ResourceLocation modelResourceLocation){
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> out.accept(modelResourceLocation));
-    }
-
 
 }

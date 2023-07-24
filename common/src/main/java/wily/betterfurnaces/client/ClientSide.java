@@ -27,16 +27,12 @@ import wily.betterfurnaces.gitup.UpCheck;
 import wily.betterfurnaces.init.Registration;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public class ClientSide {
 
     public static void init() {
-        SmeltingBlock.TYPE.getPossibleValues().forEach((i)-> List.of(false,true).forEach((b)-> BetterFurnacesPlatform.registerModel(FurnaceRenderer.getFront(i,b))));
-        BetterFurnacesPlatform.registerModel(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_furnace"),""));
-        BetterFurnacesPlatform.registerModel(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_forge"),""));
-        BetterFurnacesPlatform.registerModel(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_forge_on"),""));
-        BetterFurnacesPlatform.registerModel(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:nsweud"),""));
         MenuRegistry.registerScreenFactory(Registration.FURNACE_CONTAINER.get(), FurnaceScreen::new);
         MenuRegistry.registerScreenFactory(Registration.FORGE_CONTAINER.get(), ForgeScreen::new);
         MenuRegistry.registerScreenFactory(Registration.COLOR_UPGRADE_CONTAINER.get(), ColorUpgradeScreen::new);
@@ -50,27 +46,32 @@ public class ClientSide {
         if (Config.enableUltimateFurnaces.get())
             wily.ultimatefurnaces.init.ClientSide.init();
 
-                
-
     }
 
+    public static void registerExtraModels(Consumer<ResourceLocation> register){
+        SmeltingBlock.TYPE.getPossibleValues().forEach((i)-> List.of(false,true).forEach((b)-> register.accept(FurnaceRenderer.getFront(i,b))));
+        register.accept(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_furnace"),""));
+        register.accept(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_forge"),""));
+        register.accept(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:colored_forge_on"),""));
+        register.accept(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:nsweud"),""));
+    }
     public static void updateClientTick(){
-        ClientTickEvent.Client listener = instance -> {
-            if(instance.player != null){
+        ClientTickEvent.ClientLevel listener = level -> {
+            if(level != null){
                 Player player = Minecraft.getInstance().player;
                 if(UpCheck.checkFailed){
                     player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.failed")), false);
                 }
                 else if(UpCheck.needsUpdateNotify){
                     player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.speech")), false);
-                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION, UpCheck.updateVersionString)), false);
+                    player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION.get(), UpCheck.updateVersionString)), false);
                     player.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.buttons", UpCheck.DOWNLOAD_LINK)), false);
                 }
             }
         };
-        ClientTickEvent.CLIENT_PRE.register(listener);
+        ClientTickEvent.CLIENT_LEVEL_PRE.register(listener);
         ClientTickEvent.CLIENT_LEVEL_POST.register((i)->{
-            if(UpCheck.threadFinished && ClientTickEvent.CLIENT_PRE.isRegistered(listener)) ClientTickEvent.CLIENT_PRE.unregister(listener);
+            if(UpCheck.threadFinished && ClientTickEvent.CLIENT_LEVEL_PRE.isRegistered(listener)) ClientTickEvent.CLIENT_LEVEL_PRE.unregister(listener);
         });
     }
     public static void registerBetterFurnacesBlocksClientSide(DeferredRegister<Block> blocks){
