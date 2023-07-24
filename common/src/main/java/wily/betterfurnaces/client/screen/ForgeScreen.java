@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.inventory.ForgeMenu;
 
+import static wily.betterfurnaces.client.screen.BetterFurnacesDrawables.WIDGETS;
 
 
 public class ForgeScreen extends SmeltingScreen<ForgeMenu> {

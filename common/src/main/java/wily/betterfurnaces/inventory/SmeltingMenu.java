@@ -142,23 +142,6 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
 
         return this.fields.get(0) * pixels / i;
     }
-    public int getFluidStoredScaled(int pixels, boolean isXp) {
-        Direction facing = null;
-        if (isXp) facing = Direction.values()[be.getIndexFront()];
-        int cur = (int) getFluidStackStored(isXp).getAmount();
-        int max = (int) be.getStorage(Storages.FLUID,facing).get().getMaxFluid();
-        return cur * pixels / max;
-    }
-    public FluidStack getFluidStackStored(boolean isXp) {
-        Direction facing = null;
-        if (isXp) facing = Direction.values()[be.getIndexFront()];
-        return be.getStorage(Storages.FLUID,facing).get().getFluidStack();
-    }
-    public int getEnergyStoredScaled(int pixels) {
-        int cur = getEnergyStored();
-        int max = getMaxEnergyStored();
-        return cur * pixels / max;
-    }
     public int getEnergyStored() {
         return be.energyStorage.getEnergyStored();
     }

@@ -1,6 +1,7 @@
 package wily.betterfurnaces.client.screen;
 
 import com.google.common.collect.Lists;
+import static wily.betterfurnaces.client.screen.BetterFurnacesDrawables.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.architectury.fluid.FluidStack;
@@ -36,36 +37,22 @@ import static wily.factoryapi.util.StorageStringUtil.getFluidTooltip;
 public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<T> {
 
     public ResourceLocation GUI() {return new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/furnace_gui.png");}
-    public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
+
     Inventory playerInv;
 
-    // Widgets x and y pos
+
     protected int factoryShowButtonY() {return 3;}
-    protected int[] fluidTankPos() {return new int[]{73,49};} // 20x22pixels
-    protected int[] energyCellPos() {
-        return getMenu().be.hasUpgrade(Registration.GENERATOR.get()) ? new int[]{116,26} : new int[]{31-(menu.be.hasUpgradeType(Registration.STORAGE.get()) ? 5 : 0),17};
-    } // 16x34pixels
-    protected int[] xpTankPos() { return new int[]{116,57};} // 16x16pixels
+    protected IFactoryDrawableType.DrawableStatic<IFactoryDrawableType.DrawableImage> fluidTankType() {return FLUID_TANK.createStatic( leftPos + 73, topPos + 49);}
 
-    public static IFactoryDrawableType.DrawableProgress MINI_FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,0,16,16},false, IFactoryDrawableType.Direction.VERTICAL);
-
-    public static IFactoryDrawableType.DrawableProgress FLUID_TANK = BFProgressType(Progress.Identifier.TANK,new int[]{192,16,20,22},false,IFactoryDrawableType.Direction.VERTICAL);
-    public static IFactoryDrawableType.DrawableProgress ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false, IFactoryDrawableType.Direction.VERTICAL);
-    public static IFactoryDrawableType.DrawableProgress THIN_ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{248,102,8,34},false, IFactoryDrawableType.Direction.VERTICAL);
-
-    public static IFactoryDrawableType SLOT = IFactoryDrawableType.create(WIDGETS,192,60,18,18);
-    public static IFactoryDrawableType BIG_SLOT = IFactoryDrawableType.create(WIDGETS,210,60,26,26);
-    public static IFactoryDrawableType INPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,171,18,18);
-    public static IFactoryDrawableType FUEL_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,18,171,18,18);
-    public static IFactoryDrawableType OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,36,171,18,18);
-    public static IFactoryDrawableType BIG_OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,203,26,26);
-    public static IFactoryDrawableType.DrawableProgress BFProgressType(Progress.Identifier identifier, int[] uvSize, boolean reverse, IFactoryDrawableType.Direction plane) {
-        return IFactoryDrawableType.create(WIDGETS,uvSize[0],uvSize[1],uvSize[2],uvSize[3]).asProgress(identifier, reverse, plane);
+    protected IFactoryDrawableType.DrawableStaticProgress energyTankType() {
+        int[] pos =  menu.be.hasUpgrade(Registration.GENERATOR.get()) ? new int[]{116,26} : new int[]{menu.be.hasUpgradeType(Registration.STORAGE.get()) ? 26 : 31,17};
+        return (menu.be.hasUpgradeType(Registration.STORAGE.get()) ? THIN_ENERGY_CELL : ENERGY_CELL).createStatic(  leftPos +pos[0], topPos + pos[1]);
     }
-    protected IFactoryDrawableType.DrawableProgress energyCellDrawable(){
-        return menu.be.hasUpgradeType(Registration.STORAGE.get()) ? THIN_ENERGY_CELL : ENERGY_CELL;
-    }
-    private boolean storedFactoryUpgradeType(int type){
+    protected IFactoryDrawableType.DrawableStatic<IFactoryDrawableType.DrawableImage> generatorTankType() {return MINI_FLUID_TANK.createStatic( leftPos + 54, topPos + 18);}
+
+    protected IFactoryDrawableType.DrawableStatic<IFactoryDrawableType.DrawableImage> xpTankType() {return MINI_FLUID_TANK.createStatic( leftPos + 73, topPos + 49);}
+
+        private boolean storedFactoryUpgradeType(int type){
         if (getMenu().be.hasUpgradeType(Registration.FACTORY.get())) {
             FactoryUpgradeItem stack = ((FactoryUpgradeItem)getMenu().be.getUpgradeTypeSlotItem(Registration.FACTORY.get()).getItem());
             if (type == 0) return true;
@@ -110,17 +97,17 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
         int actualMouseX = mouseX - relX();
         int actualMouseY = mouseY - relY();
-        if (getMenu().be.isLiquid() && FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, fluidTankPos()[0], fluidTankPos()[1]))
+        if (getMenu().be.isLiquid() && fluidTankType().inMouseLimit(mouseX, mouseY))
             graphics.renderTooltip(font,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.fluidTank), actualMouseX, actualMouseY);
-        if (getMenu().be.hasUpgrade(Registration.GENERATOR.get()) && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, 54, 18)){
+        if (getMenu().be.hasUpgrade(Registration.GENERATOR.get()) && generatorTankType().inMouseLimit(mouseX, mouseY)){
             ItemStack gen = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
             graphics.renderTooltip(font, getFluidTooltip("tooltip.factory_api.fluid_stored", ((GeneratorUpgradeItem)gen.getItem()).getFluidStorage(gen)), actualMouseX, actualMouseY);
-        }if ((getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) && energyCellDrawable().inMouseLimit(actualMouseX,actualMouseY, energyCellPos()[0], energyCellPos()[1])){
+        }if ((getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) && energyTankType().inMouseLimit(mouseX,mouseY)){
             graphics.renderTooltip(font, StorageStringUtil.getEnergyTooltip("tooltip.factory_api.energy_stored", getMenu().be.energyStorage), actualMouseX, actualMouseY);
         }if (storedFactoryUpgradeType(0)) {
             this.addFactoryTooltips(graphics, actualMouseX, actualMouseY);
         }
-        if (getMenu().be.hasXPTank() && MINI_FLUID_TANK.inMouseLimit(actualMouseX, actualMouseY, xpTankPos()[0], xpTankPos()[1]))
+        if (getMenu().be.hasXPTank() && xpTankType().inMouseLimit(mouseX, mouseY))
             graphics.renderTooltip(font,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.xpTank), actualMouseX, actualMouseY);
 
     }
@@ -245,20 +232,20 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         blitSmeltingSprites(graphics);
         if (getMenu().be.hasUpgrade(Registration.ENERGY.get()) || getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             boolean storage = menu.be.hasUpgradeType(Registration.STORAGE.get());
-            graphics.blit(WIDGETS, relX() + energyCellPos()[0], relY() + energyCellPos()[1], 240 + (storage ? 8 : 0), 34 * (storage ? 2 : 1), 16 - (storage ? 8 : 0), 34);
-            energyCellDrawable().drawProgress(graphics, relX() + energyCellPos()[0], relY() + energyCellPos()[1], this.getMenu().getEnergyStoredScaled(34));
+            graphics.blit(WIDGETS, energyTankType().posX, energyTankType().posY, 240 + (storage ? 8 : 0), 34 * (storage ? 2 : 1), 16 - (storage ? 8 : 0), 34);
+            energyTankType().drawProgress(graphics, this.getMenu().getEnergyStored(),this.getMenu().getMaxEnergyStored());
         }if (getMenu().be.isLiquid()){
-            graphics.blit(WIDGETS, relX() + fluidTankPos()[0], relY() + fluidTankPos()[1], 192, 38, 20, 22);
-            FLUID_TANK.drawAsFluidTank(graphics,relX() + fluidTankPos()[0], relY() + fluidTankPos()[1], this.getMenu().getFluidStoredScaled(22,false), this.getMenu().getFluidStackStored(false),false);
+            graphics.blit(WIDGETS, fluidTankType().posX, fluidTankType().posY, 192, 38, 20, 22);
+            fluidTankType().drawAsFluidTank(graphics, this.getMenu().be.fluidTank.getFluidStack(), this.getMenu().be.fluidTank.getMaxFluid(),false);
         }
 
         if (this.getMenu().be.hasXPTank()) {
-            graphics.blit(WIDGETS, relX() + xpTankPos()[0], relY() + xpTankPos()[1], 208, 0, 16, 16);
-            MINI_FLUID_TANK.drawAsFluidTank(graphics,relX() + xpTankPos()[0], relY() + xpTankPos()[1], this.getMenu().getFluidStoredScaled(16,true), this.getMenu().getFluidStackStored(true),true);
+            graphics.blit(WIDGETS, xpTankType().posX, xpTankType().posY, 208, 0, 16, 16);
+            xpTankType().drawAsFluidTank(graphics, this.getMenu().be.xpTank.getFluidStack(), this.getMenu().be.xpTank.getMaxFluid(),true);
         }
         if (this.getMenu().be.hasUpgrade(Registration.GENERATOR.get())) {
             ItemStack generatorUp = getMenu().be.getUpgradeSlotItem(Registration.GENERATOR.get());
-            MINI_FLUID_TANK.drawAsFluidTank(graphics,relX() + 54, relY() + 18, (int)(ItemContainerUtil.getFluid(generatorUp).getAmount() * 16 / (4 * FluidStack.bucketAmount())),ItemContainerUtil.getFluid(generatorUp),true);
+            generatorTankType().drawAsFluidTank(graphics, ItemContainerUtil.getFluid(generatorUp),4 * FluidStack.bucketAmount(),true);
         }
         if (storedFactoryUpgradeType(0)) {
             int actualMouseX = mouseX - relY();
