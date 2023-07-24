@@ -513,7 +513,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 boolean valid = e.smeltValid() || e.canGeneratorWork();
                 if (!e.isBurning() && (valid)) {
                     if (e.isLiquid() && !e.fluidTank.getFluidStack().isEmpty() && getFluidBurnTime(e.fluidTank.getFluidStack()) > 0){
-                        int fluidAmount= 200000 / getFluidBurnTime(e.fluidTank.getFluidStack());
+                        int fluidAmount= (200 * (int)FluidStack.bucketAmount()) / getFluidBurnTime(e.fluidTank.getFluidStack());
                         if ( e.fluidTank.getFluidStack().getAmount() >= fluidAmount) {
                             e.furnaceBurnTime = e.getEnderMultiplier() * get_cook_time;
                             e.recipesUsed = e.furnaceBurnTime;
