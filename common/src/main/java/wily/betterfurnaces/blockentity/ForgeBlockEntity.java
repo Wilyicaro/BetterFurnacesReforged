@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -19,7 +20,7 @@ import java.util.function.Supplier;
 public class ForgeBlockEntity extends SmeltingBlockEntity {
     public int[] FUEL() {return new int[]{3};}
     public int HEATER() {return 10;}
-    public int UPGRADES()[]{ return new int[]{7,8,9,10,11,12,13};}
+    public int[] UPGRADES() { return new int[]{7,8,9,10,11,12,13};}
     public int[] INPUTS(){ return new int[]{0,1,2};}
     public int[] OUTPUTS(){ return new int[]{4,5,6};}
     public long LiquidCapacity() {return 2 * super.LiquidCapacity();}
@@ -60,7 +61,7 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
 
     @Override
     public Component getDisplayName() {
-        return getBlockState().getBlock().getName();
+        return new TranslatableComponent(this.getBlockState().getBlock().getDescriptionId());
     }
 
     @Override
