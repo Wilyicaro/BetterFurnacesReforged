@@ -49,14 +49,6 @@ public abstract class InventoryBlockEntity extends BlockEntity implements Tickab
         if (tag != null)
             load(getBlockState(),tag);
         setChanged();
-
-
-    }
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt){
-        CompoundTag tag = pkt.getTag();
-        this.load(getBlockState(),tag);
-        this.setChanged();
-        if (hasLevel()) level.setBlock(worldPosition, level.getBlockState(worldPosition), 2, 3);
     }
     public void updateBlockState(){
         level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);

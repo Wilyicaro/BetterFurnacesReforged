@@ -1,21 +1,23 @@
 package wily.betterfurnaces.blockentity;
 
 import com.google.common.collect.Lists;
-import com.ibm.icu.impl.Pair;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.platform.Platform;
 import me.shedaniel.architectury.registry.fuel.FuelRegistry;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.shedaniel.architectury.utils.Fraction;
-import net.minecraft.core.*;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.*;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
@@ -36,6 +38,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
@@ -112,10 +115,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     private final LRUCache<Item, Optional<AbstractCookingRecipe>> cache = LRUCache.newInstance(Config.cacheCapacity.get());
     protected LRUCache<Item, Optional<AbstractCookingRecipe>> blasting_cache = LRUCache.newInstance(Config.cacheCapacity.get());
     protected LRUCache<Item, Optional<AbstractCookingRecipe>> smoking_cache = LRUCache.newInstance(Config.cacheCapacity.get());
-
-    public Direction facing(){
-        return this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-    }
 
 
     public SmeltingBlockEntity(final Supplier<Integer> cookTime) {
@@ -644,37 +643,19 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     public int getIndexFront() {
-        int i = facing().ordinal();
-        return i;
+        return BlockSide.FRONT.blockStateToFacing(getBlockState()).ordinal();
     }
 
     public int getIndexBack() {
-        int i = facing().getOpposite().ordinal();
-        return i;
+        return BlockSide.BACK.blockStateToFacing(getBlockState()).ordinal();
     }
 
     public int getIndexLeft() {
-        if (facing() == Direction.NORTH) {
-            return Direction.EAST.ordinal();
-        } else if (facing() == Direction.WEST) {
-            return Direction.NORTH.ordinal();
-        } else if (facing() == Direction.SOUTH) {
-            return Direction.WEST.ordinal();
-        } else {
-            return Direction.SOUTH.ordinal();
-        }
+        return BlockSide.LEFT.blockStateToFacing(getBlockState()).ordinal();
     }
 
     public int getIndexRight() {
-        if (facing() == Direction.NORTH) {
-            return Direction.WEST.ordinal();
-        } else if (facing() == Direction.WEST) {
-            return Direction.SOUTH.ordinal();
-        } else if (facing() == Direction.SOUTH) {
-            return Direction.EAST.ordinal();
-        } else {
-            return Direction.NORTH.ordinal();
-        }
+        return BlockSide.RIGHT.blockStateToFacing(getBlockState()).ordinal();
     }
 
     public int getAutoInput() {
@@ -862,7 +843,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         }
         if (storage == Storages.ITEM){
             if (facing != null)
-                return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).first, getSlotsTransport(facing).second));
+                return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).getKey(), getSlotsTransport(facing).getValue()));
             else return (Optional<T>) Optional.of(inventory);
         }
         if (storage == Storages.ENERGY && (hasUpgrade(Registration.ENERGY.get()) ||  hasUpgrade(Registration.GENERATOR.get()))){
@@ -878,28 +859,28 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     @Override
-    public Pair<int[], TransportState> getSlotsTransport(Direction side) {
+    public Map.Entry<int[], TransportState> getSlotsTransport(Direction side) {
 
 
         if (hasUpgradeType(Registration.FACTORY.get())) {
             if (this.furnaceSettings.get(side.ordinal()) == 0) {
-                return Pair.of(new int[]{},TransportState.NONE);
+                return new AbstractMap.SimpleEntry<>(new int[]{},TransportState.NONE);
             } else if (this.furnaceSettings.get(side.ordinal()) == 1) {
-                return Pair.of(ISLOTS(),TransportState.INSERT);
+                return new AbstractMap.SimpleEntry<>(ISLOTS(),TransportState.INSERT);
             } else if (this.furnaceSettings.get(side.ordinal()) == 2) {
-                return Pair.of(OUTPUTS(),TransportState.EXTRACT_INSERT);
+                return new AbstractMap.SimpleEntry<>(OUTPUTS(),TransportState.EXTRACT_INSERT);
             } else if (this.furnaceSettings.get(side.ordinal()) == 3) {
-                return Pair.of(FSLOTS(), TransportState.EXTRACT_INSERT);
+                return new AbstractMap.SimpleEntry<>(FSLOTS(), TransportState.EXTRACT_INSERT);
             } else if (this.furnaceSettings.get(side.ordinal()) == 4) {
-                return Pair.of(new int[]{FUEL()[0]}, TransportState.EXTRACT_INSERT);
+                return new AbstractMap.SimpleEntry<>(new int[]{FUEL()[0]}, TransportState.EXTRACT_INSERT);
             }
         }else {
-            if (side == Direction.UP) return Pair.of(INPUTS(),TransportState.INSERT);
-            else if (side == Direction.DOWN) return Pair.of(OUTPUTS(),TransportState.EXTRACT);
-            else return Pair.of( new int[]{FUEL()[0]},TransportState.EXTRACT_INSERT);
+            if (side == Direction.UP) return new AbstractMap.SimpleEntry<>(INPUTS(),TransportState.INSERT);
+            else if (side == Direction.DOWN) return new AbstractMap.SimpleEntry<>(OUTPUTS(),TransportState.EXTRACT);
+            else return new AbstractMap.SimpleEntry<>( new int[]{FUEL()[0]},TransportState.EXTRACT_INSERT);
         }
 
-        return Pair.of(new int[]{},TransportState.NONE);
+        return new AbstractMap.SimpleEntry<>(new int[]{},TransportState.NONE);
     }
 
     @Override

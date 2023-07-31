@@ -178,8 +178,4 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
             Messages.INSTANCE.sendToPlayer((ServerPlayer) player, new PacketSyncEnergy(be.getBlockPos(),  be.energyStorage.getEnergyStored()));
         }
     }
-    @Override
-    public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), player, be.getBlockState().getBlock());
-    }
 }

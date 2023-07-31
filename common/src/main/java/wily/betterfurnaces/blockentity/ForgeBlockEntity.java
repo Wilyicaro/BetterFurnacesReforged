@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.*;
+import wily.factoryapi.base.BlockSide;
 
 import java.util.function.Supplier;
 
@@ -26,7 +27,7 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
     public long LiquidCapacity() {return 2 * super.LiquidCapacity();}
     public int EnergyCapacity() {return 64000;}
     public boolean isForge(){ return true;}
-    @Override
+
     public Direction facing(){
         return this.getBlockState().getValue(BlockStateProperties.FACING);
     }

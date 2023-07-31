@@ -73,7 +73,7 @@ public class SmeltingBlock extends Block implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return (BlockState) this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, ctx.getHorizontalDirection().getOpposite());
+        return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, ctx.getHorizontalDirection().getOpposite());
     }
     public static boolean getOrientation(BlockState state, BlockGetter world, BlockPos pos) {
         return world.getBlockEntity(pos) != null && ((SmeltingBlockEntity) (world.getBlockEntity(pos))).showOrientation;

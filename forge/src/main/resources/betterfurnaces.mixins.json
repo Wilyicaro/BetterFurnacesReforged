@@ -5,7 +5,7 @@
   "client": [
   ],
   "mixins": [
-    "AddBetterFurnacesBlocksCapabilities",
+    "addForgeInventoryBlockEntity",
     "AddBetterFurnacesItemsCapabilities"
   ],
   "injectors": {

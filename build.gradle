@@ -97,7 +97,7 @@ allprojects {
                 }
                 def time = dateFormat.format(new Date())
                 def changes = new StringBuilder()
-                changes << "## Beta $version  \nUpdated at **$time**.  \n**Changelog**  "
+                changes << "## " + stage.capitalize() + " $version  \nUpdated at **$time**.  \n**Changelog**  "
                 def proc = "git log --max-count=200 --pretty=format:%s".execute()
                 proc.in.eachLine { line ->
                     def processedLine = line.toString()

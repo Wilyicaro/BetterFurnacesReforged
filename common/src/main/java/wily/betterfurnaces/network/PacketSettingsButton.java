@@ -37,6 +37,7 @@ private BlockPos pos;
 			if (player.level.isLoaded(pos)) {
 				be.furnaceSettings.set(index, set);
 				be.getLevel().setBlock(pos, be.getLevel().getBlockState(pos), 2, 3);
+				be.onUpdateSent();
 				be.setChanged();
 			}
 		});

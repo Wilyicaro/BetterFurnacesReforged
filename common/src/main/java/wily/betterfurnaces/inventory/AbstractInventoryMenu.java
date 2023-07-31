@@ -22,7 +22,10 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
     protected final Level level;
     protected int TOP_ROW = 84;
 
-
+    @Override
+    public void slotsChanged(Container container) {
+        super.slotsChanged(container);
+    }
 
     public AbstractInventoryMenu(MenuType<?> containerType, int windowId, Level level, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
         super(containerType, windowId);

@@ -46,8 +46,8 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     protected CobblestoneGeneratorRecipes recipe;
 
     @Override
-    public Pair<int[], TransportState> getSlotsTransport(Direction side) {
-        return Pair.of( new int[0],TransportState.EXTRACT);
+    public Map.Entry<int[], TransportState> getSlotsTransport(Direction side) {
+        return new AbstractMap.SimpleEntry<>( new int[0],TransportState.EXTRACT);
     }
     public static Predicate<ItemStack> HAS_LAVA = s-> hasFluidAsBucket(s,Fluids.LAVA);
     public static Predicate<ItemStack> HAS_WATER = s-> hasFluidAsBucket(s,Fluids.WATER);

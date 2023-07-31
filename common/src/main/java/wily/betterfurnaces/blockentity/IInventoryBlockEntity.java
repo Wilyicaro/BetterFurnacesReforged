@@ -1,6 +1,5 @@
 package wily.betterfurnaces.blockentity;
 
-import com.ibm.icu.impl.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
@@ -9,9 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import wily.factoryapi.base.TransportState;
 
+import java.util.Map;
+
 public interface IInventoryBlockEntity {
 
-    Pair<int[], TransportState> getSlotsTransport(Direction side);
+    Map.Entry<int[], TransportState> getSlotsTransport(Direction side);
 
     boolean IcanExtractItem(int index, ItemStack stack);
 

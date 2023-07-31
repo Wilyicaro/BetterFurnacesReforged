@@ -50,7 +50,9 @@ import wily.betterfurnaces.util.RecipeUtil;
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.ultimatefurnaces.init.RegistrationUF;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Map;
 
 
 @JeiPlugin
@@ -130,7 +132,7 @@ public class BfJeiPlugin implements IModPlugin {
 		private final Component title;
 		private final IDrawable background;
 
-		private final LoadingCache<Integer, Pair<IDrawableAnimated,IDrawableAnimated>> cachedProgressAnim;
+		private final LoadingCache<Integer, Map.Entry<IDrawableAnimated,IDrawableAnimated>> cachedProgressAnim;
 
 		protected final IGuiHelper guiHelper;
 		public static final ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/cobblestone_generator_gui.png");
@@ -141,10 +143,10 @@ public class BfJeiPlugin implements IModPlugin {
 			this.guiHelper = guiHelper;
 			this.cachedProgressAnim = CacheBuilder.newBuilder()
 					.maximumSize(25)
-					.build(new CacheLoader<Integer, Pair<IDrawableAnimated,IDrawableAnimated>>() {
+					.build(new CacheLoader<Integer, Map.Entry<IDrawableAnimated,IDrawableAnimated>>() {
 						@Override
-						public Pair<IDrawableAnimated, IDrawableAnimated> load(Integer cookTime) {
-							return Pair.of( guiHelper.drawableBuilder(GUI, 176, 24, 17, 12)
+						public Map.Entry<IDrawableAnimated, IDrawableAnimated> load(Integer cookTime) {
+							return new AbstractMap.SimpleEntry<>( guiHelper.drawableBuilder(GUI, 176, 24, 17, 12)
 									.buildAnimated(cookTime, IDrawableAnimated.StartDirection.LEFT, false), guiHelper.drawableBuilder(GUI, 176, 36, 17, 12)
 									.buildAnimated(cookTime, IDrawableAnimated.StartDirection.RIGHT, false));
 						}
@@ -156,10 +158,10 @@ public class BfJeiPlugin implements IModPlugin {
 			FluidRenderUtil.renderTiledFluid(stack, 12, 23, 17,12, FluidStack.create(Fluids.LAVA, Fraction.ofWhole(FactoryAPIPlatform.getBucketAmount())), false);
 			FluidRenderUtil.renderTiledFluid(stack, 55, 23, 17,12,FluidStack.create(Fluids.WATER, Fraction.ofWhole(FactoryAPIPlatform.getBucketAmount())), true);
 
-			Pair<IDrawableAnimated,IDrawableAnimated> cache = cachedProgressAnim.getUnchecked(recipe.duration);
-			cache.first.draw(stack, 12,23);
+			Map.Entry<IDrawableAnimated,IDrawableAnimated> cache = cachedProgressAnim.getUnchecked(recipe.duration);
+			cache.getKey().draw(stack, 12,23);
 			guiHelper.createDrawable(GUI, 176, 0, 17, 12).draw(stack, 12,23);
-			cache.second.draw(stack, 55,23);
+			cache.getValue().draw(stack, 55,23);
 			guiHelper.createDrawable(GUI, 176, 12, 17, 12).draw(stack, 55,23);
 		}
 

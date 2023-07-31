@@ -20,13 +20,15 @@ import wily.factoryapi.base.IPlatformHandlerApi;
 import wily.factoryapi.base.Storages;
 import wily.factoryapi.base.TransportState;
 
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
     @Override
-    public Pair<int[], TransportState> getSlotsTransport(Direction side) {
-        return Pair.of( new int[0],TransportState.EXTRACT);
+    public Map.Entry<int[], TransportState> getSlotsTransport(Direction side) {
+        return new AbstractMap.SimpleEntry<>( new int[0],TransportState.EXTRACT);
     }
 
     @Override

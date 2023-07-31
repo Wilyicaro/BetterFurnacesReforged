@@ -41,19 +41,19 @@ import java.util.Random;
 
 public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock {
 
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public ForgeBlock(Properties properties) {
         super(properties.noOcclusion());
-        this.registerDefaultState( this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
+        this.registerDefaultState( this.defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP).setValue(WATERLOGGED, false));
     }
 
 
 
     @Override
     public VoxelShape getShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
-        return VoxelShapeUtil.rotate(FORGE_SHAPE, p_48735_.getValue(FACING));
+        return VoxelShapeUtil.rotate(FORGE_SHAPE, p_48735_.getValue(BlockStateProperties.FACING));
     }
 
     public static final VoxelShape FORGE_SHAPE = Shapes.join(Shapes.block(), Shapes.or(box(0, 0,0, 16,1,16), box(15,1,0,16,15,1), box(0,1,0,1,15,1), box(0,1,15,1,15,16), box(15,1,15,16,15,16), box(1.75,15,1.75,14.5,15,14.5), box(0,15,0,16,16,16) ,box(1, 0.5,1,15,15,15)), BooleanOp.AND);
@@ -67,7 +67,7 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         Direction facing = ctx.getNearestLookingDirection().getOpposite();
         boolean flag = ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER;;
-        return this.defaultBlockState().setValue(FACING, facing).setValue(WATERLOGGED, flag);
+        return this.defaultBlockState().setValue(BlockStateProperties.FACING, facing).setValue(WATERLOGGED, flag);
     }
 
 
@@ -151,10 +151,10 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
 
     public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
         if (p_185499_2_ == Rotation.CLOCKWISE_90 || p_185499_2_ == Rotation.COUNTERCLOCKWISE_90) {
-            if ((Direction) p_185499_1_.getValue(FACING) == Direction.WEST || (Direction) p_185499_1_.getValue(FACING) == Direction.EAST) {
-                return p_185499_1_.setValue(FACING, Direction.UP);
-            } else if ((Direction) p_185499_1_.getValue(FACING) == Direction.UP || (Direction)p_185499_1_.getValue(FACING) == Direction.DOWN) {
-                return p_185499_1_.setValue(FACING, Direction.WEST);
+            if ((Direction) p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.WEST || (Direction) p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.EAST) {
+                return p_185499_1_.setValue(BlockStateProperties.FACING, Direction.UP);
+            } else if ((Direction) p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.UP || (Direction)p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.DOWN) {
+                return p_185499_1_.setValue(BlockStateProperties.FACING, Direction.WEST);
             }
         }
         return p_185499_1_;
