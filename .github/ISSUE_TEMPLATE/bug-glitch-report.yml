@@ -42,7 +42,7 @@ body:
     validations:
       required: false
 
-    - type: textarea
+  - type: textarea
     id: whw
     attributes:
       label: What happened wrong?
