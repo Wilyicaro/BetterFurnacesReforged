@@ -1,12 +1,12 @@
-name: Bug/Glitch report
+name: Bug/Glitch Report
 title: "[Bug/Glitch]"
-description: "Follow this template if you want support/fix to be faster"
+description: "General template for Bugs and Glitches report"
 labels: bug
 body:
   - type: markdown
     attributes:
       value: |
-        Please fill in the following template to report your issue.
+        Follow this template if you want support/fix to be faster.
   - type: input
     id: mod-version
     attributes:
