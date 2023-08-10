@@ -1,6 +1,6 @@
 name: Bug/Glitch report
 title: "[Bug/Glitch]"
-about: "Follow this template if you want support/fix to be faster"
+description: "Follow this template if you want support/fix to be faster"
 labels: bug
 body:
   - type: markdown
