@@ -38,7 +38,7 @@ body:
     id: crash-report
     attributes:
       label: Crash Report
-      description: Paste here the link(Ex: Pastebin or mclo.gs) or the specific part of the issue if you are sure
+      description: "Paste here the link(Ex: Pastebin or mclo.gs) or the specific part of the issue if you are sure"
     validations:
       required: false
 
