@@ -163,8 +163,5 @@ public class BetterFurnacesPlatformImpl {
     public static Tag<Item> getCommonItemTag(String commonTag) {
         return ItemTags.getAllTags().getTag(new ResourceLocation("forge", commonTag));
     }
-    public static void registerModel(ResourceLocation modelResourceLocation) {
-        BetterFurnacesForgeClient.REGISTER_MODELS.add(modelResourceLocation);
-    }
 
 }

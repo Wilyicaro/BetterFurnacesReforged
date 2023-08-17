@@ -29,6 +29,4 @@ public class BetterFurnacesPlatform {
     public static void autoOutput(InventoryBlockEntity be, int output) {
         throw new AssertionError();
     }
-    @ExpectPlatform
-    public static void registerModel(ResourceLocation modelResourceLocation) {throw new AssertionError();}
 }

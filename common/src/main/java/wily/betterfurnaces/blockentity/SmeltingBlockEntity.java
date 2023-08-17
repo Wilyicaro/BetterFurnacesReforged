@@ -62,6 +62,8 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Supplier;
 
+import static wily.betterfurnaces.BetterFurnacesReforged.MOD_ID;
+
 public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeHolder, StackedContentsCompatible{
     public final int[] provides = new int[Direction.values().length];
     private final int[] lastProvides = new int[this.provides.length];

@@ -169,8 +169,4 @@ public class BetterFurnacesPlatformImpl {
         return ItemTags.getAllTags().getTag( new ResourceLocation("c",tag));
     }
 
-    public static void registerModel(ResourceLocation modelResourceLocation){
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> out.accept(modelResourceLocation));
-    }
-
 }
