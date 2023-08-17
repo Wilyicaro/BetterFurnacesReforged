@@ -15,12 +15,11 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = BetterFurnacesReforged.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class BetterFurnacesForgeClient {
-    public static List<ResourceLocation> REGISTER_MODELS = new ArrayList<>();
     @SubscribeEvent
     public static void initClient(FMLClientSetupEvent event){event.enqueueWork(ClientSide::init);}
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void clientInit(ModelEvent.RegisterAdditional event){
-        REGISTER_MODELS.forEach((event::register));
+        ClientSide.registerExtraModels(event::register);
     }
 }

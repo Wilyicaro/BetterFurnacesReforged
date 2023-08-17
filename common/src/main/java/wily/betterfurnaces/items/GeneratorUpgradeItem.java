@@ -4,27 +4,27 @@ import dev.architectury.fluid.FluidStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
-import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.ForgeBlockEntity;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.init.Registration;
 import wily.factoryapi.FactoryAPIPlatform;
-import wily.factoryapi.base.IFluidItem;
+import wily.factoryapi.base.IFluidHandlerItem;
 import wily.factoryapi.base.IPlatformFluidHandler;
-import wily.factoryapi.base.TransportState;
 
 
-public class GeneratorUpgradeItem extends UpgradeItem implements IFluidItem<IPlatformFluidHandler<?>> {
+public class GeneratorUpgradeItem extends UpgradeItem implements IFluidHandlerItem<IPlatformFluidHandler<?>> {
     public GeneratorUpgradeItem(Properties properties) {
         super(properties, 7, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.generator", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
     }
-
     @Override
-    public FluidStorageBuilder getFluidStorageBuilder(@Nullable ItemStack stack) {
-        return new FluidStorageBuilder(4* FluidStack.bucketAmount(), (f)->f.getFluid().isSame(Fluids.WATER), TransportState.EXTRACT_INSERT);
+    public long getCapacity() {
+        return 4* FluidStack.bucketAmount();
+    }
+    @Override
+    public boolean isFluidValid(FluidStack fluidStack) {
+        return fluidStack.getFluid().isSame(Fluids.WATER);
     }
 
     @Override

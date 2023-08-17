@@ -3,7 +3,6 @@ package wily.betterfurnaces.blockentity;
 import dev.architectury.registry.menu.ExtendedMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,7 +11,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Nameable;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -22,17 +20,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wily.factoryapi.FactoryAPIPlatform;
+import wily.factoryapi.base.IFactoryStorage;
 import wily.factoryapi.base.IPlatformHandlerApi;
 import wily.factoryapi.base.IPlatformItemHandler;
 import wily.factoryapi.base.Storages;
 
 import java.util.Optional;
 
-public abstract class InventoryBlockEntity extends BlockEntity implements IInventoryBlockEntity, ExtendedMenuProvider, Nameable {
+public abstract class InventoryBlockEntity extends BlockEntity implements IInventoryBlockEntity, ExtendedMenuProvider, Nameable, IFactoryStorage {
 
     protected Component name;
 
-    public IPlatformItemHandler inventory;
+    public IPlatformItemHandler<?> inventory;
 
     public InventoryBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -67,7 +66,7 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
     }
-    public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
+    public <T extends IPlatformHandlerApi<?>> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
         return Optional.empty();
     }
     @Override

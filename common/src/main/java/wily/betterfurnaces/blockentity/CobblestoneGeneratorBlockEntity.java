@@ -262,7 +262,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing) {
+    public <T extends IPlatformHandlerApi<?>> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing) {
         if (!this.isRemoved() && storage == Storages.ITEM) {
             return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, new int[]{0,1,2,3,4},TransportState.EXTRACT_INSERT));
         }

@@ -43,7 +43,6 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesPlatform;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.ProjectMMO;
 import wily.betterfurnaces.blocks.SmeltingBlock;
@@ -853,7 +852,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
 
 
-    public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
+    public <T extends IPlatformHandlerApi<?>> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
         if (storage == Storages.FLUID){
             if ((facing == null || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom())) {
                 if(isLiquid())
@@ -886,8 +885,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     @Override
     public Pair<int[], TransportState> getSlotsTransport(Direction side) {
-
-
         if (hasUpgradeType(Registration.FACTORY.get())) {
             if (this.furnaceSettings.get(side.ordinal()) == 0) {
                 return Pair.of(new int[]{},TransportState.NONE);
