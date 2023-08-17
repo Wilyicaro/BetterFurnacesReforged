@@ -11,11 +11,11 @@ import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import java.nio.file.Path;
 
 public class BetterFurnacesPlatform {
-@ExpectPlatform
+    @ExpectPlatform
     public static Path getConfigDirectory() {
         throw new AssertionError();
     }
-@ExpectPlatform
+    @ExpectPlatform
     public static TagKey<Item> getCommonItemTag(String tag){throw new AssertionError();}
     @ExpectPlatform
     public static void smeltingAutoIO(SmeltingBlockEntity be){
@@ -29,6 +29,4 @@ public class BetterFurnacesPlatform {
     public static void autoOutput(InventoryBlockEntity be, int output) {
         throw new AssertionError();
     }
-    @ExpectPlatform
-    public static void registerModel(ResourceLocation modelResourceLocation) {throw new AssertionError();}
 }
