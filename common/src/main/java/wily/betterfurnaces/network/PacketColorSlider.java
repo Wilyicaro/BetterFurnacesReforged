@@ -33,11 +33,11 @@ public class PacketColorSlider {
 	public void handle(Supplier<NetworkManager.PacketContext> ctx) {
 		ctx.get().queue(() -> {
 			ServerPlayer player = (ServerPlayer) ctx.get().getPlayer();
-				ItemStack stack = player.getMainHandItem();
-				if (stack.getItem() instanceof ColorUpgradeItem) {
-					CompoundTag nbt = stack.getOrCreateTag();
-					nbt.putInt(iden <= 1 ? "red" : iden < 3 ? "green"  : "blue", index);
-					}
+			ItemStack stack = player.getMainHandItem();
+			if (stack.getItem() instanceof ColorUpgradeItem) {
+				CompoundTag nbt = stack.getOrCreateTag();
+				nbt.putInt(iden <= 1 ? "red" : iden < 3 ? "green"  : "blue", index);
+			}
 		});
 
 	}

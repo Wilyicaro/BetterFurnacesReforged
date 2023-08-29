@@ -19,7 +19,7 @@ public class ItemColorsHandler implements ItemColor {
     public static CompoundTag setupInvColorTag(CompoundTag tag){
         if (tag.contains("BlockEntityTag")) {
             CompoundTag invTag =  tag.getCompound("BlockEntityTag").getCompound("inventory");
-            IPlatformItemHandler handler = FactoryAPIPlatform.getItemHandlerApi(14,null);
+            IPlatformItemHandler<?> handler = FactoryAPIPlatform.getItemHandlerApi(14,null);
             handler.deserializeTag(invTag);
             for (int i = 0; i < handler.getContainerSize() ; i++) {
                 ItemStack stack = handler.getItem(i);

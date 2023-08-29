@@ -2,12 +2,13 @@ package wily.betterfurnaces.client.screen;
 
 import net.minecraft.resources.ResourceLocation;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.init.Registration;
-import wily.factoryapi.base.IFactoryDrawableType;
 import wily.factoryapi.base.Progress;
+import wily.factoryapi.base.client.IFactoryDrawableType;
 
 public class BetterFurnacesDrawables {
     public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
+
+    public static final ResourceLocation MINECRAFT_WIDGETS = new ResourceLocation( "textures/gui/widgets.png");
     public static IFactoryDrawableType.DrawableProgress ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{240,0,16,34},false, IFactoryDrawableType.Direction.VERTICAL);
     public static IFactoryDrawableType.DrawableProgress THIN_ENERGY_CELL = BFProgressType(Progress.Identifier.ENERGY_STORAGE,new int[]{248,102,8,34},false, IFactoryDrawableType.Direction.VERTICAL);
 
@@ -19,6 +20,11 @@ public class BetterFurnacesDrawables {
     public static IFactoryDrawableType FUEL_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,18,171,18,18);
     public static IFactoryDrawableType OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,36,171,18,18);
     public static IFactoryDrawableType BIG_OUTPUT_SLOT_OUTLINE = IFactoryDrawableType.create(WIDGETS,0,203,26,26);
+    public static IFactoryDrawableType VANILLA_BUTTON = IFactoryDrawableType.create(MINECRAFT_WIDGETS,0,66,200,20);
+    public static IFactoryDrawableType VANILLA_BUTTON_BACKGROUND = IFactoryDrawableType.create(MINECRAFT_WIDGETS,0,46,200,20);
+    public static IFactoryDrawableType BUTTON = IFactoryDrawableType.create(WIDGETS,84,157,14,14);
+
+    public static IFactoryDrawableType getButtonIcon(int id){return IFactoryDrawableType.create(WIDGETS,id*14,189,14,14);}
     public static IFactoryDrawableType.DrawableProgress BFProgressType(Progress.Identifier identifier, int[] uvSize, boolean reverse, IFactoryDrawableType.Direction plane) {
         return IFactoryDrawableType.create(WIDGETS,uvSize[0],uvSize[1],uvSize[2],uvSize[3]).asProgress(identifier, reverse, plane);
     }

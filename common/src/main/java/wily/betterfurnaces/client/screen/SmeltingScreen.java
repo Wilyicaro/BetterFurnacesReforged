@@ -1,7 +1,6 @@
 package wily.betterfurnaces.client.screen;
 
 import com.google.common.collect.Lists;
-import static wily.betterfurnaces.client.screen.BetterFurnacesDrawables.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.architectury.fluid.FluidStack;
@@ -26,12 +25,12 @@ import wily.betterfurnaces.network.PacketSettingsButton;
 import wily.betterfurnaces.network.PacketShowSettingsButton;
 import wily.betterfurnaces.util.StringHelper;
 import wily.factoryapi.ItemContainerUtil;
-import wily.factoryapi.base.IFactoryDrawableType;
-import wily.factoryapi.base.Progress;
+import wily.factoryapi.base.client.IFactoryDrawableType;
 import wily.factoryapi.util.StorageStringUtil;
 
 import java.util.List;
 
+import static wily.betterfurnaces.client.screen.BetterFurnacesDrawables.*;
 import static wily.factoryapi.util.StorageStringUtil.getFluidTooltip;
 
 public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<T> {
