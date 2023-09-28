@@ -20,10 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wily.factoryapi.FactoryAPIPlatform;
-import wily.factoryapi.base.IFactoryStorage;
-import wily.factoryapi.base.IPlatformHandlerApi;
-import wily.factoryapi.base.IPlatformItemHandler;
-import wily.factoryapi.base.Storages;
+import wily.factoryapi.base.*;
 
 import java.util.Optional;
 
@@ -65,9 +62,6 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
     @Override
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
-    }
-    public <T extends IPlatformHandlerApi<?>> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
-        return Optional.empty();
     }
     @Override
     public void saveExtraData(FriendlyByteBuf buf) {

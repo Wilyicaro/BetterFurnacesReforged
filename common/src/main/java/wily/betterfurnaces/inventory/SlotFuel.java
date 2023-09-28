@@ -7,6 +7,7 @@ import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.UpgradeItem;
 import wily.factoryapi.ItemContainerUtil;
+import wily.factoryapi.base.FactoryItemSlot;
 
 import java.util.function.Predicate;
 
@@ -16,7 +17,7 @@ public class SlotFuel extends HideableSlot {
         super(be, index, x, y);
 
     }
-    public SlotFuel(InventoryBlockEntity be, int index, int x, int y, Predicate<Slot> isActive) {
+    public SlotFuel(InventoryBlockEntity be, int index, int x, int y, Predicate<FactoryItemSlot> isActive) {
         super(be, index, x, y,isActive);
     }
 

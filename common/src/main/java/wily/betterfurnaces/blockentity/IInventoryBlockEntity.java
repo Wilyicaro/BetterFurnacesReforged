@@ -3,13 +3,11 @@ package wily.betterfurnaces.blockentity;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import wily.factoryapi.base.FactoryItemSlot;
+import wily.factoryapi.base.ItemSide;
 import wily.factoryapi.base.TransportState;
 
 public interface IInventoryBlockEntity {
@@ -20,12 +18,12 @@ public interface IInventoryBlockEntity {
 
     boolean IisItemValidForSlot(int index, ItemStack stack);
 
-    default NonNullList<Slot> getSlots(@Nullable Player player){
-        NonNullList<Slot> list = NonNullList.create();
+    default NonNullList<FactoryItemSlot> getSlots(@Nullable Player player){
+        NonNullList<FactoryItemSlot> list = NonNullList.create();
         addSlots(list,player);
         return list;
     }
-    void addSlots(NonNullList<Slot> slots, @Nullable Player player);
+    void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player);
 
     default int getInventorySize(){
         return getSlots(null).size();

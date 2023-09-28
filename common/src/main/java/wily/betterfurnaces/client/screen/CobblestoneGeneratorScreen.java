@@ -40,8 +40,8 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         super.renderLabels(graphics,mouseX,mouseY);
-        int actualMouseX = mouseX - relX();
-        int actualMouseY = mouseY - relY();
+        int actualMouseX = mouseX - leftPos;
+        int actualMouseY = mouseY - topPos;
         if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
             graphics.renderTooltip(font, getMenu().be.getResult(), actualMouseX, actualMouseY);
         }
@@ -50,39 +50,39 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        double actualMouseX = mouseX - relX();
-        double actualMouseY = mouseY - relY();
+        double actualMouseX = mouseX - leftPos;
+        double actualMouseY = mouseY - topPos;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        graphics.blit(GUI, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(GUI, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
         graphics.pose().pushPose();
-        graphics.pose().translate(relX() + 88,relY() + 32,0);
+        graphics.pose().translate(leftPos + 88,topPos + 32,0);
         graphics.pose().scale(0.75F,0.75F,0.75F);
         graphics.pose().translate(-8,-8,0);
         graphics.renderItem(getMenu().be.getResult(), 0, 0);
         graphics.pose().popPose();
         RenderSystem.setShaderTexture(0, WIDGETS);
             if (actualMouseX>= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39){
-                graphics.blit(WIDGETS, relX() + 81, relY() + 25, 98, 157, 14, 14);
-        } else graphics.blit(WIDGETS, relX() + 81, relY() + 25, 84, 157, 14, 14);
+                graphics.blit(WIDGETS, leftPos + 81, topPos + 25, 98, 157, 14, 14);
+        } else graphics.blit(WIDGETS, leftPos + 81, topPos + 25, 84, 157, 14, 14);
         int i;
         i = this.getMenu().getCobTimeScaled(16);
         if (i > 0) {
             FluidStack lava = FluidStack.create(Fluids.FLOWING_LAVA, 1000);
             FluidStack water = FluidStack.create(Fluids.WATER, 1000);
-            FluidRenderUtil.renderTiledFluid(graphics,   relX() + 58, relY() + 44, 17, 12, lava, false);
-            FluidRenderUtil.renderTiledFluid(graphics,  relX() + 101, relY() + 44, 17, 12, water, true);
-            graphics.blit(GUI, relX() + 58, relY() + 44, 176, 24, i + 1, 12);
-            graphics.blit(GUI, relX() + 117 - i, relY() + 44, 192 - i, 36, 17, 12);
+            FluidRenderUtil.renderTiledFluid(graphics,   leftPos + 58, topPos + 44, 17, 12, lava, false);
+            FluidRenderUtil.renderTiledFluid(graphics,  leftPos + 101, topPos + 44, 17, 12, water, true);
+            graphics.blit(GUI, leftPos + 58, topPos + 44, 176, 24, i + 1, 12);
+            graphics.blit(GUI, leftPos + 117 - i, topPos + 44, 192 - i, 36, 17, 12);
 
         }
-        graphics.blit(GUI, relX() + 58, relY() + 44, 176, 0, 17, 12);
-        graphics.blit(GUI, relX() + 101, relY() + 44, 176, 12, 17, 12);
+        graphics.blit(GUI, leftPos + 58, topPos + 44, 176, 0, 17, 12);
+        graphics.blit(GUI, leftPos + 101, topPos + 44, 176, 12, 17, 12);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        double actualMouseX = mouseX - relX();
-        double actualMouseY = mouseY - relY();
+        double actualMouseX = mouseX - leftPos;
+        double actualMouseY = mouseY - topPos;
         if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39) {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 0.3F));
             Messages.INSTANCE.sendToServer(new PacketCobblestoneRecipeUpdate(this.getMenu().getPos()));

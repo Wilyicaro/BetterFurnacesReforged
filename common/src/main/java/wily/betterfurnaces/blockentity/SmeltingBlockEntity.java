@@ -105,7 +105,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public final Supplier<Integer> defaultCookTime;
     private int recipesUsed;
     private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
-    public boolean isForge(){ return false;}
+    public boolean isForge(){ return this instanceof ForgeBlockEntity;}
     public RecipeType<? extends AbstractCookingRecipe> recipeType;
 
     public FactoryUpgradeSettings furnaceSettings;
@@ -852,29 +852,29 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
 
 
-    public <T extends IPlatformHandlerApi<?>> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
+    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing){
         if (storage == Storages.FLUID){
-            if ((facing == null || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom())) {
+            if ((facing == null || (facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()) || !hasXPTank())) {
                 if(isLiquid())
-                    return ((Optional<T>) Optional.of(fluidTank));
+                    return ()-> (T) fluidTank;
             }
             else {
                 if (hasUpgrade(Registration.GENERATOR.get())) {
                     ItemStack gen = getUpgradeSlotItem(Registration.GENERATOR.get());
-                    return ((Optional<T>) Optional.ofNullable(gen.getItem() instanceof GeneratorUpgradeItem item ? item.getFluidStorage(gen) : null));
+                    return ()-> (T)(gen.getItem() instanceof GeneratorUpgradeItem item ? item.getFluidStorage(gen) : null);
                 } else if (hasXPTank())
-                    return ((Optional<T>) Optional.of( xpTank));
+                    return ()-> (T)xpTank;
             }
         }
         if (storage == Storages.ITEM){
             if (facing != null)
-                return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).key(), getSlotsTransport(facing).value()));
-            else return (Optional<T>) Optional.of(inventory);
+                return ()-> (T) FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).key(), getSlotsTransport(facing).value());
+            else return ()->(T)inventory;
         }
         if (storage == Storages.ENERGY && (hasUpgrade(Registration.ENERGY.get()) ||  hasUpgrade(Registration.GENERATOR.get()))){
-            return (Optional<T>) Optional.ofNullable(FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(Registration.GENERATOR.get()))));
+            return ()-> (T)FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(Registration.GENERATOR.get())));
         }
-        return Optional.empty();
+        return ArbitrarySupplier.empty();
     }
     public int getIndexBottom() {
         return 0;
@@ -886,9 +886,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     @Override
     public Pair<int[], TransportState> getSlotsTransport(Direction side) {
         if (hasUpgradeType(Registration.FACTORY.get())) {
-            if (this.furnaceSettings.get(side.ordinal()) == 0) {
-                return Pair.of(new int[]{},TransportState.NONE);
-            } else if (this.furnaceSettings.get(side.ordinal()) == 1) {
+            if (this.furnaceSettings.get(side.ordinal()) == 1) {
                 return Pair.of(ISLOTS(),TransportState.INSERT);
             } else if (this.furnaceSettings.get(side.ordinal()) == 2) {
                 return Pair.of(OUTPUTS(),TransportState.EXTRACT_INSERT);
@@ -902,19 +900,18 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             else if (side == Direction.DOWN) return Pair.of(OUTPUTS(),TransportState.EXTRACT);
             else return Pair.of( new int[]{FUEL()[0]},TransportState.EXTRACT_INSERT);
         }
-
         return Pair.of(new int[]{},TransportState.NONE);
     }
+
+
 
     @Override
     public boolean IcanExtractItem(int index, ItemStack stack) {
         if (hasUpgradeType(Registration.FACTORY.get())) {
-            if (ArrayUtils.contains(INPUTS(),index) || ArrayUtils.contains(UPGRADES(),index) || (ArrayUtils.contains(FUEL(),index) && (isItemFuel(stack) ||( ItemContainerUtil.isEnergyContainer(stack) && ItemContainerUtil.getEnergy(stack) > 0)))) return false;
+            return !ArrayUtils.contains(INPUTS(), index) && !ArrayUtils.contains(UPGRADES(), index) && (!ArrayUtils.contains(FUEL(), index) || (!isItemFuel(stack) && (!ItemContainerUtil.isEnergyContainer(stack) || ItemContainerUtil.getEnergy(stack) <= 0)));
         }else{
-            if (index >= FOUTPUT() && index <= LOUTPUT()) return true;
-            return false;
+            return ArrayUtils.contains(OUTPUTS(),index);
         }
-        return true;
     }
 
     @Override
@@ -923,7 +920,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     }
 
     @Override
-    public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
+    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
         slots.add(new SlotInput(this, 0, 54, 18, (s) -> !this.hasUpgrade(Registration.GENERATOR.get())));
         slots.add(new SlotFuel(this, 1, 54, 54));
         slots.add(new SlotOutput(player, this, 2, 116, 35, (s) -> !this.hasUpgrade(Registration.GENERATOR.get())));

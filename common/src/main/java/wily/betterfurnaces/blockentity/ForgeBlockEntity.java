@@ -14,18 +14,19 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.*;
+import wily.factoryapi.base.FactoryItemSlot;
 
 import java.util.function.Supplier;
 
 public class ForgeBlockEntity extends SmeltingBlockEntity {
     public int[] FUEL() {return new int[]{3};}
     public int HEATER() {return 10;}
-    public int UPGRADES()[]{ return new int[]{7,8,9,10,11,12,13};}
+    public int[] UPGRADES() { return new int[]{7,8,9,10,11,12,13};}
     public int[] INPUTS(){ return new int[]{0,1,2};}
     public int[] OUTPUTS(){ return new int[]{4,5,6};}
     public long LiquidCapacity() {return 2 * super.LiquidCapacity();}
     public int EnergyCapacity() {return 64000;}
-    public boolean isForge(){ return true;}
+
     @Override
     public Direction facing(){
         return this.getBlockState().getValue(BlockStateProperties.FACING);
@@ -36,7 +37,6 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
     }
 
     public int getIndexBottom() {
-
         return facing().getOpposite().ordinal();
     }
     public int getIndexTop() {
@@ -56,7 +56,7 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
     }
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new ForgeMenu(Registration.FORGE_CONTAINER.get(),i,level,getBlockPos(),playerInventory,playerEntity,fields);
+        return new ForgeMenu(i,level,getBlockPos(),playerInventory,playerEntity,fields);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
     }
 
     @Override
-    public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
+    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
         int y1 = 62;
         int y2 = 100;
         int y3 = 80;

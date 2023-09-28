@@ -34,9 +34,7 @@ import wily.betterfurnaces.items.OreProcessingUpgradeItem;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.ItemContainerUtil;
-import wily.factoryapi.base.IPlatformHandlerApi;
-import wily.factoryapi.base.Storages;
-import wily.factoryapi.base.TransportState;
+import wily.factoryapi.base.*;
 
 import java.util.Comparator;
 import java.util.List;
@@ -262,11 +260,11 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public <T extends IPlatformHandlerApi<?>> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing) {
+    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing) {
         if (!this.isRemoved() && storage == Storages.ITEM) {
-            return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, new int[]{0,1,2,3,4},TransportState.EXTRACT_INSERT));
+            return ()->(T) (facing != null ? FactoryAPIPlatform.filteredOf(inventory,facing, new int[]{0,1,2,3,4},TransportState.EXTRACT_INSERT) : inventory);
         }
-        return super.getStorage(storage, facing);
+        return ArbitrarySupplier.empty();
     }
 
 
@@ -311,14 +309,14 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
-        slots.add(new Slot(inventory, 0, 53, 27){
+    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
+        slots.add(new FactoryItemSlot(this,SlotsIdentifier.LAVA,TransportState.INSERT, 0, 53, 27){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return CobblestoneGeneratorBlockEntity.HAS_LAVA.test(stack);
             }
         });
-        slots.add(new Slot(inventory, 1, 108, 27){
+        slots.add(new FactoryItemSlot(this,SlotsIdentifier.WATER,TransportState.INSERT, 1, 108, 27){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return CobblestoneGeneratorBlockEntity.HAS_WATER.test(stack);

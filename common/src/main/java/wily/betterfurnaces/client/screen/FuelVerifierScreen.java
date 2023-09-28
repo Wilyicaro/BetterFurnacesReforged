@@ -39,11 +39,11 @@ public class FuelVerifierScreen extends AbstractBasicScreen<FuelVerifierMenu> {
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        graphics.blit(GUI, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(GUI, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
         int i;
         i = (this.getMenu()).getBurnTimeScaled(26);
         if (i > 0) {
-            graphics.blit(GUI, relX() + 74, relY() + 13 + 26 - i, 176, 24 - i, 28, i + 2);
+            graphics.blit(GUI, leftPos + 74, topPos + 13 + 26 - i, 176, 24 - i, 28, i + 2);
         }
     }
 

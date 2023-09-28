@@ -17,9 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.FuelVerifierMenu;
 import wily.betterfurnaces.inventory.SlotFuel;
-import wily.factoryapi.base.IPlatformHandlerApi;
-import wily.factoryapi.base.Storages;
-import wily.factoryapi.base.TransportState;
+import wily.factoryapi.base.*;
 
 import java.util.Optional;
 
@@ -102,11 +100,11 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public <T extends IPlatformHandlerApi<?>> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing) {
-        if (!this.isRemoved() && facing != null && storage == Storages.ITEM) {
-            return (Optional<T>) Optional.of(inventory);
+    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing) {
+        if (!this.isRemoved() && storage == Storages.ITEM) {
+            return ()->(T)inventory;
         }
-        return super.getStorage(storage, facing);
+        return ArbitrarySupplier.empty();
     }
 
 
@@ -119,7 +117,7 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
+    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
         slots.add(new SlotFuel(this, 0, 80, 48));
     }
 

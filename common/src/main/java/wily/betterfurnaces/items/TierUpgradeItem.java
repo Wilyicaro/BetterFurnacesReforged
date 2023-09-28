@@ -112,7 +112,7 @@ public class TierUpgradeItem extends Item {
                 world.setBlock(pos, next.setValue(BlockStateProperties.LIT, be.getBlockState().getValue(BlockStateProperties.LIT)), 3);
                 world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_NETHERITE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 BlockEntity newBe = world.getBlockEntity(pos);
-                newBe.load(be.getUpdateTag().merge(newBe.getUpdateTag()));
+                newBe.load(newBe.getUpdateTag().merge(be.getUpdateTag()));
                 Container newInv;
                 if (newBe instanceof SmeltingBlockEntity smeltBe) {
                     newInv = smeltBe.inventory;

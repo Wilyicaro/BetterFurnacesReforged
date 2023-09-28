@@ -39,9 +39,9 @@ public abstract class AbstractUpgradeScreen<T extends AbstractUpgradeMenu> exten
         ItemStack stack = ((ColorUpgradeItem.ContainerColorUpgrade) this.getMenu()).itemStackBeingHeld;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        graphics.blit(GUI, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
-        graphics.renderItem(stack, this.relX() + 154, this.relY() + 6);
-        graphics.drawString(font, name, (width - this.font.width(name) )/2, this.relY() + 8, 4210752,false);
+        graphics.blit(GUI, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.renderItem(stack, this.leftPos + 154, this.topPos + 6);
+        graphics.drawString(font, name, (width - this.font.width(name) )/2, this.topPos + 8, 4210752,false);
     }
 
 }
