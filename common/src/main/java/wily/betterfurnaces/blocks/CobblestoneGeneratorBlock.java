@@ -97,10 +97,10 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
 
         for (int i : new int[]{0,1,3,4}) {
             if(!stack.isEmpty() && be.IisItemValidForSlot(i, stack)) {
-                if ((!(((Container) be).getItem(i).isEmpty())) && (!player.isCreative())) {
-                    Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), ((Container) be).getItem(i));
+                if ((!(be.inventory.getItem(i).isEmpty())) && (!player.isCreative())) {
+                    Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.inventory.getItem(i));
                 }
-                ((Container) be).setItem(i, newStack);
+                be.inventory.setItem(i, newStack);
             }
         }
         world.playSound(null, be.getBlockPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.BLOCKS, 1.0F, 1.0F);

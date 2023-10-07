@@ -29,24 +29,19 @@ public abstract class AbstractUpgradeScreen<T extends AbstractUpgradeMenu> exten
 
     @Override
     public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrix);
         super.render(matrix, mouseX, mouseY, partialTicks);
         renderColorFurnace(matrix, partialTicks, mouseX, mouseY);
     }
 
     @Override
-    protected void init() {
-        super.init();
-    }
-    @Override
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
         ItemStack stack = ((ColorUpgradeItem.ContainerColorUpgrade) this.getMenu()).itemStackBeingHeld;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI);
+        RenderSystem.setShaderTexture(0,GUI);
 
-        this.blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
-        itemRenderer.renderGuiItem(stack, this.relX() + 154, this.relY() + 6);
-        this.font.draw(matrix, name, (width - this.font.width(name) )/2, this.relY() + 8, 4210752);
+        this.blit(matrix, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
+        itemRenderer.renderGuiItem(stack, this.leftPos + 154, this.topPos + 6);
+        this.font.draw(matrix, name, (width - this.font.width(name) )/2, this.topPos + 8, 4210752);
     }
     protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
     }

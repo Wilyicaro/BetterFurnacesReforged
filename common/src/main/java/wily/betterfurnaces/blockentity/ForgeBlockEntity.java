@@ -1,61 +1,40 @@
 package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
-import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.*;
+import wily.factoryapi.base.BlockSide;
+import wily.factoryapi.base.FactoryItemSlot;
 
 import java.util.function.Supplier;
 
 public class ForgeBlockEntity extends SmeltingBlockEntity {
     public int[] FUEL() {return new int[]{3};}
     public int HEATER() {return 10;}
-    public int UPGRADES()[]{ return new int[]{7,8,9,10,11,12,13};}
+    public int[] UPGRADES() { return new int[]{7,8,9,10,11,12,13};}
     public int[] INPUTS(){ return new int[]{0,1,2};}
     public int[] OUTPUTS(){ return new int[]{4,5,6};}
     public long LiquidCapacity() {return 2 * super.LiquidCapacity();}
     public int EnergyCapacity() {return 64000;}
-    public boolean isForge(){ return true;}
+
     @Override
-    public Direction facing(){
-        return this.getBlockState().getValue(BlockStateProperties.FACING);
+    protected BlockSide[] getSidesOrder() {
+        return BlockSide.TOP_FACE_SIDES;
     }
 
     public ForgeBlockEntity(BlockPos pos, BlockState state, Supplier<Integer> cookTime) {
         super(pos, state, cookTime);
     }
 
-    public int getIndexBottom() {
-
-        return facing().getOpposite().ordinal();
-    }
-    public int getIndexTop() {
-            return facing().ordinal();
-    }
-    @Override
-    public int getIndexFront() {
-        if (facing() == Direction.NORTH || facing() == Direction.EAST)  {
-            return Direction.DOWN.ordinal();
-        } else if ((facing() == Direction.SOUTH) || (facing() == Direction.WEST)) {
-            return Direction.UP.ordinal();
-        }else if (facing() == Direction.UP){
-            return Direction.NORTH.ordinal();
-        }else {
-            return Direction.SOUTH.ordinal();
-        }
-    }
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new ForgeMenu(Registration.FORGE_CONTAINER.get(),i,level,getBlockPos(),playerInventory,playerEntity,fields);
+        return new ForgeMenu(i,level,getBlockPos(),playerInventory,playerEntity,fields);
     }
 
     @Override
@@ -64,7 +43,7 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
     }
 
     @Override
-    public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
+    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
         int y1 = 62;
         int y2 = 100;
         int y3 = 80;
@@ -85,32 +64,4 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
         slots.add(new SlotUpgrade(this, 13, 151, y4));
     }
 
-    @Override
-    public int getIndexBack() {
-        if (facing() == Direction.NORTH || facing() == Direction.EAST)  {
-            return Direction.UP.ordinal();
-        } else if ((facing() == Direction.SOUTH) || (facing() == Direction.WEST)) {
-            return Direction.DOWN.ordinal();
-        }else if (facing() == Direction.UP){
-            return Direction.SOUTH.ordinal();
-        }else {
-            return Direction.NORTH.ordinal();
-        }
-    }
-    @Override
-    public int getIndexLeft() {
-        if (facing() == Direction.EAST || facing() == Direction.WEST) {
-            return Direction.SOUTH.ordinal();
-        } else {
-            return Direction.EAST.ordinal();
-        }
-    }
-    @Override
-    public int getIndexRight() {
-        if (facing() == Direction.EAST || facing() == Direction.WEST) {
-            return Direction.NORTH.ordinal();
-        } else {
-            return Direction.WEST.ordinal();
-        }
-    }
 }

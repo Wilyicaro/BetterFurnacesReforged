@@ -10,18 +10,13 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.FuelVerifierMenu;
 import wily.betterfurnaces.inventory.SlotFuel;
-import wily.factoryapi.base.IPlatformHandlerApi;
-import wily.factoryapi.base.Storages;
-import wily.factoryapi.base.TransportState;
-
-import java.util.Optional;
+import wily.factoryapi.base.*;
 
 public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
@@ -102,24 +97,15 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing) {
-        if (!this.isRemoved() && facing != null && storage == Storages.ITEM) {
-            return (Optional<T>) Optional.of(inventory);
+    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing) {
+        if (!this.isRemoved() && storage == Storages.ITEM) {
+            return ()->(T)inventory;
         }
-        return super.getStorage(storage, facing);
-    }
-
-
-    @Override
-    public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        if (index == 0) {
-            return isItemFuel(stack);
-        }
-        return false;
+        return ArbitrarySupplier.empty();
     }
 
     @Override
-    public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
+    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
         slots.add(new SlotFuel(this, 0, 80, 48));
     }
 

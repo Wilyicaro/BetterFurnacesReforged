@@ -21,17 +21,11 @@ public class FuelVerifierScreen extends AbstractBasicScreen<FuelVerifierMenu> {
         this.name = name;
     }
 
-    @Override
-    public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrix);
-        super.render(matrix, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrix, mouseX, mouseY);
-    }
 
     @Override
     protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
         Component invname = this.playerInv.getDisplayName();
-        Component burntime = Component.translatable("gui.betterfurnacesreforged.fuel.melts").append(Component.literal(String.valueOf(((FuelVerifierMenu) this.getMenu()).getBurnTime()))).append( Component.translatable("gui.betterfurnacesreforged.fuel.items"));
+        Component burntime = Component.translatable("gui.betterfurnacesreforged.fuel.melts").append(Component.literal(String.valueOf(( this.getMenu()).getBurnTime()))).append( Component.translatable("gui.betterfurnacesreforged.fuel.items"));
         this.minecraft.font.draw(matrix, invname, 7, this.imageHeight - 93, 4210752);
         if (this.getMenu().getBurnTime() > 0)
         this.minecraft.font.draw(matrix, burntime, this.imageWidth / 2 - this.minecraft.font.width(burntime.getString()) / 2, 6, 4210752);
@@ -44,11 +38,11 @@ public class FuelVerifierScreen extends AbstractBasicScreen<FuelVerifierMenu> {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI);
 
-        this.blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
+        this.blit(matrix, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
         int i;
-        i = ((FuelVerifierMenu) this.getMenu()).getBurnTimeScaled(26);
+        i = (this.getMenu()).getBurnTimeScaled(26);
         if (i > 0) {
-            this.blit(matrix, relX() + 74, relY() + 13 + 26 - i, 176, 24 - i, 28, i + 2);
+            this.blit(matrix, leftPos + 74, topPos + 13 + 26 - i, 176, 24 - i, 28, i + 2);
         }
     }
 

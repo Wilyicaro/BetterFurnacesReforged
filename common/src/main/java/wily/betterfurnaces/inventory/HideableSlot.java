@@ -1,31 +1,21 @@
 package wily.betterfurnaces.inventory;
 
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
+import wily.factoryapi.base.FactoryItemSlot;
+import wily.factoryapi.base.SlotsIdentifier;
+import wily.factoryapi.base.TransportState;
 
 import java.util.function.Predicate;
 
-public class HideableSlot extends Slot {
+public class HideableSlot extends FactoryItemSlot {
     protected InventoryBlockEntity be;
-    protected Predicate<Slot> isActive = s->true;
-    public HideableSlot(InventoryBlockEntity be, int index, int x, int y, Predicate<Slot> isActive) {
-        this(be, index, x, y);
-        this.isActive = isActive;
-    }
     public HideableSlot(InventoryBlockEntity be, int index, int x, int y) {
-        super(be.inventory, index, x, y);
+        this(be, index, x, y, (s)->true);
+    }
+    public HideableSlot(InventoryBlockEntity be, int index, int x, int y, Predicate<FactoryItemSlot> isActive) {
+        super(be, SlotsIdentifier.GENERIC, TransportState.EXTRACT_INSERT, index, x, y);
         this.be = be;
-    }
-
-    @Override
-    public boolean mayPlace(ItemStack itemStack) {
-        return isActive();
-    }
-
-    @Override
-    public boolean isActive() {
-        return isActive.test(this);
+        this.active = isActive;
     }
 
 }

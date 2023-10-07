@@ -2,26 +2,25 @@ package wily.betterfurnaces.inventory;
 
 import dev.architectury.event.events.common.PlayerEvent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
+import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
+import wily.factoryapi.base.FactoryItemSlot;
 
 import java.util.function.Predicate;
 
-public class SlotOutput extends HideableSlot {
+    public class SlotOutput extends HideableSlot {
 
     private final Player player;
     private int removeCount;
 
     public SlotOutput(Player player,InventoryBlockEntity be, int slotIndex, int xPosition, int yPosition) {
-        super(be, slotIndex, xPosition, yPosition);
+        this(player, be, slotIndex, xPosition, yPosition,s->true);
+    }
+    public SlotOutput(Player player,InventoryBlockEntity be, int slotIndex, int xPosition, int yPosition, Predicate<FactoryItemSlot> isActive) {
+        super(be, slotIndex, xPosition, yPosition,isActive);
         this.player = player;
         this.be = be;
-    }
-    public SlotOutput(Player player,InventoryBlockEntity be, int slotIndex, int xPosition, int yPosition, Predicate<Slot> isActive) {
-        this(player,be, slotIndex, xPosition, yPosition);
-        this.isActive = isActive;
     }
 
     /**
@@ -47,14 +46,16 @@ public class SlotOutput extends HideableSlot {
 
     @Override
     protected void onQuickCraft(ItemStack stack, int p_75210_2_) {
-        stack.onCraftedBy(this.player.level, this.player, this.removeCount);
-        if (!this.player.level.isClientSide && this.be instanceof SmeltingBlockEntity smeltBe) {
-            smeltBe.unlockRecipes(this.player);
+        if (player != null) {
+            stack.onCraftedBy(this.player.level, this.player, this.removeCount);
+            if (!this.player.level.isClientSide && this.be instanceof SmeltingBlockEntity smeltBe) {
+                smeltBe.unlockRecipes(this.player);
 
+            }
+
+            this.removeCount = 0;
+            PlayerEvent.SMELT_ITEM.invoker().smelt(this.player, stack);
         }
-
-        this.removeCount = 0;
-        PlayerEvent.SMELT_ITEM.invoker().smelt(this.player, stack);
     }
 
     /**

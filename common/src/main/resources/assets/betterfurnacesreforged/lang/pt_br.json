@@ -115,6 +115,8 @@
   "tooltip.betterfurnacesreforged.gui_redstone_ignored": "Redstone Ignorada",
   "tooltip.betterfurnacesreforged.gui_redstone_low": "Redstone sinal baixo",
   "tooltip.betterfurnacesreforged.gui_reset": "Resetar tudo",
+  "tooltip.betterfurnacesreforged.gui_add_signal": "Adicionar Sinal",
+  "tooltip.betterfurnacesreforged.gui_sub_signal": "Diminuir Sinal",
   "tooltip.betterfurnacesreforged.gui_right": "Direita",
   "tooltip.betterfurnacesreforged.gui_shift_more_options": " para mais opções",
   "tooltip.betterfurnacesreforged.gui_show_orientation": "Orientação",

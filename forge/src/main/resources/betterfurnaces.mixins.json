@@ -2,12 +2,8 @@
   "required": true,
   "package": "wily.betterfurnaces.forge.mixin",
   "compatibilityLevel": "JAVA_17",
-  "client": [
-  ],
-  "mixins": [
-    "AddBetterFurnacesBlocksCapabilities",
-    "AddBetterFurnacesItemsCapabilities"
-  ],
+  "client": [],
+  "mixins": [],
   "injectors": {
     "defaultRequire": 1
   }
