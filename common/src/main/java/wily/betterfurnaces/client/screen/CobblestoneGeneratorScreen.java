@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.fluid.FluidStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,12 +17,17 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.inventory.CobblestoneGeneratorMenu;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketCobblestoneRecipeUpdate;
+import wily.betterfurnaces.network.PacketSettingsButton;
+import wily.betterfurnaces.network.PacketSyncAdditionalInt;
 import wily.betterfurnaces.util.FluidRenderUtil;
+import wily.factoryapi.base.client.drawable.FactoryDrawableButton;
+import wily.factoryapi.base.client.drawable.IFactoryDrawableType;
+
+import java.util.List;
 
 public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneGeneratorMenu> {
 
     public ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/cobblestone_generator_gui.png");
-    public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/widgets.png");
     Inventory playerInv;
     Component name;
 
@@ -34,24 +41,20 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
     @Override
     protected void init() {
         super.init();
-        titleLabelX = 7 + imageWidth / 2 - font.width(name.getString()) / 2;
+        titleLabelX = 7 + imageWidth / 2 - font.width(name.getString()) / 2;;
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        super.renderLabels(graphics,mouseX,mouseY);
-        int actualMouseX = mouseX - leftPos;
-        int actualMouseY = mouseY - topPos;
-        if (mouseX >= 81 && mouseX <= 95 && mouseY >= 25 && mouseY <= 39) {
-            graphics.renderTooltip(font, getMenu().be.getResult(), actualMouseX, actualMouseY);
-        }
+    public List<? extends Renderable> getNestedRenderables() {
+        return List.of(
+                new FactoryDrawableButton(leftPos + 81, topPos + 25, BetterFurnacesDrawables.BUTTON).onPress((b,i)->Messages.INSTANCE.sendToServer(new PacketCobblestoneRecipeUpdate(this.getMenu().getPos()))).grave(0.3F).tooltips(getTooltipFromItem(this.minecraft, getMenu().be.getResult())),
+                new FactoryDrawableButton(leftPos + 9,topPos + 55,BetterFurnacesDrawables.SURFACE_BUTTON).icon(BetterFurnacesDrawables.getButtonIcon(1)).select(menu.be.hasAutoOutput()).onPress((b, i)-> Messages.INSTANCE.sendToServer(new PacketSyncAdditionalInt(this.getMenu().getPos(),menu.be.additionalSyncInts,menu.be.autoOutput,menu.be.hasAutoOutput() ? 0 : 1))).tooltips(List.of(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_output"), Component.translatable("options." + (menu.be.hasAutoOutput() ? "on" : "off")))));
     }
+
 
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        double actualMouseX = mouseX - leftPos;
-        double actualMouseY = mouseY - topPos;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         graphics.blit(GUI, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
         graphics.pose().pushPose();
@@ -60,10 +63,6 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
         graphics.pose().translate(-8,-8,0);
         graphics.renderItem(getMenu().be.getResult(), 0, 0);
         graphics.pose().popPose();
-        RenderSystem.setShaderTexture(0, WIDGETS);
-            if (actualMouseX>= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39){
-                graphics.blit(WIDGETS, leftPos + 81, topPos + 25, 98, 157, 14, 14);
-        } else graphics.blit(WIDGETS, leftPos + 81, topPos + 25, 84, 157, 14, 14);
         int i;
         i = this.getMenu().getCobTimeScaled(16);
         if (i > 0) {
@@ -79,16 +78,5 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
         graphics.blit(GUI, leftPos + 101, topPos + 44, 176, 12, 17, 12);
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        double actualMouseX = mouseX - leftPos;
-        double actualMouseY = mouseY - topPos;
-        if (actualMouseX >= 81 && actualMouseX <= 95 && actualMouseY >= 25 && actualMouseY <= 39) {
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 0.3F));
-            Messages.INSTANCE.sendToServer(new PacketCobblestoneRecipeUpdate(this.getMenu().getPos()));
-        }
-
-        return super.mouseClicked(mouseX, mouseY, button);
-    }
 
 }

@@ -2,6 +2,7 @@ package wily.betterfurnaces.inventory;
 
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import wily.betterfurnaces.blockentity.ForgeBlockEntity;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 import wily.betterfurnaces.items.UpgradeItem;
@@ -20,7 +21,7 @@ public class SlotUpgrade extends FactoryItemSlot {
     }
 
     public boolean mayPlace(ItemStack stack) {
-        return (be instanceof SmeltingBlockEntity s && stack.getItem() instanceof UpgradeItem upg && !s.hasUpgrade(upg) && upg.isValid(s) && (!s.hasUpgradeType((UpgradeItem) stack.getItem()) || (be.inventory.getItem(index).getItem() instanceof UpgradeItem upg2 && upg2.isSameType(upg))));
+        return (be instanceof SmeltingBlockEntity s && stack.getItem() instanceof UpgradeItem upg && !s.hasUpgrade(upg)  && (!s.isForge() || upg.upgradeType != 1) && upg.isValid(s) && (!s.hasUpgradeType((UpgradeItem) stack.getItem()) || (be.inventory.getItem(index).getItem() instanceof UpgradeItem upg2 && upg2.isSameType(upg))));
     }
 
     @Override

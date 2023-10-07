@@ -97,7 +97,7 @@ public class SmeltingBlock extends BaseEntityBlock{
             if (stack.hasCustomHoverName()) {
                 be.setCustomName(stack.getDisplayName());
             }
-            be.totalCookTime = be.getCookTimeConfig();
+            be.totalCookTime = be.defaultCookTime.get();
             be.forceUpdateAllStates();
         }
     }
@@ -269,29 +269,14 @@ public class SmeltingBlock extends BaseEntityBlock{
             super.onRemove(state, world, pos, oldState, p_196243_5_);
         }
     }
-    
-    public int getComparatorInputOverride(BlockState state, Level world, BlockPos pos) {
-        return AbstractContainerMenu.getRedstoneSignalFromContainer(((SmeltingBlockEntity)world.getBlockEntity(pos)).inventory);
 
-    }
 
     public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
-        return (BlockState)p_185499_1_.setValue(BlockStateProperties.HORIZONTAL_FACING, p_185499_2_.rotate((Direction)p_185499_1_.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+        return p_185499_1_.setValue(BlockStateProperties.HORIZONTAL_FACING, p_185499_2_.rotate((Direction)p_185499_1_.getValue(BlockStateProperties.HORIZONTAL_FACING)));
     }
 
     public BlockState mirror(BlockState p_185471_1_, Mirror p_185471_2_) {
         return p_185471_1_.rotate(p_185471_2_.getRotation((Direction)p_185471_1_.getValue(BlockStateProperties.HORIZONTAL_FACING)));
-    }
-
-    private int calculateOutput(Level worldIn, BlockPos pos, BlockState state) {
-        SmeltingBlockEntity tile = ((SmeltingBlockEntity)worldIn.getBlockEntity(pos));
-        int i = this.getComparatorInputOverride(state, worldIn, pos);
-        if (tile != null)
-        {
-            int j = tile.furnaceSettings.get(9);
-            return tile.furnaceSettings.get(8) == 4 ? Math.max(i - j, 0) : i;
-        }
-        return 0;
     }
 
     @Override
@@ -300,32 +285,18 @@ public class SmeltingBlock extends BaseEntityBlock{
     }
 
     @Override
-    public int getSignal(BlockState p_180656_1_, BlockGetter p_180656_2_, BlockPos p_180656_3_, Direction p_180656_4_) {
-        return super.getDirectSignal(p_180656_1_, p_180656_2_, p_180656_3_, p_180656_4_);
+    public boolean hasAnalogOutputSignal(BlockState blockState) {
+        return true;
     }
 
     @Override
-    public int getDirectSignal(BlockState blockState, BlockGetter world, BlockPos pos, Direction direction) {
-        SmeltingBlockEntity furnace = ((SmeltingBlockEntity) world.getBlockEntity(pos));
-        if (furnace != null)
-        {
-            int mode = furnace.furnaceSettings.get(8);
-            if (mode == 0)
-            {
-                return 0;
-            }
-            else if (mode == 1)
-            {
-                return 0;
-            }
-            else if (mode == 2)
-            {
-                return 0;
-            }
-            else
-            {
-                return calculateOutput(furnace.getLevel(), pos, blockState);
-            }
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+        SmeltingBlockEntity be = ((SmeltingBlockEntity) level.getBlockEntity(blockPos));
+        if (be != null) {
+            int mode = be.furnaceSettings.get(8);
+            int i = !be.hasUpgradeType(Registration.FACTORY.get()) || mode == 3 || mode == 4 ? AbstractContainerMenu.getRedstoneSignalFromContainer((be).inventory) : 0;
+            if (mode != 4) return i;
+            else return Math.max(i - be.furnaceSettings.get(9), 0);
         }
         return 0;
     }

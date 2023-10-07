@@ -54,6 +54,9 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
     protected void updateChanges() {
         be.syncAdditionalMenuData(this, player);
     }
+    public BlockPos getPos() {
+        return this.be.getBlockPos();
+    }
     @Override
     protected boolean moveItemStackTo(ItemStack itemStack, int i, int j, boolean bl) {
         boolean bl2 = false;

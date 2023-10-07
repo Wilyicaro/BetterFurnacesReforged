@@ -21,8 +21,8 @@ public abstract class AbstractBasicScreen<T extends AbstractContainerMenu> exten
 
     @Override
     protected void init() {
-        super.init();
         renderables.clear();
+        super.init();
     }
 
     @Override

@@ -109,14 +109,6 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
 
     @Override
-    public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        if (index == 0) {
-            return isItemFuel(stack);
-        }
-        return false;
-    }
-
-    @Override
     public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
         slots.add(new SlotFuel(this, 0, 80, 48));
     }

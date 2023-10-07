@@ -46,13 +46,7 @@ public class FactoryUpgradeWindow extends FactoryScreenWindow<SmeltingScreen<?>>
         return list;
     }
     public Component getTooltip(int index) {
-        return switch (parent.getMenu().be.furnaceSettings.get(index)) {
-            case 1 -> Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input");
-            case 2 -> Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_output");
-            case 3 -> Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input_output");
-            case 4 -> Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_fuel");
-            default -> Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_none");
-        };
+        return Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_"+ (index == 1 ? "input" : index == 2 ? "output" : index == 3 ? "input_output" : index == 4 ?  "fuel" : "none"));
     }
     private IFactoryDrawableType getSideButtonDrawable(int index){
         int setting = parent.getMenu().be.furnaceSettings.get(index);
@@ -62,7 +56,7 @@ public class FactoryUpgradeWindow extends FactoryScreenWindow<SmeltingScreen<?>>
         return List.of(-1,BlockSide.TOP,-1,BlockSide.LEFT,BlockSide.FRONT,BlockSide.RIGHT,BlockSide.BACK,BlockSide.BOTTOM,-1).indexOf(side);
     }
     private FactoryDrawableButton getSideButton(int setting, int index, BlockSide side){
-        return new FactoryDrawableButton(getX() + 8 + 14* (sidePositionIndex(side) % 3),getY() + 22 + 14 * ((int)Math.ceil((double)(sidePositionIndex(side) + 1 )/ 3) - 1),getSideButtonDrawable(index)).tooltips(isShiftKeyDown() ? List.of(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_reset")) : List.of(side.getComponent(),getTooltip(index))).onPress((b, i)-> {
+        return new FactoryDrawableButton(getX() + 8 + 14* (sidePositionIndex(side) % 3),getY() + 22 + 14 * ((int)Math.ceil((double)(sidePositionIndex(side) + 1 )/ 3) - 1),getSideButtonDrawable(index)).tooltips(isShiftKeyDown() ? List.of(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_reset")) : List.of(side.getComponent(),getTooltip(setting))).onPress((b, i)-> {
             if (isShiftKeyDown()) Messages.INSTANCE.sendToServer(new PacketSettingsButton(parent.getMenu().getPos(), IntStream.rangeClosed(0,5).toArray(),0));
             else Messages.INSTANCE.sendToServer(new PacketSettingsButton(parent.getMenu().getPos(), index, i == GLFW.GLFW_MOUSE_BUTTON_2 ? (setting <= 0 ? 4 : setting - 1) : (setting >= 4 ? 0 : setting + 1)));;
         });

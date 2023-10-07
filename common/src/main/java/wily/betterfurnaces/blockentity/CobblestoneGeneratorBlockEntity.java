@@ -106,10 +106,21 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     private int actualCobTime = getCobTime();
     public int resultType = 0;
 
+    public Bearer<Integer> autoOutput = Bearer.of(1);
+
 
     public CobblestoneGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.COB_GENERATOR_TILE.get(), pos, state);
+        additionalSyncInts.add(autoOutput);
+    }
 
+    @Override
+    public void syncAdditionalMenuData(AbstractContainerMenu menu, Player player) {
+        super.syncAdditionalMenuData(menu, player);
+    }
+
+    public boolean hasAutoOutput(){
+        return autoOutput.get() == 1;
     }
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
@@ -202,7 +213,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
                 level.addParticle(ParticleTypes.LARGE_SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
             }
         }
-        if (!output.isEmpty() && !level.isClientSide) BetterFurnacesPlatform.autoOutput(this, OUTPUT);
+        if (!output.isEmpty() && !level.isClientSide && hasAutoOutput()) BetterFurnacesPlatform.autoOutput(this, OUTPUT);
     }
     protected int cobGen(){
 
@@ -267,46 +278,6 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         return ArbitrarySupplier.empty();
     }
 
-
-    @Override
-    public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        if (index == OUTPUT) {
-            return false;
-        }
-        if (index == INPUT) {
-            if (stack.isEmpty()) {
-                return false;
-            }
-
-            return stack.getItem() == Items.LAVA_BUCKET;
-
-        }
-        if (index == INPUT1) {
-            if (stack.isEmpty()) {
-                return false;
-            }
-
-            return stack.getItem() == Items.WATER_BUCKET;
-
-        }
-        if (index == UPGRADE) {
-            if (stack.isEmpty()) {
-                return false;
-            }
-
-            return stack.getItem() instanceof FuelEfficiencyUpgradeItem;
-
-        }
-        if (index == UPGRADE1) {
-            if (stack.isEmpty()) {
-                return false;
-            }
-
-            return stack.getItem() instanceof OreProcessingUpgradeItem;
-
-        }
-        return false;
-    }
 
     @Override
     public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {

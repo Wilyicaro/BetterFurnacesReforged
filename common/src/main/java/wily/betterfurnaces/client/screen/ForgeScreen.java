@@ -6,19 +6,25 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import wily.betterfurnaces.BetterFurnacesReforged;
+import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.ForgeMenu;
+import wily.factoryapi.base.client.drawable.DrawableStatic;
+import wily.factoryapi.base.client.drawable.DrawableStaticProgress;
 
-import static wily.betterfurnaces.client.screen.BetterFurnacesDrawables.WIDGETS;
+import static wily.betterfurnaces.client.screen.BetterFurnacesDrawables.*;
+import static wily.betterfurnaces.client.screen.BetterFurnacesDrawables.ENERGY_CELL;
 
 
 public class ForgeScreen extends SmeltingScreen<ForgeMenu> {
 
     public ResourceLocation GUI() { return new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/forge_gui.png");}
     protected int factoryShowButtonY(){return 44;}
-    protected int[] fluidTankPos() { return new int[]{26,98};} // 20x22pixels
-    protected int[] energyCellPos() { return new int[]{8,62};} // 16x34pixels
-    protected int[] xpTankPos() { return new int[]{126,102};} // 16x16pixels
+    protected DrawableStatic fluidTankType() {return FLUID_TANK.createStatic( leftPos + 26, topPos + 98);}
 
+    protected DrawableStaticProgress energyTankType() {
+        return ENERGY_CELL.createStatic(  leftPos + 8, topPos + 62);
+    }
+    protected DrawableStatic xpTankType() {return MINI_FLUID_TANK.createStatic( leftPos + 126, topPos + 102);}
     public ForgeScreen(ForgeMenu t, Inventory inv, Component name) {
         super(t, inv, name);
     }

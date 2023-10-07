@@ -33,11 +33,6 @@ public class CobblestoneGeneratorMenu extends AbstractInventoryMenu<CobblestoneG
         checkContainerDataCount(this.fields, 3);
     }
 
-
-    public BlockPos getPos() {
-        return this.be.getBlockPos();
-    }
-
     public int getCobTimeScaled(int pixels) {
         int i = this.fields.get(0);
         int j = this.fields.get(2);

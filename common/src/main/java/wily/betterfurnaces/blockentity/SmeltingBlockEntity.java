@@ -67,7 +67,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     public int[] FUEL() {
         int[] inputs = new int[]{1};
-        if (hasUpgradeType(Registration.STORAGE.get())) inputs = ArrayUtils.add(inputs,7);
+        if (hasUpgradeType(Registration.STORAGE.get())) inputs = new int[]{1,7};
         return inputs;
     }
     public int HEATER() {return FUEL()[0];}
@@ -78,12 +78,12 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public int LOUTPUT(){ return OUTPUTS()[OUTPUTS().length - 1];}
     public int[] INPUTS(){
         int[] inputs = new int[]{0};
-        if (hasUpgradeType(Registration.STORAGE.get())) inputs = ArrayUtils.add(inputs,6);
+        if (hasUpgradeType(Registration.STORAGE.get())) inputs = new int[]{0,6};
         return inputs;
     }
     public int[] OUTPUTS(){
         int[] outputs = new int[]{2};
-        if (hasUpgradeType(Registration.STORAGE.get())) outputs = ArrayUtils.add(outputs,8);
+        if (hasUpgradeType(Registration.STORAGE.get())) outputs = new int[]{2,8};
         return outputs;
     }
     public int[] FSLOTS(){ return  ArrayUtils.addAll(ISLOTS(), OUTPUTS());}
@@ -114,11 +114,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     protected LRUCache<Item, Optional<AbstractCookingRecipe>> blasting_cache = LRUCache.newInstance(Config.cacheCapacity.get());
     protected LRUCache<Item, Optional<AbstractCookingRecipe>> smoking_cache = LRUCache.newInstance(Config.cacheCapacity.get());
 
-    public Direction facing(){
-        return this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-    }
-
-
     public SmeltingBlockEntity(BlockPos pos, BlockState state, final Supplier<Integer> cookTime) {
         super(Registration.BLOCK_ENTITIES.getRegistrar().get(state.getBlock().arch$registryName()), pos, state);
         this.defaultCookTime = cookTime;
@@ -128,7 +123,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             public void onChanged() {
                 if (hasUpgradeType(Registration.FACTORY.get())) {
                     inventory.setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory.get());
-
                 }
                 setChanged();
             }
@@ -199,70 +193,45 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     protected int getSpeed() {
         int j = 0;
-            int length = INPUTS().length;
-            for (int i : INPUTS()) {
-                int iC = getFromCache(getCache(), inventory.getItem(i).getItem());
-                j += Math.max(iC, 0);
-                if (j <= 0) length -= 1;
+        int length = INPUTS().length;
+        for (int i : INPUTS()) {
+            ItemStack stack = inventory.getItem(i);
+            int cache = getFromCache(getCache(), stack.getItem());
+            int iC = cache <= 0 ? grabRecipe(stack).map(AbstractCookingRecipe::getCookingTime).orElse(-1): cache;
+            if (iC <= 0){
+                length -= 1;
+                continue;
             }
-            j = length <= 0 ? 0 : j / length;
-            if (j == 0) {
-                for (int i : INPUTS()) {
-                    Optional<AbstractCookingRecipe> recipe = grabRecipe(inventory.getItem(i));
-                    j = !recipe.isPresent() ? -1 : recipe.orElse(null).getCookingTime();
-                    getCache().put(inventory.getItem(i).getItem(), recipe);
-                }
-                if (j == -1) {
-                    return -1;
-                }
-            }
+            j += iC;
+        }
+        j = length <= 0 ? 0 : j / length;
 
         if (j < defaultCookTime.get()) {
-            return j - (200 - defaultCookTime.get());
+            return (int) (j * (defaultCookTime.get() / 200F));
         } else {
             return defaultCookTime.get();
         }
     }
 
-    public int getCookTimeConfig() {
-        return 0;
-    }
-
     public final ContainerData fields = new ContainerData() {
         public int get(int index) {
-            switch (index) {
-                case 0:
-                    return SmeltingBlockEntity.this.furnaceBurnTime;
-                case 1:
-                    return SmeltingBlockEntity.this.recipesUsed;
-                case 2:
-                    return SmeltingBlockEntity.this.cookTime;
-                case 3:
-                    return SmeltingBlockEntity.this.totalCookTime;
-                case 4:
-                    return SmeltingBlockEntity.this.showInventorySettings;
-                default:
-                    return 0;
-            }
+            return switch (index) {
+                case 0 -> SmeltingBlockEntity.this.furnaceBurnTime;
+                case 1 -> SmeltingBlockEntity.this.recipesUsed;
+                case 2 -> SmeltingBlockEntity.this.cookTime;
+                case 3 -> SmeltingBlockEntity.this.totalCookTime;
+                case 4 -> SmeltingBlockEntity.this.showInventorySettings;
+                default -> 0;
+            };
         }
 
         public void set(int index, int value) {
             switch (index) {
-                case 0:
-                    SmeltingBlockEntity.this.furnaceBurnTime = value;
-                    break;
-                case 1:
-                    SmeltingBlockEntity.this.recipesUsed = value;
-                    break;
-                case 2:
-                    SmeltingBlockEntity.this.cookTime = value;
-                    break;
-                case 3:
-                    SmeltingBlockEntity.this.totalCookTime = value;
-                    break;
-                case 4:
-                    SmeltingBlockEntity.this.showInventorySettings = value;
-                    break;
+                case 0 -> SmeltingBlockEntity.this.furnaceBurnTime = value;
+                case 1 -> SmeltingBlockEntity.this.recipesUsed = value;
+                case 2 -> SmeltingBlockEntity.this.cookTime = value;
+                case 3 -> SmeltingBlockEntity.this.totalCookTime = value;
+                case 4 -> SmeltingBlockEntity.this.showInventorySettings = value;
             }
 
         }
@@ -634,55 +603,20 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return this.furnaceSettings.get(getIndexRight());
     }
 
-    public int getIndexFront() {
-        int i = facing().ordinal();
-        return i;
+    protected BlockSide[] getSidesOrder(){return BlockSide.values();}
+    public int getIndexBottom() {return BlockSide.BOTTOM.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
+    public int getIndexTop() {
+        return BlockSide.TOP.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();
     }
+    public int getIndexFront() {return BlockSide.FRONT.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
+    public int getIndexBack() {return BlockSide.BACK.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
+    public int getIndexLeft() {return BlockSide.LEFT.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
+    public int getIndexRight() {return BlockSide.RIGHT.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
 
-    public int getIndexBack() {
-        int i = facing().getOpposite().ordinal();
-        return i;
-    }
-
-    public int getIndexLeft() {
-        if (facing() == Direction.NORTH) {
-            return Direction.EAST.ordinal();
-        } else if (facing() == Direction.WEST) {
-            return Direction.NORTH.ordinal();
-        } else if (facing() == Direction.SOUTH) {
-            return Direction.WEST.ordinal();
-        } else {
-            return Direction.SOUTH.ordinal();
-        }
-    }
-
-    public int getIndexRight() {
-        if (facing() == Direction.NORTH) {
-            return Direction.WEST.ordinal();
-        } else if (facing() == Direction.WEST) {
-            return Direction.SOUTH.ordinal();
-        } else if (facing() == Direction.SOUTH) {
-            return Direction.EAST.ordinal();
-        } else {
-            return Direction.NORTH.ordinal();
-        }
-    }
-
-    public int getAutoInput() {
-        return this.furnaceSettings.get(6);
-    }
-
-    public int getAutoOutput() {
-        return this.furnaceSettings.get(7);
-    }
-
-    public int getRedstoneSetting() {
-        return this.furnaceSettings.get(8);
-    }
-
-    public int getRedstoneComSub() {
-        return this.furnaceSettings.get(9);
-    }
+    public int getAutoInput() {return this.furnaceSettings.get(6);}
+    public int getAutoOutput() {return this.furnaceSettings.get(7);}
+    public int getRedstoneSetting() {return this.furnaceSettings.get(8);}
+    public int getRedstoneComSub() {return this.furnaceSettings.get(9);}
 
 
 
@@ -854,7 +788,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing){
         if (storage == Storages.FLUID){
-            if ((facing == null || (facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()) || !hasXPTank())) {
+            if ((facing == null || (!hasUpgrade(Registration.GENERATOR.get()) && !hasXPTank()) || (facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()))) {
                 if(isLiquid())
                     return ()-> (T) fluidTank;
             }
@@ -875,12 +809,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             return ()-> (T)FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(Registration.GENERATOR.get())));
         }
         return ArbitrarySupplier.empty();
-    }
-    public int getIndexBottom() {
-        return 0;
-    }
-    public int getIndexTop() {
-        return 1;
     }
 
     @Override
@@ -912,11 +840,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         }else{
             return ArrayUtils.contains(OUTPUTS(),index);
         }
-    }
-
-    @Override
-    public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        return getSlots(null).get(index).mayPlace(stack);
     }
 
     @Override

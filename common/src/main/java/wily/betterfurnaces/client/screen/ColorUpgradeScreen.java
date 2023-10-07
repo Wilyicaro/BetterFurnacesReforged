@@ -65,7 +65,7 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
         ItemColorsHandler.putColor(tag,red.getValue(),green.getValue(),blue.getValue());
         stack.setTag(tag);
         graphics.pose().pushPose();
-        graphics.pose().translate((width / 2 ), (this.topPos - 40),0);
+        graphics.pose().translate(((float) width / 2 ), (this.topPos - 40),0);
         graphics.pose().scale(4F,4F,1F);
         graphics.pose().translate(-8, -8,0);
         graphics.renderItem(stack, 0, 0);
