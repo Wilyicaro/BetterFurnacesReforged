@@ -121,6 +121,8 @@
   "tooltip.betterfurnacesreforged.gui_redstone_ignored": "Redstone Ignored",
   "tooltip.betterfurnacesreforged.gui_redstone_low": "Redstone Low",
   "tooltip.betterfurnacesreforged.gui_reset": "Reset All",
+  "tooltip.betterfurnacesreforged.gui_add_signal": "Add Comparator Signal",
+  "tooltip.betterfurnacesreforged.gui_sub_signal": "Sub Comparator Signal",
   "tooltip.betterfurnacesreforged.gui_right": "Right",
   "tooltip.betterfurnacesreforged.gui_shift_more_options": " for more options",
   "tooltip.betterfurnacesreforged.gui_show_orientation": "Orientation",

@@ -16,6 +16,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -24,6 +25,8 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -37,6 +40,7 @@ import net.minecraft.world.level.material.Fluids;
 import org.apache.commons.lang3.ArrayUtils;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
+import wily.betterfurnaces.client.screen.AbstractBasicScreen;
 import wily.betterfurnaces.client.screen.CobblestoneGeneratorScreen;
 import wily.betterfurnaces.client.screen.ForgeScreen;
 import wily.betterfurnaces.client.screen.FurnaceScreen;
@@ -46,7 +50,11 @@ import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.GuiUtil;
 import wily.betterfurnaces.util.RecipeUtil;
+import wily.factoryapi.base.client.IWindowWidget;
 import wily.ultimatefurnaces.init.RegistrationUF;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @JeiPlugin
@@ -113,6 +121,15 @@ public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
 		if (Config.enableJeiClickArea.get() && Config.enableJeiPlugin.get()) {
+			registry.addGenericGuiContainerHandler(AbstractBasicScreen.class, new IGuiContainerHandler<AbstractBasicScreen<?>>() {
+				@Override
+				public List<Rect2i> getGuiExtraAreas(AbstractBasicScreen<?> containerScreen) {
+					List<Rect2i> list =  new ArrayList<>();
+					for (Renderable nested : containerScreen.getNestedRenderables())
+						if (nested instanceof IWindowWidget w) list.add(w.getBounds());
+					return list;
+				}
+			});
 			registry.addRecipeClickArea(FurnaceScreen.class, 79, 35, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
 			registry.addRecipeClickArea(ForgeScreen.class, 80, 80, 24, 17, RecipeTypes.SMELTING, RecipeTypes.FUELING);
 			registry.addRecipeClickArea(CobblestoneGeneratorScreen.class, 58, 44, 17, 12, BFRRecipeTypes.ROCK_GENERATING_JEI);

@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 public class PacketSettingsButton {
 
 private BlockPos pos;
-	private int index;
+	private int[] indexes;
 	private int set;
 
 	public PacketSettingsButton(FriendlyByteBuf buf) {
@@ -20,13 +20,15 @@ private BlockPos pos;
 
 	public void toBytes(FriendlyByteBuf buf) {
 		buf.writeBlockPos(pos);
-		buf.writeInt(index);
+		buf.writeVarIntArray(indexes);
 		buf.writeInt(set);
 	}
-
 	public PacketSettingsButton(BlockPos pos, int index, int set) {
+		this(pos,new int[]{index},set);
+	}
+	public PacketSettingsButton(BlockPos pos, int[] indexes, int set) {
 		this.pos = pos;
-		this.index = index;
+		this.indexes = indexes;
 		this.set = set;
 	}
 
@@ -35,7 +37,8 @@ private BlockPos pos;
 			ServerPlayer player = (ServerPlayer) ctx.get().getPlayer();
 			SmeltingBlockEntity be = (SmeltingBlockEntity) player.getLevel().getBlockEntity(pos);
 			if (player.level.isLoaded(pos)) {
-				be.furnaceSettings.set(index, set);
+				for (int index : indexes)
+					be.furnaceSettings.set(index, set);
 				be.getLevel().setBlock(pos, be.getLevel().getBlockState(pos), 2, 3);
 				be.setChanged();
 			}

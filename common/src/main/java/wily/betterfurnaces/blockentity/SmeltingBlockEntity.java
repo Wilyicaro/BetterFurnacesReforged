@@ -1,6 +1,5 @@
 package wily.betterfurnaces.blockentity;
 
-import java.util.function.Supplier;
 import com.google.common.collect.Lists;
 import dev.architectury.fluid.FluidStack;
 import dev.architectury.platform.Platform;
@@ -8,10 +7,8 @@ import dev.architectury.registry.fuel.FuelRegistry;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.*;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -27,7 +24,10 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.RecipeHolder;
+import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.AirItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +43,6 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesPlatform;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.ProjectMMO;
 import wily.betterfurnaces.blocks.SmeltingBlock;
@@ -58,8 +57,9 @@ import wily.factoryapi.ItemContainerUtil;
 import wily.factoryapi.base.*;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeHolder, StackedContentsCompatible{
     public final int[] provides = new int[Direction.values().length];
@@ -68,7 +68,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     public int[] FUEL() {
         int[] inputs = new int[]{1};
-        if (hasUpgradeType(Registration.STORAGE.get())) inputs = ArrayUtils.add(inputs,7);
+        if (hasUpgradeType(Registration.STORAGE.get())) inputs = new int[]{1,7};
         return inputs;
     }
     public int HEATER() {return FUEL()[0];}
@@ -79,12 +79,12 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public int LOUTPUT(){ return OUTPUTS()[OUTPUTS().length - 1];}
     public int[] INPUTS(){
         int[] inputs = new int[]{0};
-        if (hasUpgradeType(Registration.STORAGE.get())) inputs = ArrayUtils.add(inputs,6);
+        if (hasUpgradeType(Registration.STORAGE.get())) inputs = new int[]{0,6};
         return inputs;
     }
     public int[] OUTPUTS(){
         int[] outputs = new int[]{2};
-        if (hasUpgradeType(Registration.STORAGE.get())) outputs = ArrayUtils.add(outputs,8);
+        if (hasUpgradeType(Registration.STORAGE.get())) outputs = new int[]{2,8};
         return outputs;
     }
     public int[] FSLOTS(){ return  ArrayUtils.addAll(ISLOTS(), OUTPUTS());}
@@ -106,7 +106,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public final Supplier<Integer> defaultCookTime;
     private int recipesUsed;
     private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
-    public boolean isForge(){ return false;}
+    public boolean isForge(){ return this instanceof ForgeBlockEntity;}
     public RecipeType<? extends AbstractCookingRecipe> recipeType;
 
     public FactoryUpgradeSettings furnaceSettings;
@@ -114,11 +114,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     private final LRUCache<Item, Optional<AbstractCookingRecipe>> cache = LRUCache.newInstance(Config.cacheCapacity.get());
     protected LRUCache<Item, Optional<AbstractCookingRecipe>> blasting_cache = LRUCache.newInstance(Config.cacheCapacity.get());
     protected LRUCache<Item, Optional<AbstractCookingRecipe>> smoking_cache = LRUCache.newInstance(Config.cacheCapacity.get());
-
-    public Direction facing(){
-        return this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-    }
-
 
     public SmeltingBlockEntity(BlockPos pos, BlockState state, final Supplier<Integer> cookTime) {
         super(Registration.BLOCK_ENTITIES.getRegistrar().get(state.getBlock().arch$registryName()), pos, state);
@@ -129,7 +124,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             public void onChanged() {
                 if (hasUpgradeType(Registration.FACTORY.get())) {
                     inventory.setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory.get());
-
                 }
                 setChanged();
             }
@@ -202,68 +196,43 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         int j = 0;
         int length = INPUTS().length;
         for (int i : INPUTS()) {
-            int iC = getFromCache(getCache(), inventory.getItem(i).getItem());
-            j += Math.max(iC, 0);
-            if (j <= 0) length -= 1;
+            ItemStack stack = inventory.getItem(i);
+            int cache = getFromCache(getCache(), stack.getItem());
+            int iC = cache <= 0 ? grabRecipe(stack).map(AbstractCookingRecipe::getCookingTime).orElse(-1): cache;
+            if (iC <= 0){
+                length -= 1;
+                continue;
+            }
+            j += iC;
         }
         j = length <= 0 ? 0 : j / length;
-        if (j == 0) {
-            for (int i : INPUTS()) {
-                Optional<AbstractCookingRecipe> recipe = grabRecipe(inventory.getItem(i));
-                j = !recipe.isPresent() ? -1 : recipe.orElse(null).getCookingTime();
-                getCache().put(inventory.getItem(i).getItem(), recipe);
-            }
-            if (j == -1) {
-                return -1;
-            }
-        }
 
         if (j < defaultCookTime.get()) {
-            return j - (200 - defaultCookTime.get());
+            return (int) (j * (defaultCookTime.get() / 200F));
         } else {
             return defaultCookTime.get();
         }
     }
 
-    public int getCookTimeConfig() {
-        return 0;
-    }
-
     public final ContainerData fields = new ContainerData() {
         public int get(int index) {
-            switch (index) {
-                case 0:
-                    return SmeltingBlockEntity.this.furnaceBurnTime;
-                case 1:
-                    return SmeltingBlockEntity.this.recipesUsed;
-                case 2:
-                    return SmeltingBlockEntity.this.cookTime;
-                case 3:
-                    return SmeltingBlockEntity.this.totalCookTime;
-                case 4:
-                    return SmeltingBlockEntity.this.showInventorySettings;
-                default:
-                    return 0;
-            }
+            return switch (index) {
+                case 0 -> SmeltingBlockEntity.this.furnaceBurnTime;
+                case 1 -> SmeltingBlockEntity.this.recipesUsed;
+                case 2 -> SmeltingBlockEntity.this.cookTime;
+                case 3 -> SmeltingBlockEntity.this.totalCookTime;
+                case 4 -> SmeltingBlockEntity.this.showInventorySettings;
+                default -> 0;
+            };
         }
 
         public void set(int index, int value) {
             switch (index) {
-                case 0:
-                    SmeltingBlockEntity.this.furnaceBurnTime = value;
-                    break;
-                case 1:
-                    SmeltingBlockEntity.this.recipesUsed = value;
-                    break;
-                case 2:
-                    SmeltingBlockEntity.this.cookTime = value;
-                    break;
-                case 3:
-                    SmeltingBlockEntity.this.totalCookTime = value;
-                    break;
-                case 4:
-                    SmeltingBlockEntity.this.showInventorySettings = value;
-                    break;
+                case 0 -> SmeltingBlockEntity.this.furnaceBurnTime = value;
+                case 1 -> SmeltingBlockEntity.this.recipesUsed = value;
+                case 2 -> SmeltingBlockEntity.this.cookTime = value;
+                case 3 -> SmeltingBlockEntity.this.totalCookTime = value;
+                case 4 -> SmeltingBlockEntity.this.showInventorySettings = value;
             }
 
         }
@@ -273,7 +242,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             return 5;
         }
     };
-
     public List<UpgradeItem> getUpgrades() {
         List<UpgradeItem> list = new ArrayList<>();
         for (int slot : UPGRADES())
@@ -325,10 +293,10 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             int i = correspondentOutputSlot(FINPUT());
             if (i>=0) this.smeltItem(irecipeSlot(FINPUT()).orElse(null), FINPUT(), i);
         } else
-            for (int i : INPUTS()) {
-                if(!this.canSmelt(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i))) continue;
-                this.smeltItem(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i));
-            }
+                for (int i : INPUTS()) {
+                    if(!this.canSmelt(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i))) continue;
+                    this.smeltItem(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i));
+                }
     }
     public int getUpdatedType(){
         return hasUpgrade(Registration.BLAST.get()) ? 1 : hasUpgrade(Registration.SMOKE.get()) ? 2 : hasUpgrade(Registration.GENERATOR.get()) ? 3 : 0;
@@ -382,9 +350,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public boolean smeltValid(){
         if (!hasUpgrade(Registration.GENERATOR.get()))
             for (int i : INPUTS()) {
-                if(!this.canSmelt(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i))) continue;
-                return true;
-            }
+            if(!this.canSmelt(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i))) continue;
+            return true;
+        }
         return false;
     }
     public static void tick(Level level, BlockPos worldPosition, BlockState blockState, SmeltingBlockEntity e) {
@@ -501,11 +469,11 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
             if (e.isLiquid() && ItemContainerUtil.isFluidContainer(fuel) && SmeltingBlockEntity.isItemFuel(ItemContainerUtil.getFluid(fuel).getFluid().getBucket().getDefaultInstance())) {
                 ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(e.fluidTank.getTotalSpace(),fuel);
-                long amount = e.fluidTank.fill(context.fluidStack(), false);
-                if (amount > 0) {
-                    level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
-                    e.inventory.setItem(e.FUEL()[0], context.container());
-                }
+                    long amount = e.fluidTank.fill(context.fluidStack(), false);
+                    if (amount > 0) {
+                        level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
+                        e.inventory.setItem(e.FUEL()[0], context.container());
+                    }
 
 
             }
@@ -514,7 +482,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 if (!e.isBurning() && (valid)) {
                     if (e.isLiquid() && !e.fluidTank.getFluidStack().isEmpty() && getFluidBurnTime(e.fluidTank.getFluidStack()) > 0){
                         int fluidAmount= (200 * (int)FluidStack.bucketAmount()) / getFluidBurnTime(e.fluidTank.getFluidStack());
-                        if ( e.fluidTank.getFluidStack().getAmount() >= fluidAmount) {
+                        if (e.fluidTank.getFluidStack().getAmount() >= fluidAmount) {
                             e.furnaceBurnTime = e.getEnderMultiplier() * get_cook_time;
                             e.recipesUsed = e.furnaceBurnTime;
                             e.fluidTank.drain(fluidAmount, false);
@@ -609,7 +577,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public Color getColor() {
         if (getUpgradeSlotItem(Registration.COLOR.get()).isEmpty()) return Color.WHITE;
         CompoundTag nbt = getUpgradeSlotItem(Registration.COLOR.get()).getTag();
-        return new Color(nbt.getInt("red") ,nbt.getInt("green") ,nbt.getInt("blue"));
+            return new Color(nbt.getInt("red") ,nbt.getInt("green") ,nbt.getInt("blue"));
     }
 
 
@@ -635,55 +603,20 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return this.furnaceSettings.get(getIndexRight());
     }
 
-    public int getIndexFront() {
-        int i = facing().ordinal();
-        return i;
+    protected BlockSide[] getSidesOrder(){return BlockSide.values();}
+    public int getIndexBottom() {return BlockSide.BOTTOM.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
+    public int getIndexTop() {
+        return BlockSide.TOP.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();
     }
+    public int getIndexFront() {return BlockSide.FRONT.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
+    public int getIndexBack() {return BlockSide.BACK.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
+    public int getIndexLeft() {return BlockSide.LEFT.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
+    public int getIndexRight() {return BlockSide.RIGHT.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
 
-    public int getIndexBack() {
-        int i = facing().getOpposite().ordinal();
-        return i;
-    }
-
-    public int getIndexLeft() {
-        if (facing() == Direction.NORTH) {
-            return Direction.EAST.ordinal();
-        } else if (facing() == Direction.WEST) {
-            return Direction.NORTH.ordinal();
-        } else if (facing() == Direction.SOUTH) {
-            return Direction.WEST.ordinal();
-        } else {
-            return Direction.SOUTH.ordinal();
-        }
-    }
-
-    public int getIndexRight() {
-        if (facing() == Direction.NORTH) {
-            return Direction.WEST.ordinal();
-        } else if (facing() == Direction.WEST) {
-            return Direction.SOUTH.ordinal();
-        } else if (facing() == Direction.SOUTH) {
-            return Direction.EAST.ordinal();
-        } else {
-            return Direction.NORTH.ordinal();
-        }
-    }
-
-    public int getAutoInput() {
-        return this.furnaceSettings.get(6);
-    }
-
-    public int getAutoOutput() {
-        return this.furnaceSettings.get(7);
-    }
-
-    public int getRedstoneSetting() {
-        return this.furnaceSettings.get(8);
-    }
-
-    public int getRedstoneComSub() {
-        return this.furnaceSettings.get(9);
-    }
+    public int getAutoInput() {return this.furnaceSettings.get(6);}
+    public int getAutoOutput() {return this.furnaceSettings.get(7);}
+    public int getRedstoneSetting() {return this.furnaceSettings.get(8);}
+    public int getRedstoneComSub() {return this.furnaceSettings.get(9);}
 
 
 
@@ -740,7 +673,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 if (output.isEmpty()) return true;
                 else if (!ItemStack.isSameItemSameTags(output,recipeOutput)) return false;
                 else {
-                    return output.getCount() + recipeOutput.getCount() * OreProcessingMultiplier(input) <= output.getMaxStackSize();
+                    return output.getCount() + recipeOutput.getCount() * OreProcessingMultiplier(input) <= output   .getMaxStackSize();
                 }
             }
         }
@@ -825,7 +758,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         tag.putInt("CookTimeTotal", this.totalCookTime);
         tag.put("fluidTank", fluidTank.serializeTag());
         tag.put("xpTank", xpTank.serializeTag());
-        tag.put("energy",energyStorage.serializeTag());
+         tag.put("energy",energyStorage.serializeTag());
         tag.putInt("ShowInvSettings", this.showInventorySettings);
         tag.putBoolean("ShowOrientation", this.showOrientation);
         CompoundTag compoundnbt = new CompoundTag();
@@ -853,45 +786,35 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
 
 
-    public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
+    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing){
         if (storage == Storages.FLUID){
-            if ((facing == null || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom())) {
+            if ((facing == null || (!hasUpgrade(Registration.GENERATOR.get()) && !hasXPTank()) || (facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()))) {
                 if(isLiquid())
-                    return ((Optional<T>) Optional.of(fluidTank));
+                    return ()-> (T) fluidTank;
             }
             else {
                 if (hasUpgrade(Registration.GENERATOR.get())) {
                     ItemStack gen = getUpgradeSlotItem(Registration.GENERATOR.get());
-                    return ((Optional<T>) Optional.ofNullable(gen.getItem() instanceof GeneratorUpgradeItem item ? item.getFluidStorage(gen) : null));
+                    return ()-> (T)(gen.getItem() instanceof GeneratorUpgradeItem item ? item.getFluidStorage(gen) : null);
                 } else if (hasXPTank())
-                    return ((Optional<T>) Optional.of( xpTank));
+                    return ()-> (T)xpTank;
             }
         }
         if (storage == Storages.ITEM){
             if (facing != null)
-                return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).key(), getSlotsTransport(facing).value()));
-            else return (Optional<T>) Optional.of(inventory);
+                return ()-> (T) FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).key(), getSlotsTransport(facing).value());
+            else return ()->(T)inventory;
         }
         if (storage == Storages.ENERGY && (hasUpgrade(Registration.ENERGY.get()) ||  hasUpgrade(Registration.GENERATOR.get()))){
-            return (Optional<T>) Optional.ofNullable(FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(Registration.GENERATOR.get()))));
+            return ()-> (T)FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(Registration.GENERATOR.get())));
         }
-        return Optional.empty();
-    }
-    public int getIndexBottom() {
-        return 0;
-    }
-    public int getIndexTop() {
-        return 1;
+        return ArbitrarySupplier.empty();
     }
 
     @Override
     public Pair<int[], TransportState> getSlotsTransport(Direction side) {
-
-
         if (hasUpgradeType(Registration.FACTORY.get())) {
-            if (this.furnaceSettings.get(side.ordinal()) == 0) {
-                return Pair.of(new int[]{},TransportState.NONE);
-            } else if (this.furnaceSettings.get(side.ordinal()) == 1) {
+            if (this.furnaceSettings.get(side.ordinal()) == 1) {
                 return Pair.of(ISLOTS(),TransportState.INSERT);
             } else if (this.furnaceSettings.get(side.ordinal()) == 2) {
                 return Pair.of(OUTPUTS(),TransportState.EXTRACT_INSERT);
@@ -905,28 +828,22 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             else if (side == Direction.DOWN) return Pair.of(OUTPUTS(),TransportState.EXTRACT);
             else return Pair.of( new int[]{FUEL()[0]},TransportState.EXTRACT_INSERT);
         }
-
         return Pair.of(new int[]{},TransportState.NONE);
     }
+
+
 
     @Override
     public boolean IcanExtractItem(int index, ItemStack stack) {
         if (hasUpgradeType(Registration.FACTORY.get())) {
-            if (ArrayUtils.contains(INPUTS(),index) || ArrayUtils.contains(UPGRADES(),index) || (ArrayUtils.contains(FUEL(),index) && (isItemFuel(stack) ||( ItemContainerUtil.isEnergyContainer(stack) && ItemContainerUtil.getEnergy(stack) > 0)))) return false;
+            return !ArrayUtils.contains(INPUTS(), index) && !ArrayUtils.contains(UPGRADES(), index) && (!ArrayUtils.contains(FUEL(), index) || (!isItemFuel(stack) && (!ItemContainerUtil.isEnergyContainer(stack) || ItemContainerUtil.getEnergy(stack) <= 0)));
         }else{
-            if (index >= FOUTPUT() && index <= LOUTPUT()) return true;
-            return false;
+            return ArrayUtils.contains(OUTPUTS(),index);
         }
-        return true;
     }
 
     @Override
-    public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        return getSlots(null).get(index).mayPlace(stack);
-    }
-
-    @Override
-    public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
+    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
         slots.add(new SlotInput(this, 0, 54, 18, (s) -> !this.hasUpgrade(Registration.GENERATOR.get())));
         slots.add(new SlotFuel(this, 1, 54, 54));
         slots.add(new SlotOutput(player, this, 2, 116, 35, (s) -> !this.hasUpgrade(Registration.GENERATOR.get())));
@@ -987,21 +904,21 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     public List<Recipe<?>> grantStoredRecipeExperience(Level level, Vec3 worldPosition) {
         List<Recipe<?>> list = Lists.newArrayList();
-        this.recipes.object2IntEntrySet().fastForEach(entry-> {
-            level.getRecipeManager().byKey(entry.getKey()).ifPresent((h) -> {
-                list.add(h);
-                if (hasXPTank()) {
-                    int amountLiquidXp = Mth.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h).getExperience()) * 5;
-                    if (amountLiquidXp >= 1) {
-                        xpTank.fill(FluidStack.create(Config.getLiquidXP(), amountLiquidXp * FluidStack.bucketAmount() /1000), false);
-                        recipes.clear();
+            this.recipes.object2IntEntrySet().fastForEach(entry-> {
+                level.getRecipeManager().byKey(entry.getKey()).ifPresent((h) -> {
+                    list.add(h);
+                    if (hasXPTank()) {
+                        int amountLiquidXp = Mth.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h).getExperience()) * 5;
+                        if (amountLiquidXp >= 1) {
+                          xpTank.fill(FluidStack.create(Config.getLiquidXP(), amountLiquidXp * FluidStack.bucketAmount() /1000), false);
+                            recipes.clear();
+                        }
+                    }else {
+                        if (worldPosition != null)
+                            splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h).getExperience());
                     }
-                }else {
-                    if (worldPosition != null)
-                        splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h).getExperience());
-                }
+                });
             });
-        });
 
         return list;
     }

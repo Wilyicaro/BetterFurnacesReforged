@@ -15,8 +15,8 @@ public class ForgeMenu extends SmeltingMenu {
         super(Registration.FORGE_CONTAINER.get(), windowId, world, pos, playerInventory, player);
     }
 
-    public ForgeMenu(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
-        super(containerType, windowId, world, pos, playerInventory, player, fields);
+    public ForgeMenu(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
+        super(Registration.FORGE_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
     }
     @Override
     public void addInventorySlots(){
