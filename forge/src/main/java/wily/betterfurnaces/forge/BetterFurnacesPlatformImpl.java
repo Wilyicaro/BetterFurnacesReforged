@@ -60,14 +60,14 @@ public class BetterFurnacesPlatformImpl {
                                             continue;
                                         }
                                         for (int i = 0; i < other.getSlots(); i++) {
-                                            if (!be.isItemFuel(other.getStackInSlot(i))){
+                                            if (!SmeltingBlockEntity.isItemFuel(other.getStackInSlot(i))){
                                                 continue;
                                             }
                                             if (other.getStackInSlot(i).isEmpty()) {
                                                 continue;
                                             }
                                             ItemStack stack = other.extractItem(i, other.getStackInSlot(i).getMaxStackSize(), true);
-                                            if (be.isItemFuel(stack) && be.inventory.getItem(FUEL).isEmpty() || ItemHandlerHelper.canItemStacksStack(be.inventory.getItem(FUEL), stack)) {
+                                            if (SmeltingBlockEntity.isItemFuel(stack) && be.inventory.getItem(FUEL).isEmpty() || ItemHandlerHelper.canItemStacksStack(be.inventory.getItem(FUEL), stack)) {
                                                 be.inventory.insertItem(FUEL, other.extractItem(i, other.getStackInSlot(i).getMaxStackSize() - be.inventory.getItem(FUEL).getCount(), false), false);
                                             }
                                         }
@@ -81,7 +81,7 @@ public class BetterFurnacesPlatformImpl {
                                             continue;
                                         }
                                         ItemStack fuel = be.inventory.getItem(FUEL);
-                                        if (be.isItemFuel(fuel)) {
+                                        if (SmeltingBlockEntity.isItemFuel(fuel)) {
                                             continue;
                                         }
                                         for (int i = 0; i < other.getSlots(); i++) {

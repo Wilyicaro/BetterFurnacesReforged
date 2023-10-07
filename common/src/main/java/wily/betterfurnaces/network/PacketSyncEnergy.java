@@ -10,8 +10,8 @@ import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import java.util.function.Supplier;
 
 public class PacketSyncEnergy {
-    private int energy;
-    private BlockPos pos;
+    private final int energy;
+    private final BlockPos pos;
 
 
     public PacketSyncEnergy(FriendlyByteBuf buf) {

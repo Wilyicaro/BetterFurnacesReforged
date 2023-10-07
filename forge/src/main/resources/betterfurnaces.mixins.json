@@ -5,8 +5,7 @@
   "client": [
   ],
   "mixins": [
-    "addForgeInventoryBlockEntity",
-    "AddBetterFurnacesItemsCapabilities"
+    "AddInventoryBlockEntityClient"
   ],
   "injectors": {
     "defaultRequire": 1

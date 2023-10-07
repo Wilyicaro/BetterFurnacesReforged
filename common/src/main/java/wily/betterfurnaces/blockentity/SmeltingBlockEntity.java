@@ -1,6 +1,7 @@
 package wily.betterfurnaces.blockentity;
 
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.shedaniel.architectury.fluid.FluidStack;
@@ -38,7 +39,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
@@ -62,8 +62,6 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static wily.betterfurnaces.BetterFurnacesReforged.MOD_ID;
-
 public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeHolder, StackedContentsCompatible{
     public final int[] provides = new int[Direction.values().length];
     private final int[] lastProvides = new int[this.provides.length];
@@ -71,7 +69,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     public int[] FUEL() {
         int[] inputs = new int[]{1};
-        if (hasUpgradeType(Registration.STORAGE.get())) inputs = ArrayUtils.add(inputs,7);
+        if (hasUpgradeType(Registration.STORAGE.get())) inputs = new  int[]{1,7};
         return inputs;
     }
     public int HEATER() {return FUEL()[0];}
@@ -82,18 +80,18 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public int LOUTPUT(){ return OUTPUTS()[OUTPUTS().length - 1];}
     public int[] INPUTS(){
         int[] inputs = new int[]{0};
-        if (hasUpgradeType(Registration.STORAGE.get())) inputs = ArrayUtils.add(inputs,6);
+        if (hasUpgradeType(Registration.STORAGE.get())) inputs = new int[]{0,6};
         return inputs;
     }
     public int[] OUTPUTS(){
         int[] outputs = new int[]{2};
-        if (hasUpgradeType(Registration.STORAGE.get())) outputs = ArrayUtils.add(outputs,8);
+        if (hasUpgradeType(Registration.STORAGE.get())) outputs = new int[]{2,8};
         return outputs;
     }
     public int[] FSLOTS(){ return  ArrayUtils.addAll(ISLOTS(), OUTPUTS());}
     public int[] ISLOTS(){ return  ArrayUtils.addAll(INPUTS(), FUEL());}
 
-    private Random rand = new Random();
+    private final Random rand = new Random();
 
     public int showInventorySettings;
 
@@ -203,33 +201,24 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     protected int getSpeed() {
         int j = 0;
-            int length = INPUTS().length;
-            for (int i : INPUTS()) {
-                int iC = getFromCache(getCache(), inventory.getItem(i).getItem());
-                j += Math.max(iC, 0);
-                if (j <= 0) length -= 1;
+        int length = INPUTS().length;
+        for (int i : INPUTS()) {
+            ItemStack stack = inventory.getItem(i);
+            int cache = getFromCache(getCache(), stack.getItem());
+            int iC = cache <= 0 ? grabRecipe(stack).map(AbstractCookingRecipe::getCookingTime).orElse(-1): cache;
+            if (iC <= 0){
+                length -= 1;
+                continue;
             }
-            j = length <= 0 ? 0 : j / length;
-            if (j == 0) {
-                for (int i : INPUTS()) {
-                    Optional<AbstractCookingRecipe> recipe = grabRecipe(inventory.getItem(i));
-                    j = !recipe.isPresent() ? -1 : recipe.orElse(null).getCookingTime();
-                    getCache().put(inventory.getItem(i).getItem(), recipe);
-                }
-                if (j == -1) {
-                    return -1;
-                }
-            }
+            j += iC;
+        }
+        j = length <= 0 ? 0 : j / length;
 
         if (j < defaultCookTime.get()) {
-            return j - (200 - defaultCookTime.get());
+            return (int) (j * (defaultCookTime.get() / 200F));
         } else {
             return defaultCookTime.get();
         }
-    }
-
-    public int getCookTimeConfig() {
-        return 0;
     }
 
     public final ContainerData fields = new ContainerData() {
@@ -522,8 +511,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 boolean valid = this.smeltValid() || this.canGeneratorWork();
                 if (!this.isBurning() && (valid)) {
                     if (this.isLiquid() && !this.fluidTank.getFluidStack().isEmpty() && getFluidBurnTime(this.fluidTank.getFluidStack()) > 0){
-                        int fluidAmount= (200 * FluidStack.bucketAmount().intValue()) / getFluidBurnTime(this.fluidTank.getFluidStack());
-                        if ( this.fluidTank.getFluidStack().getAmount().longValue() >= fluidAmount) {
+                        int fluidAmount = (int) ((200 * FactoryAPIPlatform.getBucketAmount()) / getFluidBurnTime(this.fluidTank.getFluidStack()));
+                        if (this.fluidTank.getFluidStack().getAmount().longValue() >= fluidAmount) {
                             this.furnaceBurnTime = this.getEnderMultiplier() * get_cook_time;
                             this.recipesUsed = this.furnaceBurnTime;
                             this.fluidTank.drain(fluidAmount, false);
@@ -643,21 +632,27 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public int getSettingRight() {
         return this.furnaceSettings.get(getIndexRight());
     }
+    public BlockSide[] getSidesOrder(){
+        return BlockSide.values();
+    }
+
+    public int getIndexBottom() {return BlockSide.BOTTOM.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
+    public int getIndexTop() {return BlockSide.TOP.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();}
 
     public int getIndexFront() {
-        return BlockSide.FRONT.blockStateToFacing(getBlockState()).ordinal();
+        return BlockSide.FRONT.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();
     }
 
     public int getIndexBack() {
-        return BlockSide.BACK.blockStateToFacing(getBlockState()).ordinal();
+        return BlockSide.BACK.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();
     }
 
     public int getIndexLeft() {
-        return BlockSide.LEFT.blockStateToFacing(getBlockState()).ordinal();
+        return BlockSide.LEFT.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();
     }
 
     public int getIndexRight() {
-        return BlockSide.RIGHT.blockStateToFacing(getBlockState()).ordinal();
+        return BlockSide.RIGHT.blockStateToFacing(getBlockState(),getSidesOrder()).ordinal();
     }
 
     public int getAutoInput() {
@@ -782,7 +777,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         this.cookTime = tag.getInt("CookTime");
         this.totalCookTime = tag.getInt("CookTimeTotal");
         this.timer = 0;
-        this.recipesUsed = this.getBurnTime(this.getInv().getItem(1));
+        this.recipesUsed = getBurnTime(this.getInv().getItem(1));
         fluidTank.deserializeTag(tag.getCompound("fluidTank"));
         xpTank.deserializeTag(tag.getCompound("xpTank"));
         CompoundTag compoundnbt = tag.getCompound("RecipesUsed");
@@ -829,71 +824,60 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
 
 
-    public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing){
+    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing){
         if (storage == Storages.FLUID){
-            if (facing == null || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()) {
+            if (facing == null || (!hasUpgrade(Registration.GENERATOR.get()) && !hasXPTank()) || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()) {
                 if(isLiquid())
-                    return ((Optional<T>) Optional.of(fluidTank));
-            }
-            else {
+                    return ()-> (T) fluidTank;
+            } else {
                 if (hasUpgrade(Registration.GENERATOR.get())) {
                     ItemStack gen = getUpgradeSlotItem(Registration.GENERATOR.get());
-                    return ((Optional<T>) Optional.ofNullable(gen.getItem() instanceof GeneratorUpgradeItem ? ((GeneratorUpgradeItem) gen.getItem()).getFluidStorage(gen) : null));
+                    return ()-> (T)(gen.getItem() instanceof GeneratorUpgradeItem ? ((GeneratorUpgradeItem) gen.getItem()).getFluidStorage(gen) : null);
                 } else if (hasXPTank())
-                    return ((Optional<T>) Optional.of( xpTank));
+                    return ()-> (T) xpTank;
             }
         }
         if (storage == Storages.ITEM){
             if (facing != null)
-                return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).getKey(), getSlotsTransport(facing).getValue()));
-            else return (Optional<T>) Optional.of(inventory);
+                return ()-> (T)FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).getFirst(), getSlotsTransport(facing).getSecond());
+            else return ()-> (T)inventory;
         }
         if (storage == Storages.ENERGY && (hasUpgrade(Registration.ENERGY.get()) ||  hasUpgrade(Registration.GENERATOR.get()))){
-            return (Optional<T>) Optional.ofNullable(FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(Registration.GENERATOR.get()))));
+            return ()-> (T)FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(Registration.GENERATOR.get())));
         }
-        return Optional.empty();
-    }
-    public int getIndexBottom() {
-        return 0;
-    }
-    public int getIndexTop() {
-        return 1;
+        return ArbitrarySupplier.empty();
     }
 
     @Override
-    public Map.Entry<int[], TransportState> getSlotsTransport(Direction side) {
-
-
+    public Pair<int[], TransportState> getSlotsTransport(Direction side) {
         if (hasUpgradeType(Registration.FACTORY.get())) {
             if (this.furnaceSettings.get(side.ordinal()) == 0) {
-                return new AbstractMap.SimpleEntry<>(new int[]{},TransportState.NONE);
+                return Pair.of(new int[]{},TransportState.NONE);
             } else if (this.furnaceSettings.get(side.ordinal()) == 1) {
-                return new AbstractMap.SimpleEntry<>(ISLOTS(),TransportState.INSERT);
+                return Pair.of(ISLOTS(),TransportState.INSERT);
             } else if (this.furnaceSettings.get(side.ordinal()) == 2) {
-                return new AbstractMap.SimpleEntry<>(OUTPUTS(),TransportState.EXTRACT_INSERT);
+                return Pair.of(OUTPUTS(),TransportState.EXTRACT_INSERT);
             } else if (this.furnaceSettings.get(side.ordinal()) == 3) {
-                return new AbstractMap.SimpleEntry<>(FSLOTS(), TransportState.EXTRACT_INSERT);
+                return Pair.of(FSLOTS(), TransportState.EXTRACT_INSERT);
             } else if (this.furnaceSettings.get(side.ordinal()) == 4) {
-                return new AbstractMap.SimpleEntry<>(new int[]{FUEL()[0]}, TransportState.EXTRACT_INSERT);
+                return Pair.of(new int[]{FUEL()[0]}, TransportState.EXTRACT_INSERT);
             }
         }else {
-            if (side == Direction.UP) return new AbstractMap.SimpleEntry<>(INPUTS(),TransportState.INSERT);
-            else if (side == Direction.DOWN) return new AbstractMap.SimpleEntry<>(OUTPUTS(),TransportState.EXTRACT);
-            else return new AbstractMap.SimpleEntry<>( new int[]{FUEL()[0]},TransportState.EXTRACT_INSERT);
+            if (side == Direction.UP) return Pair.of(INPUTS(),TransportState.INSERT);
+            else if (side == Direction.DOWN) return Pair.of(OUTPUTS(),TransportState.EXTRACT);
+            else return Pair.of( new int[]{FUEL()[0]},TransportState.EXTRACT_INSERT);
         }
 
-        return new AbstractMap.SimpleEntry<>(new int[]{},TransportState.NONE);
+        return Pair.of(new int[]{},TransportState.NONE);
     }
 
     @Override
     public boolean IcanExtractItem(int index, ItemStack stack) {
         if (hasUpgradeType(Registration.FACTORY.get())) {
-            if (ArrayUtils.contains(INPUTS(),index) || ArrayUtils.contains(UPGRADES(),index) || (ArrayUtils.contains(FUEL(),index) && (isItemFuel(stack) ||( ItemContainerUtil.isEnergyContainer(stack) && ItemContainerUtil.getEnergy(stack) > 0)))) return false;
+            return !ArrayUtils.contains(INPUTS(), index) && !ArrayUtils.contains(UPGRADES(), index) && (!ArrayUtils.contains(FUEL(), index) || (!isItemFuel(stack) && (!ItemContainerUtil.isEnergyContainer(stack) || ItemContainerUtil.getEnergy(stack) <= 0)));
         }else{
-            if (index >= FOUTPUT() && index <= LOUTPUT()) return true;
-            return false;
+            return index >= FOUTPUT() && index <= LOUTPUT();
         }
-        return true;
     }
 
     @Override

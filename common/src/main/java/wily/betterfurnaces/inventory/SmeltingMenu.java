@@ -59,71 +59,6 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
         return this.be.getAutoOutput() == 1;
     }
 
-    public Component getTooltip(int index) {
-        switch (be.furnaceSettings.get(index))
-        {
-            case 1:
-                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input");
-            case 2:
-                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_output");
-            case 3:
-                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_input_output");
-            case 4:
-                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_fuel");
-            default:
-                return new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_none");
-        }
-    }
-
-    public int getSettingTop()
-    {
-        return this.be.getSettingTop();
-    }
-
-    public int getSettingBottom()
-    {
-        return this.be.getSettingBottom();
-    }
-
-    public int getSettingFront()
-    {
-        return this.be.getSettingFront();
-    }
-
-    public int getSettingBack()
-    {
-        return this.be.getSettingBack();
-    }
-
-    public int getSettingLeft()
-    {
-        return this.be.getSettingLeft();
-    }
-
-    public int getSettingRight()
-    {
-        return this.be.getSettingRight();
-    }
-
-    public int getIndexFront()
-    {
-        return this.be.getIndexFront();
-    }
-
-    public int getIndexBack()
-    {
-        return this.be.getIndexBack();
-    }
-
-    public int getIndexLeft()
-    {
-        return this.be.getIndexLeft();
-    }
-
-    public int getIndexRight()
-    {
-        return this.be.getIndexRight();
-    }
 
     public BlockPos getPos() {
         return this.be.getBlockPos();
@@ -143,23 +78,7 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
 
         return this.fields.get(0) * pixels / i;
     }
-    public int getFluidStoredScaled(int pixels, boolean isXp) {
-        Direction facing = null;
-        if (isXp) facing = Direction.values()[be.getIndexFront()];
-        int cur = getFluidStackStored(isXp).getAmount().intValue();
-        int max = (int) be.getStorage(Storages.FLUID,facing).get().getMaxFluid();
-        return cur * pixels / max;
-    }
-    public FluidStack getFluidStackStored(boolean isXp) {
-        Direction facing = null;
-        if (isXp) facing = Direction.values()[be.getIndexFront()];
-        return be.getStorage(Storages.FLUID,facing).get().getFluidStack();
-    }
-    public int getEnergyStoredScaled(int pixels) {
-        int cur = getEnergyStored();
-        int max = getMaxEnergyStored();
-        return cur * pixels / max;
-    }
+
     public int getEnergyStored() {
         return be.energyStorage.getEnergyStored();
     }

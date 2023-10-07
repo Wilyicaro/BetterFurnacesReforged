@@ -1,108 +1,63 @@
 package wily.betterfurnaces.client.screen;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.client.ItemColorsHandler;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ColorUpgradeItem.ContainerColorUpgrade;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketColorSlider;
+import wily.factoryapi.base.client.drawable.FactoryDrawableButton;
+import wily.factoryapi.base.client.drawable.FactoryDrawableSlider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgrade> {
-    public static final ResourceLocation WIDGETS = new ResourceLocation(BetterFurnacesReforged.MOD_ID + ":" + "textures/container/widgets.png");
     private int buttonstate = 0;
-    public BetterSlider red;
-    public BetterSlider green;
-    public BetterSlider blue;
-    private Player player;
-
+    public FactoryDrawableSlider red;
+    public FactoryDrawableSlider green;
+    public FactoryDrawableSlider blue;
 
     public ColorUpgradeScreen(ContainerColorUpgrade container, Inventory inv, Component name) {
         super(container, inv, name);
-        player = inv.player;
     }
-
     @Override
     protected void init() {
         super.init();
-
-        ItemStack itemStack = this.getMenu().itemStackBeingHeld;
-        CompoundTag nbt;
-        nbt = itemStack.getOrCreateTag();
-        red = new BetterSlider( width / 2 - (imageWidth - 8) / 2, relY() + 24, imageWidth - 8, 20, new TranslatableComponent("gui.betterfurnacesreforged.color.red") , TextComponent.EMPTY, 0, 255, nbt.getInt("red"),  true);
-        green = new BetterSlider( width / 2 - (imageWidth - 8) / 2, relY() + 46, imageWidth - 8, 20, new TranslatableComponent("gui.betterfurnacesreforged.color.green") , TextComponent.EMPTY, 0, 255, nbt.getInt("green"), true);
-        blue = new BetterSlider( width / 2 - (imageWidth - 8) / 2, relY() + 68, imageWidth - 8, 20, new TranslatableComponent("gui.betterfurnacesreforged.color.blue") , TextComponent.EMPTY, 0, 255, nbt.getInt("blue"), true);
-        this.addButton(red);
-        this.addButton(green);
-        this.addButton(blue);
-
+        CompoundTag nbt = this.getMenu().itemStackBeingHeld.getOrCreateTag();
+        red = addNestedWidget(new FactoryDrawableSlider(leftPos + 3,topPos + 24, i->new TranslatableComponent("gui.betterfurnacesreforged.color.red").append(""+i.value),BetterFurnacesDrawables.VANILLA_BUTTON,BetterFurnacesDrawables.VANILLA_BUTTON_BACKGROUND,6,imageWidth - 6,nbt.getInt("red"),255).onPress((s, b)-> sliderPacket(s,1)));
+        green = addNestedWidget(new FactoryDrawableSlider(leftPos + 3,topPos + 46,i->new TranslatableComponent("gui.betterfurnacesreforged.color.green").append(""+i.value),BetterFurnacesDrawables.VANILLA_BUTTON,BetterFurnacesDrawables.VANILLA_BUTTON_BACKGROUND,6,imageWidth - 6,nbt.getInt("green"),255).onPress((s,b)-> sliderPacket(s,2)));
+        blue = addNestedWidget(new FactoryDrawableSlider(leftPos + 3,topPos + 68,i->new TranslatableComponent("gui.betterfurnacesreforged.color.blue").append(""+i.value),BetterFurnacesDrawables.VANILLA_BUTTON,BetterFurnacesDrawables.VANILLA_BUTTON_BACKGROUND,6,imageWidth - 6,nbt.getInt("blue"),255).onPress((s,b)-> sliderPacket(s,3)));
     }
-    protected void sliderPacket(BetterSlider slider, int diff){
-            Messages.INSTANCE.sendToServer(new PacketColorSlider(slider.getValueInt(), diff));
+    protected void sliderPacket(FactoryDrawableSlider slider, int diff){
+        Messages.INSTANCE.sendToServer(new PacketColorSlider(slider.getValue(), diff));
     }
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        double actualMouseX = mouseX - relX();
-        double actualMouseY = mouseY - relY();
-        if (actualMouseX>= 8 && actualMouseX <= 22 && actualMouseY >= 6 && actualMouseY <= 20) {
-            if (buttonstate == 1) {
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
-                buttonstate = 0;
-            } else {
-                if (buttonstate == 0) {
-                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.3F, 0.3F));
-                    buttonstate = 1;
-                }
-            }
-        }
-        return super.mouseClicked(mouseX, mouseY, button);
+    public List<Widget> getNestedWidgets() {
+        List<Widget> list = new ArrayList<>(ImmutableList.of(new FactoryDrawableButton(leftPos + 8,topPos + 8, BetterFurnacesDrawables.BUTTON).icon(BetterFurnacesDrawables.getButtonIcon(12 + buttonstate)).tooltip((buttonstate == 0 ?Blocks.FURNACE : Registration.EXTREME_FORGE.get()).getName()).onPress((b, i)-> buttonstate =(buttonstate == 1 ? 0 : 1))));
+        list.addAll(nestedWidgets);
+        return list;
     }
+
     @Override
     protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-        if (red.isHovered() || red.isFocused()) sliderPacket(red, 1);
-        if (green.isHovered() || green.isFocused()) sliderPacket(green, 2);
-        if (blue.isHovered() || blue.isFocused()) sliderPacket(blue, 3);
-        int actualMouseX = mouseX - relX();
-            int actualMouseY = mouseY - relY();
-            minecraft.getTextureManager().bind(WIDGETS);
-            if (buttonstate == 0) {
-            this.blit(matrix, relX() + 8, relY() + 8, 126, 189, 14, 14);
-        }
-        if (buttonstate == 1) {
-            this.blit(matrix, relX() + 8, relY() + 8, 112, 189, 14, 14);
-        }
-        if (actualMouseX>= 8 && actualMouseX <= 22 && actualMouseY >= 6 && actualMouseY <= 20){
-            if (buttonstate == 0) {
-                this.blit(matrix, relX() + 8, relY() + 8, 154, 189, 14, 14);
-                this.renderTooltip(matrix, Blocks.FURNACE.getName(), mouseX, mouseY);
-            }
-            if (buttonstate == 1) {
-                this.blit(matrix, relX() + 8, relY() + 8, 140, 189, 14, 14);
-                this.renderTooltip(matrix, Registration.EXTREME_FORGE.get().getName(), mouseX, mouseY);
-            }
-        }
         ItemStack stack = buttonstate == 0 ? new ItemStack(Registration.EXTREME_FURNACE.get().asItem()) : new ItemStack(Registration.EXTREME_FORGE.get().asItem());
         Lighting.setupFor3DItems();
         CompoundTag tag = stack.getOrCreateTag();
-        ItemColorsHandler.putColor(tag,red.getValueInt(),green.getValueInt(),blue.getValueInt());
+        ItemColorsHandler.putColor(tag,red.getValue(),green.getValue(),blue.getValue());
         stack.setTag(tag);
-        renderGuiItem(stack, (width / 2 - 8), (this.relY() - 48), 4,4);
-
+        renderGuiItem(stack, (width / 2 - 8), (this.topPos - 48), 4,4);
     }
 
 }

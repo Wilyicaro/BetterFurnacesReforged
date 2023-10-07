@@ -7,7 +7,7 @@ import wily.betterfurnaces.items.UpgradeItem;
 
 public class SlotHeater extends Slot {
 
-    private SmeltingBlockEntity tf;
+    private final SmeltingBlockEntity tf;
 
     public SlotHeater(SmeltingBlockEntity be, int slotIndex, int xPosition, int yPosition) {
         super(be.inventory, slotIndex, xPosition, yPosition);

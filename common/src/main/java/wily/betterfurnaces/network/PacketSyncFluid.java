@@ -13,9 +13,9 @@ import wily.factoryapi.base.Storages;
 import java.util.function.Supplier;
 
 public class PacketSyncFluid {
-    private FluidStack stack;
-    private Direction direction;
-    private BlockPos pos;
+    private final FluidStack stack;
+    private final Direction direction;
+    private final BlockPos pos;
 
     public PacketSyncFluid(FriendlyByteBuf buf) {
         this(buf.readBlockPos(),Direction.values()[buf.readInt()], FluidStack.read(buf) );

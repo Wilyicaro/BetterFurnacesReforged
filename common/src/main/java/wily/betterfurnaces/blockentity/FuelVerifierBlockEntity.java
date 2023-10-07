@@ -1,6 +1,6 @@
 package wily.betterfurnaces.blockentity;
 
-import com.ibm.icu.impl.Pair;
+import com.mojang.datafixers.util.Pair;
 import me.shedaniel.architectury.registry.fuel.FuelRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.FuelVerifierMenu;
 import wily.betterfurnaces.inventory.SlotFuel;
+import wily.factoryapi.base.ArbitrarySupplier;
 import wily.factoryapi.base.IPlatformHandlerApi;
 import wily.factoryapi.base.Storages;
 import wily.factoryapi.base.TransportState;
@@ -27,8 +28,8 @@ import java.util.Optional;
 public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
     @Override
-    public Map.Entry<int[], TransportState> getSlotsTransport(Direction side) {
-        return new AbstractMap.SimpleEntry<>( new int[0],TransportState.EXTRACT);
+    public Pair<int[], TransportState> getSlotsTransport(Direction side) {
+        return Pair.of(new int[0],TransportState.EXTRACT);
     }
 
     @Override
@@ -103,9 +104,9 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing) {
+    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing) {
         if (!this.isRemoved() && facing != null && storage == Storages.ITEM) {
-            return (Optional<T>) Optional.of(inventory);
+            return ()-> (T)inventory;
         }
         return super.getStorage(storage, facing);
     }

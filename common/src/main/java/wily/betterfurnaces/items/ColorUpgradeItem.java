@@ -71,7 +71,7 @@ public class ColorUpgradeItem extends UpgradeItem {
             return newContainerServerSide;
         }
 
-        private ItemStack itemStackColorUpgrade;
+        private final ItemStack itemStackColorUpgrade;
     }
     public static class ContainerColorUpgrade extends AbstractUpgradeMenu {
 

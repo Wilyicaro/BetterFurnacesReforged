@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 
 public class PacketOrientationButton {
 
-private BlockPos pos;
-	private boolean state;
+private final BlockPos pos;
+	private final boolean state;
 
 	public PacketOrientationButton(FriendlyByteBuf buf) {
 		this(buf.readBlockPos(), buf.readBoolean());

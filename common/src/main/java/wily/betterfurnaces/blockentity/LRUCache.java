@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class LRUCache<K, V> extends LinkedHashMap<K, V> {
 
-    private int size;
+    private final int size;
 
     private LRUCache(int size)
     {

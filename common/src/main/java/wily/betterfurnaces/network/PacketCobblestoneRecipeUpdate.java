@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 public class PacketCobblestoneRecipeUpdate {
 
-private BlockPos pos;
+private final BlockPos pos;
 
 	public PacketCobblestoneRecipeUpdate(FriendlyByteBuf buf) {
 		this(buf.readBlockPos());

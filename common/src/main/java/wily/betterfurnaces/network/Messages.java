@@ -7,11 +7,6 @@ import wily.betterfurnaces.BetterFurnacesReforged;
 public class Messages {
     public static NetworkChannel INSTANCE;
 
-    private static int ID = 0;
-    private static int nextID() {
-        return ID++;
-    }
-
     public static void registerMessages(String channelName) {
         INSTANCE = NetworkChannel.create(new ResourceLocation(BetterFurnacesReforged.MOD_ID, channelName));
 
@@ -52,5 +47,9 @@ public class Messages {
                 PacketSyncEnergy::encode,
                 PacketSyncEnergy::new,
                 PacketSyncEnergy::apply);
+        INSTANCE.register( PacketSyncAdditionalInt.class,
+                PacketSyncAdditionalInt::toBytes,
+                PacketSyncAdditionalInt::new,
+                PacketSyncAdditionalInt::handle);
     }
 }

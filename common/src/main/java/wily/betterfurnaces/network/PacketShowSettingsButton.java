@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 
 public class PacketShowSettingsButton {
 
-private BlockPos pos;
-	private int set;
+private final BlockPos pos;
+	private final int set;
 
 	public PacketShowSettingsButton(FriendlyByteBuf buf) {
 		this(buf.readBlockPos(),buf.readInt());

@@ -36,28 +36,14 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
         super(cookTime);
     }
 
-    public int getIndexBottom() {
-
-        return facing().getOpposite().ordinal();
-    }
-    public int getIndexTop() {
-            return facing().ordinal();
-    }
-    @Override
-    public int getIndexFront() {
-        if (facing() == Direction.NORTH || facing() == Direction.EAST)  {
-            return Direction.DOWN.ordinal();
-        } else if ((facing() == Direction.SOUTH) || (facing() == Direction.WEST)) {
-            return Direction.UP.ordinal();
-        }else if (facing() == Direction.UP){
-            return Direction.NORTH.ordinal();
-        }else {
-            return Direction.SOUTH.ordinal();
-        }
-    }
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new ForgeMenu(Registration.FORGE_CONTAINER.get(),i,level,getBlockPos(),playerInventory,playerEntity,fields);
+        return new ForgeMenu(i,level,getBlockPos(),playerInventory,playerEntity,fields);
+    }
+
+    @Override
+    public BlockSide[] getSidesOrder() {
+        return BlockSide.TOP_FACE_SIDES;
     }
 
     @Override
@@ -87,32 +73,4 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
         slots.add(new SlotUpgrade(this, 13, 151, y4));
     }
 
-    @Override
-    public int getIndexBack() {
-        if (facing() == Direction.NORTH || facing() == Direction.EAST)  {
-            return Direction.UP.ordinal();
-        } else if ((facing() == Direction.SOUTH) || (facing() == Direction.WEST)) {
-            return Direction.DOWN.ordinal();
-        }else if (facing() == Direction.UP){
-            return Direction.SOUTH.ordinal();
-        }else {
-            return Direction.NORTH.ordinal();
-        }
-    }
-    @Override
-    public int getIndexLeft() {
-        if (facing() == Direction.EAST || facing() == Direction.WEST) {
-            return Direction.SOUTH.ordinal();
-        } else {
-            return Direction.EAST.ordinal();
-        }
-    }
-    @Override
-    public int getIndexRight() {
-        if (facing() == Direction.EAST || facing() == Direction.WEST) {
-            return Direction.NORTH.ordinal();
-        } else {
-            return Direction.WEST.ordinal();
-        }
-    }
 }

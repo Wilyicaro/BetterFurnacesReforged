@@ -1,8 +1,9 @@
 package wily.betterfurnaces.blockentity;
 
-import com.ibm.icu.impl.Pair;
+import com.mojang.datafixers.util.Pair;
 import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.utils.Fraction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,9 +33,7 @@ import wily.betterfurnaces.items.OreProcessingUpgradeItem;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.ItemContainerUtil;
-import wily.factoryapi.base.IPlatformHandlerApi;
-import wily.factoryapi.base.Storages;
-import wily.factoryapi.base.TransportState;
+import wily.factoryapi.base.*;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -46,8 +45,8 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     protected CobblestoneGeneratorRecipes recipe;
 
     @Override
-    public Map.Entry<int[], TransportState> getSlotsTransport(Direction side) {
-        return new AbstractMap.SimpleEntry<>( new int[0],TransportState.EXTRACT);
+    public Pair<int[], TransportState> getSlotsTransport(Direction side) {
+        return Pair.of( new int[0],TransportState.EXTRACT);
     }
     public static Predicate<ItemStack> HAS_LAVA = s-> hasFluidAsBucket(s,Fluids.LAVA);
     public static Predicate<ItemStack> HAS_WATER = s-> hasFluidAsBucket(s,Fluids.WATER);
@@ -103,11 +102,21 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     private int cobTime;
     private int actualCobTime = getCobTime();
     public int resultType = 0;
+    public Bearer<Integer> autoOutput = Bearer.of(1);
 
 
     public CobblestoneGeneratorBlockEntity() {
         super(Registration.COB_GENERATOR_TILE.get());
+        additionalSyncInts.add(autoOutput);
+    }
 
+    @Override
+    public void syncAdditionalMenuData(AbstractContainerMenu menu, Player player) {
+        super.syncAdditionalMenuData(menu, player);
+    }
+
+    public boolean hasAutoOutput(){
+        return autoOutput.get() == 1;
     }
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
@@ -200,7 +209,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
                 level.addParticle(ParticleTypes.LARGE_SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
             }
         }
-        if (!output.isEmpty() && !level.isClientSide) BetterFurnacesPlatform.autoOutput(this,OUTPUT);
+        if (!output.isEmpty() && !level.isClientSide && hasAutoOutput()) BetterFurnacesPlatform.autoOutput(this,OUTPUT);
     }
     protected int cobGen(){
 
@@ -258,9 +267,9 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public <T extends IPlatformHandlerApi> Optional<T> getStorage(Storages.Storage<T> storage, Direction facing) {
+    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing) {
         if (!this.isRemoved() && storage == Storages.ITEM) {
-            return (Optional<T>) Optional.of(FactoryAPIPlatform.filteredOf(inventory,facing, new int[]{0,1,2,3,4},TransportState.EXTRACT_INSERT));
+            return ()-> (T)FactoryAPIPlatform.filteredOf(inventory,facing, new int[]{0,1,2,3,4},TransportState.EXTRACT_INSERT);
         }
         return super.getStorage(storage, facing);
     }

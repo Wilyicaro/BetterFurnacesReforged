@@ -6,7 +6,6 @@ package wily.betterfurnaces.forge.compat;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.ibm.icu.impl.Pair;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.utils.Fraction;
@@ -17,27 +16,29 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 import org.apache.commons.lang3.ArrayUtils;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
+import wily.betterfurnaces.client.screen.AbstractBasicScreen;
 import wily.betterfurnaces.client.screen.CobblestoneGeneratorScreen;
 import wily.betterfurnaces.client.screen.ForgeScreen;
 import wily.betterfurnaces.client.screen.FurnaceScreen;
@@ -48,10 +49,12 @@ import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.GuiUtil;
 import wily.betterfurnaces.util.RecipeUtil;
 import wily.factoryapi.FactoryAPIPlatform;
+import wily.factoryapi.base.client.IWindowWidget;
 import wily.ultimatefurnaces.init.RegistrationUF;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -121,6 +124,15 @@ public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registry) {
 		if (Config.enableJeiClickArea.get() && Config.enableJeiPlugin.get()) {
+			registry.addGenericGuiContainerHandler(AbstractBasicScreen.class, new IGuiContainerHandler<AbstractBasicScreen<?>>() {
+				@Override
+				public List<Rect2i> getGuiExtraAreas(AbstractBasicScreen<?> containerScreen) {
+					List<Rect2i> list =  new ArrayList<>();
+					for (Widget nestedWidget : containerScreen.getNestedWidgets())
+						if (nestedWidget instanceof IWindowWidget) list.add(((IWindowWidget)nestedWidget).getBounds());
+					return list;
+				}
+			});
 			registry.addRecipeClickArea(FurnaceScreen.class, 79, 35, 24, 17, VanillaRecipeCategoryUid.FURNACE, VanillaRecipeCategoryUid.FUEL);
 			registry.addRecipeClickArea(ForgeScreen.class, 80, 80, 24, 17, VanillaRecipeCategoryUid.FURNACE, VanillaRecipeCategoryUid.FUEL);
 			registry.addRecipeClickArea(CobblestoneGeneratorScreen.class, 58, 44, 17, 12, CobblestoneGeneratorRecipes.UID);

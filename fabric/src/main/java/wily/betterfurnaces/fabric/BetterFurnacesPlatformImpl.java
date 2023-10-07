@@ -75,7 +75,7 @@ public class BetterFurnacesPlatformImpl {
                                         while (storageView.hasNext()) {
                                             StorageView<ItemVariant> view = storageView.next();
                                             ItemVariant variant = view.getResource();
-                                            if (view.isResourceBlank() || !be.isItemFuel(view.getResource().toStack())) {
+                                            if (view.isResourceBlank() || !SmeltingBlockEntity.isItemFuel(view.getResource().toStack())) {
                                                 continue;
                                             }
                                             if (variant.isOf(fuel.getItem()) || fuel.isEmpty())
@@ -95,7 +95,7 @@ public class BetterFurnacesPlatformImpl {
                                         continue;
                                     }
                                     ItemStack fuel = be.inventory.getItem(FUEL);
-                                    if (be.isItemFuel(fuel)) {
+                                    if (SmeltingBlockEntity.isItemFuel(fuel)) {
                                         continue;
                                     }
                                     try (Transaction nested = transaction.openNested()) {
@@ -159,8 +159,8 @@ public class BetterFurnacesPlatformImpl {
         for (Direction dir : Direction.values()) {
             BlockEntity other = be.getLevel().getBlockEntity(be.getBlockPos().relative(dir));
             if (other == null || !Energy.valid(other)) continue;
-            EnergyHandler storage= Energy.of(be.getLevel().getBlockEntity(be.getBlockPos().relative(dir)));
-            int i = (int) storage.insert(be.energyStorage.getEnergyStored());
+            EnergyHandler storage= Energy.of(other);
+            int i = (int) Math.ceil(storage.insert(be.energyStorage.getEnergyStored()));
             be.energyStorage.consumeEnergy(i,false);
         }
     }

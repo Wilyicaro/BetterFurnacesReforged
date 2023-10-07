@@ -66,7 +66,7 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         Direction facing = ctx.getNearestLookingDirection().getOpposite();
-        boolean flag = ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER;;
+        boolean flag = ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER;
         return this.defaultBlockState().setValue(BlockStateProperties.FACING, facing).setValue(WATERLOGGED, flag);
     }
 
@@ -98,7 +98,7 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
         }else {
             return super.interactUpgrade(world, pos, player, handIn, stack);
         }
-        ((SmeltingBlockEntity)be).onUpdateSent();
+        be.onUpdateSent();
         return InteractionResult.SUCCESS;
     }
 
@@ -151,9 +151,9 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
 
     public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
         if (p_185499_2_ == Rotation.CLOCKWISE_90 || p_185499_2_ == Rotation.COUNTERCLOCKWISE_90) {
-            if ((Direction) p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.WEST || (Direction) p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.EAST) {
+            if (p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.WEST || p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.EAST) {
                 return p_185499_1_.setValue(BlockStateProperties.FACING, Direction.UP);
-            } else if ((Direction) p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.UP || (Direction)p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.DOWN) {
+            } else if (p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.UP || p_185499_1_.getValue(BlockStateProperties.FACING) == Direction.DOWN) {
                 return p_185499_1_.setValue(BlockStateProperties.FACING, Direction.WEST);
             }
         }

@@ -25,13 +25,6 @@ public class FuelVerifierScreen extends AbstractBasicScreen<FuelVerifierMenu> {
 
 
     @Override
-    public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrix);
-        super.render(matrix, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrix, mouseX, mouseY);
-    }
-
-    @Override
     protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
         Component invname = this.playerInv.getDisplayName();
         Component burntime = new TranslatableComponent("gui.betterfurnacesreforged.fuel.melts").append(new TextComponent(String.valueOf(( this.getMenu()).getBurnTime()))).append( new TranslatableComponent("gui.betterfurnacesreforged.fuel.items"));
@@ -47,11 +40,11 @@ public class FuelVerifierScreen extends AbstractBasicScreen<FuelVerifierMenu> {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         minecraft.getTextureManager().bind( GUI);
 
-        this.blit(matrix, relX(), relY(), 0, 0, this.imageWidth, this.imageHeight);
+        this.blit(matrix, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
         int i;
         i = (this.getMenu()).getBurnTimeScaled(26);
         if (i > 0) {
-            this.blit(matrix, relX() + 74, relY() + 13 + 26 - i, 176, 24 - i, 28, i + 2);
+            this.blit(matrix, leftPos + 74, topPos + 13 + 26 - i, 176, 24 - i, 28, i + 2);
         }
     }
 

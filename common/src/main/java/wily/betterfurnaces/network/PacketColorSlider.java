@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 public class PacketColorSlider {
 
-	private int iden;
-	private int index;
+	private final int iden;
+	private final int index;
 
 	public PacketColorSlider(FriendlyByteBuf buf) {
 		index = buf.readInt();
