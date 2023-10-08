@@ -54,8 +54,6 @@ public class Registration {
         RECIPES_SERIALIZERS.register();
         RECIPES.register();
         TABS.register();
-
-
     }
 
     public static final RegistrySupplier<CreativeModeTab> ITEM_GROUP = TABS.register("bfr_creative_tab",()-> CreativeTabRegistry.create(Component.translatable("itemGroup." + MOD_ID + ".tab"), ()-> Registration.EXTREME_FURNACE.get().asItem().getDefaultInstance()));

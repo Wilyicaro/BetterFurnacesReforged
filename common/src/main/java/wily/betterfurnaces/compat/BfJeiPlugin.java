@@ -164,11 +164,11 @@ public class BfJeiPlugin implements IModPlugin {
 		}
 		@Override
 		public void draw(CobblestoneGeneratorRecipes recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-			GuiUtil.renderScaled(graphics.pose(),  (float) recipe.duration / 20 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
+			GuiUtil.renderScaled(graphics.pose(),  (float) recipe.duration() / 20 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
 			FluidRenderUtil.renderTiledFluid(graphics, 12, 23, 17,12, FluidStack.create(Fluids.LAVA, 1000), false);
 			FluidRenderUtil.renderTiledFluid(graphics, 55, 23, 17,12,FluidStack.create(Fluids.WATER, 1000), true);
 
-			Pair<IDrawableAnimated,IDrawableAnimated> cache = cachedProgressAnim.getUnchecked(recipe.duration);
+			Pair<IDrawableAnimated,IDrawableAnimated> cache = cachedProgressAnim.getUnchecked(recipe.duration());
 			cache.first.draw(graphics, 12,23);
 			guiHelper.createDrawable(GUI, 176, 0, 17, 12).draw(graphics, 12,23);
 			cache.second.draw(graphics, 55,23);
