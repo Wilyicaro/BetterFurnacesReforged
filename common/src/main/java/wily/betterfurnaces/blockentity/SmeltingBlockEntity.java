@@ -495,7 +495,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
                         for (int a : e.INPUTS())
                             e.energyStorage.consumeEnergy(e.EnergyUse() * e.OreProcessingMultiplier(e.inventory.getItem(a)), false);
                     }else{
-                        e.furnaceBurnTime =  e.getEnderMultiplier() * getBurnTime(fuel) * get_cook_time / 200;
+                        e.furnaceBurnTime = (int) Math.ceil(e.getEnderMultiplier() * getBurnTime(fuel) * (get_cook_time / 200D));
                         e.recipesUsed = e.furnaceBurnTime;
                     }
                     if (e.isBurning()) {
