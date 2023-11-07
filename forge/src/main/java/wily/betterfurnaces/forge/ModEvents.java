@@ -8,8 +8,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.init.Registration;
-import wily.ultimatefurnaces.init.RegistrationUF;
+import wily.betterfurnaces.init.ModObjects;
+import wily.ultimatefurnaces.init.ModObjectsUF;
 
 @Mod.EventBusSubscriber(modid = BetterFurnacesReforged.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModEvents {
@@ -23,11 +23,11 @@ public class ModEvents {
     public static void missingItemMappingEvent(RegistryEvent.MissingMappings<Item> event) {
         event.getMappings( "ultimatefurnaces_bfr").forEach((m) -> {
                     m.remap(ForgeRegistries.ITEMS.getValue(new ResourceLocation(BetterFurnacesReforged.MOD_ID, m.key.getPath())));
-                    if (m.key.equals(Registration.IRON_UPGRADE.getId())) m.remap(RegistrationUF.IRON_UPGRADE.get());
-                    if (m.key.equals(Registration.GOLD_UPGRADE.getId())) m.remap(RegistrationUF.GOLD_UPGRADE.get());
-                    if (m.key.equals(Registration.DIAMOND_UPGRADE.getId())) m.remap(RegistrationUF.DIAMOND_UPGRADE.get());
-                    if (m.key.equals(Registration.NETHERHOT_UPGRADE.getId()))
-                        m.remap(RegistrationUF.NETHERHOT_UPGRADE.get());
+                    if (m.key.equals(ModObjects.IRON_UPGRADE.getId())) m.remap(ModObjectsUF.IRON_UPGRADE.get());
+                    if (m.key.equals(ModObjects.GOLD_UPGRADE.getId())) m.remap(ModObjectsUF.GOLD_UPGRADE.get());
+                    if (m.key.equals(ModObjects.DIAMOND_UPGRADE.getId())) m.remap(ModObjectsUF.DIAMOND_UPGRADE.get());
+                    if (m.key.equals(ModObjects.NETHERHOT_UPGRADE.getId()))
+                        m.remap(ModObjectsUF.NETHERHOT_UPGRADE.get());
                 }
         );
     }

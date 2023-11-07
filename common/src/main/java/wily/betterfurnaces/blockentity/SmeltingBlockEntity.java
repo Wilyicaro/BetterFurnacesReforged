@@ -47,7 +47,8 @@ import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.ProjectMMO;
 import wily.betterfurnaces.blocks.SmeltingBlock;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.BlockEntityTypes;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.*;
 import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
 import wily.betterfurnaces.items.GeneratorUpgradeItem;
@@ -69,7 +70,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     public int[] FUEL() {
         int[] inputs = new int[]{1};
-        if (hasUpgradeType(Registration.STORAGE.get())) inputs = new  int[]{1,7};
+        if (hasUpgradeType(ModObjects.STORAGE.get())) inputs = new  int[]{1,7};
         return inputs;
     }
     public int HEATER() {return FUEL()[0];}
@@ -80,12 +81,12 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public int LOUTPUT(){ return OUTPUTS()[OUTPUTS().length - 1];}
     public int[] INPUTS(){
         int[] inputs = new int[]{0};
-        if (hasUpgradeType(Registration.STORAGE.get())) inputs = new int[]{0,6};
+        if (hasUpgradeType(ModObjects.STORAGE.get())) inputs = new int[]{0,6};
         return inputs;
     }
     public int[] OUTPUTS(){
         int[] outputs = new int[]{2};
-        if (hasUpgradeType(Registration.STORAGE.get())) outputs = new int[]{2,8};
+        if (hasUpgradeType(ModObjects.STORAGE.get())) outputs = new int[]{2,8};
         return outputs;
     }
     public int[] FSLOTS(){ return  ArrayUtils.addAll(ISLOTS(), OUTPUTS());}
@@ -104,7 +105,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     private int furnaceBurnTime;
     public int cookTime;
     public int totalCookTime = this.getCookTime();
-    public final Supplier<Integer> defaultCookTime;
     private int recipesUsed;
     private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
     public boolean isForge(){ return false;}
@@ -117,26 +117,24 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     protected LRUCache<Item, Optional<AbstractCookingRecipe>> smoking_cache = LRUCache.newInstance(Config.cacheCapacity.get());
 
 
-    public SmeltingBlockEntity(final Supplier<Integer> cookTime) {
-        super(Registration.IRON_FURNACE_TILE.get());
-        this.defaultCookTime = cookTime;
+    public SmeltingBlockEntity(BlockEntityType<?> blockEntityType) {
+        super(blockEntityType);
         this.recipeType = RecipeType.SMELTING;
-        furnaceSettings = new FactoryUpgradeSettings(()->getUpgradeTypeSlotItem(Registration.FACTORY.get())) {
+        furnaceSettings = new FactoryUpgradeSettings(()->getUpgradeTypeSlotItem(ModObjects.FACTORY.get())) {
             @Override
             public void onChanged() {
-                if (hasUpgradeType(Registration.FACTORY.get())) {
-                    inventory.setItem(getUpgradeTypeSlot(Registration.FACTORY.get()), factory.get());
+                if (hasUpgradeType(ModObjects.FACTORY.get())) {
+                    inventory.setItem(getUpgradeTypeSlot(ModObjects.FACTORY.get()), factory.get());
 
                 }
                 setChanged();
             }
         };
     }
-
-    @Override
-    public BlockEntityType<?> getType() {
-        return Registry.BLOCK_ENTITY_TYPE.get(Registry.BLOCK.getKey(getBlockState().getBlock()));
+    public SmeltingBlockEntity(){
+        this(BlockEntityTypes.BETTER_FURNACE_TILE.get());
     }
+
 
     private int getFromCache(LRUCache<Item, Optional<AbstractCookingRecipe>> c, Item key) {
         if (c == null) return 0;
@@ -175,21 +173,21 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return recipe;
     }
     public boolean hasXPTank() {
-        return hasUpgrade(Registration.XP.get());
+        return hasUpgrade(ModObjects.XP.get());
     }
     public boolean hasEnder() {
-        return (hasUpgradeType(Registration.FUEL.get()));
+        return (hasUpgradeType(ModObjects.FUEL.get()));
     }
-    public int getEnderMultiplier(){ if (hasEnder()) return ((FuelEfficiencyUpgradeItem)getUpgradeTypeSlotItem(Registration.FUEL.get()).getItem()).getMultiplier; else return 1;}
+    public int getEnderMultiplier(){ if (hasEnder()) return ((FuelEfficiencyUpgradeItem)getUpgradeTypeSlotItem(ModObjects.FUEL.get()).getItem()).getMultiplier; else return 1;}
     public boolean isLiquid() {
-        return hasUpgrade(Registration.LIQUID.get());
+        return hasUpgrade(ModObjects.LIQUID.get());
     }
     private boolean isEnergy() {
-        return (hasUpgrade(Registration.ENERGY.get()) && energyStorage.getEnergyStored() >= EnergyUse());
+        return (hasUpgrade(ModObjects.ENERGY.get()) && energyStorage.getEnergyStored() >= EnergyUse());
     }
     public int getCookTime() {
-        if (hasUpgrade(Registration.GENERATOR.get()) || arraySlotAllEmpty(INPUTS())) {
-            return Optional.ofNullable(defaultCookTime).orElse(()->totalCookTime).get();
+        if (hasUpgrade(ModObjects.GENERATOR.get()) || arraySlotAllEmpty(INPUTS())) {
+            return Optional.of(getDefaultCookTime()).orElse(totalCookTime);
         }
         int speed = getSpeed();
         if (speed == -1) {
@@ -197,6 +195,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         }
 
         return Math.max(1, speed);
+    }
+    public int getDefaultCookTime(){
+        return level != null && getBlockState() != null && getBlockState().getBlock() instanceof SmeltingBlock ? ((SmeltingBlock)this.getBlockState().getBlock()).defaultCookTime.get() : 200;
     }
 
     protected int getSpeed() {
@@ -214,10 +215,10 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         }
         j = length <= 0 ? 0 : j / length;
 
-        if (j < defaultCookTime.get()) {
-            return (int) (j * (defaultCookTime.get() / 200F));
+        if (j < getDefaultCookTime()) {
+            return (int) (j * (getDefaultCookTime() / 200F));
         } else {
-            return defaultCookTime.get();
+            return getDefaultCookTime();
         }
     }
 
@@ -314,10 +315,10 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         }
     }
     public int correspondentOutputSlot(int input){
-        return hasUpgradeType(Registration.STORAGE.get())?  Arrays.stream(OUTPUTS()).filter(i-> canSmelt(irecipeSlot(input).orElse(null), input, i)).min().orElse(-1) : FOUTPUT() - FINPUT() + input;
+        return hasUpgradeType(ModObjects.STORAGE.get())?  Arrays.stream(OUTPUTS()).filter(i-> canSmelt(irecipeSlot(input).orElse(null), input, i)).min().orElse(-1) : FOUTPUT() - FINPUT() + input;
     }
     public void trySmelt(){
-        if (hasUpgradeType(Registration.STORAGE.get())) {
+        if (hasUpgradeType(ModObjects.STORAGE.get())) {
             int i = correspondentOutputSlot(FINPUT());
             if (i>=0) this.smeltItem(irecipeSlot(FINPUT()).orElse(null), FINPUT(), i);
         } else
@@ -327,7 +328,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 }
     }
     public int getUpdatedType(){
-        return hasUpgrade(Registration.BLAST.get()) ? 1 : hasUpgrade(Registration.SMOKE.get()) ? 2 : hasUpgrade(Registration.GENERATOR.get()) ? 3 : 0;
+        return hasUpgrade(ModObjects.BLAST.get()) ? 1 : hasUpgrade(ModObjects.SMOKE.get()) ? 2 : hasUpgrade(ModObjects.GENERATOR.get()) ? 3 : 0;
     }
 
     @Override
@@ -369,14 +370,14 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return true;
     }
     public boolean canGeneratorWork(){
-        if (hasUpgrade(Registration.GENERATOR.get())){
-            ItemStack stack = getUpgradeSlotItem(Registration.GENERATOR.get());
+        if (hasUpgrade(ModObjects.GENERATOR.get())){
+            ItemStack stack = getUpgradeSlotItem(ModObjects.GENERATOR.get());
             return (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).getAmount().longValue() > 0) && energyStorage.getSpace() > 0;
         }
         return false;
     }
     public boolean smeltValid(){
-        if (!hasUpgrade(Registration.GENERATOR.get()))
+        if (!hasUpgrade(ModObjects.GENERATOR.get()))
             for (int i : INPUTS()) {
             if(!this.canSmelt(irecipeSlot(i).orElse(null), i, correspondentOutputSlot(i))) continue;
             return true;
@@ -392,16 +393,17 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
         if (this.isBurning()) {
             --this.furnaceBurnTime;
+
         }
 
 
         if (this.hasXPTank()) this.grantStoredRecipeExperience(level, null);
 
-        if (!this.hasUpgradeType(Registration.FACTORY.get()) && this.showOrientation) this.showOrientation = false;
+        if (!this.hasUpgradeType(ModObjects.FACTORY.get()) && this.showOrientation) this.showOrientation = false;
 
         ItemStack fuel = this.inventory.getItem(this.FUEL()[0]);
-        if (this.hasUpgrade(Registration.COLOR.get()) != level.getBlockState(this.getBlockPos()).getValue(SmeltingBlock.COLORED)) {
-            level.setBlock(this.getBlockPos(), level.getBlockState(this.getBlockPos()).setValue(SmeltingBlock.COLORED, this.hasUpgrade(Registration.COLOR.get())), 3);
+        if (this.hasUpgrade(ModObjects.COLOR.get()) != level.getBlockState(this.getBlockPos()).getValue(SmeltingBlock.COLORED)) {
+            level.setBlock(this.getBlockPos(), level.getBlockState(this.getBlockPos()).setValue(SmeltingBlock.COLORED, this.hasUpgrade(ModObjects.COLOR.get())), 3);
             setChanged();
         }
 
@@ -420,10 +422,10 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         if (!level.isClientSide) {
             int get_cook_time = this.getCookTime();
             this.timer++;
-            if (this.hasUpgrade(Registration.GENERATOR.get()))
+            if (this.hasUpgrade(ModObjects.GENERATOR.get()))
                 BetterFurnacesPlatform.transferEnergySides(this);
 
-            if (this.hasUpgradeType(Registration.STORAGE.get())) {
+            if (this.hasUpgradeType(ModObjects.STORAGE.get())) {
                 ItemStack storageInput = this.inventory.getItem(6);
                 if (!storageInput.isEmpty()){
                     int added = this.addOrSetItem(storageInput,this.inventory,this.FINPUT());
@@ -443,7 +445,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
             }
 
 
-            if (this.hasUpgrade(Registration.ENERGY.get())) {
+            if (this.hasUpgrade(ModObjects.ENERGY.get())) {
                 if (ItemContainerUtil.isEnergyContainer(fuel) && ItemContainerUtil.getEnergy(fuel) > 0) {
                     if (this.energyStorage.getSpace() > 0) {
                         energyStorage.receiveEnergy(ItemContainerUtil.extractEnergy(energyStorage.getSpace(),fuel).contextEnergy, false);
@@ -523,14 +525,14 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                         for (int a : this.INPUTS())
                             this.energyStorage.consumeEnergy(this.EnergyUse() * this.OreProcessingMultiplier(this.inventory.getItem(a)), false);
                     }else{
-                        this.furnaceBurnTime =  this.getEnderMultiplier() * getBurnTime(fuel) * get_cook_time / 200;
+                        this.furnaceBurnTime = (int) Math.ceil(this.getEnderMultiplier() * getBurnTime(fuel) * (get_cook_time / 200D));
                         this.recipesUsed = this.furnaceBurnTime;
                     }
                     if (this.isBurning()) {
                         flag1 = true;
                         if (this.hasEnder()) {
-                            if (this.hasUpgrade(Registration.FUEL.get())) {
-                                this.breakDurabilityItem(this.getUpgradeSlotItem(Registration.FUEL.get()));
+                            if (this.hasUpgrade(ModObjects.FUEL.get())) {
+                                this.breakDurabilityItem(this.getUpgradeSlotItem(ModObjects.FUEL.get()));
                             }
                         }
                         if ((!this.isLiquid() || this.fluidTank.getFluidStack().getAmount().longValue() < 10) && !this.isEnergy()) {
@@ -541,8 +543,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
                             if (!fuel.isEmpty() && isItemFuel(fuel)) {
                                 fuel.shrink(1);
-                                if (this.hasUpgrade(Registration.FUEL.get())) {
-                                    this.breakDurabilityItem(this.getUpgradeSlotItem(Registration.FUEL.get()));
+                                if (this.hasUpgrade(ModObjects.FUEL.get())) {
+                                    this.breakDurabilityItem(this.getUpgradeSlotItem(ModObjects.FUEL.get()));
                                 }
                             }
                         }
@@ -550,17 +552,17 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 }
                 if (this.isBurning() && valid ) {
                     ++this.cookTime;
-                    if (this.hasUpgrade(Registration.GENERATOR.get())){
-                        ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(FactoryAPIPlatform.getBucketAmount() / 1000, this.getUpgradeSlotItem(Registration.GENERATOR.get()));
-                        if (!context.fluidStack.isEmpty()) this.inventory.setItem(this.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container);
+                    if (this.hasUpgrade(ModObjects.GENERATOR.get())){
+                        ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(FactoryAPIPlatform.getBucketAmount() / 1000, this.getUpgradeSlotItem(ModObjects.GENERATOR.get()));
+                        if (!context.fluidStack.isEmpty()) this.inventory.setItem(this.getUpgradeTypeSlot(ModObjects.GENERATOR.get()), context.container);
                         this.energyStorage.receiveEnergy(Math.round((float)500 / get_cook_time),false);
                     }
                     if (this.cookTime >= this.totalCookTime) {
                         this.cookTime = 0;
                         this.totalCookTime = this.getCookTime();
-                        if (!this.hasUpgrade(Registration.GENERATOR.get())) {
+                        if (!this.hasUpgrade(ModObjects.GENERATOR.get())) {
                             this.trySmelt();
-                            if (this.hasUpgradeType(Registration.FACTORY.get()))
+                            if (this.hasUpgradeType(ModObjects.FACTORY.get()))
                                 BetterFurnacesPlatform.smeltingAutoIO(this);
                         }
                         flag1 = true;
@@ -575,7 +577,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 flag1 = true;
                 this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(BlockStateProperties.LIT, this.isBurning()), 3);
             }
-            if ((this.timer % 24 == 0) && (this.hasUpgradeType(Registration.FACTORY.get()))){
+            if ((this.timer % 24 == 0) && (this.hasUpgradeType(ModObjects.FACTORY.get()))){
                 if (this.cookTime <= 0) {
                     if (this.arraySlotFilled(this.INPUTS(), false)) {
                         BetterFurnacesPlatform.smeltingAutoIO(this);
@@ -605,8 +607,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     }
     public Color getColor() {
-        if (getUpgradeSlotItem(Registration.COLOR.get()).isEmpty()) return Color.WHITE;
-        CompoundTag nbt = getUpgradeSlotItem(Registration.COLOR.get()).getTag();
+        if (getUpgradeSlotItem(ModObjects.COLOR.get()).isEmpty()) return Color.WHITE;
+        CompoundTag nbt = getUpgradeSlotItem(ModObjects.COLOR.get()).getTag();
             return new Color(nbt.getInt("red") ,nbt.getInt("green") ,nbt.getInt("blue"));
     }
 
@@ -689,8 +691,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         return (ore != null && input.getItem().is(ore));
     }
     protected int OreProcessingMultiplier(ItemStack input){
-        if (hasUpgradeType(Registration.ORE_PROCESSING.get())){
-            OreProcessingUpgradeItem oreup = (OreProcessingUpgradeItem)getUpgradeTypeSlotItem(Registration.ORE_PROCESSING.get()).getItem();
+        if (hasUpgradeType(ModObjects.ORE_PROCESSING.get())){
+            OreProcessingUpgradeItem oreup = (OreProcessingUpgradeItem)getUpgradeTypeSlotItem(ModObjects.ORE_PROCESSING.get()).getItem();
             if  (isOre( input)) return oreup.getMultiplier;
 
         } else if (input == ItemStack.EMPTY) return 0;
@@ -699,7 +701,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
-        return new SmeltingMenu(Registration.FURNACE_CONTAINER.get(),i,level,getBlockPos(),playerInventory,playerEntity,fields);
+        return new SmeltingMenu(ModObjects.FURNACE_CONTAINER.get(),i,level,getBlockPos(),playerInventory,playerEntity,fields);
     }
 
     protected boolean canSmelt(@Nullable Recipe<?> recipe, int INPUT, int OUTPUT) {
@@ -748,8 +750,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
         if (recipe != null && this.canSmelt(recipe, INPUT, OUTPUT)) {
             ItemStack input = this.getInv().getItem(INPUT);
 
-            if (addOrSetItem(getResult(recipe,input),inventory,OUTPUT) > 0 && hasUpgrade(Registration.ORE_PROCESSING.get()) && (isOre(input))) {
-                breakDurabilityItem(getUpgradeSlotItem(Registration.ORE_PROCESSING.get()));
+            if (addOrSetItem(getResult(recipe,input),inventory,OUTPUT) > 0 && hasUpgrade(ModObjects.ORE_PROCESSING.get()) && (isOre(input))) {
+                breakDurabilityItem(getUpgradeSlotItem(ModObjects.ORE_PROCESSING.get()));
             }
 
             this.checkXP(recipe);
@@ -826,12 +828,12 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing){
         if (storage == Storages.FLUID){
-            if (facing == null || (!hasUpgrade(Registration.GENERATOR.get()) && !hasXPTank()) || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()) {
+            if (facing == null || (!hasUpgrade(ModObjects.GENERATOR.get()) && !hasXPTank()) || facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()) {
                 if(isLiquid())
                     return ()-> (T) fluidTank;
             } else {
-                if (hasUpgrade(Registration.GENERATOR.get())) {
-                    ItemStack gen = getUpgradeSlotItem(Registration.GENERATOR.get());
+                if (hasUpgrade(ModObjects.GENERATOR.get())) {
+                    ItemStack gen = getUpgradeSlotItem(ModObjects.GENERATOR.get());
                     return ()-> (T)(gen.getItem() instanceof GeneratorUpgradeItem ? ((GeneratorUpgradeItem) gen.getItem()).getFluidStorage(gen) : null);
                 } else if (hasXPTank())
                     return ()-> (T) xpTank;
@@ -842,15 +844,15 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
                 return ()-> (T)FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).getFirst(), getSlotsTransport(facing).getSecond());
             else return ()-> (T)inventory;
         }
-        if (storage == Storages.ENERGY && (hasUpgrade(Registration.ENERGY.get()) ||  hasUpgrade(Registration.GENERATOR.get()))){
-            return ()-> (T)FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(Registration.GENERATOR.get())));
+        if (storage == Storages.ENERGY && (hasUpgrade(ModObjects.ENERGY.get()) ||  hasUpgrade(ModObjects.GENERATOR.get()))){
+            return ()-> (T)FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(ModObjects.GENERATOR.get())));
         }
         return ArbitrarySupplier.empty();
     }
 
     @Override
     public Pair<int[], TransportState> getSlotsTransport(Direction side) {
-        if (hasUpgradeType(Registration.FACTORY.get())) {
+        if (hasUpgradeType(ModObjects.FACTORY.get())) {
             if (this.furnaceSettings.get(side.ordinal()) == 0) {
                 return Pair.of(new int[]{},TransportState.NONE);
             } else if (this.furnaceSettings.get(side.ordinal()) == 1) {
@@ -873,7 +875,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     @Override
     public boolean IcanExtractItem(int index, ItemStack stack) {
-        if (hasUpgradeType(Registration.FACTORY.get())) {
+        if (hasUpgradeType(ModObjects.FACTORY.get())) {
             return !ArrayUtils.contains(INPUTS(), index) && !ArrayUtils.contains(UPGRADES(), index) && (!ArrayUtils.contains(FUEL(), index) || (!isItemFuel(stack) && (!ItemContainerUtil.isEnergyContainer(stack) || ItemContainerUtil.getEnergy(stack) <= 0)));
         }else{
             return index >= FOUTPUT() && index <= LOUTPUT();
@@ -887,17 +889,17 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
 
     @Override
     public void addSlots(NonNullList<Slot> slots, @Nullable Player player) {
-        slots.add(new SlotInput(this, 0, 54, 18, (s) -> !this.hasUpgrade(Registration.GENERATOR.get())));
+        slots.add(new SlotInput(this, 0, 54, 18, (s) -> !this.hasUpgrade(ModObjects.GENERATOR.get())));
         slots.add(new SlotFuel(this, 1, 54, 54));
-        slots.add(new SlotOutput(player, this, 2, 116, 35, (s) -> !this.hasUpgrade(Registration.GENERATOR.get())));
+        slots.add(new SlotOutput(player, this, 2, 116, 35, (s) -> !this.hasUpgrade(ModObjects.GENERATOR.get())));
 
         slots.add(new SlotUpgrade(this, 3, 8, 18));
         slots.add(new SlotUpgrade(this, 4, 8, 36));
         slots.add(new SlotUpgrade(this, 5, 8, 54));
 
-        slots.add(new SlotInput(this, 6, 36, 18, s -> hasUpgradeType(Registration.STORAGE.get())));
-        slots.add(new SlotFuel(this, 7, 36, 54, s-> hasUpgradeType(Registration.STORAGE.get())));
-        slots.add(new SlotOutput(player, this, 8, 138, 35, s -> hasUpgradeType(Registration.STORAGE.get())));
+        slots.add(new SlotInput(this, 6, 36, 18, s -> hasUpgradeType(ModObjects.STORAGE.get())));
+        slots.add(new SlotFuel(this, 7, 36, 54, s-> hasUpgradeType(ModObjects.STORAGE.get())));
+        slots.add(new SlotOutput(player, this, 8, 138, 35, s -> hasUpgradeType(ModObjects.STORAGE.get())));
 
     }
     public void checkXP(@Nullable Recipe<?> recipe) {

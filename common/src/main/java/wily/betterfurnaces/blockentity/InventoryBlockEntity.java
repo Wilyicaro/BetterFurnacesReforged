@@ -43,16 +43,28 @@ public abstract class InventoryBlockEntity extends BlockEntity implements Tickab
         inventory.setExtractableSlots(this::IcanExtractItem);
         inventory.setInsertableSlots(this::IisItemValidForSlot);
     }
-
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(getBlockPos(), -1, getUpdateTag());
-    }
-    public void handleUpdateTag(CompoundTag tag){
+    public void loadClientData(BlockState pos, CompoundTag tag){
         if (tag != null)
             load(getBlockState(),tag);
         setChanged();
     }
+
+    @Override
+    public CompoundTag saveClientData(CompoundTag tag) {
+        this.setChanged();
+        return save(tag);
+    }
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        if(hasLevel() && !level.isClientSide) syncData();
+    }
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), -1, getUpdateTag());
+    }
+
     public void updateBlockState(){
         level.sendBlockUpdated(getBlockPos(), level.getBlockState(getBlockPos()), getBlockState(), 2);
     }

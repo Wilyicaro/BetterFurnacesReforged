@@ -2,12 +2,12 @@ package wily.ultimatefurnaces.items;
 
 import net.minecraft.world.level.block.Blocks;
 import wily.betterfurnaces.items.TierUpgradeItem;
-import wily.ultimatefurnaces.init.RegistrationUF;
+import wily.ultimatefurnaces.init.ModObjectsUF;
 
 public class CopperUpgradeItem extends TierUpgradeItem {
 
 
     public CopperUpgradeItem(Properties properties) {
-        super(properties, Blocks.FURNACE, RegistrationUF.COPPER_FURNACE.get());
+        super(properties, Blocks.FURNACE, ModObjectsUF.COPPER_FURNACE.get());
     }
 }

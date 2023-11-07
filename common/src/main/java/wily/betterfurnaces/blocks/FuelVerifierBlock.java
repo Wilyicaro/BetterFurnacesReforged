@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class FuelVerifierBlock extends Block implements EntityBlock {
+public class FuelVerifierBlock extends BFRBlock implements EntityBlock {
     public static final String FUEL_VERIFIER = "fuel_verifier";
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -41,15 +41,6 @@ public class FuelVerifierBlock extends Block implements EntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        List<ItemStack> dropsOriginal = super.getDrops(state, builder);
-        if (!dropsOriginal.isEmpty())
-            return dropsOriginal;
-        return Collections.singletonList(new ItemStack(this, 1));
-    }
-
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult p_225533_6_) {

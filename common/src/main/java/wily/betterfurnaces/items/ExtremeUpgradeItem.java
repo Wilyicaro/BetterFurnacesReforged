@@ -1,11 +1,11 @@
 package wily.betterfurnaces.items;
 
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 
 public class ExtremeUpgradeItem extends TierUpgradeItem {
 
 
     public ExtremeUpgradeItem(Properties properties) {
-        super(properties, Registration.NETHERHOT_FURNACE.get(), Registration.EXTREME_FURNACE.get());
+        super(properties, ModObjects.NETHERHOT_FURNACE.get(), ModObjects.EXTREME_FURNACE.get());
     }
 }

@@ -3,7 +3,7 @@ package wily.betterfurnaces.client;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.base.IPlatformItemHandler;
 
@@ -23,7 +23,7 @@ public class ItemColorsHandler implements ItemColor {
             handler.deserializeTag(invTag);
             for (int i = 0; i < handler.getContainerSize() ; i++) {
                 ItemStack stack = handler.getItem(i);
-                if (stack.getItem() != Registration.COLOR.get()) continue;
+                if (stack.getItem() != ModObjects.COLOR.get()) continue;
                 return stack.getOrCreateTag();
             }
         }

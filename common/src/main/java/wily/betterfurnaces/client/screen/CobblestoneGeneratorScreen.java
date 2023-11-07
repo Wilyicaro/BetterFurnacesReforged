@@ -59,7 +59,6 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         minecraft.getTextureManager().bind(GUI);
         blit(matrix, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
-        renderGuiItem(getMenu().be.getResult(),leftPos + 80, topPos + 24, 0.75F, 0.75F);
         minecraft.getTextureManager().bind(WIDGETS);
         int i;
         i = this.getMenu().getCobTimeScaled(16);
@@ -78,4 +77,9 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
         blit(matrix, leftPos + 101, topPos + 44, 176, 12, 17, 12);
     }
 
+    @Override
+    public void render(PoseStack poseStack, int i, int j, float f) {
+        super.render(poseStack, i, j, f);
+        renderGuiItem(getMenu().be.getResult(),leftPos + 80, topPos + 24, 0.75F, 0.75F);
+    }
 }

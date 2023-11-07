@@ -34,7 +34,7 @@ import wily.betterfurnaces.items.UpgradeItem;
 import java.util.Collections;
 import java.util.List;
 
-public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
+public class CobblestoneGeneratorBlock extends BFRBlock implements EntityBlock {
     public static final String COBBLESTONE_GENERATOR = "cobblestone_generator";
 
 
@@ -50,13 +50,6 @@ public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
-    }
-    @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        List<ItemStack> dropsOriginal = super.getDrops(state, builder);
-        if (!dropsOriginal.isEmpty())
-            return dropsOriginal;
-        return Collections.singletonList(new ItemStack(this, 1));
     }
 
 

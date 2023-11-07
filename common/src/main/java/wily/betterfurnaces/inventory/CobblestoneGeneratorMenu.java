@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 
 
 public class CobblestoneGeneratorMenu extends AbstractInventoryMenu<CobblestoneGeneratorBlockEntity> {
@@ -19,7 +19,7 @@ public class CobblestoneGeneratorMenu extends AbstractInventoryMenu<CobblestoneG
     }
 
     public CobblestoneGeneratorMenu(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
-        super(Registration.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
+        super(ModObjects.COB_GENERATOR_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
         checkContainerDataCount(this.fields, 3);
     }
 

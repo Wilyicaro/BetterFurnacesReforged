@@ -6,13 +6,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import wily.betterfurnaces.client.ItemColorsHandler;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.ColorUpgradeItem.ContainerColorUpgrade;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketColorSlider;
@@ -45,14 +44,14 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
     }
     @Override
     public List<Widget> getNestedWidgets() {
-        List<Widget> list = new ArrayList<>(ImmutableList.of(new FactoryDrawableButton(leftPos + 8,topPos + 8, BetterFurnacesDrawables.BUTTON).icon(BetterFurnacesDrawables.getButtonIcon(12 + buttonstate)).tooltip((buttonstate == 0 ?Blocks.FURNACE : Registration.EXTREME_FORGE.get()).getName()).onPress((b, i)-> buttonstate =(buttonstate == 1 ? 0 : 1))));
+        List<Widget> list = new ArrayList<>(ImmutableList.of(new FactoryDrawableButton(leftPos + 8,topPos + 8, BetterFurnacesDrawables.BUTTON).icon(BetterFurnacesDrawables.getButtonIcon(12 + buttonstate)).tooltip((buttonstate == 0 ?Blocks.FURNACE : ModObjects.EXTREME_FORGE.get()).getName()).onPress((b, i)-> buttonstate =(buttonstate == 1 ? 0 : 1))));
         list.addAll(nestedWidgets);
         return list;
     }
 
     @Override
     protected void renderColorFurnace(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-        ItemStack stack = buttonstate == 0 ? new ItemStack(Registration.EXTREME_FURNACE.get().asItem()) : new ItemStack(Registration.EXTREME_FORGE.get().asItem());
+        ItemStack stack = buttonstate == 0 ? new ItemStack(ModObjects.EXTREME_FURNACE.get().asItem()) : new ItemStack(ModObjects.EXTREME_FORGE.get().asItem());
         Lighting.setupFor3DItems();
         CompoundTag tag = stack.getOrCreateTag();
         ItemColorsHandler.putColor(tag,red.getValue(),green.getValue(),blue.getValue());

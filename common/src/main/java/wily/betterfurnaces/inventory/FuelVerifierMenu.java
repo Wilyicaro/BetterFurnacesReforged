@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import wily.betterfurnaces.blockentity.FuelVerifierBlockEntity;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 
 import java.util.Comparator;
 
@@ -21,7 +21,7 @@ public class FuelVerifierMenu extends AbstractInventoryMenu<FuelVerifierBlockEnt
     }
 
     public FuelVerifierMenu( int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
-        super(Registration.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
+        super(ModObjects.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, player, fields);
         checkContainerDataCount(this.fields, 1);
     }
 

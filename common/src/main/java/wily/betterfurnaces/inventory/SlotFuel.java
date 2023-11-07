@@ -4,7 +4,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.UpgradeItem;
 import wily.factoryapi.ItemContainerUtil;
 
@@ -24,7 +24,7 @@ public class SlotFuel extends HideableSlot {
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-        return super.mayPlace(stack) && (!(stack.getItem() instanceof UpgradeItem) && (SmeltingBlockEntity.isItemFuel(stack) || ( be instanceof SmeltingBlockEntity && ItemContainerUtil.isEnergyContainer(stack) && ((SmeltingBlockEntity) be).hasUpgrade(Registration.ENERGY.get())) ||  ItemContainerUtil.isFluidContainer(stack)));
+        return super.mayPlace(stack) && (!(stack.getItem() instanceof UpgradeItem) && (SmeltingBlockEntity.isItemFuel(stack) || ( be instanceof SmeltingBlockEntity && ItemContainerUtil.isEnergyContainer(stack) && ((SmeltingBlockEntity) be).hasUpgrade(ModObjects.ENERGY.get())) ||  ItemContainerUtil.isFluidContainer(stack)));
     }
 
     @Override

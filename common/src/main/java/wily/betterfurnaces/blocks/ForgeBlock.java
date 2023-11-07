@@ -18,7 +18,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,27 +25,34 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
+import wily.betterfurnaces.init.BlockEntityTypes;
 import wily.betterfurnaces.items.UpgradeItem;
 import wily.factoryapi.util.VoxelShapeUtil;
 
+import java.util.Properties;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock {
 
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public ForgeBlock(Properties properties) {
-        super(properties.noOcclusion());
+    public ForgeBlock(Properties properties, Supplier<Integer> cookTime) {
+        super(properties.noOcclusion(),cookTime);
         this.registerDefaultState( this.defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP).setValue(WATERLOGGED, false));
+    }
+    public ForgeBlock(Properties properties, Item.Properties itemProperties, Supplier<Integer> cookTime){
+        this(properties,cookTime);
+        this.itemProperties = itemProperties;
     }
 
 
@@ -70,7 +76,11 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
         return this.defaultBlockState().setValue(BlockStateProperties.FACING, facing).setValue(WATERLOGGED, flag);
     }
 
-
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockGetter getter) {
+        return BlockEntityTypes.FORGE_TILE.get().create();
+    }
 
 
     protected InteractionResult interactUpgrade(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {

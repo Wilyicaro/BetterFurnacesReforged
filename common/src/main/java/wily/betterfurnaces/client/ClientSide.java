@@ -1,6 +1,7 @@
 package wily.betterfurnaces.client;
 
 import com.google.common.collect.Lists;
+import me.shedaniel.architectury.event.events.TickEvent;
 import me.shedaniel.architectury.event.events.client.ClientTickEvent;
 import me.shedaniel.architectury.registry.*;
 import net.minecraft.client.Minecraft;
@@ -11,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blockentity.ForgeBlockEntity;
@@ -21,27 +21,31 @@ import wily.betterfurnaces.client.renderer.ForgeRenderer;
 import wily.betterfurnaces.client.renderer.FurnaceRenderer;
 import wily.betterfurnaces.client.screen.*;
 import wily.betterfurnaces.gitup.UpCheck;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 
 public class ClientSide {
 
     public static void init() {
-        MenuRegistry.registerScreenFactory(Registration.FURNACE_CONTAINER.get(), FurnaceScreen::new);
-        MenuRegistry.registerScreenFactory(Registration.FORGE_CONTAINER.get(), ForgeScreen::new);
-        MenuRegistry.registerScreenFactory(Registration.COLOR_UPGRADE_CONTAINER.get(), ColorUpgradeScreen::new);
-        MenuRegistry.registerScreenFactory(Registration.FUEL_VERIFIER_CONTAINER.get(), FuelVerifierScreen::new);
-        MenuRegistry.registerScreenFactory(Registration.COB_GENERATOR_CONTAINER.get(), CobblestoneGeneratorScreen::new);
-        registerBetterFurnacesBlocksClientSide(Registration.BLOCK_ITEMS);
+        MenuRegistry.registerScreenFactory(ModObjects.FURNACE_CONTAINER.get(), FurnaceScreen::new);
+        MenuRegistry.registerScreenFactory(ModObjects.FORGE_CONTAINER.get(), ForgeScreen::new);
+        MenuRegistry.registerScreenFactory(ModObjects.COLOR_UPGRADE_CONTAINER.get(), ColorUpgradeScreen::new);
+        MenuRegistry.registerScreenFactory(ModObjects.FUEL_VERIFIER_CONTAINER.get(), FuelVerifierScreen::new);
+        MenuRegistry.registerScreenFactory(ModObjects.COB_GENERATOR_CONTAINER.get(), CobblestoneGeneratorScreen::new);
+        Registration.BLOCK_ITEMS.forEach((block)->{
+            if (block.get() instanceof SmeltingBlock) {
+                ItemPropertiesRegistry.register(block.get().asItem(),
+                        new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
+            }
+            ColorHandlers.registerItemColors(ItemColorsHandler.COLOR,block.get().asItem());
+        });
         Registration.BLOCK_ENTITIES.forEach((b)->{
             if(b.getId().getPath().contains("forge")) BlockEntityRenderers.registerRenderer((BlockEntityType<ForgeBlockEntity>) b.get(), ForgeRenderer::new);
             else if(b.getId().getPath().contains("furnace")) BlockEntityRenderers.registerRenderer((BlockEntityType<SmeltingBlockEntity>) b.get(), FurnaceRenderer::new);
         });
-        if (Config.enableUltimateFurnaces.get())
-            wily.ultimatefurnaces.init.ClientSide.init();
     }
 
     public static void registerExtraModels(Consumer<ResourceLocation> register){
@@ -52,17 +56,7 @@ public class ClientSide {
         register.accept(new ModelResourceLocation( new ResourceLocation( "betterfurnacesreforged:nsweud"),""));
     }
 
-    public static void registerBetterFurnacesBlocksClientSide(DeferredRegister<Block> blocks){
-        blocks.forEach((block)->{
-            if (block.get() instanceof SmeltingBlock) {
-                ItemPropertiesRegistry.register(block.get().asItem(),
-                        new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
-            }
-            ColorHandlers.registerItemColors(ItemColorsHandler.COLOR,block.get().asItem());
-        });
-    }
     public static void updateClientTick(){
-
         ClientTickEvent.ClientWorld listener = instance -> {
             Minecraft minecraft = Minecraft.getInstance();
             if(minecraft.player != null){
@@ -77,6 +71,7 @@ public class ClientSide {
                 }
             }
         };
+
         ClientTickEvent.CLIENT_WORLD_PRE.register(listener);
         ClientTickEvent.CLIENT_WORLD_POST.register((i)->{
             if(UpCheck.threadFinished && ClientTickEvent.CLIENT_WORLD_PRE.isRegistered(listener)) ClientTickEvent.CLIENT_WORLD_PRE.unregister(listener);

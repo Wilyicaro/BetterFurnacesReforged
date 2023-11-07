@@ -1,17 +1,19 @@
 package wily.betterfurnaces.blocks;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
+import wily.betterfurnaces.init.ModObjects;
 
 import java.util.Collections;
 import java.util.List;
 
-public class ConductorBlock extends Block {
+public class BFRBlock extends Block {
+    public Item.Properties itemProperties = ModObjects.defaultItemProperties();
 
-
-    public ConductorBlock(Properties properties) {
+    public BFRBlock(Properties properties) {
         super(properties.strength(3f));
     }
     @Override

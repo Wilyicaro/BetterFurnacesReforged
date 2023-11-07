@@ -10,6 +10,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wily.betterfurnaces.gitup.UpCheck;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
 
@@ -26,7 +27,7 @@ public class BetterFurnacesReforged
 
     public static final Supplier<Registries> REGISTRIES = Suppliers.memoize(() -> Registries.get(MOD_ID));
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final CreativeModeTab ITEM_GROUP = CreativeTabs.create(new ResourceLocation(BetterFurnacesReforged.MOD_ID,"tab"), ()-> Registration.EXTREME_FURNACE.get().asItem().getDefaultInstance());
+    public static final CreativeModeTab ITEM_GROUP = CreativeTabs.create(new ResourceLocation(BetterFurnacesReforged.MOD_ID,"tab"), ()-> ModObjects.EXTREME_FURNACE.get().asItem().getDefaultInstance());
 
     public static void init(){
 

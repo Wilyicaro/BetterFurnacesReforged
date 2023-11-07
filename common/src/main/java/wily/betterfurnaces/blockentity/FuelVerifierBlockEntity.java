@@ -13,17 +13,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.BlockEntityTypes;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.FuelVerifierMenu;
 import wily.betterfurnaces.inventory.SlotFuel;
 import wily.factoryapi.base.ArbitrarySupplier;
 import wily.factoryapi.base.IPlatformHandlerApi;
 import wily.factoryapi.base.Storages;
 import wily.factoryapi.base.TransportState;
-
-import java.util.AbstractMap;
-import java.util.Map;
-import java.util.Optional;
 
 public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
@@ -58,15 +55,11 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
         return new FuelVerifierMenu(i, level, worldPosition, playerInventory, playerEntity, this.fields);
     }
 
-    /**
-     * The number of ticks that the furnace will keep burning
-     */
     private int burnTime;
 
 
     public FuelVerifierBlockEntity() {
-        super(Registration.FUEL_VERIFIER_TILE.get());
-
+        super(BlockEntityTypes.FUEL_VERIFIER_TILE.get());
     }
 
     public void tick() {

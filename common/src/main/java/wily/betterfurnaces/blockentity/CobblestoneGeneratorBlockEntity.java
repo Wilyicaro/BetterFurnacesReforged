@@ -3,7 +3,6 @@ package wily.betterfurnaces.blockentity;
 import com.mojang.datafixers.util.Pair;
 import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.utils.Fraction;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -24,7 +23,8 @@ import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.blocks.CobblestoneGeneratorBlock;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.BlockEntityTypes;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.CobblestoneGeneratorMenu;
 import wily.betterfurnaces.inventory.SlotOutput;
 import wily.betterfurnaces.inventory.SlotUpgrade;
@@ -106,7 +106,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
 
     public CobblestoneGeneratorBlockEntity() {
-        super(Registration.COB_GENERATOR_TILE.get());
+        super(BlockEntityTypes.COB_GENERATOR_TILE.get());
         additionalSyncInts.add(autoOutput);
     }
 
@@ -125,7 +125,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         }
     }
     protected List<CobblestoneGeneratorRecipes> getSortedCobRecipes(){
-        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(Registration.ROCK_GENERATING_RECIPE.get()).stream().sorted(Comparator.comparing(o -> o.recipeId.getPath())).collect(Collectors.toList());
+        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(ModObjects.ROCK_GENERATING_RECIPE.get()).stream().sorted(Comparator.comparing(o -> o.recipeId.getPath())).collect(Collectors.toList());
     }
     public void initRecipes() {
         recipes = getSortedCobRecipes();
@@ -186,10 +186,10 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
             if (!level.isClientSide) {
                 if (can1) getInv().setItem(OUTPUT, getResult());
                 else output.grow(getResult().getCount());
-                if (upgrade1.getItem() == Registration.ORE_PROCESSING.get())
+                if (upgrade1.getItem() == ModObjects.ORE_PROCESSING.get())
                     breakDurabilityItem(upgrade1);
                 level.playSound(null, getBlockPos(), SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 0.3F, 0.3F);
-                if (upgrade.getItem() == Registration.FUEL.get())
+                if (upgrade.getItem() == ModObjects.FUEL.get())
                     breakDurabilityItem(upgrade);
             }
             cobTime = 0;

@@ -3,7 +3,6 @@ package wily.betterfurnaces.recipes;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 import me.shedaniel.architectury.core.RegistryEntry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -16,7 +15,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -119,6 +118,6 @@ public class CobblestoneGeneratorRecipes implements Recipe<Container> {
     }
     @Override
     public RecipeType<?> getType() {
-        return Registration.ROCK_GENERATING_RECIPE.get();
+        return ModObjects.ROCK_GENERATING_RECIPE.get();
     }
 }

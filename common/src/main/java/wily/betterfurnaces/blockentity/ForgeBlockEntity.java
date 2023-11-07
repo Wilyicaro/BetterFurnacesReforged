@@ -1,6 +1,5 @@
 package wily.betterfurnaces.blockentity;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -9,10 +8,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.BlockEntityTypes;
 import wily.betterfurnaces.inventory.*;
 import wily.factoryapi.base.BlockSide;
 
@@ -31,9 +29,8 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
     public Direction facing(){
         return this.getBlockState().getValue(BlockStateProperties.FACING);
     }
-
-    public ForgeBlockEntity(Supplier<Integer> cookTime) {
-        super(cookTime);
+    public ForgeBlockEntity(){
+        super(BlockEntityTypes.FORGE_TILE.get());
     }
 
     @Override

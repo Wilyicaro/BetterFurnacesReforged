@@ -1,21 +1,16 @@
 package wily.betterfurnaces.inventory;
 
-import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
-import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketSyncEnergy;
 import wily.betterfurnaces.network.PacketSyncFluid;
@@ -30,7 +25,7 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
         this(containerType, windowId, world, pos, playerInventory, player, new SimpleContainerData(5));
     }
     public SmeltingMenu(int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player) {
-        this(Registration.FURNACE_CONTAINER.get(), windowId, world, pos, playerInventory, player, new SimpleContainerData(5));
+        this(ModObjects.FURNACE_CONTAINER.get(), windowId, world, pos, playerInventory, player, new SimpleContainerData(5));
     }
 
     public SmeltingMenu(MenuType<?> containerType, int windowId, Level world, BlockPos pos, Inventory playerInventory, Player player, ContainerData fields) {
