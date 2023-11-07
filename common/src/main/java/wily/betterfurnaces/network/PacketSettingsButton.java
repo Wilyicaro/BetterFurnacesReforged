@@ -15,7 +15,7 @@ private BlockPos pos;
 	private int set;
 
 	public PacketSettingsButton(FriendlyByteBuf buf) {
-		this(buf.readBlockPos(),buf.readInt(), buf.readInt());
+		this(buf.readBlockPos(),buf.readVarIntArray(), buf.readInt());
 	}
 
 	public void toBytes(FriendlyByteBuf buf) {

@@ -10,7 +10,7 @@ displayName="${mod_name}"
 credits="${mod_credits}"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/better-furnaces-reforged/"
 logoFile="bfr_icon.png"
-authors="${mc_authors}"
+authors="${mod_authors}"
 description="${mod_description}"
 
 
