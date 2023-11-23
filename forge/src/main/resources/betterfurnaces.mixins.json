@@ -3,7 +3,9 @@
   "package": "wily.betterfurnaces.forge.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [],
-  "mixins": [],
+  "mixins": [
+    "BlockEntityMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

@@ -1,5 +1,6 @@
 package wily.betterfurnaces;
 
+
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -37,6 +38,8 @@ public class ForgeConfigCompat {
     public static ForgeConfigSpec.BooleanValue enableJeiCatalysts;
     public static ForgeConfigSpec.BooleanValue enableJeiClickArea;
 
+    public static ForgeConfigSpec.BooleanValue checkOresName;
+
     public static ForgeConfigSpec.IntValue xpFluidType;
 
     public static ForgeConfigSpec.BooleanValue checkUpdates;
@@ -44,10 +47,6 @@ public class ForgeConfigCompat {
     public static ForgeConfigSpec.BooleanValue showErrors;
 
     public static ForgeConfigSpec.BooleanValue enableUltimateFurnaces;
-
-    public static ForgeConfigSpec.BooleanValue checkCommonOresName;
-
-    public static ForgeConfigSpec.BooleanValue checkRawOresName;
 
 
     static {
@@ -154,19 +153,13 @@ public class ForgeConfigCompat {
                 .comment(" This value indicates when the furnace or forge should 'overload' and spit out the xp stored. \n Default: 100000, Single recipe uses")
                 .defineInRange("furnace_xp_drop.value_two", 100000, 1, 1000000);
 
-        checkCommonOresName = SERVER_BUILDER
-                .comment("When true, upgrades of the Ore Processing type now use the registry name as a check instead of the \"ore\" tag present in the smelted item. \n Default: false, Only Common(Block) Ores")
-                .define("check_ores.common", false);
-
-        checkRawOresName = SERVER_BUILDER
-                .comment("When true, upgrades of the Raw Ore Processing type now use the registry name as a check instead of the \"raw_ore\" tag present in the smelted item. \n Default: false, Only Raw Ores")
-                .define("check_ores.raw", false);
-
-
         xpFluidType = SERVER_BUILDER
                 .comment(" Value referring to the mod used for the xp fluid generated with the Xp Tank Upgrade. \n 0 = Mob Grinding Utils(Default) \n 1 = Industrial Foregoing \n 2 = Cyclic \n 3 = Reliquary \n 4 = Kibe Utilities")
                 .defineInRange("upgrade.xp_fluid_type", getDefaultLiquidXpMod(), 0, supportedLiquidXps.size() - 1);
 
+        checkOresName = SERVER_BUILDER
+                .comment("When true, upgrades of the Ore Processing type now use the registry name as a check instead of the \"ore\" tag present in the smelted item. \n Default: false")
+                .define("check_ores.common", false);
     }
 
     public static int getDefaultLiquidXpMod(){
@@ -214,24 +207,21 @@ public class ForgeConfigCompat {
         loadConfig(COMMON_CONFIG, BetterFurnacesPlatform.getConfigDirectory().resolve(BetterFurnacesReforged.MOD_ID + "-common.toml"));
     }
     public static void onServerConfigLoad(){
-        Config.cacheCapacity = cache_capacity;
-        Config.copperTierSpeed = copperTierSpeed;
-        Config.ironTierSpeed = ironTierSpeed;
-        Config.steelTierSpeed = steelTierSpeed;
-        Config.goldTierSpeed = goldTierSpeed;
-        Config.amethystTierSpeed = amethystTierSpeed;
-        Config.diamondTierSpeed = diamondTierSpeed;
-        Config.platinumTierSpeed = platinumTierSpeed;
-        Config.netherhotTierSpeed = netherhotTierSpeed;
-        Config.extremeTierSpeed = extremeTierSpeed;
-        Config.ultimateTierSpeed = ultimateTierSpeed;
-        Config.checkCommonOresName = checkCommonOresName;
-        Config.checkRawOresName = checkRawOresName;
+        Config.cacheCapacity = cache_capacity::get;
+        Config.copperTierSpeed = copperTierSpeed::get;
+        Config.ironTierSpeed = ironTierSpeed::get;
+        Config.steelTierSpeed = steelTierSpeed::get;
+        Config.goldTierSpeed = goldTierSpeed::get;
+        Config.amethystTierSpeed = amethystTierSpeed::get;
+        Config.diamondTierSpeed = diamondTierSpeed::get;
+        Config.platinumTierSpeed = platinumTierSpeed::get;
+        Config.netherhotTierSpeed = netherhotTierSpeed::get;
+        Config.extremeTierSpeed = extremeTierSpeed::get;
+        Config.ultimateTierSpeed = ultimateTierSpeed::get;
 
-
-        Config.furnaceXPDropValue = furnaceXPDropValue;
-        Config.furnaceXPDropValue2 = furnaceXPDropValue2;
-        Config.xpFluidType = xpFluidType;
+        Config.furnaceXPDropValue = furnaceXPDropValue::get;
+        Config.furnaceXPDropValue2 = furnaceXPDropValue2::get;
+        Config.xpFluidType = xpFluidType::get;
     }
 
     @ExpectPlatform
@@ -241,12 +231,12 @@ public class ForgeConfigCompat {
     public static void setupPlatformConfig(){
         registerConfig();
         loadAllSyncConfigs();
-        Config.checkUpdates = checkUpdates;
-        Config.enableUltimateFurnaces = enableUltimateFurnaces;
+        Config.checkUpdates = checkUpdates::get;
+        Config.enableUltimateFurnaces = enableUltimateFurnaces::get;
 
-        Config.enableJeiPlugin = enableJeiPlugin;
-        Config.enableJeiCatalysts = enableJeiCatalysts;
-        Config.enableJeiClickArea = enableJeiClickArea;
+        Config.enableJeiPlugin = enableJeiPlugin::get;
+        Config.enableJeiCatalysts = enableJeiCatalysts::get;
+        Config.enableJeiClickArea = enableJeiClickArea::get;
     }
 
 }

@@ -1,13 +1,13 @@
 package wily.ultimatefurnaces.items;
 
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.TierUpgradeItem;
-import wily.ultimatefurnaces.init.RegistrationUF;
+import wily.ultimatefurnaces.init.ModObjectsUF;
 
 public class NetherhotUpgradeItem extends TierUpgradeItem {
 
 
     public NetherhotUpgradeItem(Properties properties) {
-        super(properties, RegistrationUF.PLATINUM_FURNACE.get(), Registration.NETHERHOT_FURNACE.get());
+        super(properties, ModObjectsUF.PLATINUM_FURNACE.get(), ModObjects.NETHERHOT_FURNACE.get());
     }
 }

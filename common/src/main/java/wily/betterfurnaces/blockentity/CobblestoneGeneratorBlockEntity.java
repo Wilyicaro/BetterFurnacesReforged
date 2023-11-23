@@ -5,12 +5,10 @@ import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -24,7 +22,8 @@ import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.blocks.CobblestoneGeneratorBlock;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.BlockEntityTypes;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.CobblestoneGeneratorMenu;
 import wily.betterfurnaces.inventory.SlotOutput;
 import wily.betterfurnaces.inventory.SlotUpgrade;
@@ -38,6 +37,7 @@ import wily.factoryapi.base.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.function.Predicate;
 
 public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
@@ -108,7 +108,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
 
     public CobblestoneGeneratorBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.COB_GENERATOR_TILE.get(), pos, state);
+        super(BlockEntityTypes.COB_GENERATOR_TILE.get(), pos, state);
         additionalSyncInts.add(autoOutput);
     }
 
@@ -127,7 +127,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         }
     }
     protected List<CobblestoneGeneratorRecipes> getSortedCobRecipes(){
-        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(Registration.ROCK_GENERATING_RECIPE.get()).stream().sorted(Comparator.comparing(o -> o.recipeId.getPath())).toList();
+        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(ModObjects.ROCK_GENERATING_RECIPE.get()).stream().sorted(Comparator.comparing(o -> o.recipeId.getPath())).toList();
     }
     public void initRecipes() {
         recipes = getSortedCobRecipes();
@@ -188,15 +188,15 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
             if (!level.isClientSide) {
                 if (can1) getInv().setItem(OUTPUT, getResult());
                 else output.grow(getResult().getCount());
-                if (upgrade1.getItem() == Registration.ORE_PROCESSING.get())
+                if (upgrade1.getItem() == ModObjects.ORE_PROCESSING.get())
                     breakDurabilityItem(upgrade1);
                 level.playSound(null, getBlockPos(), SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 0.3F, 0.3F);
-                if (upgrade.getItem() == Registration.FUEL.get())
+                if (upgrade.getItem() == ModObjects.FUEL.get())
                     breakDurabilityItem(upgrade);
             }
             cobTime = 0;
 
-            RandomSource rand = level.random;
+            Random rand = level.random;
             double d0 = (double) worldPosition.getX() + 0.5D;
             double d1 = (double) worldPosition.getY() + 0.5D;
             double d2 = (double) worldPosition.getZ() + 0.5D;

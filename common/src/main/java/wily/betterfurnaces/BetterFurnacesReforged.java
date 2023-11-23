@@ -6,28 +6,27 @@ import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wily.betterfurnaces.gitup.UpCheck;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
 import wily.ultimatefurnaces.UltimateFurnaces;
 
 import java.util.function.Supplier;
 
-// The value here should match an entry in the META-INF/mods.toml file
 
 public class BetterFurnacesReforged
 {
 
     public static final String MOD_ID = "betterfurnacesreforged";
     public static final Supplier<String> VERSION =  Platform.getMod(MOD_ID)::getVersion;
-    public static final String MC_VERSION = "1.19.2-arc";
+    public static final String MC_VERSION = "1.18.2-arc";
 
     public static final Supplier<Registries> REGISTRIES = Suppliers.memoize(() -> Registries.get(MOD_ID));
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final CreativeModeTab ITEM_GROUP = CreativeTabRegistry.create(new ResourceLocation(BetterFurnacesReforged.MOD_ID, "tab"), () -> Registration.EXTREME_FURNACE.get().asItem().getDefaultInstance());
+    public static final CreativeModeTab ITEM_GROUP = CreativeTabRegistry.create(new ResourceLocation(BetterFurnacesReforged.MOD_ID, "tab"), () -> ModObjects.EXTREME_FURNACE.get().asItem().getDefaultInstance());
 
     public static void init(){
 

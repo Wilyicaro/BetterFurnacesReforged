@@ -3,6 +3,7 @@ package wily.betterfurnaces.items;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -35,16 +36,16 @@ public class OreProcessingUpgradeItem extends UpgradeItem {
         String i;
         String o;
         if (!stack.isDamageableItem())
-            i = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.infinitely").getString();
+            i = new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.infinitely").getString();
         else i = "";
-        if (acceptOre && !acceptRaw) o = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ore").getString();
-        else o = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.raw").getString();
-        if (acceptRaw && acceptOre) o = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.allore").getString();
-        if (getMultiplier == 2) s = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.double").getString();
-        else if (getMultiplier == 4) s = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.quadruple").getString();
-        else if (getMultiplier > 4) s = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.multiple").getString();
+        if (acceptOre && !acceptRaw) o = new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ore").getString();
+        else o = new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.raw").getString();
+        if (acceptRaw && acceptOre) o = new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.allore").getString();
+        if (getMultiplier == 2) s = new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.double").getString();
+        else if (getMultiplier == 4) s = new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.quadruple").getString();
+        else if (getMultiplier > 4) s = new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.multiple").getString();
         else s = "";
-        tooltip.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores",s,i,o).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
+        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.ores",s,i,o).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
     }
     public void inventoryTick(ItemStack stack, Level world, Entity player, int slot, boolean selected) {
         super.inventoryTick(stack, world, player, slot, selected);

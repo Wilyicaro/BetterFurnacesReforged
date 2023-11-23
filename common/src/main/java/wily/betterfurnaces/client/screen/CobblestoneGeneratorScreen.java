@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.fluid.FluidStack;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.material.Fluids;
@@ -42,7 +43,7 @@ public class CobblestoneGeneratorScreen extends AbstractBasicScreen<CobblestoneG
     public List<? extends Widget> getNestedWidgets() {
         return List.of(
                 new FactoryDrawableButton(leftPos + 81, topPos + 25, BetterFurnacesDrawables.BUTTON).onPress((b,i)->Messages.INSTANCE.sendToServer(new PacketCobblestoneRecipeUpdate(this.getMenu().getPos()))).grave(0.3F).tooltips(getTooltipFromItem(getMenu().be.getResult())),
-                new FactoryDrawableButton(leftPos + 9,topPos + 55,BetterFurnacesDrawables.SURFACE_BUTTON).icon(BetterFurnacesDrawables.getButtonIcon(1)).select(menu.be.hasAutoOutput()).onPress((b, i)-> Messages.INSTANCE.sendToServer(new PacketSyncAdditionalInt(this.getMenu().getPos(),menu.be.additionalSyncInts,menu.be.autoOutput,menu.be.hasAutoOutput() ? 0 : 1))).tooltips(List.of(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_output"), Component.translatable("options." + (menu.be.hasAutoOutput() ? "on" : "off")))));
+                new FactoryDrawableButton(leftPos + 9,topPos + 55,BetterFurnacesDrawables.SURFACE_BUTTON).icon(BetterFurnacesDrawables.getButtonIcon(1)).select(menu.be.hasAutoOutput()).onPress((b, i)-> Messages.INSTANCE.sendToServer(new PacketSyncAdditionalInt(this.getMenu().getPos(),menu.be.additionalSyncInts,menu.be.autoOutput,menu.be.hasAutoOutput() ? 0 : 1))).tooltips(List.of(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".gui_auto_output"), new TranslatableComponent("options." + (menu.be.hasAutoOutput() ? "on" : "off")))));
     }
 
     @Override

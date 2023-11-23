@@ -1,13 +1,13 @@
 package wily.ultimatefurnaces.items;
 
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.TierUpgradeItem;
-import wily.ultimatefurnaces.init.RegistrationUF;
+import wily.ultimatefurnaces.init.ModObjectsUF;
 
 public class AmethystUpgradeItem extends TierUpgradeItem {
 
 
     public AmethystUpgradeItem(Properties properties) {
-        super(properties, Registration.GOLD_FURNACE.get(), RegistrationUF.AMETHYST_FURNACE.get());
+        super(properties, ModObjects.GOLD_FURNACE.get(), ModObjectsUF.AMETHYST_FURNACE.get());
     }
 }

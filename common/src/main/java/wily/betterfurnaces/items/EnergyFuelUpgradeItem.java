@@ -1,11 +1,7 @@
 package wily.betterfurnaces.items;
 
-import dev.architectury.platform.Platform;
 import net.minecraft.network.chat.Component;
-import wily.betterfurnaces.blockentity.InventoryBlockEntity;
-import wily.betterfurnaces.init.Registration;
-
-import java.util.List;
+import wily.betterfurnaces.init.ModObjects;
 
 public class EnergyFuelUpgradeItem extends UpgradeItem {
 
@@ -17,6 +13,6 @@ public class EnergyFuelUpgradeItem extends UpgradeItem {
 
 
     public boolean isUpgradeCompatibleWith(UpgradeItem upg) {
-        return upg != Registration.GENERATOR.get();
+        return upg != ModObjects.GENERATOR.get();
     }
 }

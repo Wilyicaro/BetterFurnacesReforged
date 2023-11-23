@@ -10,17 +10,18 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -45,7 +46,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.BlockEntityTypes;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.UpgradeItem;
 import wily.factoryapi.ItemContainerUtil;
 import wily.factoryapi.base.Bearer;
@@ -53,8 +55,10 @@ import wily.factoryapi.base.Storages;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
 
-public class SmeltingBlock extends Block implements EntityBlock {
+public class SmeltingBlock extends BFRBlock implements EntityBlock {
 
     public static final BooleanProperty COLORED = BooleanProperty.create("colored");
     // 0= Furnace, 1= Blast Furnace, 2= Smoker
@@ -62,9 +66,16 @@ public class SmeltingBlock extends Block implements EntityBlock {
 
     public boolean shouldDropContent = true;
 
-    public SmeltingBlock(Properties properties) {
-        super(properties.destroyTime(3f).lightLevel((b) -> b.getValue(BlockStateProperties.LIT) ? 14 : 0).emissiveRendering(SmeltingBlock::getOrientation).noOcclusion());
+    public final Supplier<Integer> defaultCookTime;
+
+    public SmeltingBlock(Properties properties, Item.Properties itemProperties, Supplier<Integer> cookTime) {
+        super(properties.strength(3f).lightLevel((b) -> b.getValue(BlockStateProperties.LIT) ? 14 : 0).noOcclusion().emissiveRendering(SmeltingBlock::getOrientation));
+        this.itemProperties = itemProperties;
         this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.LIT, false).setValue(COLORED,false));
+        this.defaultCookTime = cookTime;
+    }
+    public SmeltingBlock(Properties properties, Supplier<Integer> cookTime){
+        this(properties, new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP), cookTime);
     }
 
     @Override
@@ -92,13 +103,13 @@ public class SmeltingBlock extends Block implements EntityBlock {
             if (stack.hasCustomHoverName()) {
                 be.setCustomName(stack.getDisplayName());
             }
-            be.totalCookTime = be.defaultCookTime.get();
+            be.totalCookTime = be.getDefaultCookTime();
             be.forceUpdateAllStates();
         }
     }
 
     public static boolean getOrientation(BlockState state, BlockGetter world, BlockPos pos) {
-        return ((SmeltingBlockEntity) world.getBlockEntity(pos)).showOrientation;
+        return world.getBlockEntity(pos) instanceof  SmeltingBlockEntity be && be.showOrientation;
     }
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult p_225533_6_) {
@@ -113,11 +124,11 @@ public class SmeltingBlock extends Block implements EntityBlock {
                 return this.interactUpgrade(world, pos, player, handIn, stack);
             }if (ItemContainerUtil.isFluidContainer(hand) &&  !(player.isCrouching())) {
                 Bearer<FluidStack> fluid = Bearer.of(FluidStack.empty());
-                if ((be.hasUpgrade(Registration.GENERATOR.get()) && ItemContainerUtil.getFluid(stack).getFluid().isSame(Fluids.WATER) && ItemContainerUtil.getFluid(be.getUpgradeSlotItem(Registration.GENERATOR.get())).getAmount() <= 3 * FluidStack.bucketAmount())){
-                    ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.fillItem(be.getUpgradeSlotItem(Registration.GENERATOR.get()), ItemContainerUtil.drainItem(FluidStack.bucketAmount(), player, handIn));
-                    be.inventory.setItem(be.getUpgradeTypeSlot(Registration.GENERATOR.get()), context.container());
+                if ((be.hasUpgrade(ModObjects.GENERATOR.get()) && ItemContainerUtil.getFluid(stack).getFluid().isSame(Fluids.WATER) && ItemContainerUtil.getFluid(be.getUpgradeSlotItem(ModObjects.GENERATOR.get())).getAmount() <= 3 * FluidStack.bucketAmount())){
+                    ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.fillItem(be.getUpgradeSlotItem(ModObjects.GENERATOR.get()), ItemContainerUtil.drainItem(FluidStack.bucketAmount(), player, handIn));
+                    be.inventory.setItem(be.getUpgradeTypeSlot(ModObjects.GENERATOR.get()), context.container());
                     fluid.set(context.fluidStack());
-                }else if (be.hasUpgrade(Registration.LIQUID.get()) && SmeltingBlockEntity.isItemFuel(ItemContainerUtil.getFluid(hand).getFluid().getBucket().getDefaultInstance()))
+                }else if (be.hasUpgrade(ModObjects.LIQUID.get()) && SmeltingBlockEntity.isItemFuel(ItemContainerUtil.getFluid(hand).getFluid().getBucket().getDefaultInstance()))
                     be.getStorage(Storages.FLUID, null).ifPresent(e -> {if (e.getTotalSpace() > 0 && e.getFluidStack().isFluidEqual(ItemContainerUtil.getFluid(hand)) || e.getFluidStack().isEmpty()) fluid.set(ItemContainerUtil.getFluid(hand).copyWithAmount(e.fill((ItemContainerUtil.drainItem(e.getTotalSpace(), player, handIn)), false)));});
                 if (fluid.get().getAmount() > 0) return InteractionResult.SUCCESS;
             }
@@ -177,14 +188,14 @@ public class SmeltingBlock extends Block implements EntityBlock {
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 
         if (stack.getOrCreateTag().getInt("type") == 1)
-            tooltip.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.BLAST.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
+            tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(ModObjects.BLAST.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
         else if (stack.getOrCreateTag().getInt("type") == 2)
-            tooltip.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(Registration.SMOKE.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
+            tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".furnace.only", new ItemStack(ModObjects.SMOKE.get()).getHoverName().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.DARK_RED))));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
 
-    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource rand) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random rand) {
         if (state.getValue(BlockStateProperties.LIT)) {
             int type = state.getValue(TYPE);
             if (type == 0  || type == 3) {
@@ -292,7 +303,7 @@ public class SmeltingBlock extends Block implements EntityBlock {
         SmeltingBlockEntity be = ((SmeltingBlockEntity) level.getBlockEntity(blockPos));
         if (be != null) {
             int mode = be.furnaceSettings.get(8);
-            int i = !be.hasUpgradeType(Registration.FACTORY.get()) || mode == 3 || mode == 4 ? AbstractContainerMenu.getRedstoneSignalFromContainer((be).inventory) : 0;
+            int i = !be.hasUpgradeType(ModObjects.FACTORY.get()) || mode == 3 || mode == 4 ? AbstractContainerMenu.getRedstoneSignalFromContainer((be).inventory) : 0;
             if (mode != 4) return i;
             else return Math.max(i - be.furnaceSettings.get(9), 0);
         }
@@ -301,7 +312,7 @@ public class SmeltingBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return Registration.BLOCK_ENTITIES.getRegistrar().get(arch$registryName()).create(blockPos,blockState);
+        return BlockEntityTypes.BETTER_FURNACE_TILE.get().create(blockPos,blockState);
     }
 
     @Override
@@ -312,7 +323,7 @@ public class SmeltingBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createFurnaceTicker(level, type,(BlockEntityType<? extends SmeltingBlockEntity>) Registration.BLOCK_ENTITIES.getRegistrar().get(state.getBlock().arch$registryName()));
+        return createFurnaceTicker(level, type, BlockEntityTypes.BETTER_FURNACE_TILE.get());
     }
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

@@ -1,12 +1,13 @@
 package wily.ultimatefurnaces.items;
 
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.TierUpgradeItem;
-import wily.ultimatefurnaces.init.RegistrationUF;
+import wily.ultimatefurnaces.init.ModObjectsUF;
 
 public class IronUpgradeItem extends TierUpgradeItem {
 
 
     public IronUpgradeItem(Properties properties) {
-        super(properties, RegistrationUF.COPPER_FURNACE.get(), wily.betterfurnaces.init.Registration.IRON_FURNACE.get());
+        super(properties, ModObjectsUF.COPPER_FURNACE.get(), ModObjects.IRON_FURNACE.get());
     }
 }

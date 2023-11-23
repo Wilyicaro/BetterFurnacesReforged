@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -23,6 +22,8 @@ import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -35,22 +36,29 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.BlockEntityTypes;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.UpgradeItem;
 import wily.factoryapi.util.VoxelShapeUtil;
+
+import java.util.Random;
+import java.util.function.Supplier;
 
 public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock {
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public ForgeBlock(Properties properties) {
-        super(properties.noOcclusion().emissiveRendering(ForgeBlock::getOrientation));
+    public ForgeBlock(Properties properties, Item.Properties itemProperties, Supplier<Integer> cookTime) {
+        super(properties.noOcclusion().emissiveRendering(ForgeBlock::getOrientation), itemProperties,cookTime);
         this.registerDefaultState( this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
     }
 
-
+    public ForgeBlock(Properties properties, Supplier<Integer> cookTime) {
+        this(properties.noOcclusion().emissiveRendering(ForgeBlock::getOrientation),new Item.Properties().tab(BetterFurnacesReforged.ITEM_GROUP), cookTime);
+    }
 
     @Override
     public VoxelShape getShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
@@ -103,11 +111,16 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return Registration.BLOCK_ENTITIES.getRegistrar().get(arch$registryName()).create(blockPos,blockState);
+        return BlockEntityTypes.FORGE_TILE.get().create(blockPos,blockState);
+    }
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createFurnaceTicker(level, type, BlockEntityTypes.FORGE_TILE.get());
     }
     @Environment(EnvType.CLIENT)
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource rand) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random rand) {
         if (state.getValue(BlockStateProperties.LIT)) {
             if (world.getBlockEntity(pos) == null)
             {

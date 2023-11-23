@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import wily.betterfurnaces.init.BlockEntityTypes;
 import wily.betterfurnaces.inventory.*;
 import wily.factoryapi.base.BlockSide;
 import wily.factoryapi.base.FactoryItemSlot;
@@ -28,8 +29,8 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
         return BlockSide.TOP_FACE_SIDES;
     }
 
-    public ForgeBlockEntity(BlockPos pos, BlockState state, Supplier<Integer> cookTime) {
-        super(pos, state, cookTime);
+    public ForgeBlockEntity(BlockPos pos, BlockState state) {
+        super(BlockEntityTypes.FORGE_TILE.get(),pos, state);
     }
 
     @Override

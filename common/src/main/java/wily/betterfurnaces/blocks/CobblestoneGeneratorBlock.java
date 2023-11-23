@@ -34,7 +34,7 @@ import wily.betterfurnaces.items.UpgradeItem;
 import java.util.Collections;
 import java.util.List;
 
-public class CobblestoneGeneratorBlock extends Block implements EntityBlock {
+public class CobblestoneGeneratorBlock extends BFRBlock implements EntityBlock {
     public static final String COBBLESTONE_GENERATOR = "cobblestone_generator";
 
 

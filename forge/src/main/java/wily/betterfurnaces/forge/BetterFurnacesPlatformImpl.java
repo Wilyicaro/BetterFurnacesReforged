@@ -7,15 +7,14 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.CobblestoneGeneratorBlockEntity;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 
@@ -32,7 +31,7 @@ public class BetterFurnacesPlatformImpl {
             }
             if (be.furnaceSettings.get(dir.ordinal()) == 1 || be.furnaceSettings.get(dir.ordinal()) == 2 || be.furnaceSettings.get(dir.ordinal()) == 3 || be.furnaceSettings.get(dir.ordinal()) == 4) {
                 if (tile != null) {
-                    IItemHandler other = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, dir.getOpposite()).map(other1 -> other1).orElse(null);
+                    IItemHandler other = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).map(other1 -> other1).orElse(null);
 
                     if (other == null) {
                         continue;
@@ -123,7 +122,7 @@ public class BetterFurnacesPlatformImpl {
             if (tile == null) {
                 continue;
             }
-            IItemHandler other = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, dir.getOpposite()).map(other1 -> other1).orElse(null);
+            IItemHandler other = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).map(other1 -> other1).orElse(null);
 
             if (other == null) {
                 continue;
@@ -151,7 +150,7 @@ public class BetterFurnacesPlatformImpl {
             if (sideBe == null) {
                 continue;
             }
-            LazyOptional<IEnergyStorage> energyStorage = sideBe.getCapability(ForgeCapabilities.ENERGY,dir);
+            LazyOptional<IEnergyStorage> energyStorage = sideBe.getCapability(CapabilityEnergy.ENERGY,dir);
             energyStorage.ifPresent((e)-> { if (be.energyStorage.getEnergyStored() > 0)be.energyStorage.consumeEnergy(e.receiveEnergy(be.energyStorage.getEnergyStored(),false),false);});
         }
     }

@@ -1,11 +1,11 @@
 package wily.betterfurnaces.items;
 
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 
 public class GoldUpgradeItem extends TierUpgradeItem {
 
 
     public GoldUpgradeItem(Properties properties) {
-        super(properties, Registration.IRON_FURNACE.get(), Registration.GOLD_FURNACE.get());
+        super(properties, ModObjects.IRON_FURNACE.get(), ModObjects.GOLD_FURNACE.get());
     }
 }

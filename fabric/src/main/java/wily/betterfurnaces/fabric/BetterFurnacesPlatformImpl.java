@@ -37,87 +37,90 @@ public class BetterFurnacesPlatformImpl {
             }
             if (be.furnaceSettings.get(dir.ordinal()) == 1 || be.furnaceSettings.get(dir.ordinal()) == 2 || be.furnaceSettings.get(dir.ordinal()) == 3 || be.furnaceSettings.get(dir.ordinal()) == 4) {
                 if (tile != null) {
-                    Storage<ItemVariant> other = ItemStorage.SIDED.find(be.getLevel(),be.getBlockPos().relative(dir),dir);
+                    Storage<ItemVariant> other = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos().relative(dir), dir);
                     if (other == null) {
                         continue;
                     }
-                    Iterator<StorageView<ItemVariant>> storageView = other.iterator();
-                    if (other != null) {
-                        if (be.getAutoInput() != 0 || be.getAutoOutput() != 0) {
-                            if (be.getAutoInput() == 1) {
-                                for (int INPUT : be.INPUTS())
-                                    if (be.furnaceSettings.get(dir.ordinal()) == 1 || be.furnaceSettings.get(dir.ordinal()) == 3) {
-                                        ItemStack input = be.inventory.getItem(INPUT);
-                                        if (input.getCount() >= input.getMaxStackSize()) {
-                                            continue;
-                                        }
-                                        while (storageView.hasNext()) {
-                                            StorageView<ItemVariant> view = storageView.next();
-                                            ItemVariant variant = view.getResource();
-                                            if (view.isResourceBlank() || !be.IisItemValidForSlot(INPUT,variant.toStack())) {
+                    try (Transaction transaction = Transaction.openOuter()) {
+                        Iterator<? extends StorageView<ItemVariant>> storageView = other.iterator(transaction);
+                        if (other != null) {
+                            if (be.getAutoInput() != 0 || be.getAutoOutput() != 0) {
+                                if (be.getAutoInput() == 1) {
+                                    for (int INPUT : be.INPUTS())
+                                        if (be.furnaceSettings.get(dir.ordinal()) == 1 || be.furnaceSettings.get(dir.ordinal()) == 3) {
+                                            ItemStack input = be.inventory.getItem(INPUT);
+                                            if (input.getCount() >= input.getMaxStackSize()) {
                                                 continue;
                                             }
-                                            if (variant.isOf(input.getItem()) || input.isEmpty())
-                                                try (Transaction transaction = Transaction.openOuter()) {
-                                                    be.inventory.insertItem(INPUT, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(INPUT).getCount(), transaction)), false);
-                                                    transaction.commit();
+                                            while (storageView.hasNext()) {
+                                                StorageView<ItemVariant> view = storageView.next();
+                                                ItemVariant variant = view.getResource();
+                                                if (view.isResourceBlank() || !be.IisItemValidForSlot(INPUT, variant.toStack())) {
+                                                    continue;
                                                 }
+                                                if (variant.isOf(input.getItem()) || input.isEmpty())
+                                                    try (Transaction nested = transaction.openNested()) {
+                                                        be.inventory.insertItem(INPUT, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(INPUT).getCount(), nested)), false);
+                                                        nested.commit();
+                                                    }
+                                            }
                                         }
-                                    }
+                                    for (int FUEL : be.FUEL())
+                                        if (be.furnaceSettings.get(dir.ordinal()) == 4) {
+                                            ItemStack fuel = be.inventory.getItem(FUEL);
+                                            if (fuel.getCount() >= fuel.getMaxStackSize()) {
+                                                continue;
+                                            }
+                                            while (storageView.hasNext()) {
+                                                StorageView<ItemVariant> view = storageView.next();
+                                                ItemVariant variant = view.getResource();
+                                                if (view.isResourceBlank() || !be.isItemFuel(view.getResource().toStack())) {
+                                                    continue;
+                                                }
+                                                if (variant.isOf(fuel.getItem()) || fuel.isEmpty())
+                                                    try (Transaction nested = transaction.openNested()) {
+                                                        be.inventory.insertItem(FUEL, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(FUEL).getCount(), nested)), false);
+                                                        nested.commit();
+                                                    }
+                                            }
+                                        }
+                                }
+                            }
+                            if (be.getAutoOutput() == 1) {
                                 for (int FUEL : be.FUEL())
                                     if (be.furnaceSettings.get(dir.ordinal()) == 4) {
-                                        ItemStack fuel = be.inventory.getItem(FUEL);
-                                        if (fuel.getCount() >= fuel.getMaxStackSize()) {
+                                        if (be.inventory.getItem(FUEL).isEmpty()) {
                                             continue;
                                         }
-                                        while (storageView.hasNext()) {
-                                            StorageView<ItemVariant> view = storageView.next();
-                                            ItemVariant variant = view.getResource();
-                                            if (view.isResourceBlank() || !be.isItemFuel(view.getResource().toStack())) {
-                                                continue;
-                                            }
-                                            if (variant.isOf(fuel.getItem()) || fuel.isEmpty())
-                                                try (Transaction transaction = Transaction.openOuter()) {
-                                                    be.inventory.insertItem(FUEL, variant.toStack((int) other.extract(variant, view.getCapacity() - be.inventory.getItem(FUEL).getCount(), transaction)), false);
-                                                    transaction.commit();
-                                                }
+                                        ItemStack fuel = be.inventory.getItem(FUEL);
+                                        if (be.isItemFuel(fuel)) {
+                                            continue;
                                         }
-                                    }
-                            }
-                        }
-                        if (be.getAutoOutput() == 1) {
-                            for (int FUEL : be.FUEL())
-                                if (be.furnaceSettings.get(dir.ordinal()) == 4) {
-                                    if (be.inventory.getItem(FUEL).isEmpty()) {
-                                        continue;
-                                    }
-                                    ItemStack fuel = be.inventory.getItem(FUEL);
-                                    if (be.isItemFuel(fuel)) {
-                                        continue;
-                                    }
-                                    try (Transaction transaction = Transaction.openOuter()) {
-                                        be.inventory.extractItem(FUEL, (int) other.insert(ItemVariant.of(fuel), fuel.getCount(), transaction), false);
-                                        transaction.commit();
-                                    }
+                                        try (Transaction nested = transaction.openNested()) {
+                                            be.inventory.extractItem(FUEL, (int) other.insert(ItemVariant.of(fuel), fuel.getCount(), nested), false);
+                                            nested.commit();
+                                        }
 
-                                }
-                            for (int output : be.OUTPUTS()) {
-                                if (be.furnaceSettings.get(dir.ordinal()) == 2 || be.furnaceSettings.get(dir.ordinal()) == 3) {
-                                    ItemStack o = be.inventory.getItem(output);
-                                    if (o.isEmpty()) {
-                                        continue;
                                     }
-                                    if (Registry.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
-                                        continue;
-                                    }
-                                    try (Transaction transaction = Transaction.openOuter()) {
-                                        be.inventory.extractItem(output, (int) other.insert(ItemVariant.of(o), o.getCount(), transaction), false);
-                                        transaction.commit();
-                                    }
+                                for (int output : be.OUTPUTS()) {
+                                    if (be.furnaceSettings.get(dir.ordinal()) == 2 || be.furnaceSettings.get(dir.ordinal()) == 3) {
+                                        ItemStack o = be.inventory.getItem(output);
+                                        if (o.isEmpty()) {
+                                            continue;
+                                        }
+                                        if (Registry.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
+                                            continue;
+                                        }
+                                        try (Transaction nested = transaction.openNested()) {
+                                            be.inventory.extractItem(output, (int) other.insert(ItemVariant.of(o), o.getCount(), nested), false);
+                                            nested.commit();
+                                        }
 
+                                    }
                                 }
                             }
                         }
+                        transaction.commit();
                     }
                 }
             }

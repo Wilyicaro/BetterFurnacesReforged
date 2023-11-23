@@ -7,6 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -49,8 +51,8 @@ public class TierUpgradeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_shift_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
-        tooltip.add(Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", from.getName().getString(), to.getName().getString())).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
+        tooltip.add(new TranslatableComponent("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade_shift_right_click").setStyle(Style.EMPTY.applyFormat(ChatFormatting.GOLD).withItalic(true)));
+        tooltip.add(new TextComponent(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", from.getName().getString(), to.getName().getString())).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
     }
 
     @Override
@@ -62,7 +64,7 @@ public class TierUpgradeItem extends Item {
             BlockPlaceContext ctx2 = new BlockPlaceContext(ctx);
             BlockState state = level.getBlockState(pos);
             if (state.is(from) && (fromBe instanceof FurnaceBlockEntity || fromBe instanceof SmeltingBlockEntity)) {
-                CompoundTag tag =  fromBe.saveWithoutMetadata();
+                CompoundTag tag =  fromBe.getUpdateTag();
                 level.removeBlockEntity(pos);
                 level.removeBlock(pos,false);
                 level.setBlock(pos,to.getStateForPlacement(ctx2).setValue(BlockStateProperties.LIT, state.getValue(BlockStateProperties.LIT)),3);
@@ -70,7 +72,7 @@ public class TierUpgradeItem extends Item {
                 level.blockEntityChanged(pos);
                 if (fromBe instanceof FurnaceBlockEntity)
                     toBe.inventory.deserializeTag(tag);
-                tag.putInt("BurnTime", (int)(tag.getInt("BurnTime") * (float) toBe.defaultCookTime.get() / Math.max(1, tag.getInt("CookTimeTotal"))));
+                tag.putInt("BurnTime", (int)(tag.getInt("BurnTime") * (float) toBe.getDefaultCookTime() / Math.max(1, tag.getInt("CookTimeTotal"))));
                 toBe.load(toBe.saveWithoutMetadata().merge(tag));
                 if (!ctx.getPlayer().isCreative())
                     ctx.getItemInHand().shrink(1);

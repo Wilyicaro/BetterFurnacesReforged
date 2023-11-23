@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class FuelVerifierBlock extends Block implements EntityBlock {
+public class FuelVerifierBlock extends BFRBlock implements EntityBlock {
     public static final String FUEL_VERIFIER = "fuel_verifier";
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
