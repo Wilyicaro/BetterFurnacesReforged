@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.client.ItemColorsHandler;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.items.ColorUpgradeItem.ContainerColorUpgrade;
 import wily.betterfurnaces.network.Messages;
 import wily.betterfurnaces.network.PacketColorSlider;
@@ -53,13 +53,13 @@ public class ColorUpgradeScreen extends AbstractUpgradeScreen<ContainerColorUpgr
 
     @Override
     public List<? extends Renderable> getNestedRenderables() {
-        List<Renderable> list = new ArrayList<>(List.of(new FactoryDrawableButton(leftPos + 8,topPos + 8, BetterFurnacesDrawables.BUTTON).icon(BetterFurnacesDrawables.getButtonIcon(12 + buttonstate)).tooltip((buttonstate == 0 ?Blocks.FURNACE : Registration.EXTREME_FORGE.get()).getName()).onPress((b,i)-> buttonstate =(buttonstate == 1 ? 0 : 1))));
+        List<Renderable> list = new ArrayList<>(List.of(new FactoryDrawableButton(leftPos + 8,topPos + 8, BetterFurnacesDrawables.BUTTON).icon(BetterFurnacesDrawables.getButtonIcon(12 + buttonstate)).tooltip((buttonstate == 0 ?Blocks.FURNACE : ModObjects.EXTREME_FORGE.get()).getName()).onPress((b, i)-> buttonstate =(buttonstate == 1 ? 0 : 1))));
         list.addAll(super.getNestedRenderables());
         return list;
     }
 
     protected void renderColorFurnace(GuiGraphics graphics) {
-        ItemStack stack =  new ItemStack(buttonstate == 0 ? Registration.EXTREME_FURNACE.get() : Registration.EXTREME_FORGE.get().asItem());
+        ItemStack stack =  new ItemStack(buttonstate == 0 ? ModObjects.EXTREME_FURNACE.get() : ModObjects.EXTREME_FORGE.get().asItem());
         Lighting.setupFor3DItems();
         CompoundTag tag = stack.getOrCreateTag();
         ItemColorsHandler.putColor(tag,red.getValue(),green.getValue(),blue.getValue());

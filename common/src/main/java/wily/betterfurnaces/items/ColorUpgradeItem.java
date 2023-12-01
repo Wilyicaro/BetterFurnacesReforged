@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.AbstractUpgradeMenu;
 
 public class ColorUpgradeItem extends UpgradeItem {
@@ -77,7 +77,7 @@ public class ColorUpgradeItem extends UpgradeItem {
 
         public ContainerColorUpgrade(int windowId, Inventory playerInv,
                                      ItemStack itemStackBeingHeld) {
-            super(Registration.COLOR_UPGRADE_CONTAINER.get(), windowId, playerInv, itemStackBeingHeld);
+            super(ModObjects.COLOR_UPGRADE_CONTAINER.get(), windowId, playerInv, itemStackBeingHeld);
             this.itemStackBeingHeld = itemStackBeingHeld;
 
         }

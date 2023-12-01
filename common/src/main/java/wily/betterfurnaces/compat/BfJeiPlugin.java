@@ -7,7 +7,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.ibm.icu.impl.Pair;
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.fluid.FluidStack;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -45,6 +44,7 @@ import wily.betterfurnaces.client.screen.AbstractBasicScreen;
 import wily.betterfurnaces.client.screen.CobblestoneGeneratorScreen;
 import wily.betterfurnaces.client.screen.ForgeScreen;
 import wily.betterfurnaces.client.screen.FurnaceScreen;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.TierUpgradeItem;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
@@ -52,7 +52,7 @@ import wily.betterfurnaces.util.FluidRenderUtil;
 import wily.betterfurnaces.util.GuiUtil;
 import wily.betterfurnaces.util.RecipeUtil;
 import wily.factoryapi.base.client.IWindowWidget;
-import wily.ultimatefurnaces.init.RegistrationUF;
+import wily.ultimatefurnaces.init.ModObjectsUF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,10 +72,10 @@ public class BfJeiPlugin implements IModPlugin {
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
 		if (Config.enableJeiCatalysts.get() && Config.enableJeiPlugin.get()) {
-			registry.addRecipeCatalyst(new ItemStack(Registration.COBBLESTONE_GENERATOR.get()), BFRRecipeTypes.ROCK_GENERATING_JEI);
+			registry.addRecipeCatalyst(new ItemStack(ModObjects.COBBLESTONE_GENERATOR.get()), BFRRecipeTypes.ROCK_GENERATING_JEI);
 
-			Block[] blocks = {Registration.IRON_FURNACE.get(), Registration.GOLD_FURNACE.get(), Registration.DIAMOND_FURNACE.get(), Registration.NETHERHOT_FURNACE.get(), Registration.EXTREME_FURNACE.get(), Registration.EXTREME_FORGE.get()};
-			if (Config.enableUltimateFurnaces.get()) blocks = ArrayUtils.addAll(blocks, RegistrationUF.COPPER_FURNACE.get(), RegistrationUF.STEEL_FURNACE.get(),RegistrationUF.AMETHYST_FURNACE.get(),RegistrationUF.PLATINUM_FURNACE.get(), RegistrationUF.ULTIMATE_FURNACE.get(), RegistrationUF.COPPER_FORGE.get(), RegistrationUF.IRON_FORGE.get(), RegistrationUF.GOLD_FORGE.get(), RegistrationUF.DIAMOND_FORGE.get(), RegistrationUF.NETHERHOT_FORGE.get(), RegistrationUF.ULTIMATE_FORGE.get());
+			Block[] blocks = {ModObjects.IRON_FURNACE.get(), ModObjects.GOLD_FURNACE.get(), ModObjects.DIAMOND_FURNACE.get(), ModObjects.NETHERHOT_FURNACE.get(), ModObjects.EXTREME_FURNACE.get(), ModObjects.EXTREME_FORGE.get()};
+			if (Config.enableUltimateFurnaces.get()) blocks = ArrayUtils.addAll(blocks, ModObjectsUF.COPPER_FURNACE.get(), ModObjectsUF.STEEL_FURNACE.get(), ModObjectsUF.AMETHYST_FURNACE.get(), ModObjectsUF.PLATINUM_FURNACE.get(), ModObjectsUF.ULTIMATE_FURNACE.get(), ModObjectsUF.COPPER_FORGE.get(), ModObjectsUF.IRON_FORGE.get(), ModObjectsUF.GOLD_FORGE.get(), ModObjectsUF.DIAMOND_FORGE.get(), ModObjectsUF.NETHERHOT_FORGE.get(), ModObjectsUF.ULTIMATE_FORGE.get());
 			for (Block i : blocks) {
 				ItemStack smelting = new ItemStack(i);
 				registry.addRecipeCatalyst(smelting, RecipeTypes.SMELTING);
@@ -108,12 +108,9 @@ public class BfJeiPlugin implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		Level world = Minecraft.getInstance().level;
 		RecipeManager recipeManager = world.getRecipeManager();
-		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes(recipeManager, Registration.ROCK_GENERATING_RECIPE.get()));
+		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes(recipeManager, ModObjects.ROCK_GENERATING_RECIPE.get()));
 
 		Registration.ITEMS.forEach((item)-> {
-			if (item.get() instanceof TierUpgradeItem i) addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
-		});
-		if (Config.enableUltimateFurnaces.get()) Registration.ITEMS.forEach((item)-> {
 			if (item.get() instanceof TierUpgradeItem i) addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
 		});
 
@@ -148,7 +145,7 @@ public class BfJeiPlugin implements IModPlugin {
 		public static final ResourceLocation GUI = new ResourceLocation(BetterFurnacesReforged.MOD_ID , "textures/container/cobblestone_generator_gui.png");
 
 		public CobblestoneGeneratorCategory(IGuiHelper guiHelper) {
-			this.title = Registration.COBBLESTONE_GENERATOR.get().getName();
+			this.title = ModObjects.COBBLESTONE_GENERATOR.get().getName();
 			this.background = guiHelper.createDrawable(GUI, 46, 21, 85, 52);
 			this.guiHelper = guiHelper;
 			this.cachedProgressAnim = CacheBuilder.newBuilder()

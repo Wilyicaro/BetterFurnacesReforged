@@ -37,7 +37,7 @@ public class Config {
     }
 
     public static void setupPlatformConfig(){
-    if (Platform.isModLoaded("forgeconfigapiport") || Platform.isForge()) ForgeConfigCompat.setupPlatformConfig();
+    if (Platform.isModLoaded("forgeconfigapiport") || Platform.isForgeLike()) ForgeConfigCompat.setupPlatformConfig();
     else BetterFurnacesReforged.LOGGER.warn("Currently ForgeConfigApiPort isn't installed, to config  BetterFurnaces options, please consider install it!");
     }
 

@@ -10,16 +10,14 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.BlockEntityTypes;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.FuelVerifierMenu;
 import wily.betterfurnaces.inventory.SlotFuel;
 import wily.factoryapi.base.*;
-
-import java.util.Optional;
 
 public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
@@ -61,7 +59,7 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
 
     public FuelVerifierBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.FUEL_VERIFIER_TILE.get(), pos, state);
+        super(BlockEntityTypes.FUEL_VERIFIER_TILE.get(), pos, state);
 
     }
 

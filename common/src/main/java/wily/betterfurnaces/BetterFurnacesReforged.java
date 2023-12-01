@@ -6,6 +6,7 @@ import dev.architectury.registry.registries.RegistrarManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wily.betterfurnaces.gitup.UpCheck;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.network.Messages;
 

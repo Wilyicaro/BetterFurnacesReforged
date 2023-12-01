@@ -14,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.blockentity.ForgeBlockEntity;
@@ -24,6 +23,8 @@ import wily.betterfurnaces.client.renderer.ForgeRenderer;
 import wily.betterfurnaces.client.renderer.FurnaceRenderer;
 import wily.betterfurnaces.client.screen.*;
 import wily.betterfurnaces.gitup.UpCheck;
+import wily.betterfurnaces.init.BlockEntityTypes;
+import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
 
 import java.util.List;
@@ -33,18 +34,20 @@ import java.util.function.Consumer;
 public class ClientSide {
 
     public static void init() {
-        MenuRegistry.registerScreenFactory(Registration.FURNACE_CONTAINER.get(), FurnaceScreen::new);
-        MenuRegistry.registerScreenFactory(Registration.FORGE_CONTAINER.get(), ForgeScreen::new);
-        MenuRegistry.registerScreenFactory(Registration.COLOR_UPGRADE_CONTAINER.get(), ColorUpgradeScreen::new);
-        MenuRegistry.registerScreenFactory(Registration.FUEL_VERIFIER_CONTAINER.get(), FuelVerifierScreen::new);
-        MenuRegistry.registerScreenFactory(Registration.COB_GENERATOR_CONTAINER.get(), CobblestoneGeneratorScreen::new);
-        registerBetterFurnacesBlocksClientSide(Registration.BLOCK_ITEMS);
-        Registration.BLOCK_ENTITIES.forEach((b)->{
-            if(b.getId().getPath().contains("forge")) BlockEntityRendererRegistry.register((BlockEntityType<ForgeBlockEntity>) b.get(), ForgeRenderer::new);
-            else if(b.getId().getPath().contains("furnace")) BlockEntityRendererRegistry.register((BlockEntityType<SmeltingBlockEntity>) b.get(), FurnaceRenderer::new);
+        MenuRegistry.registerScreenFactory(ModObjects.FURNACE_CONTAINER.get(), FurnaceScreen::new);
+        MenuRegistry.registerScreenFactory(ModObjects.FORGE_CONTAINER.get(), ForgeScreen::new);
+        MenuRegistry.registerScreenFactory(ModObjects.COLOR_UPGRADE_CONTAINER.get(), ColorUpgradeScreen::new);
+        MenuRegistry.registerScreenFactory(ModObjects.FUEL_VERIFIER_CONTAINER.get(), FuelVerifierScreen::new);
+        MenuRegistry.registerScreenFactory(ModObjects.COB_GENERATOR_CONTAINER.get(), CobblestoneGeneratorScreen::new);
+        Registration.BLOCK_ITEMS.forEach((block)->{
+            if (block.get() instanceof SmeltingBlock) {
+                ItemPropertiesRegistry.register(block.get().asItem(),
+                        new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
+            }
+            ColorHandlerRegistry.registerItemColors(ItemColorsHandler.COLOR,block.get().asItem());
         });
-        if (Config.enableUltimateFurnaces.get())
-            wily.ultimatefurnaces.init.ClientSide.init();
+        BlockEntityRendererRegistry.register(BlockEntityTypes.BETTER_FURNACE_TILE.get(), FurnaceRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityTypes.FORGE_TILE.get(), ForgeRenderer::new);
 
     }
     public static void registerExtraModels(Consumer<ResourceLocation> register){
@@ -73,15 +76,7 @@ public class ClientSide {
             if(UpCheck.threadFinished && ClientTickEvent.CLIENT_LEVEL_PRE.isRegistered(listener)) ClientTickEvent.CLIENT_LEVEL_PRE.unregister(listener);
         });
     }
-    public static void registerBetterFurnacesBlocksClientSide(DeferredRegister<Block> blocks){
-        blocks.forEach((block)->{
-            if (block.get() instanceof SmeltingBlock) {
-                ItemPropertiesRegistry.register(block.get().asItem(),
-                        new ResourceLocation(BetterFurnacesReforged.MOD_ID, "colored"), (stack, level, living, id) -> ItemColorsHandler.itemContainsColor(stack.getOrCreateTag()) ? 1.0F : 0.0F);
-            }
-            ColorHandlerRegistry.registerItemColors(ItemColorsHandler.COLOR,block.get().asItem());
-        });
-    }
+
 
 
 

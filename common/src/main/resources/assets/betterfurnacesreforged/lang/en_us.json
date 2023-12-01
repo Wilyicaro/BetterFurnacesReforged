@@ -131,7 +131,7 @@
   "tooltip.betterfurnacesreforged.upgrade.allore": "ore type",
   "tooltip.betterfurnacesreforged.upgrade.color": "Change the color of the furnace",
   "tooltip.betterfurnacesreforged.upgrade.double": "Doubles",
-  "tooltip.betterfurnacesreforged.upgrade.energy": "Uses %s instead of solid fuel in Extreme Forge",
+  "tooltip.betterfurnacesreforged.upgrade.energy": "Uses %s instead of solid fuel.",
   "tooltip.betterfurnacesreforged.upgrade.factory": "Adds the possibility to enter and exit items automatically, from the sides configured within the furnace interface, and alters its functioning by the redstone signal",
   "tooltip.betterfurnacesreforged.upgrade.fuel": "%s %sthe fuel efficiency",
   "tooltip.betterfurnacesreforged.upgrade.infinitely": "infinitely ",

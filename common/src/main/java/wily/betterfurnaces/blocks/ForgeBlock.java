@@ -23,6 +23,8 @@ import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -34,18 +36,26 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
+import wily.betterfurnaces.init.BlockEntityTypes;
 import wily.betterfurnaces.items.UpgradeItem;
 import wily.factoryapi.util.VoxelShapeUtil;
+
+import java.util.function.Supplier;
 
 public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock {
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public ForgeBlock(Properties properties) {
-        super(properties.noOcclusion());
+    public ForgeBlock(Properties properties, Supplier<Integer> defaultCookTime) {
+        super(properties.noOcclusion(),defaultCookTime);
         this.registerDefaultState( this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
+    }
+    public ForgeBlock(Properties properties,Item.Properties itemProperties, Supplier<Integer> defaultCookTime) {
+        this(properties.noOcclusion(),defaultCookTime);
+        this.itemProperties = itemProperties;
     }
 
 
@@ -145,7 +155,17 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
             }
         }
     }
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return BlockEntityTypes.FORGE_TILE.get().create(blockPos,blockState);
+    }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createFurnaceTicker(level, type, BlockEntityTypes.FORGE_TILE.get());
+    }
 
     public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
         if (p_185499_2_ == Rotation.CLOCKWISE_90 || p_185499_2_ == Rotation.COUNTERCLOCKWISE_90) {

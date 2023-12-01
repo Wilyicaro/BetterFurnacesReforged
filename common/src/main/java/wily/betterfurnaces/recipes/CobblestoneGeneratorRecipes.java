@@ -4,13 +4,12 @@ import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 
 public record CobblestoneGeneratorRecipes(ItemStack result, int duration) implements Recipe<Container> {
     public static final CobblestoneGeneratorRecipes.Serializer SERIALIZER = new CobblestoneGeneratorRecipes.Serializer();
@@ -80,6 +79,6 @@ public record CobblestoneGeneratorRecipes(ItemStack result, int duration) implem
 
     @Override
     public RecipeType<?> getType() {
-        return Registration.ROCK_GENERATING_RECIPE.get();
+        return ModObjects.ROCK_GENERATING_RECIPE.get();
     }
 }

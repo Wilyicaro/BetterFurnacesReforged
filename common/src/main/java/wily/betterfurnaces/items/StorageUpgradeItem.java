@@ -1,7 +1,7 @@
 package wily.betterfurnaces.items;
 
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 
 
 public class StorageUpgradeItem extends UpgradeItem {
@@ -16,6 +16,6 @@ public class StorageUpgradeItem extends UpgradeItem {
 
     @Override
     public boolean isUpgradeCompatibleWith(UpgradeItem upg) {
-        return upg != Registration.GENERATOR.get();
+        return upg != ModObjects.GENERATOR.get();
     }
 }

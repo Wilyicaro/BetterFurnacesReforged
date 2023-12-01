@@ -71,7 +71,7 @@ public class TierUpgradeItem extends Item {
                 level.blockEntityChanged(pos);
                 if (fromBe instanceof FurnaceBlockEntity)
                     toBe.inventory.deserializeTag(tag);
-                tag.putInt("BurnTime", (int)(tag.getInt("BurnTime") * (float) toBe.defaultCookTime.get() / Math.max(1, tag.getInt("CookTimeTotal"))));
+                tag.putInt("BurnTime", (int)(tag.getInt("BurnTime") * (float) toBe.getDefaultCookTime() / Math.max(1, tag.getInt("CookTimeTotal"))));
                 toBe.load(toBe.saveWithoutMetadata().merge(tag));
                 if (!ctx.getPlayer().isCreative())
                     ctx.getItemInHand().shrink(1);

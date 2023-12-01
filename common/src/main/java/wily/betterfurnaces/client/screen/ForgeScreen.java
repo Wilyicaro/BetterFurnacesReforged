@@ -1,12 +1,10 @@
 package wily.betterfurnaces.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.inventory.ForgeMenu;
 import wily.factoryapi.base.client.drawable.DrawableStatic;
 import wily.factoryapi.base.client.drawable.DrawableStaticProgress;

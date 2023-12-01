@@ -8,7 +8,7 @@ import net.minecraft.world.level.material.Fluids;
 import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.ForgeBlockEntity;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
-import wily.betterfurnaces.init.Registration;
+import wily.betterfurnaces.init.ModObjects;
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.base.IFluidHandlerItem;
 import wily.factoryapi.base.IPlatformFluidHandler;
@@ -34,6 +34,6 @@ public class GeneratorUpgradeItem extends UpgradeItem implements IFluidHandlerIt
 
     @Override
     public boolean isUpgradeCompatibleWith(UpgradeItem upg) {
-        return upg != Registration.ENERGY.get() && upg.upgradeType != 3 && upg.upgradeType != 6 && upg.upgradeType != 8;
+        return upg != ModObjects.ENERGY.get() && upg.upgradeType != 3 && upg.upgradeType != 6 && upg.upgradeType != 8;
     }
 }
