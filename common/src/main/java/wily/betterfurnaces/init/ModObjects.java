@@ -1,28 +1,24 @@
 package wily.betterfurnaces.init;
 
-import com.mojang.datafixers.types.Type;
 import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.menu.MenuRegistry;
-import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import wily.betterfurnaces.Config;
-import wily.betterfurnaces.blockentity.*;
 import wily.betterfurnaces.blocks.*;
-import wily.betterfurnaces.inventory.*;
+import wily.betterfurnaces.inventory.CobblestoneGeneratorMenu;
+import wily.betterfurnaces.inventory.ForgeMenu;
+import wily.betterfurnaces.inventory.FuelVerifierMenu;
+import wily.betterfurnaces.inventory.SmeltingMenu;
 import wily.betterfurnaces.items.*;
 import wily.betterfurnaces.recipes.CobblestoneGeneratorRecipes;
 import wily.betterfurnaces.util.registration.SmeltingBlocks;
@@ -33,8 +29,6 @@ import static wily.betterfurnaces.init.Registration.*;
 
 public class ModObjects {
 
-    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create( MOD_ID, Registries.CREATIVE_MODE_TAB);
-
     public static void init() {
     }
 
@@ -43,9 +37,6 @@ public class ModObjects {
     public static Item.Properties defaultItemProperties(){ return  new Item.Properties().arch$tab(ITEM_GROUP);}
 
     private static Item.Properties uniqueStackItemProperties(){ return  defaultItemProperties().stacksTo(1);}
-    private static Type<?> blockEntityType(String name){
-        return Util.fetchChoiceType(References.BLOCK_ENTITY, name);
-    }
 
     public static final RegistrySupplier<RecipeSerializer<CobblestoneGeneratorRecipes>> COB_GENERATION_SERIALIZER = RECIPES_SERIALIZERS.register("rock_generating", () -> CobblestoneGeneratorRecipes.SERIALIZER);
 

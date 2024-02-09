@@ -4,9 +4,13 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import dev.architectury.platform.Platform;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 
 import static wily.betterfurnaces.Config.*;
 
@@ -17,37 +21,6 @@ public class ForgeConfigCompat {
     public static ForgeConfigSpec COMMON_CONFIG;
     public static ForgeConfigSpec CLIENT_CONFIG;
     public static ForgeConfigSpec SERVER_CONFIG;
-
-    public static ForgeConfigSpec.IntValue cache_capacity;
-
-    public static ForgeConfigSpec.IntValue furnaceXPDropValue;
-    public static ForgeConfigSpec.IntValue furnaceXPDropValue2;
-
-    public static ForgeConfigSpec.IntValue copperTierSpeed;
-    public static ForgeConfigSpec.IntValue steelTierSpeed;
-    public static ForgeConfigSpec.IntValue ironTierSpeed;
-    public static ForgeConfigSpec.IntValue amethystTierSpeed;
-    public static ForgeConfigSpec.IntValue goldTierSpeed;
-    public static ForgeConfigSpec.IntValue diamondTierSpeed;
-    public static ForgeConfigSpec.IntValue platinumTierSpeed;
-    public static ForgeConfigSpec.IntValue netherhotTierSpeed;
-    public static ForgeConfigSpec.IntValue extremeTierSpeed;
-    public static ForgeConfigSpec.IntValue ultimateTierSpeed;
-    public static ForgeConfigSpec.BooleanValue enableJeiPlugin;
-    public static ForgeConfigSpec.BooleanValue enableJeiCatalysts;
-    public static ForgeConfigSpec.BooleanValue enableJeiClickArea;
-
-    public static ForgeConfigSpec.IntValue xpFluidType;
-
-    public static ForgeConfigSpec.BooleanValue checkUpdates;
-
-    public static ForgeConfigSpec.BooleanValue showErrors;
-
-    public static ForgeConfigSpec.BooleanValue enableUltimateFurnaces;
-
-    public static ForgeConfigSpec.BooleanValue checkCommonOresName;
-
-    public static ForgeConfigSpec.BooleanValue checkRawOresName;
 
 
     static {
@@ -66,8 +39,7 @@ public class ForgeConfigCompat {
 
         CLIENT_BUILDER.comment("Additional Content").push(CATEGORY_MODDED_FURNACE);
 
-        enableUltimateFurnaces = COMMON_BUILDER
-                .comment("Enable or disable Ultimate Furnaces Addon").define("additional.enable_ultimatefurnaces", true);
+        enableUltimateFurnaces = COMMON_BUILDER.comment("Enable or disable Ultimate Furnaces Addon").define("additional.enable_ultimatefurnaces", true);
 
 
         CLIENT_BUILDER.pop();
@@ -75,14 +47,6 @@ public class ForgeConfigCompat {
         CLIENT_BUILDER.comment("JEI Settings").push(CATEGORY_JEI);
 
         setupJEIConfig(COMMON_BUILDER, CLIENT_BUILDER);
-
-        CLIENT_BUILDER.pop();
-
-
-        CLIENT_BUILDER.comment("Misc").push(CATEGORY_MISC);
-
-        showErrors = CLIENT_BUILDER
-                .comment(" Show furnace settings errors in chat, used for debugging").define("misc.errors", false);
 
 
         CLIENT_BUILDER.pop();
@@ -102,7 +66,7 @@ public class ForgeConfigCompat {
 
     private static void setupFurnacesConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder SERVER_BUILDER) {
 
-        cache_capacity = SERVER_BUILDER
+        cacheCapacity = SERVER_BUILDER
                 .comment(" The capacity of the recipe cache, higher values use more memory.\n Default: 10")
                 .defineInRange("recipe_cache", 10, 1, 100);
 
@@ -166,6 +130,9 @@ public class ForgeConfigCompat {
         xpFluidType = SERVER_BUILDER
                 .comment(" Value referring to the mod used for the xp fluid generated with the Xp Tank Upgrade. \n 0 = Mob Grinding Utils(Default) \n 1 = Industrial Foregoing \n 2 = Cyclic \n 3 = Reliquary \n 4 = Kibe Utilities")
                 .defineInRange("upgrade.xp_fluid_type", getDefaultLiquidXpMod(), 0, supportedLiquidXps.size() - 1);
+        List<String> list = Collections.emptyList();
+
+        additionalLiquidFuels = SERVER_BUILDER.comment("List of additional supported fluids for Liquid Fuel Upgrade").defineList("upgrade.additional_liquid_fuels", list,o->  o instanceof String s &&  BuiltInRegistries.FLUID.containsKey(new ResourceLocation(s)));
 
     }
 
@@ -178,7 +145,6 @@ public class ForgeConfigCompat {
 
 
     private static void setupJEIConfig(ForgeConfigSpec.Builder COMMON_BUILDER, ForgeConfigSpec.Builder CLIENT_BUILDER) {
-
         enableJeiPlugin = COMMON_BUILDER
                 .comment(" Enable or disable the JeiPlugin of BetterFurnaces.").define("jei.enable_jei", true);
 
@@ -213,26 +179,6 @@ public class ForgeConfigCompat {
         loadConfig(CLIENT_CONFIG, BetterFurnacesPlatform.getConfigDirectory().resolve(BetterFurnacesReforged.MOD_ID + "-client.toml"));
         loadConfig(COMMON_CONFIG, BetterFurnacesPlatform.getConfigDirectory().resolve(BetterFurnacesReforged.MOD_ID + "-common.toml"));
     }
-    public static void onServerConfigLoad(){
-        Config.cacheCapacity = cache_capacity;
-        Config.copperTierSpeed = copperTierSpeed;
-        Config.ironTierSpeed = ironTierSpeed;
-        Config.steelTierSpeed = steelTierSpeed;
-        Config.goldTierSpeed = goldTierSpeed;
-        Config.amethystTierSpeed = amethystTierSpeed;
-        Config.diamondTierSpeed = diamondTierSpeed;
-        Config.platinumTierSpeed = platinumTierSpeed;
-        Config.netherhotTierSpeed = netherhotTierSpeed;
-        Config.extremeTierSpeed = extremeTierSpeed;
-        Config.ultimateTierSpeed = ultimateTierSpeed;
-        Config.checkCommonOresName = checkCommonOresName;
-        Config.checkRawOresName = checkRawOresName;
-
-
-        Config.furnaceXPDropValue = furnaceXPDropValue;
-        Config.furnaceXPDropValue2 = furnaceXPDropValue2;
-        Config.xpFluidType = xpFluidType;
-    }
 
     @ExpectPlatform
     public static void registerConfig() {
@@ -241,12 +187,6 @@ public class ForgeConfigCompat {
     public static void setupPlatformConfig(){
         registerConfig();
         loadAllSyncConfigs();
-        Config.checkUpdates = checkUpdates;
-        Config.enableUltimateFurnaces = enableUltimateFurnaces;
-
-        Config.enableJeiPlugin = enableJeiPlugin;
-        Config.enableJeiCatalysts = enableJeiCatalysts;
-        Config.enableJeiClickArea = enableJeiClickArea;
     }
 
 }

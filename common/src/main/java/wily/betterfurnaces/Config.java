@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -20,7 +21,6 @@ public class Config {
     public static final String CATEGORY_MODDED_FURNACE = "modded_furnaces";
     public static final String CATEGORY_JEI = "jei";
     public static final String CATEGORY_UPDATES = "updates";
-    public static final String CATEGORY_MISC = "misc";
 
     public static final List<String> supportedLiquidXps = new ArrayList<>(List.of("mob_grinding_utils:fluid_xp","industrialforegoing:essence","cyclic:xpjuice","reliquary:xp_juice","kibe:liquid_xp"));
 
@@ -38,7 +38,7 @@ public class Config {
 
     public static void setupPlatformConfig(){
     if (Platform.isModLoaded("forgeconfigapiport") || Platform.isForgeLike()) ForgeConfigCompat.setupPlatformConfig();
-    else BetterFurnacesReforged.LOGGER.warn("Currently ForgeConfigApiPort isn't installed, to config  BetterFurnaces options, please consider install it!");
+    else BetterFurnacesReforged.LOGGER.warn("Currently ForgeConfigApiPort isn't installed, to change BetterFurnaces options, please consider installing it!");
     }
 
 
@@ -60,7 +60,7 @@ public class Config {
     public static Supplier<Boolean> enableJeiClickArea =()-> true;
 
     public static Supplier<Integer> copperTierSpeed =()-> 175;
-    public static Supplier<Integer>  ironTierSpeed =()-> 150;
+    public static Supplier<Integer> ironTierSpeed =()-> 150;
     public static Supplier<Integer> steelTierSpeed =()-> 125;
     public static Supplier<Integer> goldTierSpeed =()-> 100;
     public static Supplier<Integer> amethystTierSpeed =()-> 75;
@@ -69,8 +69,8 @@ public class Config {
     public static Supplier<Integer> netherhotTierSpeed =()-> 8;
     public static Supplier<Integer> extremeTierSpeed =()-> 4;
     public static Supplier<Integer> ultimateTierSpeed =()-> 1;
-
     public static Supplier<Integer> xpFluidType =()-> 0;
+    public static Supplier<List<? extends String>> additionalLiquidFuels = Collections::emptyList;
 
 
 }

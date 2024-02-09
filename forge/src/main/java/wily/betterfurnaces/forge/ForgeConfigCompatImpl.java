@@ -18,13 +18,4 @@ public class ForgeConfigCompatImpl {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON,COMMON_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER,SERVER_CONFIG);
     }
-    @SubscribeEvent
-    public static void onServerConfigLoad(final ModConfigEvent event) {
-       if(event.getConfig().getSpec().equals(SERVER_CONFIG))
-           ForgeConfigCompat.onServerConfigLoad();
-    }
-    @SubscribeEvent
-    public static void onLevelLoad(final LevelEvent.Load event) {
-        ForgeConfigCompat.onServerConfigLoad();
-    }
 }

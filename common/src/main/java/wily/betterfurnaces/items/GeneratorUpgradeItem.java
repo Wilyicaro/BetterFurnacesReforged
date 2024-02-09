@@ -14,7 +14,7 @@ import wily.factoryapi.base.IFluidHandlerItem;
 import wily.factoryapi.base.IPlatformFluidHandler;
 
 
-public class GeneratorUpgradeItem extends UpgradeItem implements IFluidHandlerItem<IPlatformFluidHandler<?>> {
+public class GeneratorUpgradeItem extends UpgradeItem implements IFluidHandlerItem<IPlatformFluidHandler> {
     public GeneratorUpgradeItem(Properties properties) {
         super(properties, 7, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.generator", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
     }

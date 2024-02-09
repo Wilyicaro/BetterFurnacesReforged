@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -33,15 +34,18 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
 
     protected Component name;
 
-    public IPlatformItemHandler<?> inventory;
+    public FactoryItemHandler inventory;
 
     public List<Bearer<Integer>> additionalSyncInts = new ArrayList<>();
 
     public InventoryBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
-        inventory = FactoryAPIPlatform.getItemHandlerApi(getInventorySize(),this);
-        inventory.setExtractableSlots(this::IcanExtractItem);
-        inventory.setInsertableSlots(this::IisItemValidForSlot);
+        inventory = new FactoryItemHandler(getInventorySize(),this, TransportState.EXTRACT_INSERT){
+            @Override
+            public boolean canTakeItem(Container container, int i, ItemStack itemStack) {
+                return super.canTakeItem(container, i, itemStack) && IcanExtractItem(i,itemStack);
+            }
+        };
     }
 
     @Override
@@ -56,10 +60,7 @@ public abstract class InventoryBlockEntity extends BlockEntity implements IInven
 
 
     }
-    @Override
-    public boolean IisItemValidForSlot(int index, ItemStack stack) {
-        return getSlots(null).get(index).mayPlace(stack);
-    }
+
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt){
         CompoundTag tag = pkt.getTag();
         this.load(tag);

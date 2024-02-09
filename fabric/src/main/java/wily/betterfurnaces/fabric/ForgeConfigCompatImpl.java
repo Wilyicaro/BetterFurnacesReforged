@@ -13,7 +13,5 @@ public class ForgeConfigCompatImpl {
         ForgeConfigRegistry.INSTANCE.register(BetterFurnacesReforged.MOD_ID,ModConfig.Type.CLIENT,CLIENT_CONFIG);
         ForgeConfigRegistry.INSTANCE.register(BetterFurnacesReforged.MOD_ID, ModConfig.Type.COMMON,COMMON_CONFIG);
         ForgeConfigRegistry.INSTANCE.register(BetterFurnacesReforged.MOD_ID, ModConfig.Type.SERVER,SERVER_CONFIG);
-        ModConfigEvents.reloading(BetterFurnacesReforged.MOD_ID).register((l)-> {if (l.getSpec().equals(SERVER_CONFIG)) onServerConfigLoad();});
-        ServerWorldEvents.LOAD.register((l,r)-> onServerConfigLoad());
     }
 }

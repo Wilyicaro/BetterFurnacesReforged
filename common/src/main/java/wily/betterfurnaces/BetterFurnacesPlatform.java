@@ -17,16 +17,4 @@ public class BetterFurnacesPlatform {
     }
     @ExpectPlatform
     public static TagKey<Item> getCommonItemTag(String tag){throw new AssertionError();}
-    @ExpectPlatform
-    public static void smeltingAutoIO(SmeltingBlockEntity be){
-        throw new AssertionError();
-    }
-    @ExpectPlatform
-    public static void transferEnergySides(SmeltingBlockEntity be){
-        throw new AssertionError();
-    }
-    @ExpectPlatform
-    public static void autoOutput(InventoryBlockEntity be, int output) {
-        throw new AssertionError();
-    }
 }

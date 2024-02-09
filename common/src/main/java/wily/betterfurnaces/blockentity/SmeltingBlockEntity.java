@@ -1,6 +1,5 @@
 package wily.betterfurnaces.blockentity;
 
-import java.util.function.Supplier;
 import com.google.common.collect.Lists;
 import dev.architectury.fluid.FluidStack;
 import dev.architectury.platform.Platform;
@@ -12,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -37,6 +37,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -44,17 +45,13 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
-import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.Config;
 import wily.betterfurnaces.ProjectMMO;
 import wily.betterfurnaces.blocks.SmeltingBlock;
 import wily.betterfurnaces.init.BlockEntityTypes;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.*;
-import wily.betterfurnaces.items.FuelEfficiencyUpgradeItem;
-import wily.betterfurnaces.items.GeneratorUpgradeItem;
-import wily.betterfurnaces.items.OreProcessingUpgradeItem;
-import wily.betterfurnaces.items.UpgradeItem;
+import wily.betterfurnaces.items.*;
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.ItemContainerUtil;
 import wily.factoryapi.base.*;
@@ -132,7 +129,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
     public SmeltingBlockEntity(BlockPos pos, BlockState state){
         this(BlockEntityTypes.BETTER_FURNACE_TILE.get(),pos,state);
     }
-
 
     private int getFromCache(LRUCache<Item, Optional<RecipeHolder<AbstractCookingRecipe>>> c, Item key) {
         if (c == null) return 0;
@@ -282,9 +278,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
     public static int getFluidBurnTime(FluidStack stack) {
         return stack == null ? 0 : FuelRegistry.get(stack.getFluid().getBucket().getDefaultInstance());
     }
-    public final IPlatformFluidHandler<?> fluidTank = FactoryAPIPlatform.getFluidHandlerApi(LiquidCapacity(), this,fs -> (getBurnTime(new ItemStack(fs.getFluid().getBucket())) > 0), SlotsIdentifier.LAVA, TransportState.INSERT);
-    public final IPlatformFluidHandler<?> xpTank = FactoryAPIPlatform.getFluidHandlerApi(2*FluidStack.bucketAmount(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), SlotsIdentifier.GENERIC, TransportState.EXTRACT);
-    public final IPlatformEnergyStorage<?> energyStorage = FactoryAPIPlatform.getEnergyStorageApi(EnergyCapacity(),this);
+    public final IPlatformFluidHandler fluidTank = FactoryAPIPlatform.getFluidHandlerApi(LiquidCapacity(), this,fs -> LiquidFuelUpgradeItem.supportsFluid(fs.getFluid()), SlotsIdentifier.LAVA, TransportState.INSERT);
+    public final IPlatformFluidHandler xpTank = FactoryAPIPlatform.getFluidHandlerApi(2*FluidStack.bucketAmount(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), SlotsIdentifier.GENERIC, TransportState.EXTRACT);
+    public final IPlatformEnergyStorage energyStorage = FactoryAPIPlatform.getEnergyStorageApi(EnergyCapacity(),this);
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
         if (state.getValue(BlockStateProperties.LIT) != this.isBurning()) {
@@ -349,7 +345,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
     public boolean canGeneratorWork(){
         if (hasUpgrade(ModObjects.GENERATOR.get())){
             ItemStack stack = getUpgradeSlotItem(ModObjects.GENERATOR.get());
-            return (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).getAmount() > 0) && energyStorage.getSpace() > 0;
+            return (ItemContainerUtil.isFluidContainer(stack) && ItemContainerUtil.getFluid(stack).getAmount() > 0) && energyStorage.getEnergySpace() > 0;
         }
         return false;
     }
@@ -361,77 +357,77 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
         }
         return false;
     }
-    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, SmeltingBlockEntity e) {
+    public static void tick(Level level, BlockPos worldPosition, BlockState blockState, SmeltingBlockEntity be) {
 
-        boolean wasBurning = e.isBurning();
+        boolean wasBurning = be.isBurning();
         boolean flag1 = false;
         boolean flag2 = false;
 
-        if (e.isBurning()) {
-            --e.furnaceBurnTime;
+        if (be.isBurning()) {
+            --be.furnaceBurnTime;
         }
 
 
-        if (e.hasXPTank()) e.grantStoredRecipeExperience(level, null);
+        if (be.hasXPTank()) be.grantStoredRecipeExperience(level, null);
 
-        if (!e.hasUpgradeType(ModObjects.FACTORY.get()) && e.showOrientation) e.showOrientation = false;
+        if (!be.hasUpgradeType(ModObjects.FACTORY.get()) && be.showOrientation) be.showOrientation = false;
 
-        ItemStack fuel = e.inventory.getItem(e.FUEL()[0]);
-        if ((e.hasUpgrade(ModObjects.COLOR.get()))) {
-            if (!(level.getBlockState(e.getBlockPos()).getValue(SmeltingBlock.COLORED)))
-                level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(SmeltingBlock.COLORED, true), 3);
-        } else if ((level.getBlockState(e.getBlockPos()).getValue(SmeltingBlock.COLORED))) level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(SmeltingBlock.COLORED, false), 3);
+        ItemStack fuel = be.inventory.getItem(be.FUEL()[0]);
+        if ((be.hasUpgrade(ModObjects.COLOR.get()))) {
+            if (!(level.getBlockState(be.getBlockPos()).getValue(SmeltingBlock.COLORED)))
+                level.setBlock(be.getBlockPos(), level.getBlockState(be.getBlockPos()).setValue(SmeltingBlock.COLORED, true), 3);
+        } else if ((level.getBlockState(be.getBlockPos()).getValue(SmeltingBlock.COLORED))) level.setBlock(be.getBlockPos(), level.getBlockState(be.getBlockPos()).setValue(SmeltingBlock.COLORED, false), 3);
 
-        int updatedType = e.getUpdatedType();
+        int updatedType = be.getUpdatedType();
         RecipeType<? extends AbstractCookingRecipe>[] recipeTypes = new RecipeType[]{RecipeType.SMELTING,RecipeType.BLASTING, RecipeType.SMOKING};
         if (updatedType == 3) {
-            for (int i : new int[]{e.FINPUT(), e.FOUTPUT()}){
-                ItemStack stack = e.inventory.getItem(i);
-                if (!stack.isEmpty())Containers.dropItemStack(level, e.getBlockPos().getX(), e.getBlockPos().getY() + 1, e.getBlockPos().getZ(), stack);
+            for (int i : new int[]{be.FINPUT(), be.FOUTPUT()}){
+                ItemStack stack = be.inventory.getItem(i);
+                if (!stack.isEmpty())Containers.dropItemStack(level, be.getBlockPos().getX(), be.getBlockPos().getY() + 1, be.getBlockPos().getZ(), stack);
             }
-        }else if (e.recipeType != recipeTypes[updatedType]) e.recipeType = recipeTypes[updatedType];
+        }else if (be.recipeType != recipeTypes[updatedType]) be.recipeType = recipeTypes[updatedType];
 
-        if (!e.isForge() &&   level.getBlockState(e.getBlockPos()).getValue(SmeltingBlock.TYPE) != updatedType)
-            level.setBlock(e.getBlockPos(), level.getBlockState(e.getBlockPos()).setValue(SmeltingBlock.TYPE, updatedType), 3);
+        if (!be.isForge() &&   level.getBlockState(be.getBlockPos()).getValue(SmeltingBlock.TYPE) != updatedType)
+            level.setBlock(be.getBlockPos(), level.getBlockState(be.getBlockPos()).setValue(SmeltingBlock.TYPE, updatedType), 3);
 
         if (!level.isClientSide) {
-            int get_cook_time = e.getCookTime();
-            e.timer++;
-            if (e.hasUpgrade(ModObjects.GENERATOR.get()))
-                BetterFurnacesPlatform.transferEnergySides(e);
-
-            if (e.hasUpgradeType(ModObjects.STORAGE.get())) {
-                ItemStack storageInput = e.inventory.getItem(6);
-                if (!storageInput.isEmpty()){
-                    int added = e.addOrSetItem(storageInput,e.inventory,e.FINPUT());
-                    if (added > 0) e.inventory.extractItem(6, added,false);
-                }
-                ItemStack storageFuel = e.inventory.getItem(7);
-                if (!storageFuel.isEmpty()){
-                    int added = e.addOrSetItem(storageFuel,e.inventory,e.FUEL()[0]);
-                    if (added > 0) e.inventory.extractItem(7, added,false);
+            int get_cook_time = be.getCookTime();
+            be.timer++;
+            if (be.hasUpgrade(ModObjects.GENERATOR.get())) {
+                for (Direction d : Direction.values()) {
+                    BlockEntity other = be.getLevel().getBlockEntity(be.getBlockPos().relative(d));
+                    if (other == null) continue;
+                    IPlatformEnergyStorage energyStorage = FactoryAPIPlatform.getPlatformFactoryStorage(be).getStorage(Storages.ENERGY,d.getOpposite()).get();
+                    if (energyStorage == null) continue;
+                    be.energyStorage.consumeEnergy(energyStorage.receiveEnergy(Math.min(energyStorage.getMaxReceive(), be.energyStorage.getMaxConsume()),false),false);
                 }
             }
-            else if (!e.isForge()){
+            if (be.hasUpgradeType(ModObjects.STORAGE.get())) {
+                ItemStack storageInput = be.inventory.getItem(6);
+                if (!storageInput.isEmpty()) be.inventory.setItem(6, be.inventory.insertItem(be.FINPUT(),storageInput,false));
+                ItemStack storageFuel = be.inventory.getItem(7);
+                if (!storageFuel.isEmpty()) be.inventory.setItem(7, be.inventory.insertItem(be.FUEL()[0],storageFuel,false));
+            }
+            else if (!be.isForge()){
                 for (int i : new int[]{6,7,8}){
-                    ItemStack stack = e.inventory.getItem(i);
-                    if (!stack.isEmpty())Containers.dropItemStack(level, e.getBlockPos().getX(), e.getBlockPos().getY() + 1, e.getBlockPos().getZ(), stack);
+                    ItemStack stack = be.inventory.getItem(i);
+                    if (!stack.isEmpty())Containers.dropItemStack(level, be.getBlockPos().getX(), be.getBlockPos().getY() + 1, be.getBlockPos().getZ(), stack);
                 }
             }
 
 
-            if (e.hasUpgrade(ModObjects.ENERGY.get())) {
+            if (be.hasUpgrade(ModObjects.ENERGY.get())) {
                 if (ItemContainerUtil.isEnergyContainer(fuel) && ItemContainerUtil.getEnergy(fuel) > 0) {
-                    if (e.energyStorage.getSpace() > 0) {
-                        e.energyStorage.receiveEnergy(ItemContainerUtil.extractEnergy(e.energyStorage.getSpace(),fuel).contextEnergy(), false);
-                        e.inventory.setItem(e.FUEL()[0], fuel);
+                    if (be.energyStorage.getEnergySpace() > 0) {
+                        be.energyStorage.receiveEnergy(ItemContainerUtil.extractEnergy(be.energyStorage.getEnergySpace(),fuel).contextEnergy(), false);
+                        be.inventory.setItem(be.FUEL()[0], fuel);
                     }
                 }
             }
-            if (e.totalCookTime != get_cook_time) {
-                e.totalCookTime = get_cook_time;
+            if (be.totalCookTime != get_cook_time) {
+                be.totalCookTime = get_cook_time;
             }
-            int mode = e.getRedstoneSetting();
+            int mode = be.getRedstoneSetting();
             if (mode != 0) {
                 if (mode == 2) {
                     int i = 0;
@@ -441,9 +437,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
                         }
                     }
                     if (i != 0) {
-                        e.cookTime = 0;
-                        e.furnaceBurnTime = 0;
-                        e.forceUpdateAllStates();
+                        be.cookTime = 0;
+                        be.furnaceBurnTime = 0;
+                        be.forceUpdateAllStates();
                         return;
                     }
                 }
@@ -456,119 +452,118 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
                         }
                     }
                     if (!flag) {
-                        e.cookTime = 0;
-                        e.furnaceBurnTime = 0;
-                        e.forceUpdateAllStates();
+                        be.cookTime = 0;
+                        be.furnaceBurnTime = 0;
+                        be.forceUpdateAllStates();
                         return;
                     }
                 }
                 for (int i = 0; i < Direction.values().length; i++)
-                    e.provides[i] = e.getBlockState().getDirectSignal(e.level, worldPosition, Direction.values()[i]);
+                    be.provides[i] = be.getBlockState().getDirectSignal(be.level, worldPosition, Direction.values()[i]);
 
             } else {
                 for (int i = 0; i < Direction.values().length; i++)
-                    e.provides[i] = 0;
+                    be.provides[i] = 0;
             }
-            if (e.doesNeedUpdateSend()) {
-                e.onUpdateSent();
+            if (be.doesNeedUpdateSend()) {
+                be.onUpdateSent();
             }
 
-            if (e.isLiquid() && ItemContainerUtil.isFluidContainer(fuel) && SmeltingBlockEntity.isItemFuel(ItemContainerUtil.getFluid(fuel).getFluid().getBucket().getDefaultInstance())) {
-                ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(e.fluidTank.getTotalSpace(),fuel);
-                    long amount = e.fluidTank.fill(context.fluidStack(), false);
-                    if (amount > 0) {
-                        level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
-                        e.inventory.setItem(e.FUEL()[0], context.container());
-                    }
-
-
+            if (be.isLiquid() && LiquidFuelUpgradeItem.supportsItemFluidHandler(fuel)) {
+                ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(be.fluidTank.getTotalSpace(),fuel);
+                long amount = be.fluidTank.fill(context.fluidStack(), false);
+                if (amount > 0) {
+                    level.playSound(null, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 0.6F, 0.8F);
+                    be.inventory.setItem(be.FUEL()[0], context.container());
+                }
             }
-            if ((e.isBurning() || !fuel.isEmpty() || e.isLiquid() || (e.isEnergy() && !e.canGeneratorWork())) &&  (e.arraySlotFilled(e.INPUTS(), true)|| e.canGeneratorWork()))  {
-                boolean valid = e.smeltValid() || e.canGeneratorWork();
-                if (!e.isBurning() && (valid)) {
-                    if (e.isLiquid() && !e.fluidTank.getFluidStack().isEmpty() && getFluidBurnTime(e.fluidTank.getFluidStack()) > 0){
-                        int fluidAmount= (200 * (int)FluidStack.bucketAmount()) / getFluidBurnTime(e.fluidTank.getFluidStack());
-                        if (e.fluidTank.getFluidStack().getAmount() >= fluidAmount) {
-                            e.furnaceBurnTime = e.getEnderMultiplier() * get_cook_time;
-                            e.recipesUsed = e.furnaceBurnTime;
-                            e.fluidTank.drain(fluidAmount, false);
+
+            if ((be.isBurning() || !fuel.isEmpty() || be.isLiquid() || (be.isEnergy() && !be.canGeneratorWork())) &&  (be.arraySlotFilled(be.INPUTS(), true)|| be.canGeneratorWork()))  {
+                boolean valid = be.smeltValid() || be.canGeneratorWork();
+                if (!be.isBurning() && (valid)) {
+                    if (be.isLiquid() && !be.fluidTank.getFluidStack().isEmpty() && getFluidBurnTime(be.fluidTank.getFluidStack()) > 0){
+                        int fluidAmount= (200 * (int)FluidStack.bucketAmount()) / getFluidBurnTime(be.fluidTank.getFluidStack());
+                        if (be.fluidTank.getFluidStack().getAmount() >= fluidAmount) {
+                            be.furnaceBurnTime = be.getEnderMultiplier() * get_cook_time;
+                            be.recipesUsed = be.furnaceBurnTime;
+                            be.fluidTank.drain(fluidAmount, false);
                         }
-                    }else if (e.isEnergy()){
-                        e.furnaceBurnTime = e.getEnderMultiplier() * get_cook_time;
-                        e.recipesUsed = e.furnaceBurnTime;
-                        for (int a : e.INPUTS())
-                            e.energyStorage.consumeEnergy(e.EnergyUse() * e.OreProcessingMultiplier(e.inventory.getItem(a)), false);
+                    }else if (be.isEnergy()){
+                        be.furnaceBurnTime = be.getEnderMultiplier() * get_cook_time;
+                        be.recipesUsed = be.furnaceBurnTime;
+                        for (int a : be.INPUTS())
+                            be.energyStorage.consumeEnergy(be.EnergyUse() * be.OreProcessingMultiplier(be.inventory.getItem(a)), false);
                     }else{
-                        e.furnaceBurnTime = (int) Math.ceil(e.getEnderMultiplier() * getBurnTime(fuel) * (get_cook_time / 200D));
-                        e.recipesUsed = e.furnaceBurnTime;
+                        be.furnaceBurnTime = (int) Math.ceil(be.getEnderMultiplier() * getBurnTime(fuel) * (get_cook_time / 200D));
+                        be.recipesUsed = be.furnaceBurnTime;
                     }
-                    if (e.isBurning()) {
+                    if (be.isBurning()) {
                         flag1 = true;
-                        if (e.hasEnder()) {
-                            if (e.hasUpgrade(ModObjects.FUEL.get())) {
-                                e.breakDurabilityItem(e.getUpgradeSlotItem(ModObjects.FUEL.get()));
+                        if (be.hasEnder()) {
+                            if (be.hasUpgrade(ModObjects.FUEL.get())) {
+                                be.breakDurabilityItem(be.getUpgradeSlotItem(ModObjects.FUEL.get()));
                             }
                         }
-                        if ((!e.isLiquid() || e.fluidTank.getFluidStack().getAmount() < 10) && !e.isEnergy()) {
+                        if ((!be.isLiquid() || be.fluidTank.getFluidStack().getAmount() < 10) && !be.isEnergy()) {
                             if (ItemContainerUtil.isFluidContainer(fuel)){
-                                ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(e.fluidTank.getTotalSpace(),fuel);
-                                e.inventory.setItem(e.FUEL()[0],context.container());
+                                ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(be.fluidTank.getTotalSpace(),fuel);
+                                be.inventory.setItem(be.FUEL()[0],context.container());
                             }
 
                             if (!fuel.isEmpty() && isItemFuel(fuel)) {
                                 fuel.shrink(1);
-                                if (e.hasUpgrade(ModObjects.FUEL.get())) {
-                                    e.breakDurabilityItem(e.getUpgradeSlotItem(ModObjects.FUEL.get()));
+                                if (be.hasUpgrade(ModObjects.FUEL.get())) {
+                                    be.breakDurabilityItem(be.getUpgradeSlotItem(ModObjects.FUEL.get()));
                                 }
                             }
                         }
                     }
                 }
-                if (e.isBurning() && valid ) {
-                    ++e.cookTime;
-                    if (e.hasUpgrade(ModObjects.GENERATOR.get())){
-                        ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(FluidStack.bucketAmount() / 1000, e.getUpgradeSlotItem(ModObjects.GENERATOR.get()));
-                        if (!context.fluidStack().isEmpty()) e.inventory.setItem(e.getUpgradeTypeSlot(ModObjects.GENERATOR.get()), context.container());
-                        e.energyStorage.receiveEnergy(Math.round((float)500 / get_cook_time),false);
+                if (be.isBurning() && valid ) {
+                    ++be.cookTime;
+                    if (be.hasUpgrade(ModObjects.GENERATOR.get())){
+                        ItemContainerUtil.ItemFluidContext context = ItemContainerUtil.drainItem(FluidStack.bucketAmount() / 1000, be.getUpgradeSlotItem(ModObjects.GENERATOR.get()));
+                        if (!context.fluidStack().isEmpty()) be.inventory.setItem(be.getUpgradeTypeSlot(ModObjects.GENERATOR.get()), context.container());
+                        be.energyStorage.receiveEnergy(Math.round((float)500 / get_cook_time),false);
                     }
-                    if (e.cookTime >= e.totalCookTime) {
-                        e.cookTime = 0;
-                        e.totalCookTime = e.getCookTime();
-                        if (!e.hasUpgrade(ModObjects.GENERATOR.get())) {
-                            e.trySmelt();
-                            if (e.hasUpgradeType(ModObjects.FACTORY.get()))
-                                BetterFurnacesPlatform.smeltingAutoIO(e);
+                    if (be.cookTime >= be.totalCookTime) {
+                        be.cookTime = 0;
+                        be.totalCookTime = be.getCookTime();
+                        if (!be.hasUpgrade(ModObjects.GENERATOR.get())) {
+                            be.trySmelt();
+                            if (be.hasUpgradeType(ModObjects.FACTORY.get()))
+                                be.handleAutoIO();
                         }
                         flag1 = true;
                     }
                 } else {
-                    e.cookTime = 0;
+                    be.cookTime = 0;
                 }
-            } else if (!e.isBurning() && e.cookTime > 0) {
-                e.cookTime = Mth.clamp(e.cookTime - 2, 0, e.totalCookTime);
+            } else if (!be.isBurning() && be.cookTime > 0) {
+                be.cookTime = Mth.clamp(be.cookTime - 2, 0, be.totalCookTime);
             }
-            if (wasBurning != e.isBurning()) {
+            if (wasBurning != be.isBurning()) {
                 flag1 = true;
-                e.level.setBlock(e.worldPosition, e.level.getBlockState(e.worldPosition).setValue(BlockStateProperties.LIT, e.isBurning()), 3);
+                be.level.setBlock(be.worldPosition, be.level.getBlockState(be.worldPosition).setValue(BlockStateProperties.LIT, be.isBurning()), 3);
             }
-            if ((e.timer % 24 == 0) && (e.hasUpgradeType(ModObjects.FACTORY.get()))){
-                if (e.cookTime <= 0) {
-                    if (e.arraySlotFilled(e.INPUTS(), false)) {
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
+            if ((be.timer % 24 == 0) && (be.hasUpgradeType(ModObjects.FACTORY.get()))){
+                if (be.cookTime <= 0) {
+                    if (be.arraySlotFilled(be.INPUTS(), false)) {
+                        be.handleAutoIO();
                         flag1 = true;
-                    } else if (e.hasArraySlotSpace(e.INPUTS())) {
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
-                        flag1 = true;
-                    }
-                    if (e.arraySlotFilled(e.OUTPUTS(), true)) {
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
+                    } else if (be.hasArraySlotSpace(be.INPUTS())) {
+                        be.handleAutoIO();
                         flag1 = true;
                     }
-                    if (e.inventory.getItem(e.FUEL()[0]).isEmpty() && !e.isLiquid() && !e.isEnergy()) {
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
+                    if (be.arraySlotFilled(be.OUTPUTS(), true)) {
+                        be.handleAutoIO();
                         flag1 = true;
-                    } else if (e.inventory.getItem(e.FUEL()[0]).getCount() < e.inventory.getItem(e.FUEL()[0]).getMaxStackSize() || ItemContainerUtil.isFluidContainer(fuel) && ItemContainerUtil.getFluid(fuel).getAmount() < e.fluidTank.getTotalSpace()){
-                        BetterFurnacesPlatform.smeltingAutoIO(e);
+                    }
+                    if (be.inventory.getItem(be.FUEL()[0]).isEmpty() && !be.isLiquid() && !be.isEnergy()) {
+                        be.handleAutoIO();
+                        flag1 = true;
+                    } else if (be.inventory.getItem(be.FUEL()[0]).getCount() < be.inventory.getItem(be.FUEL()[0]).getMaxStackSize() || ItemContainerUtil.isFluidContainer(fuel) && ItemContainerUtil.getFluid(fuel).getAmount() < be.fluidTank.getTotalSpace()){
+                        be.handleAutoIO();
                         flag1 = true;
                     }
                 }
@@ -576,7 +571,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
         }
 
         if (flag1) {
-            e.setChanged();
+            be.setChanged();
         }
 
     }
@@ -792,7 +787,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
 
 
 
-    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing){
+    public <T extends IPlatformHandler> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing){
         if (storage == Storages.FLUID){
             if ((facing == null || (!hasUpgrade(ModObjects.GENERATOR.get()) && !hasXPTank()) || (facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()))) {
                 if(isLiquid())
@@ -812,7 +807,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
             else return ()->(T)inventory;
         }
         if (storage == Storages.ENERGY && (hasUpgrade(ModObjects.ENERGY.get()) ||  hasUpgrade(ModObjects.GENERATOR.get()))){
-            return ()-> (T)FactoryAPIPlatform.filteredOf(energyStorage, TransportState.ofBoolean( true, !hasUpgrade(ModObjects.GENERATOR.get())));
+            return ()-> (T)FactoryAPIPlatform.filteredOf(energyStorage,facing, TransportState.ofBoolean( true, !hasUpgrade(ModObjects.GENERATOR.get())));
         }
         return ArbitrarySupplier.empty();
     }
@@ -923,6 +918,93 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
             });
 
         return list;
+    }
+    public void handleAutoIO(){
+        for (Direction dir : Direction.values()) {
+            BlockEntity tile = getLevel().getBlockEntity(getBlockPos().offset(dir.getNormal()));
+            if (tile == null) {
+                continue;
+            }
+            if (furnaceSettings.get(dir.ordinal()) == 1 || furnaceSettings.get(dir.ordinal()) == 2 || furnaceSettings.get(dir.ordinal()) == 3 || furnaceSettings.get(dir.ordinal()) == 4) {
+                IPlatformItemHandler other = FactoryAPIPlatform.getPlatformFactoryStorage(tile).getStorage(Storages.ITEM, dir.getOpposite()).get();
+
+                if (other == null)
+                    continue;
+                if (getAutoInput() != 0 || getAutoOutput() != 0) {
+                    if (getAutoInput() == 1) {
+                        for (int INPUT : INPUTS())
+                            if (furnaceSettings.get(dir.ordinal()) == 1 || furnaceSettings.get(dir.ordinal()) == 3) {
+                                if (inventory.getItem(INPUT).getCount() >= inventory.getItem(INPUT).getMaxStackSize()) {
+                                    continue;
+                                }
+                                for (int i = 0; i < other.getContainerSize(); i++) {
+                                    if (other.getItem(i).isEmpty()) {
+                                        continue;
+                                    }
+                                    ItemStack stack = other.extractItem(i, other.getItem(i).getMaxStackSize(), true);
+                                    if (hasRecipe(stack) && inventory.getItem(INPUT).isEmpty() || ItemStack.isSameItemSameTags(inventory.getItem(INPUT), stack))
+                                        inventory.insertItem(INPUT, other.extractItem(i, other.getItem(i).getMaxStackSize() - inventory.getItem(INPUT).getCount(), false), false);
+                                }
+                            }
+                        for (int FUEL : FUEL())
+                            if (furnaceSettings.get(dir.ordinal()) == 4) {
+                                if (inventory.getItem(FUEL).getCount() >= inventory.getItem(FUEL).getMaxStackSize()) {
+                                    continue;
+                                }
+                                for (int i = 0; i < other.getContainerSize(); i++) {
+                                    if (!isItemFuel(other.getItem(i))) {
+                                        continue;
+                                    }
+                                    if (other.getItem(i).isEmpty()) {
+                                        continue;
+                                    }
+                                    ItemStack stack = other.extractItem(i, other.getItem(i).getMaxStackSize(), true);
+                                    if (isItemFuel(stack) && inventory.getItem(FUEL).isEmpty() || ItemStack.isSameItemSameTags(inventory.getItem(FUEL), stack)) {
+                                        inventory.insertItem(FUEL, other.extractItem(i, other.getItem(i).getMaxStackSize() - inventory.getItem(FUEL).getCount(), false), false);
+                                    }
+                                }
+                            }
+                    }
+
+                    if (getAutoOutput() == 1) {
+                        for (int FUEL : FUEL())
+                            if (furnaceSettings.get(dir.ordinal()) == 4) {
+                                if (inventory.getItem(FUEL).isEmpty()) {
+                                    continue;
+                                }
+                                ItemStack fuel = inventory.getItem(FUEL);
+                                if (isItemFuel(fuel)) {
+                                    continue;
+                                }
+                                for (int i = 0; i < other.getContainerSize(); i++) {
+                                    ItemStack stack = inventory.extractItem(FUEL, inventory.getItem(FUEL).getMaxStackSize() - other.getItem(i).getCount(), true);
+                                    if (other.canPlaceItem(i, stack) && (other.getItem(i).isEmpty() || other.canPlaceItem(i, stack) && (ItemStack.isSameItemSameTags(other.getItem(i), stack) && other.getItem(i).getCount() + stack.getCount() <= other.getMaxStackSize()))) {
+                                        inventory.setItem(FUEL,other.insertItem(i, stack, false));
+                                    }
+                                }
+                            }
+                        for (int output : OUTPUTS()) {
+                            if (furnaceSettings.get(dir.ordinal()) == 2 || furnaceSettings.get(dir.ordinal()) == 3) {
+                                if (inventory.getItem(output).isEmpty()) {
+                                    continue;
+                                }
+                                if (BuiltInRegistries.BLOCK.getKey(tile.getBlockState().getBlock()).toString().contains("storagedrawers:")) {
+                                    continue;
+                                }
+                                for (int i = 0; i < other.getContainerSize(); i++) {
+                                    ItemStack stack = inventory.extractItem(output, inventory.getItem(output).getMaxStackSize() - other.getItem(i).getCount(), true);
+                                    if (other.canPlaceItem(i, stack) && (other.getItem(i).isEmpty() || other.canPlaceItem(i, stack) && (ItemStack.isSameItemSameTags(other.getItem(i), stack) && other.getItem(i).getCount() + stack.getCount() <= other.getMaxStackSize()))) {
+                                        inventory.setItem(output, other.insertItem(i, stack, false));
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
     private static void splitAndSpawnExperience(Level level, Vec3 worldPosition, int craftedAmount, float experience) {

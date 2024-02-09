@@ -1,5 +1,5 @@
 {
-  "group": "ultimatefurnaces",
+
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "000",
@@ -15,7 +15,6 @@
     }
   },
   "result": {
-    "item": "betterfurnacesreforged:copper_furnace",
-    "count": 1
+    "item": "betterfurnacesreforged:copper_furnace"
   }
 }

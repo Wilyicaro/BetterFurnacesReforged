@@ -98,7 +98,7 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing) {
+    public <T extends IPlatformHandler> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing) {
         if (!this.isRemoved() && storage == Storages.ITEM) {
             return ()->(T)inventory;
         }

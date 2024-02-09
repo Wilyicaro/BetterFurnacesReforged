@@ -89,7 +89,7 @@ public class CobblestoneGeneratorBlock extends BFRBlock implements EntityBlock {
         newStack.setTag(stack.getTag());
 
         for (int i : new int[]{0,1,3,4}) {
-            if(!stack.isEmpty() && be.IisItemValidForSlot(i, stack)) {
+            if(!stack.isEmpty() && be.getSlots(null).get(i).mayPlace(stack)) {
                 if ((!(be.inventory.getItem(i).isEmpty())) && (!player.isCreative())) {
                     Containers.dropItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), be.inventory.getItem(i));
                 }

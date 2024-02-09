@@ -15,8 +15,6 @@ public interface IInventoryBlockEntity {
 
     boolean IcanExtractItem(int index, ItemStack stack);
 
-    boolean IisItemValidForSlot(int index, ItemStack stack);
-
     default NonNullList<FactoryItemSlot> getSlots(@Nullable Player player){
         NonNullList<FactoryItemSlot> list = NonNullList.create();
         addSlots(list,player);

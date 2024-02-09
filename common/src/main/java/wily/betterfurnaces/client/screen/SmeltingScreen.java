@@ -156,7 +156,7 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
             energyTankType().drawProgress(graphics, this.getMenu().getEnergyStored(),this.getMenu().getMaxEnergyStored());
         }if (getMenu().be.isLiquid()){
             graphics.blit(WIDGETS, fluidTankType().getX(), fluidTankType().getY(), 192, 38, 20, 22);
-            fluidTankType().drawAsFluidTank(graphics, this.getMenu().be.fluidTank.getFluidStack(), this.getMenu().be.fluidTank.getMaxFluid(),false);
+            fluidTankType().drawAsFluidTank(graphics, this.getMenu().be.fluidTank.getFluidStack(), this.getMenu().be.fluidTank.getMaxFluid(),true);
         }
 
         if (this.getMenu().be.hasXPTank()) {

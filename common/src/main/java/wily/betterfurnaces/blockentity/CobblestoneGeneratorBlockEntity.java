@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,12 +19,12 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
-import wily.betterfurnaces.BetterFurnacesPlatform;
 import wily.betterfurnaces.blocks.CobblestoneGeneratorBlock;
 import wily.betterfurnaces.init.BlockEntityTypes;
 import wily.betterfurnaces.init.ModObjects;
@@ -60,7 +61,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
     @Override
     public boolean IcanExtractItem(int index, ItemStack stack) {
-        return false;
+        return index == 2;
     }
 
     public final ContainerData fields = new ContainerData() {
@@ -168,7 +169,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
             updateBlockState();
         }
 
-        if (!getLevel().isClientSide)forceUpdateAllStates();
+        if (!getLevel().isClientSide) forceUpdateAllStates();
         ItemStack output = inventory.getItem(OUTPUT);
         ItemStack upgrade = inventory.getItem(UPGRADE);
         ItemStack upgrade1 = inventory.getItem(UPGRADE1);
@@ -213,7 +214,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
                 level.addParticle(ParticleTypes.LARGE_SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
             }
         }
-        if (!output.isEmpty() && !level.isClientSide && hasAutoOutput()) BetterFurnacesPlatform.autoOutput(this, OUTPUT);
+        if (!output.isEmpty() && !level.isClientSide && hasAutoOutput()) handleAutoOutput(this, OUTPUT);
     }
     protected int cobGen(){
 
@@ -231,8 +232,8 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         ItemStack upgrade = this.inventory.getItem(UPGRADE);
         if (!upgrade.isEmpty() && upgrade.getItem() instanceof FuelEfficiencyUpgradeItem) return 2;
         return 1;
-
     }
+
     protected int getCobTime(){
         if (recipe != null) return recipe.duration() / FuelEfficiencyMultiplier();
         return -1;
@@ -271,9 +272,9 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public <T extends IPlatformHandlerApi<?>> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing) {
+    public <T extends IPlatformHandler> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing) {
         if (!this.isRemoved() && storage == Storages.ITEM) {
-            return ()->(T) (facing != null ? FactoryAPIPlatform.filteredOf(inventory,facing, new int[]{0,1,2,3,4},TransportState.EXTRACT_INSERT) : inventory);
+            return ()->(T) inventory;
         }
         return ArbitrarySupplier.empty();
     }
@@ -308,6 +309,24 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
         });
     }
 
+    public static void handleAutoOutput(InventoryBlockEntity be, int output) {
+        for (Direction dir : Direction.values()) {
+            BlockEntity tile = be.getLevel().getBlockEntity(be.getBlockPos().relative(dir));
+            if (tile == null)
+                continue;
+            IPlatformItemHandler other = FactoryAPIPlatform.getPlatformFactoryStorage(tile).getStorage(Storages.ITEM, dir.getOpposite()).get();
+
+            if (other == null || be.inventory.getItem(output).isEmpty() || BuiltInRegistries.BLOCK.getKey(tile.getBlockState().getBlock()).getNamespace().equals("storagedrawers"))
+                continue;
+
+            for (int i = 0; i < other.getContainerSize(); i++) {
+                ItemStack stack = be.inventory.extractItem(output, be.inventory.getItem(output).getMaxStackSize() - other.getItem(i).getCount(), true);
+                if (other.canPlaceItem(i, stack) && (other.getItem(i).isEmpty() || other.canPlaceItem(i, stack) && (ItemStack.isSameItemSameTags(other.getItem(i), stack) && other.getItem(i).getCount() + stack.getCount() <= other.getMaxStackSize()))) {
+                    be.inventory.setItem(output, other.insertItem(i, stack, false));
+                }
+            }
+        }
+    }
     public void onUpdateSent() {
         System.arraycopy(this.provides, 0, this.lastProvides, 0, this.provides.length);
         this.level.updateNeighborsAt(this.worldPosition, getBlockState().getBlock());

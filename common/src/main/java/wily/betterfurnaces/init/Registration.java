@@ -6,6 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -28,6 +29,8 @@ public class Registration {
     static final DeferredRegister<RecipeSerializer<?>> RECIPES_SERIALIZERS = DeferredRegister.create( BetterFurnacesReforged.MOD_ID, Registries.RECIPE_SERIALIZER);
     static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.RECIPE_TYPE);
 
+    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(BetterFurnacesReforged.MOD_ID, Registries.CREATIVE_MODE_TAB);
+
     public static List<Supplier<Block>> FURNACES = new ArrayList<>();
     public static List<Supplier<Block>> FORGES = new ArrayList<>();
     public static void init() {
@@ -45,5 +48,6 @@ public class Registration {
         CONTAINERS.register();
         RECIPES_SERIALIZERS.register();
         RECIPES.register();
+        TABS.register();
     }
 }
