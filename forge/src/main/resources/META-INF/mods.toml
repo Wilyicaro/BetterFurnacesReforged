@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[48,)"
+loaderVersion="[47,)"
 license="${mod_license}"
 issueTrackerURL="https://github.com/MinecraftForge/MinecraftForge/issues"
 
@@ -17,7 +17,7 @@ description="${mod_description}"
 [[dependencies.betterfurnacesreforged]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.20.2,)"
+    versionRange="[1.20,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.betterfurnacesreforged]]

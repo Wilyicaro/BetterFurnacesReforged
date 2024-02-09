@@ -27,13 +27,15 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.RecipeHolder;
+import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.AirItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -57,10 +59,10 @@ import wily.factoryapi.ItemContainerUtil;
 import wily.factoryapi.base.*;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
-public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeCraftingHolder, StackedContentsCompatible{
+public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeHolder, StackedContentsCompatible{
     public final int[] provides = new int[Direction.values().length];
     private final int[] lastProvides = new int[this.provides.length];
 
@@ -109,9 +111,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
 
     public FactoryUpgradeSettings furnaceSettings;
 
-    private final LRUCache<Item, Optional<RecipeHolder<AbstractCookingRecipe>>> cache = LRUCache.newInstance(Config.cacheCapacity.get());
-    protected LRUCache<Item, Optional<RecipeHolder<AbstractCookingRecipe>>> blasting_cache = LRUCache.newInstance(Config.cacheCapacity.get());
-    protected LRUCache<Item, Optional<RecipeHolder<AbstractCookingRecipe>>> smoking_cache = LRUCache.newInstance(Config.cacheCapacity.get());
+    private final LRUCache<Item, Optional<AbstractCookingRecipe>> cache = LRUCache.newInstance(Config.cacheCapacity.get());
+    protected LRUCache<Item, Optional<AbstractCookingRecipe>> blasting_cache = LRUCache.newInstance(Config.cacheCapacity.get());
+    protected LRUCache<Item, Optional<AbstractCookingRecipe>> smoking_cache = LRUCache.newInstance(Config.cacheCapacity.get());
 
     public SmeltingBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
@@ -130,36 +132,36 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
         this(BlockEntityTypes.BETTER_FURNACE_TILE.get(),pos,state);
     }
 
-    private int getFromCache(LRUCache<Item, Optional<RecipeHolder<AbstractCookingRecipe>>> c, Item key) {
+    private int getFromCache(LRUCache<Item, Optional<AbstractCookingRecipe>> c, Item key) {
         if (c == null) return 0;
         if (c.get(key) == null)
         {
             return 0;
         }
-        return c.get(key).orElse(null) == null ? 0 : c.get(key).orElse(null).value().getCookingTime();
+        return c.get(key).orElse(null) == null ? 0 : c.get(key).orElse(null).getCookingTime();
     }
 
     public boolean hasRecipe(ItemStack stack) {
         return grabRecipe(stack).isPresent();
     }
 
-    protected LRUCache<Item, Optional<RecipeHolder<AbstractCookingRecipe>>> getCache() {
-        LRUCache<Item, Optional<RecipeHolder<AbstractCookingRecipe>>>[] caches = new LRUCache[]{cache,blasting_cache,smoking_cache};
+    protected LRUCache<Item, Optional<AbstractCookingRecipe>> getCache() {
+        LRUCache<Item, Optional<AbstractCookingRecipe>>[] caches = new LRUCache[]{cache,blasting_cache,smoking_cache};
         return caches[getUpdatedType() >=3 ? 0 : getUpdatedType()];
     }
 
 
-    private Optional<RecipeHolder<AbstractCookingRecipe>> getRecipe(ItemStack stack, RecipeType recipeType) {
+    private Optional<AbstractCookingRecipe> getRecipe(ItemStack stack, RecipeType recipeType) {
         return this.level.getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.level);
     }
 
-    private Optional<RecipeHolder<AbstractCookingRecipe>> grabRecipe(ItemStack stack) {
+    private Optional<AbstractCookingRecipe> grabRecipe(ItemStack stack) {
         Item item = stack.getItem();
         if (item instanceof AirItem)
         {
             return Optional.empty();
         }
-        Optional<RecipeHolder<AbstractCookingRecipe>> recipe = getCache().get(item);
+        Optional<AbstractCookingRecipe> recipe = getCache().get(item);
         if (recipe == null) {
             recipe = getRecipe(stack, recipeType);
             getCache().put(item, recipe);
@@ -196,7 +198,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
         for (int i : INPUTS()) {
             ItemStack stack = inventory.getItem(i);
             int cache = getFromCache(getCache(), stack.getItem());
-            int iC = cache <= 0 ? grabRecipe(stack).map(v-> v.value().getCookingTime()).orElse(-1): cache;
+            int iC = cache <= 0 ? grabRecipe(stack).map(AbstractCookingRecipe::getCookingTime).orElse(-1): cache;
             if (iC <= 0){
                 length -= 1;
                 continue;
@@ -311,7 +313,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
     }
 
 
-    public Optional<RecipeHolder<AbstractCookingRecipe>> irecipeSlot(int input){
+    public Optional<AbstractCookingRecipe> irecipeSlot(int input){
         if (!ArrayUtils.contains(INPUTS(), input)) return Optional.empty();
         if (!inventory.getItem(input).isEmpty())
             return grabRecipe(inventory.getItem(input));
@@ -625,7 +627,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
         return this.furnaceBurnTime > 0;
     }
 
-    TagKey<Item> ore = getItemTag(new ResourceLocation(Platform.isForgeLike() ? "forge" : "c", "ores"));
+    TagKey<Item> ore = getItemTag(new ResourceLocation(Platform.isForge() ? "forge" : "c", "ores"));
 
 
 
@@ -634,7 +636,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
     }
     private boolean hasRawOreTag(ItemStack stack){
         if (Config.checkRawOresName.get()) return stack.getItem().arch$registryName().getPath().startsWith("raw_");
-        if(Platform.isForgeLike()) return stack.is(getItemTag( new ResourceLocation("forge","raw_materials")));
+        if(Platform.isForge()) return stack.is(getItemTag( new ResourceLocation("forge","raw_materials")));
         else {
             if (stack.is(getItemTag(new ResourceLocation("c", "raw_materials")))) return true;
             for (TagKey<Item> tag: stack.getTags().toList()){
@@ -665,10 +667,10 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
         return new SmeltingMenu(ModObjects.FURNACE_CONTAINER.get(),i,level,getBlockPos(),playerInventory,playerEntity,fields);
     }
 
-    protected boolean canSmelt(@Nullable RecipeHolder<?> recipe, int INPUT, int OUTPUT) {
+    protected boolean canSmelt(@Nullable Recipe<?> recipe, int INPUT, int OUTPUT) {
         ItemStack input = this.getInv().getItem(INPUT);
         if (OUTPUT >= 0 && !input.isEmpty() && recipe != null) {
-            ItemStack recipeOutput = recipe.value().getResultItem(RegistryAccess.EMPTY);
+            ItemStack recipeOutput = recipe.getResultItem(RegistryAccess.EMPTY);
             if (!recipeOutput.isEmpty()) {
                 ItemStack output = this.getInv().getItem(OUTPUT);
                 if (output.isEmpty()) return true;
@@ -706,16 +708,16 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
         }
         return 0;
     }
-    protected void smeltItem(@Nullable RecipeHolder<?> recipe, int INPUT, int OUTPUT) {
+    protected void smeltItem(@Nullable Recipe<?> recipe, int INPUT, int OUTPUT) {
         timer = 0;
         if (recipe != null && this.canSmelt(recipe, INPUT, OUTPUT)) {
             ItemStack input = this.getInv().getItem(INPUT);
 
-            if (addOrSetItem(getResult(recipe.value(),input),inventory,OUTPUT) > 0 && hasUpgrade(ModObjects.ORE_PROCESSING.get()) && (isOre(input))) {
+            if (addOrSetItem(getResult(recipe,input),inventory,OUTPUT) > 0 && hasUpgrade(ModObjects.ORE_PROCESSING.get()) && (isOre(input))) {
                 breakDurabilityItem(getUpgradeSlotItem(ModObjects.ORE_PROCESSING.get()));
             }
 
-            this.checkXP(recipe.value());
+            this.checkXP(recipe);
             if (!this.level.isClientSide) {
                 this.setRecipeUsed(recipe);
             }
@@ -883,36 +885,36 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeC
     }
 
     @Override
-    public void setRecipeUsed(RecipeHolder<?> recipeHolder) {
-        ResourceLocation resourcelocation = recipeHolder.id();
+    public void setRecipeUsed(Recipe<?> recipeHolder) {
+        ResourceLocation resourcelocation = recipeHolder.getId();
         this.recipes.addTo(resourcelocation, 1);
     }
 
-    public RecipeHolder<?> getRecipeUsed(){
+    public Recipe<?> getRecipeUsed(){
         return  null;
     }
 
 
     public void unlockRecipes(Player player) {
-        List<RecipeHolder<?>> list = this.grantStoredRecipeExperience(player.level(), player.position());
+        List<Recipe<?>> list = this.grantStoredRecipeExperience(player.level(), player.position());
         player.awardRecipes(list);
         this.recipes.clear();
     }
 
-    public List<RecipeHolder<?>> grantStoredRecipeExperience(Level level, Vec3 worldPosition) {
-        List<RecipeHolder<?>> list = Lists.newArrayList();
+    public List<Recipe<?>> grantStoredRecipeExperience(Level level, Vec3 worldPosition) {
+        List<Recipe<?>> list = Lists.newArrayList();
             this.recipes.object2IntEntrySet().fastForEach(entry-> {
                 level.getRecipeManager().byKey(entry.getKey()).ifPresent((h) -> {
                     list.add(h);
                     if (hasXPTank()) {
-                        int amountLiquidXp = Mth.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h.value()).getExperience()) * 5;
+                        int amountLiquidXp = Mth.floor((float) entry.getIntValue() * ((AbstractCookingRecipe) h).getExperience()) * 5;
                         if (amountLiquidXp >= 1) {
                           xpTank.fill(FluidStack.create(Config.getLiquidXP(), amountLiquidXp * FluidStack.bucketAmount() /1000), false);
                             recipes.clear();
                         }
                     }else {
                         if (worldPosition != null)
-                            splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h.value()).getExperience());
+                            splitAndSpawnExperience(level, worldPosition, entry.getIntValue(), ((AbstractCookingRecipe) h).getExperience());
                     }
                 });
             });

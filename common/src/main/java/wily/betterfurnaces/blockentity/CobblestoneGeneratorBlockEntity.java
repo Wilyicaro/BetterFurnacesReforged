@@ -18,7 +18,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -45,7 +44,7 @@ import java.util.function.Predicate;
 
 public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
-    public static List<RecipeHolder<CobblestoneGeneratorRecipes>> recipes;
+    public static List<CobblestoneGeneratorRecipes> recipes;
     protected CobblestoneGeneratorRecipes recipe;
 
     @Override
@@ -129,15 +128,15 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
             level.setBlock(worldPosition, state.setValue(CobblestoneGeneratorBlock.TYPE, cobGen()), 3);
         }
     }
-    protected List<RecipeHolder<CobblestoneGeneratorRecipes>> getSortedCobRecipes(){
-        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(ModObjects.ROCK_GENERATING_RECIPE.get()).stream().sorted(Comparator.comparing(o -> o.id().getPath())).toList();
+    protected List<CobblestoneGeneratorRecipes> getSortedCobRecipes(){
+        return Objects.requireNonNull(getLevel()).getRecipeManager().getAllRecipesFor(ModObjects.ROCK_GENERATING_RECIPE.get()).stream().sorted(Comparator.comparing(o -> o.getId().getPath())).toList();
     }
     public void initRecipes() {
         recipes = getSortedCobRecipes();
     }
     public void setRecipe(int index) {
         if (level != null) {
-            this.recipe = Objects.requireNonNullElseGet(recipes, this::getSortedCobRecipes).get(index).value();
+            this.recipe = Objects.requireNonNullElseGet(recipes, this::getSortedCobRecipes).get(index);
         }
     }
     public void changeRecipe(boolean next) {
@@ -235,7 +234,7 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
     }
 
     protected int getCobTime(){
-        if (recipe != null) return recipe.duration() / FuelEfficiencyMultiplier();
+        if (recipe != null) return recipe.duration / FuelEfficiencyMultiplier();
         return -1;
     }
     public ItemStack getResult(){

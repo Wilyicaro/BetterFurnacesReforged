@@ -37,7 +37,7 @@ public abstract class AbstractBasicScreen<T extends AbstractContainerMenu> exten
 
     @Override
     public void render(GuiGraphics graphics, int i, int j, float f) {
-        renderBackground(graphics,i,j,f);
+        renderBackground(graphics);
         super.render(graphics, i, j, f);
         renderTooltip(graphics,i,j);
         IWindowWidget.super.render(graphics,i,j,f);

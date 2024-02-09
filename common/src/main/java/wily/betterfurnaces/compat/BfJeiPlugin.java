@@ -75,7 +75,7 @@ public class BfJeiPlugin implements IModPlugin {
 			registry.addRecipeCatalyst(new ItemStack(ModObjects.COBBLESTONE_GENERATOR.get()), BFRRecipeTypes.ROCK_GENERATING_JEI);
 
 			Block[] blocks = {ModObjects.IRON_FURNACE.get(), ModObjects.GOLD_FURNACE.get(), ModObjects.DIAMOND_FURNACE.get(), ModObjects.NETHERHOT_FURNACE.get(), ModObjects.EXTREME_FURNACE.get(), ModObjects.EXTREME_FORGE.get()};
-			if (Config.enableUltimateFurnaces.get()) blocks = ArrayUtils.addAll(blocks, ModObjectsUF.COPPER_FURNACE.get(), ModObjectsUF.STEEL_FURNACE.get(), ModObjectsUF.AMETHYST_FURNACE.get(), ModObjectsUF.PLATINUM_FURNACE.get(), ModObjectsUF.ULTIMATE_FURNACE.get(), ModObjectsUF.COPPER_FORGE.get(), ModObjectsUF.IRON_FORGE.get(), ModObjectsUF.GOLD_FORGE.get(), ModObjectsUF.DIAMOND_FORGE.get(), ModObjectsUF.NETHERHOT_FORGE.get(), ModObjectsUF.ULTIMATE_FORGE.get());
+			if (Config.enableUltimateFurnaces.get()) blocks = ArrayUtils.addAll(blocks, ModObjectsUF.COPPER_FURNACE.get(), ModObjectsUF.STEEL_FURNACE.get(),ModObjectsUF.AMETHYST_FURNACE.get(),ModObjectsUF.PLATINUM_FURNACE.get(), ModObjectsUF.ULTIMATE_FURNACE.get(), ModObjectsUF.COPPER_FORGE.get(), ModObjectsUF.IRON_FORGE.get(), ModObjectsUF.GOLD_FORGE.get(), ModObjectsUF.DIAMOND_FORGE.get(), ModObjectsUF.NETHERHOT_FORGE.get(), ModObjectsUF.ULTIMATE_FORGE.get());
 			for (Block i : blocks) {
 				ItemStack smelting = new ItemStack(i);
 				registry.addRecipeCatalyst(smelting, RecipeTypes.SMELTING);
@@ -111,6 +111,9 @@ public class BfJeiPlugin implements IModPlugin {
 		registration.addRecipes(BFRRecipeTypes.ROCK_GENERATING_JEI, RecipeUtil.getRecipes(recipeManager, ModObjects.ROCK_GENERATING_RECIPE.get()));
 
 		Registration.ITEMS.forEach((item)-> {
+			if (item.get() instanceof TierUpgradeItem i) addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
+		});
+		if (Config.enableUltimateFurnaces.get()) Registration.ITEMS.forEach((item)-> {
 			if (item.get() instanceof TierUpgradeItem i) addDescription(registration, new ItemStack(i), Component.literal(I18n.get("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.tier", i.from.getName().getString(), i.to.getName().getString())));
 		});
 
@@ -161,11 +164,11 @@ public class BfJeiPlugin implements IModPlugin {
 		}
 		@Override
 		public void draw(CobblestoneGeneratorRecipes recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-			GuiUtil.renderScaled(graphics.pose(),  (float) recipe.duration() / 20 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
+			GuiUtil.renderScaled(graphics.pose(),  (float) recipe.duration / 20 + "s", 62, 45, 0.75f, 0x7E7E7E, false);
 			FluidRenderUtil.renderTiledFluid(graphics, 12, 23, 17,12, FluidStack.create(Fluids.LAVA, 1000), false);
 			FluidRenderUtil.renderTiledFluid(graphics, 55, 23, 17,12,FluidStack.create(Fluids.WATER, 1000), true);
 
-			Pair<IDrawableAnimated,IDrawableAnimated> cache = cachedProgressAnim.getUnchecked(recipe.duration());
+			Pair<IDrawableAnimated,IDrawableAnimated> cache = cachedProgressAnim.getUnchecked(recipe.duration);
 			cache.first.draw(graphics, 12,23);
 			guiHelper.createDrawable(GUI, 176, 0, 17, 12).draw(graphics, 12,23);
 			cache.second.draw(graphics, 55,23);
@@ -201,7 +204,3 @@ public class BfJeiPlugin implements IModPlugin {
 		}
 	}
 }
-
-
-
-
