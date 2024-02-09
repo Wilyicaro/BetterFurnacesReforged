@@ -45,7 +45,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BetterFurnacesReforged;
-import wily.betterfurnaces.blockentity.FactoryUpgradeSettings;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.init.BlockEntityTypes;
 import wily.betterfurnaces.init.ModObjects;
@@ -260,12 +259,10 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock{
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (EnchantmentHelper.getEnchantments(stack).containsKey(Enchantments.SILK_TOUCH) && stack.isCorrectToolForDrops(blockState))
-            shouldDropContent = false;
-        else shouldDropContent = true;
-        super.playerWillDestroy(level, blockPos, blockState, player);
+        shouldDropContent = !EnchantmentHelper.getEnchantments(stack).containsKey(Enchantments.SILK_TOUCH) || !stack.isCorrectToolForDrops(blockState);
+        return  super.playerWillDestroy(level, blockPos, blockState, player);
     }
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean p_196243_5_) {

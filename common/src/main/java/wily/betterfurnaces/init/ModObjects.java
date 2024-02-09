@@ -46,26 +46,26 @@ public class ModObjects {
     public static final RegistrySupplier<MenuType<ForgeMenu>> FORGE_CONTAINER = CONTAINERS.register("forge", () -> MenuRegistry.ofExtended((windowId, inv, data) -> new ForgeMenu(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player)));
     public static final RegistrySupplier<MenuType<ColorUpgradeItem.ContainerColorUpgrade>> COLOR_UPGRADE_CONTAINER = CONTAINERS.register("color_upgrade", () -> MenuRegistry.ofExtended((windowId, inv, data) -> new ColorUpgradeItem.ContainerColorUpgrade(windowId, inv, inv.player.getMainHandItem())));
 
-    public static final RegistrySupplier<SmeltingBlock> IRON_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.IRON_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), Config.ironTierSpeed));
-    public static final RegistrySupplier<SmeltingBlock> GOLD_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.GOLD_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK), Config.goldTierSpeed));
-    public static final RegistrySupplier<SmeltingBlock> DIAMOND_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.DIAMOND_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.DIAMOND_BLOCK).noOcclusion(), Config.diamondTierSpeed));
-    public static final RegistrySupplier<SmeltingBlock> NETHERHOT_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.NETHERHOT_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.REDSTONE_BLOCK), Config.netherhotTierSpeed));
-    public static final RegistrySupplier<SmeltingBlock> EXTREME_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.EXTREME_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.copy(Blocks.DIAMOND_BLOCK).strength(20.0F, 3000.0F), Config.extremeTierSpeed));
-    public static final RegistrySupplier<ForgeBlock> EXTREME_FORGE = BLOCK_ITEMS.register(SmeltingBlocks.EXTREME_FORGE.getName(), () -> new ForgeBlock(BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK).strength(30.0F, 6000.0F), Config.extremeTierSpeed));
+    public static final RegistrySupplier<SmeltingBlock> IRON_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.IRON_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), Config.ironTierSpeed));
+    public static final RegistrySupplier<SmeltingBlock> GOLD_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.GOLD_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GOLD_BLOCK), Config.goldTierSpeed));
+    public static final RegistrySupplier<SmeltingBlock> DIAMOND_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.DIAMOND_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).noOcclusion(), Config.diamondTierSpeed));
+    public static final RegistrySupplier<SmeltingBlock> NETHERHOT_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.NETHERHOT_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.REDSTONE_BLOCK), Config.netherhotTierSpeed));
+    public static final RegistrySupplier<SmeltingBlock> EXTREME_FURNACE = BLOCK_ITEMS.register(SmeltingBlocks.EXTREME_FURNACE.getName(), () -> new SmeltingBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).strength(20.0F, 3000.0F), Config.extremeTierSpeed));
+    public static final RegistrySupplier<ForgeBlock> EXTREME_FORGE = BLOCK_ITEMS.register(SmeltingBlocks.EXTREME_FORGE.getName(), () -> new ForgeBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK).strength(30.0F, 6000.0F), Config.extremeTierSpeed));
 
 
-    public static final RegistrySupplier<CobblestoneGeneratorBlock> COBBLESTONE_GENERATOR = BLOCK_ITEMS.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> new CobblestoneGeneratorBlock(BlockBehaviour.Properties.copy(Blocks.BLACKSTONE)));
+    public static final RegistrySupplier<CobblestoneGeneratorBlock> COBBLESTONE_GENERATOR = BLOCK_ITEMS.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> new CobblestoneGeneratorBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BLACKSTONE)));
     public static final RegistrySupplier<MenuType<CobblestoneGeneratorMenu>> COB_GENERATOR_CONTAINER = CONTAINERS.register(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> MenuRegistry.ofExtended((windowId, inv, data) -> new CobblestoneGeneratorMenu(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player)));
 
-    public static final RegistrySupplier<FuelVerifierBlock> FUEL_VERIFIER = BLOCK_ITEMS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> new FuelVerifierBlock(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)));
+    public static final RegistrySupplier<FuelVerifierBlock> FUEL_VERIFIER = BLOCK_ITEMS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> new FuelVerifierBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE)));
     public static final RegistrySupplier<MenuType<FuelVerifierMenu>> FUEL_VERIFIER_CONTAINER = CONTAINERS.register(FuelVerifierBlock.FUEL_VERIFIER, () -> MenuRegistry.ofExtended((windowId, inv, data) -> new FuelVerifierMenu(windowId, inv.player.level(),data.readBlockPos(), inv, inv.player)));
 
 
-    public static final RegistrySupplier<BFRBlock> IRON_CONDUCTOR_BLOCK = BLOCK_ITEMS.register("iron_conductor_block", () -> new BFRBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8.0F, 20.0F)));
+    public static final RegistrySupplier<BFRBlock> IRON_CONDUCTOR_BLOCK = BLOCK_ITEMS.register("iron_conductor_block", () -> new BFRBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8.0F, 20.0F)));
 
-    public static final RegistrySupplier<BFRBlock> GOLD_CONDUCTOR_BLOCK = BLOCK_ITEMS.register("gold_conductor_block", () -> new BFRBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).strength(8.0F, 20.0F)));
+    public static final RegistrySupplier<BFRBlock> GOLD_CONDUCTOR_BLOCK = BLOCK_ITEMS.register("gold_conductor_block", () -> new BFRBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GOLD_BLOCK).strength(8.0F, 20.0F)));
 
-    public static final RegistrySupplier<BFRBlock> NETHERHOT_CONDUCTOR_BLOCK = BLOCK_ITEMS.register("netherhot_conductor_block", () -> new BFRBlock(BlockBehaviour.Properties.copy(Blocks.REDSTONE_BLOCK).strength(10.0F, 40.0F)));
+    public static final RegistrySupplier<BFRBlock> NETHERHOT_CONDUCTOR_BLOCK = BLOCK_ITEMS.register("netherhot_conductor_block", () -> new BFRBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.REDSTONE_BLOCK).strength(10.0F, 40.0F)));
 
     public static final RegistrySupplier<IronUpgradeItem> IRON_UPGRADE = ITEMS.register("iron_upgrade", () -> new IronUpgradeItem(uniqueStackItemProperties()));
     public static final RegistrySupplier<GoldUpgradeItem> GOLD_UPGRADE = ITEMS.register("gold_upgrade", () -> new GoldUpgradeItem(uniqueStackItemProperties()));

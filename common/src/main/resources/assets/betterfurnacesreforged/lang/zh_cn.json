@@ -14,9 +14,9 @@
 
   "_comment": "Updates",
   "betterfurnacesreforged.update.buttons": "[{\"text\":\"[✓]\",\"color\":\"green\"},{\"text\":\"点击下载\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}}]",
-  "betterfurnacesreforged.update.failed": "[{\"text\":\"更好的熔炉重铸版\",\"color\":\"blue\"},{\"text\":\"更新检查\",\"color\":\"none\"},{\"text\":\"失败！详情请查看日志！\"}]",
-  "betterfurnacesreforged.update.speech": "[{\"text\":\"更好的熔炉重铸版\",\"color\":\"dark_aqua\"},{\"text\":\"有更新可用！\",\"color\":\"none\"}]",
-  "betterfurnacesreforged.update.version": "[{\"text\":\"当前版本：\"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\"，最新版本：\",\"color\":\"none\"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
+  "betterfurnacesreforged.update.failed": "[{\"text\":\"更好的熔炉重铸版\",\"color\":\"blue\"},{\"text\":\"更新检查\"},{\"text\":\"失败！详情请查看日志！\"}]",
+  "betterfurnacesreforged.update.speech": "[{\"text\":\"更好的熔炉重铸版\",\"color\":\"dark_aqua\"},{\"text\":\"有更新可用！\"}]",
+  "betterfurnacesreforged.update.version": "[{\"text\":\"当前版本：\"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\"，最新版本：\"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
 
   "block.betterfurnacesreforged.cobblestone_generator": "圆石制造机",
   "block.betterfurnacesreforged.diamond_furnace": "钻石熔炉",

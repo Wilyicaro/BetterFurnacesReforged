@@ -49,7 +49,7 @@ public record CobblestoneGeneratorRecipes(ItemStack result, int duration) implem
             codec = RecordCodecBuilder.create((instance) -> {
                 Products.P2<RecordCodecBuilder.Mu<CobblestoneGeneratorRecipes>, ItemStack, Integer> product =
                         instance.group(
-                                CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC.fieldOf("result").forGetter((abstractCookingRecipe) -> abstractCookingRecipe.result),
+                                ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter((abstractCookingRecipe) -> abstractCookingRecipe.result),
                                 Codec.INT.fieldOf("duration").orElse(80).forGetter((abstractCookingRecipe) -> abstractCookingRecipe.duration));
                 return product.apply(instance, CobblestoneGeneratorRecipes::new);
             });

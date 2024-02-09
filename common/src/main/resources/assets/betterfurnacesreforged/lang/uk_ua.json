@@ -14,9 +14,9 @@
 
   "_comment": "Updates",
   "betterfurnacesreforged.update.buttons": "[{\"text\":\"[✓]\",\"color\":\"green\"},{\"text\":\"Клік для завантаження\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"}}]",
-  "betterfurnacesreforged.update.failed": "[{\"text\":\"Перевірка оновлень \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"blue\"},{\"text\":\"провалена! Перевір Логи для детальної інформації!\",\"color\":\"none\"}]",
-  "betterfurnacesreforged.update.speech": "[{\"text\":\"Оновлення для \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"dark_aqua\"},{\"text\":\"доступно!\",\"color\":\"none\"}]",
-  "betterfurnacesreforged.update.version": "[{\"text\":\"Поточна версія: \"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\", остання версія: \",\"color\":\"none\"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
+  "betterfurnacesreforged.update.failed": "[{\"text\":\"Перевірка оновлень \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"blue\"},{\"text\":\"провалена! Перевір Логи для детальної інформації!\"}]",
+  "betterfurnacesreforged.update.speech": "[{\"text\":\"Оновлення для \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"dark_aqua\"},{\"text\":\"доступно!\"}]",
+  "betterfurnacesreforged.update.version": "[{\"text\":\"Поточна версія: \"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\", остання версія: \"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
 
   "block.betterfurnacesreforged.cobblestone_generator": "Генератор Бруківки",
   "block.betterfurnacesreforged.diamond_furnace": "Діамантова піч",

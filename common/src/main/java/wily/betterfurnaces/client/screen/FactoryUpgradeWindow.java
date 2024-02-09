@@ -63,7 +63,8 @@ public class FactoryUpgradeWindow extends FactoryScreenWindow<SmeltingScreen<?>>
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
+    protected void renderBg(GuiGraphics guiGraphics, int i, int j, float f) {
+        super.renderBg(guiGraphics,i,j,f);
         if (parent.getMenu().getRedstoneMode() == 4)
             ScreenUtil.drawString(guiGraphics.pose(),parent.getMenu().getComSub() + "",getX() + (parent.getMenu().getComSub() > 9 ? 39 : 42),getY() + 86,0xFFFFFF,true);
     }
