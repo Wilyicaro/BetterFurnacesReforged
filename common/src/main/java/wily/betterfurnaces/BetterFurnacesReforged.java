@@ -19,7 +19,7 @@ public class BetterFurnacesReforged
 
     public static final String MOD_ID = "betterfurnacesreforged";
     public static final Supplier<String> VERSION =  Platform.getMod(MOD_ID)::getVersion;
-    public static final String MC_VERSION = "1.20.2";
+    public static final String MC_VERSION = "1.20.1";
 
     public static final Supplier<RegistrarManager> REGISTRIES = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
     public static final Logger LOGGER = LogManager.getLogger();

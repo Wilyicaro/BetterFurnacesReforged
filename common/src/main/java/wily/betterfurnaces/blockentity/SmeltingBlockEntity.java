@@ -7,6 +7,7 @@ import dev.architectury.registry.fuel.FuelRegistry;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -280,9 +281,10 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public static int getFluidBurnTime(FluidStack stack) {
         return stack == null ? 0 : FuelRegistry.get(stack.getFluid().getBucket().getDefaultInstance());
     }
-    public final IPlatformFluidHandler fluidTank = FactoryAPIPlatform.getFluidHandlerApi(LiquidCapacity(), this,fs -> LiquidFuelUpgradeItem.supportsFluid(fs.getFluid()), SlotsIdentifier.LAVA, TransportState.INSERT);
-    public final IPlatformFluidHandler xpTank = FactoryAPIPlatform.getFluidHandlerApi(2*FluidStack.bucketAmount(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), SlotsIdentifier.GENERIC, TransportState.EXTRACT);
-    public final IPlatformEnergyStorage energyStorage = FactoryAPIPlatform.getEnergyStorageApi(EnergyCapacity(),this);
+    public static final SlotsIdentifier XP = new SlotsIdentifier(ChatFormatting.GREEN,"green");
+    public final IPlatformFluidHandler fluidTank = new FactoryFluidHandler(LiquidCapacity(), this,fs -> LiquidFuelUpgradeItem.supportsFluid(fs.getFluid()), SlotsIdentifier.LAVA, TransportState.EXTRACT_INSERT);
+    public final IPlatformFluidHandler xpTank = new FactoryFluidHandler(2*FluidStack.bucketAmount(), this, xp -> xp.getFluid().isSame(Config.getLiquidXP()), XP, TransportState.EXTRACT_INSERT);
+    public final IPlatformEnergyStorage energyStorage = new FactoryEnergyStorage(EnergyCapacity(),this);
     public void forceUpdateAllStates() {
         BlockState state = level.getBlockState(worldPosition);
         if (state.getValue(BlockStateProperties.LIT) != this.isBurning()) {
@@ -792,24 +794,20 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements RecipeH
     public <T extends IPlatformHandler> ArbitrarySupplier<T> getStorage(Storages.Storage<T> storage, Direction facing){
         if (storage == Storages.FLUID){
             if ((facing == null || (!hasUpgrade(ModObjects.GENERATOR.get()) && !hasXPTank()) || (facing.ordinal() == getIndexTop() || facing.ordinal() == getIndexBottom()))) {
-                if(isLiquid())
-                    return ()-> (T) fluidTank;
-            }
-            else {
+                if(isLiquid()) return ()-> (T)(facing == null ?  fluidTank : FactoryAPIPlatform.filteredOf(fluidTank,Direction.NORTH,TransportState.INSERT));
+            } else {
                 if (hasUpgrade(ModObjects.GENERATOR.get())) {
                     ItemStack gen = getUpgradeSlotItem(ModObjects.GENERATOR.get());
-                    return ()-> (T)(gen.getItem() instanceof GeneratorUpgradeItem item ? item.getFluidStorage(gen) : null);
+                    return ()-> (T)(gen.getItem() instanceof GeneratorUpgradeItem item ? (facing == null ? item.getFluidStorage(gen) : FactoryAPIPlatform.filteredOf(item.getFluidStorage(gen),Direction.NORTH,TransportState.INSERT)) : null);
                 } else if (hasXPTank())
-                    return ()-> (T)xpTank;
+                    return ()-> (T)(facing == null ?  xpTank : FactoryAPIPlatform.filteredOf(xpTank,Direction.NORTH,TransportState.EXTRACT));
             }
         }
         if (storage == Storages.ITEM){
-            if (facing != null)
-                return ()-> (T) FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).key(), getSlotsTransport(facing).value());
-            else return ()->(T)inventory;
+            return ()-> (T) (facing == null ? inventory : FactoryAPIPlatform.filteredOf(inventory,facing, getSlotsTransport(facing).key(), getSlotsTransport(facing).value()));
         }
         if (storage == Storages.ENERGY && (hasUpgrade(ModObjects.ENERGY.get()) ||  hasUpgrade(ModObjects.GENERATOR.get()))){
-            return ()-> (T)FactoryAPIPlatform.filteredOf(energyStorage,facing, TransportState.ofBoolean( true, !hasUpgrade(ModObjects.GENERATOR.get())));
+            return ()-> (T)(facing == null ? energyStorage : FactoryAPIPlatform.filteredOf(energyStorage, Direction.NORTH, TransportState.ofBoolean( true, !hasUpgrade(ModObjects.GENERATOR.get()))));
         }
         return ArbitrarySupplier.empty();
     }
