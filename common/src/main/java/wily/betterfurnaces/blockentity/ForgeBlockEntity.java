@@ -15,6 +15,8 @@ import wily.factoryapi.base.FactoryItemSlot;
 
 import java.util.function.Supplier;
 
+import static wily.factoryapi.base.BlockSide.*;
+
 public class ForgeBlockEntity extends SmeltingBlockEntity {
     public int[] FUEL() {return new int[]{3};}
     public int HEATER() {return 10;}
@@ -23,10 +25,10 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
     public int[] OUTPUTS(){ return new int[]{4,5,6};}
     public long LiquidCapacity() {return 2 * super.LiquidCapacity();}
     public int EnergyCapacity() {return 64000;}
-
+    public static final BlockSide[] FORGE_TOP_FACE_SIDES = new BlockSide[]{TOP,BOTTOM,BACK,FRONT,RIGHT,LEFT};
     @Override
     protected BlockSide[] getSidesOrder() {
-        return BlockSide.TOP_FACE_SIDES;
+        return FORGE_TOP_FACE_SIDES;
     }
 
     public ForgeBlockEntity(BlockPos pos, BlockState state) {
