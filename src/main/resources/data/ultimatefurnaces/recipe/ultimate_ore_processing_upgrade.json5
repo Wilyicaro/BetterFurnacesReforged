@@ -1,0 +1,33 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "313",
+    "242",
+    "313"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:dragon_head"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:raw_ore_processing_upgrade"
+    },
+    "3": {
+      "item": "minecraft:emerald_block"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:advanced_ore_processing_upgrade"
+    }
+    *///?} else {
+    "1": "minecraft:dragon_head",
+    "2": "betterfurnacesreforged:raw_ore_processing_upgrade",
+    "3": "minecraft:emerald_block",
+    "4": "betterfurnacesreforged:advanced_ore_processing_upgrade"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:ultimate_ore_processing_upgrade"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "${mod_authors}"
+  ],
+  "contributors": [
+    "${mod_credits}"
+  ],
+  "contact": {
+    "sources": "${mod_source}",
+    "issues": "${mod_issues}"
+  },
+  "license": "${mod_license}",
+  "icon": "logo.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "wily.betterfurnaces.BetterFurnacesReforged::init"
+    ],
+    "client": [
+      "wily.betterfurnaces.BetterFurnacesReforgedClient::init"
+    ],
+    "jei_mod_plugin": [
+      "wily.betterfurnaces.compat.BfJeiPlugin"
+    ]
+  },
+  "accessWidener": "${aw}",
+  "mixins": [
+    "${mod_id}.mixins.json"
+  ],
+  "depends": {
+    "fabric-api": ">=${fabric_api_version}",
+    "factory_api": ">=${factory_api_version}",
+    "minecraft": ["${mc_version_range}"]
+  }
+}

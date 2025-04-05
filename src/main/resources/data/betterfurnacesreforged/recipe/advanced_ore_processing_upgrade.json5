@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "343",
+    "070"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:diamond"
+    },
+    "1": {
+      "item": "minecraft:piston"
+    },
+    "3": {
+      "item": "minecraft:obsidian"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:ore_processing_upgrade"
+    },
+    "7": {
+      "item": "minecraft:piston"
+    }
+    *///?} else {
+    "0": "minecraft:diamond",
+    "1": "minecraft:piston",
+    "3": "minecraft:obsidian",
+    "4": "betterfurnacesreforged:ore_processing_upgrade",
+    "7": "minecraft:piston"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:advanced_ore_processing_upgrade"
+  }
+}

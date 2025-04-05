@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "040"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "1": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    },
+    "4": {
+      "item": "minecraft:furnace"
+    }
+    *///?} else {
+    "0": "minecraft:iron_ingot",
+    "1": "betterfurnacesreforged:iron_conductor_block",
+    "4": "minecraft:furnace"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:iron_furnace"
+  }
+}

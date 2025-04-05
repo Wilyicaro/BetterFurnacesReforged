@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "040",
+    "000"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:stone"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    }
+    *///?} else {
+    "0": "minecraft:stone",
+    "4": "betterfurnacesreforged:iron_conductor_block"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:ore_processing_upgrade"
+  }
+}

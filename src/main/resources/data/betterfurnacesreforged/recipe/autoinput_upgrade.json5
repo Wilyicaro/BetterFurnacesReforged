@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "131",
+    "121",
+    "131"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:gold_ingot"
+    },
+    "2": {
+      "item": "minecraft:diamond"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:piping_upgrade"
+    }
+    *///?} else {
+    "1": "minecraft:gold_ingot",
+    "2": "minecraft:diamond",
+    "3": "betterfurnacesreforged:piping_upgrade"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:autoinput_upgrade"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "343",
+    "010"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:gold_ingot"
+    },
+    "1": {
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:glass"^//^?} else {^/"c:glass_blocks"/^?}^/
+    },
+    "3": {
+      "item": "minecraft:redstone_block"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    }
+    *///?} else {
+    "0": "minecraft:gold_ingot",
+    "1": /*? if forge || neoforge && <1.20.5 {*//*"#forge:glass"*//*?} else {*/"#c:glass_blocks"/*?}*/,
+    "3": "minecraft:redstone_block",
+    "4": "betterfurnacesreforged:netherhot_conductor_block"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:energy_upgrade"
+  }
+}

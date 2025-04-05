@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "141",
+    "676"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "1": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "2": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:extreme_furnace"
+    },
+    "6": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "7": {
+      "tag": "minecraft:soul_fire_base_blocks"
+    }
+    *///?} else {
+    "0": "minecraft:netherite_ingot",
+    "1": "betterfurnacesreforged:netherhot_conductor_block",
+    "2": "minecraft:netherite_ingot",
+    "4": "betterfurnacesreforged:extreme_furnace",
+    "6": "minecraft:netherite_ingot",
+    "7": "#minecraft:soul_fire_base_blocks"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:extreme_forge"
+  }
+}

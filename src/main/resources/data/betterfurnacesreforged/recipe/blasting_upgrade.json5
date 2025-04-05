@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "IXI",
+    "###"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"#": {
+      "item": "minecraft:smooth_stone"
+    },
+    "X": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+    *///?} else {
+    "#": "minecraft:smooth_stone",
+    "X": "betterfurnacesreforged:iron_conductor_block",
+    "I": "minecraft:iron_ingot"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:blasting_upgrade"
+  }
+}

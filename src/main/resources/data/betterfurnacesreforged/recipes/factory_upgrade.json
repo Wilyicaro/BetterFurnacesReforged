@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "141",
+    "131"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:autoinput_upgrade"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:autooutput_upgrade"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:redstone_signal_upgrade"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:factory_upgrade",
+    "count": 1
+  }
+}

@@ -1,0 +1,33 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "020",
+    "131",
+    "010"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:glass"^//^?} else {^/"c:glass_blocks"/^?}^/
+    },
+    "1": {
+      "item": "minecraft:amethyst_block"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:gold_furnace"
+    }
+    *///?} else {
+    "0": /*? if forge || neoforge && <1.20.5 {*//*"#forge:glass"*//*?} else {*/"#c:glass_blocks"/*?}*/,
+    "1": "minecraft:amethyst_block",
+    "2": "betterfurnacesreforged:gold_conductor_block",
+    "3": "betterfurnacesreforged:gold_furnace"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:amethyst_furnace"
+  }
+}

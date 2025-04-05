@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "betterfurnacesreforged:fuel_verifier",
+    "betterfurnacesreforged:cobblestone_generator",
+    "#betterfurnacesreforged:tier/iron",
+    "#betterfurnacesreforged:tier/copper",
+    "#betterfurnacesreforged:tier/steel"
+    ]
+}

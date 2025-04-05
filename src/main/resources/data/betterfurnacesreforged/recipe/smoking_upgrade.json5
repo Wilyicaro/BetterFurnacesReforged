@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "#X#",
+    " # "
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"#": {
+      "tag": "minecraft:logs"
+    },
+    "X": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    }
+    *///?} else {
+    "#": "#minecraft:logs",
+    "X": "betterfurnacesreforged:gold_conductor_block"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:smoking_upgrade"
+  }
+}

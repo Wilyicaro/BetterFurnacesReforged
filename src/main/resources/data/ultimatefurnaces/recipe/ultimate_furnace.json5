@@ -1,0 +1,45 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "131",
+    "254",
+    "676"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    },
+    "5": {
+      "item": "betterfurnacesreforged:extreme_furnace"
+    },
+    "6": {
+      "item": "minecraft:emerald_block"
+    },
+    "7": {
+      "item": "minecraft:coal_block"
+    }
+    *///?} else {
+    "1": "minecraft:netherite_ingot",
+    "2": "betterfurnacesreforged:iron_conductor_block",
+    "3": "betterfurnacesreforged:netherhot_conductor_block",
+    "4": "betterfurnacesreforged:gold_conductor_block",
+    "5": "betterfurnacesreforged:extreme_furnace",
+    "6": "minecraft:emerald_block",
+    "7": "minecraft:coal_block"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:ultimate_furnace"
+  }
+}

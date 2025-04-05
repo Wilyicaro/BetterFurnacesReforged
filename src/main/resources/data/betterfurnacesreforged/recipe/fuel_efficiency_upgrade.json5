@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "343",
+    "010"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:lapis_block"
+    },
+    "1": {
+      "item": "minecraft:ender_pearl"
+    },
+    "3": {
+      "item": "minecraft:ender_pearl"
+    },
+    "4": {
+      "item": "minecraft:coal"
+    }
+    *///?} else {
+    "0": "minecraft:lapis_block",
+    "1": "minecraft:ender_pearl",
+    "3": "minecraft:ender_pearl",
+    "4": "minecraft:coal"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:fuel_efficiency_upgrade"
+  }
+}

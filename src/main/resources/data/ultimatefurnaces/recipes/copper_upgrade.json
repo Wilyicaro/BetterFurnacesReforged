@@ -1,0 +1,21 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "040",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:copper_ingot"
+    },
+    "4": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:copper_upgrade",
+    "count": 1
+  }
+}

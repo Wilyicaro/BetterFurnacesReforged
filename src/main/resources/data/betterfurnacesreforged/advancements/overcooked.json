@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "betterfurnacesreforged:iron_furnace"
+    },
+    "title": {
+      "translate": "advancements.overcooked.title"
+    },
+    "description": {
+      "translate": "advancements.overcooked.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "overcooked": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+            "betterfurnacesreforged:iron_furnace"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "overcooked"
+    ]
+  ],
+  "parent": "minecraft:story/smelt_iron"
+}

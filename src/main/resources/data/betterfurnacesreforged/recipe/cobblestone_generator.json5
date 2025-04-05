@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "343",
+    "676"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:coal_block"
+    },
+    "3": {
+      "item": "minecraft:iron_ingot"
+    },
+    "4": {
+      "item": "minecraft:bucket"
+    },
+    "6": {
+      "item": "minecraft:smooth_stone"
+    },
+    "7": {
+      "item": "betterfurnacesreforged:fuel_verifier"
+    }
+    *///?} else {
+    "1": "minecraft:coal_block",
+    "3": "minecraft:iron_ingot",
+    "4": "minecraft:bucket",
+    "6": "minecraft:smooth_stone",
+    "7": "betterfurnacesreforged:fuel_verifier"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:cobblestone_generator"
+  }
+}

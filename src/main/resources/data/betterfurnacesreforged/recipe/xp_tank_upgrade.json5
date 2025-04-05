@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "030",
+    "343",
+    "030"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:iron_block"
+    },
+    "3": {
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:glass"^//^?} else {^/"c:glass_blocks"/^?}^/
+    },
+    "4": {
+      "item": "minecraft:experience_bottle"
+    }
+    *///?} else {
+    "0": "minecraft:iron_block",
+    "3": /*? if forge || neoforge && <1.20.5 {*//*"#forge:glass"*//*?} else {*/"#c:glass_blocks"/*?}*/,
+    "4": "minecraft:experience_bottle"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:xp_tank_upgrade"
+  }
+}

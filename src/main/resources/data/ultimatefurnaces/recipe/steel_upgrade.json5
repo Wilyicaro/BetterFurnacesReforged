@@ -1,0 +1,28 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "040"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:ingots/steel"^//^?} else {^/"c:steel_ingots"/^?}^/
+    },
+    "1": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    },
+    "4": {
+      "item": "minecraft:iron_ingot"
+    }
+    *///?} else {
+    "0": /*? if forge || neoforge && <1.20.5 {*//*"#forge:ingots/steel"*//*?} else {*/"#c:steel_ingots"/*?}*/,
+    "1": "betterfurnacesreforged:iron_conductor_block",
+    "4": "minecraft:iron_ingot"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:steel_upgrade"
+  }
+}

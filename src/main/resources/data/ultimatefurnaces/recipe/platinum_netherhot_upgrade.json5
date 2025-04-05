@@ -1,0 +1,37 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "101",
+    "212",
+    "343"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:tnt"
+    },
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "3": {
+      "item": "minecraft:magma_cream"
+    },
+    "4": {
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:ingots/platinum"^//^?} else {^/"c:platinum_ingots"/^?}^/
+    }
+    *///?} else {
+    "0": "minecraft:tnt",
+    "1": "minecraft:diamond",
+    "2": "betterfurnacesreforged:netherhot_conductor_block",
+    "3": "minecraft:magma_cream",
+    "4": /*? if forge || neoforge && <1.20.5 {*//*"#forge:ingots/platinum"*//*?} else {*/"#c:platinum_ingots"/*?}*/
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:platinum_netherhot_upgrade"
+  }
+}

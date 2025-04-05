@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "betterfurnacesreforged:block/copper_forge"
+    },
+    "lit=true": {
+      "model": "betterfurnacesreforged:block/copper_forge_on"
+    }
+  }
+}

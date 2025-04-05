@@ -1,0 +1,52 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:white_dye"
+    },
+    "1": {
+      "item": "minecraft:black_dye"
+    },
+    "2": {
+      "item": "minecraft:brown_dye"
+    },
+    "3": {
+      "item": "minecraft:red_dye"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    },
+    "5": {
+      "item": "minecraft:yellow_dye"
+    },
+    "6": {
+      "item": "minecraft:green_dye"
+    },
+    "7": {
+      "item": "minecraft:blue_dye"
+    },
+    "8": {
+      "item": "minecraft:pink_dye"
+    }
+    *///?} else {
+    "0": "minecraft:white_dye",
+    "1": "minecraft:black_dye",
+    "2": "minecraft:brown_dye",
+    "3": "minecraft:red_dye",
+    "4": "betterfurnacesreforged:gold_conductor_block",
+    "5": "minecraft:yellow_dye",
+    "6": "minecraft:green_dye",
+    "7": "minecraft:blue_dye",
+    "8": "minecraft:pink_dye"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:color_upgrade"
+  }
+}

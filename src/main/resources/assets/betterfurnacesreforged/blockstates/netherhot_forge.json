@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "betterfurnacesreforged:block/netherhot_forge"
+    },
+    "lit=true": {
+      "model": "betterfurnacesreforged:block/netherhot_forge_on"
+    }
+  }
+}

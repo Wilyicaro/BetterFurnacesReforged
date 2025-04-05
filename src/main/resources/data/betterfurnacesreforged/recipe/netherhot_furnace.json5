@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "343",
+    "676"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:tnt"
+    },
+    "3": {
+      "item": "minecraft:diamond_block"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "6": {
+      "item": "minecraft:magma_cream"
+    },
+    "7": {
+      "item": "betterfurnacesreforged:diamond_furnace"
+    }
+    *///?} else {
+    "1": "minecraft:tnt",
+    "3": "minecraft:diamond_block",
+    "4": "betterfurnacesreforged:netherhot_conductor_block",
+    "6": "minecraft:magma_cream",
+    "7": "betterfurnacesreforged:diamond_furnace"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:netherhot_furnace"
+  }
+}

@@ -1,0 +1,29 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "101",
+    "212",
+    "343"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:tnt"
+    },
+    "1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "3": {
+      "item": "minecraft:magma_cream"
+    },
+    "4": {
+      "tag": /*? if forge || neoforge && <1.20.5 {*//*"forge:ingots/platinum"*//*?} else {*/"c:platinum_ingots"/*?}*/
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:platinum_netherhot_upgrade"
+  }
+}

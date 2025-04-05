@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "232",
+    "121"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:stone"
+    },
+    "2": {
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:glass"^//^?} else {^/"c:glass_blocks"/^?}^/
+    },
+    "3": {
+      "item": "minecraft:chest"
+    }
+    *///?} else {
+    "1": "minecraft:stone",
+    "2": /*? if forge || neoforge && <1.20.5 {*//*"#forge:glass"*//*?} else {*/"#c:glass_blocks"/*?}*/,
+    "3": "minecraft:chest"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:storage_upgrade"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "040",
+    "000"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:cobblestone"
+    },
+    "4": {
+      "tag": "minecraft:coals"
+    }
+    *///?} else {
+    "0": "minecraft:cobblestone",
+    "4": "#minecraft:coals"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:fuel_verifier"
+  }
+}

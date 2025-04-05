@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    " 2 ",
+    "010"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "1": {
+      "item": "minecraft:lightning_rod"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:energy_upgrade"
+    }
+    *///?} else {
+    "0": "minecraft:iron_ingot",
+    "1": "minecraft:lightning_rod",
+    "2": "betterfurnacesreforged:energy_upgrade"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:generator_upgrade"
+  }
+}

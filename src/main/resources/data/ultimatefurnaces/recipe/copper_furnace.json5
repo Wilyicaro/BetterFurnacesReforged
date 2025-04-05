@@ -1,0 +1,25 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "040",
+    "000"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:copper_ingot"
+    },
+    "4": {
+      "item": "minecraft:furnace"
+    }
+    *///?} else {
+    "0": "minecraft:copper_ingot",
+    "4": "minecraft:furnace"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:copper_furnace"
+  }
+}

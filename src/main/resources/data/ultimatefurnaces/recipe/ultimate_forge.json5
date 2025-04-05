@@ -1,0 +1,33 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "121",
+    "343"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:ultimate_furnace"
+    },
+    "3": {
+      "item": "minecraft:emerald_block"
+    },
+    "4": {
+      "tag": "minecraft:soul_fire_base_blocks"
+    }
+    *///?} else {
+    "1": "minecraft:netherite_ingot",
+    "2": "betterfurnacesreforged:ultimate_furnace",
+    "3": "minecraft:emerald_block",
+    "4": "#minecraft:soul_fire_base_blocks"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:ultimate_forge"
+  }
+}

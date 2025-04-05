@@ -1,0 +1,27 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "232",
+    "141"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:redstone"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:netherhot_furnace"
+    },
+    "4": {
+      "tag": "minecraft:soul_fire_base_blocks"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:netherhot_forge",
+    "count": 1
+  }
+}

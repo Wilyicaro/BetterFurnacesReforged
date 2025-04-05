@@ -1,0 +1,30 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "343",
+    "151"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:copper_ingot"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    },
+    "3": {
+      "item": "minecraft:copper_block"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:copper_furnace"
+    },
+    "5": {
+      "tag": "minecraft:soul_fire_base_blocks"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:copper_forge",
+    "count": 1
+  }
+}

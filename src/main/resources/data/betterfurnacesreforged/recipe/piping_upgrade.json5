@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "111",
+    "121"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:iron_ingot"
+    },
+    "2": {
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:glass"^//^?} else {^/"c:glass_blocks"/^?}^/
+    }
+    *///?} else {
+    "1": "minecraft:iron_ingot",
+    "2": /*? if forge || neoforge && <1.20.5 {*//*"#forge:glass"*//*?} else {*/"#c:glass_blocks"/*?}*/
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:piping_upgrade"
+  }
+}

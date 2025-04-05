@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "141",
+    "131"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:autoinput_upgrade"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:autooutput_upgrade"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:redstone_signal_upgrade"
+    }
+    *///?} else {
+    "1": "minecraft:diamond",
+    "2": "betterfurnacesreforged:autoinput_upgrade",
+    "3": "betterfurnacesreforged:autooutput_upgrade",
+    "4": "betterfurnacesreforged:redstone_signal_upgrade"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:factory_upgrade"
+  }
+}

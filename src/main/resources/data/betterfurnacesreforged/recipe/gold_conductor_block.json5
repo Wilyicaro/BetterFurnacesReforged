@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "141",
+    "010"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:gold_ingot"
+    },
+    "1": {
+      "item": "minecraft:iron_bars"
+    },
+    "4": {
+      "item": "minecraft:iron_ingot"
+    }
+    *///?} else {
+    "0": "minecraft:gold_ingot",
+    "1": "minecraft:iron_bars",
+    "4": "minecraft:iron_ingot"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:gold_conductor_block"
+  }
+}

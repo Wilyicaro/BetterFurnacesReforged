@@ -1,0 +1,37 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "151",
+    "232",
+    "141"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:diamond"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:diamond_furnace"
+    },
+    "4": {
+      "tag": "minecraft:soul_fire_base_blocks"
+    },
+    "5": {
+      "item": "minecraft:diamond_block"
+    }
+    *///?} else {
+    "1": "minecraft:diamond",
+    "2": "betterfurnacesreforged:gold_conductor_block",
+    "3": "betterfurnacesreforged:diamond_furnace",
+    "4": "#minecraft:soul_fire_base_blocks",
+    "5": "minecraft:diamond_block"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:diamond_forge"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "030",
+    "101"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:netherite_scrap"
+    },
+    "1": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "2": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "3": {
+      "item": "minecraft:raw_iron_block"
+    }
+    *///?} else {
+    "0": "minecraft:netherite_scrap",
+    "1": "betterfurnacesreforged:netherhot_conductor_block",
+    "2": "minecraft:netherite_ingot",
+    "3": "minecraft:raw_iron_block"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:raw_ore_processing_upgrade"
+  }
+}

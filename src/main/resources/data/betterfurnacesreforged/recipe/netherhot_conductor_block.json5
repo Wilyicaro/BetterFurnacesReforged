@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "141",
+    "010"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:redstone_block"
+    },
+    "1": {
+      "item": "minecraft:blaze_rod"
+    },
+    "4": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    }
+    *///?} else {
+    "0": "minecraft:redstone_block",
+    "1": "minecraft:blaze_rod",
+    "4": "betterfurnacesreforged:gold_conductor_block"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:netherhot_conductor_block"
+  }
+}

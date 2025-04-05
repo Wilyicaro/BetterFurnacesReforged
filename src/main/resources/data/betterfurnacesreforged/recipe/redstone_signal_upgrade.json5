@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "202",
+    "131",
+    "202"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"0": {
+      "item": "minecraft:comparator"
+    },
+    "1": {
+      "item": "minecraft:repeater"
+    },
+    "2": {
+      "item": "minecraft:redstone"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:iron_conductor_block"
+    }
+    *///?} else {
+    "0": "minecraft:comparator",
+    "1": "minecraft:repeater",
+    "2": "minecraft:redstone",
+    "3": "betterfurnacesreforged:iron_conductor_block"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:redstone_signal_upgrade"
+  }
+}

@@ -1,0 +1,20 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "040",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "tag": /*? if forge || neoforge && <1.20.5 {*//*"forge:ingots/platinum"*//*?} else {*/"c:platinum_ingots"/*?}*/
+    },
+    "4": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:platinum_upgrade"
+  }
+}

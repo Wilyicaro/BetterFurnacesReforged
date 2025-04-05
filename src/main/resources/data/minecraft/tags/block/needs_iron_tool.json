@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#betterfurnacesreforged:tier/gold",
+    "#betterfurnacesreforged:tier/diamond",
+    "#betterfurnacesreforged:tier/netherhot",
+    "#betterfurnacesreforged:tier/amethyst",
+    "#betterfurnacesreforged:tier/platinum"
+  ]
+}

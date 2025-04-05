@@ -1,0 +1,23 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "141",
+    "010"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "1": {
+      "tag": /*? if forge || neoforge && <1.20.5 {*//*"forge:glass"*//*?} else {*/"c:glass_blocks"/*?}*/
+    },
+    "4": {
+      "item": "betterfurnacesreforged:copper_furnace"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:iron_furnace"
+  }
+}

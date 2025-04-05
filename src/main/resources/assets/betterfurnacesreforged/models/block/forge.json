@@ -1,0 +1,127 @@
+{
+  "parent": "minecraft:block/block",
+  "elements": [
+    {
+      "name": "pilar",
+      "from": [0, 1, 0],
+      "to": [1, 15, 1],
+      "faces": {
+        "north": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "east": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "south": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "west": {"uv": [0, 0, 1, 14], "texture": "#side"}
+      }
+    },
+    {
+      "name": "pilar",
+      "from": [0, 1, 15],
+      "to": [1, 15, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "east": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "south": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "west": {"uv": [0, 0, 1, 14], "texture": "#side"}
+      }
+    },
+    {
+      "name": "pilar",
+      "from": [15, 1, 15],
+      "to": [16, 15, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "east": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "south": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "west": {"uv": [0, 0, 1, 14], "texture": "#side"}
+      }
+    },
+    {
+      "name": "pilar",
+      "from": [15, 1, 0],
+      "to": [16, 15, 1],
+      "faces": {
+        "north": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "east": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "south": {"uv": [0, 0, 1, 14], "texture": "#side"},
+        "west": {"uv": [0, 0, 1, 14], "texture": "#side"}
+      }
+    },
+    {
+      "name": "forge",
+      "from": [1, 0.5, 1],
+      "to": [15, 14.5, 15],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#front"},
+        "east": {"uv": [0, 0, 16, 16], "texture": "#front"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#front"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#front"},
+        "up": {"uv": [0, 0, 16, 16], "texture": "#side"}
+      }
+    },
+    {
+      "name": "forge_overlay",
+      "from": [1, 0.5, 1],
+      "to": [15, 14.5, 15],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#overlayfront"},
+        "east": {"uv": [0, 0, 16, 16], "texture": "#overlayfront"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#overlayfront"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#overlayfront"}
+      }
+    },
+    {
+      "name": "heater",
+      "from": [1.75, 14, 1.75],
+      "to": [14.5, 15, 14.5],
+      "faces": {
+        "north": {"uv": [5, 6, 15, 7], "texture": "#side"},
+        "east": {"uv": [5, 6, 15, 7], "texture": "#side"},
+        "south": {"uv": [5, 6, 15, 7], "texture": "#side"},
+        "west": {"uv": [5, 6, 15, 7], "texture": "#side"}
+      }
+    },
+    {
+      "name": "forge_top",
+      "from": [0, 15, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 1], "texture": "#side"},
+        "east": {"uv": [0, 0, 16, 1], "texture": "#side"},
+        "south": {"uv": [0, 0, 16, 1], "texture": "#side"},
+        "west": {"uv": [0, 0, 16, 1], "texture": "#side"},
+        "up": {"uv": [0, 0, 16, 16], "texture": "#side"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#side"}
+      }
+    },
+    {
+      "name": "forge_down",
+      "from": [0, 0, 0],
+      "to": [16, 1, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 1], "texture": "#side"},
+        "east": {"uv": [0, 0, 16, 1], "texture": "#side"},
+        "south": {"uv": [0, 0, 16, 1], "texture": "#side"},
+        "west": {"uv": [0, 0, 16, 1], "texture": "#side"},
+        "up": {"uv": [0, 0, 16, 16], "texture": "#side"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#side"}
+      }
+    },
+    {
+      "name": "forge_top_overlay",
+      "from": [0, 15, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "up": {"uv": [0, 0, 16, 16], "texture": "#overlayside"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#overlayside"}
+      }
+    },
+    {
+      "name": "forge_down_overlay",
+      "from": [0, 0, 0],
+      "to": [16, 1, 16],
+      "faces": {
+        "up": {"uv": [0, 0, 16, 16], "texture": "#overlayside"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#overlayside"}
+      }
+    }
+  ]
+}

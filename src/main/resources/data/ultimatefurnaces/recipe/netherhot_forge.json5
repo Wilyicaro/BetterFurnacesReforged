@@ -1,0 +1,33 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "232",
+    "141"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "item": "minecraft:redstone"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:netherhot_conductor_block"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:netherhot_furnace"
+    },
+    "4": {
+      "tag": "minecraft:soul_fire_base_blocks"
+    }
+    *///?} else {
+    "1": "minecraft:redstone",
+    "2": "betterfurnacesreforged:netherhot_conductor_block",
+    "3": "betterfurnacesreforged:netherhot_furnace",
+    "4": "#minecraft:soul_fire_base_blocks"
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:netherhot_forge"
+  }
+}
