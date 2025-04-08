@@ -59,7 +59,7 @@ The only currently supported versions are: **1.20.1, 1.20.4, 1.21.1, 1.21.3, 1.2
 - Energy - uses Energy instead of fuel
 - XP Tank - turns resulting experience points into liquid experience points in a created tank
 - Generator - instead of smelting items, this furnace will generate Energy from water evaporation
-- Storage -
+- Storage - adds an extra storage slot for fuel, input, and output
 - Ultimate Ore Processing - quadruples infinitely the amount that each smelted ore type yields
 - Tier upgrades - furnaces can be upgraded in-place to the next tier without having to break and replace it
 

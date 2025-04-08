@@ -89,7 +89,7 @@ public interface FactoryUpgradeSettings {
         //? if <1.20.5 {
         /*return getContainer().getOrCreateTag().getIntArray(type.id);
         *///?} else {
-        return getContainer().get(ModObjects.getSettingComponent(type).get());
+        return getContainer().get(ModObjects.getSettingComponent(type).get()).values();
         //?}
     }
 
@@ -97,7 +97,7 @@ public interface FactoryUpgradeSettings {
         //? if <1.20.5 {
         /*getContainer().getOrCreateTag().putIntArray(type.id, settings);
         *///?} else {
-        getContainer().set(ModObjects.getSettingComponent(type).get(), settings);
+        getContainer().set(ModObjects.getSettingComponent(type).get(), new ModObjects.UpgradeSetting(settings));
         //?}
     }
 

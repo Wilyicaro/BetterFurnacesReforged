@@ -1,0 +1,13 @@
+{
+    "_comment": "Options",
+    "options.betterfurnacesreforged.netherhotTierSpeed": "Hell Tier Speed",
+  
+    "block.betterfurnacesreforged.netherhot_conductor_block": "Hell Conductor Block",
+    "block.betterfurnacesreforged.netherhot_furnace": "Hell Furnace",
+    "block.betterfurnacesreforged.netherhot_forge": "Hell Forge",
+  
+    "item.betterfurnacesreforged.netherhot_upgrade": "Hell Upgrade",
+    "item.betterfurnacesreforged.platinum_netherhot_upgrade": "Hell Upgrade",
+
+    "tooltip.betterfurnacesreforged.netherhot_tier": "Hell %s"
+  }

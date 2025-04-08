@@ -281,9 +281,10 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
     public List<UpgradeItem> getUpgrades() {
         List<UpgradeItem> list = new ArrayList<>();
         for (int slot : getUpgradeIndexes())
-            if (inventory.getItem(slot).getItem() instanceof UpgradeItem upg )list.add(upg);
+            if (inventory.getItem(slot).getItem() instanceof UpgradeItem upg) list.add(upg);
         return list;
     }
+
     public boolean hasUpgrade(UpgradeItem upg) {
         for (int slot : getUpgradeIndexes())
             if (upg.equals(inventory.getItem(slot).getItem()) && upg.isEnabled()) return true;
@@ -630,7 +631,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
         ItemStack colorUpgrade = getUpgradeSlotItem(ModObjects.COLOR.get());
         if (colorUpgrade.isEmpty()) return new float[]{1,1,1};
         //? if <1.20.5 {
-        /*CompoundTag nbt = colorUpgrade.getTag();
+        /*CompoundTag nbt = colorUpgrade.getOrCreateTag();
         return new float[]{nbt.getInt("red") / 255f, nbt.getInt("green") / 255f, nbt.getInt("blue") / 255f};
         *///?} else {
         return colorUpgrade.getOrDefault(ModObjects.BLOCK_TINT.get(), ModObjects.BlockTint.WHITE).toFloatArray();

@@ -41,6 +41,7 @@
   "betterfurnacesreforged.update.speech": "[{\"text\":\"There is an Update for \"},{\"text\":\"BetterFurnaces Reforged \",\"color\":\"dark_aqua\"},{\"text\":\"available!\"}]",
   "betterfurnacesreforged.update.version": "[{\"text\":\"Current Version: \"},{\"text\":\"%s\",\"color\":\"dark_red\"},{\"text\":\", newest Version: \"},{\"text\":\"%s\",\"color\":\"dark_green\"}]",
 
+
   "block.betterfurnacesreforged.cobblestone_generator": "Cobblestone Generator",
   "block.betterfurnacesreforged.diamond_furnace": "Diamond Furnace",
   "block.betterfurnacesreforged.extreme_forge": "Extreme Forge",
@@ -67,6 +68,8 @@
   "block.betterfurnacesreforged.platinum_forge": "Platinum Forge",
   "block.betterfurnacesreforged.netherhot_forge": "Netherhot Forge",
   "block.betterfurnacesreforged.ultimate_forge": "Ultimate Forge",
+
+  "builtin.betterfurnacesreforged.programmer_art": "Programmer Art BFR Expansion",
 
   "description.betterfurnacesreforged.fuel_verifier": "It only shows how much each fuel is capable of smelting (Useless)",
 
@@ -179,5 +182,5 @@
   "tooltip.betterfurnacesreforged.upgrade.generator": "Makes the furnace instead of smelt items generate %s from water evaporation",
   "tooltip.betterfurnacesreforged.upgrade_right_click": "Right-click to insert upgrade",
   "tooltip.betterfurnacesreforged.upgrade_shift_right_click": "Right-click holding shift to insert tier upgrade",
-  "tooltip.betterfurnacesreforged.upgrade.storage": "Adds an additional storage slot for fuel, input, and output"
+  "tooltip.betterfurnacesreforged.upgrade.storage": "Adds an extra storage slot for fuel, input, and output"
 }

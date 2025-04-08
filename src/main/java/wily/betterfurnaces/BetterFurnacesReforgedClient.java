@@ -5,6 +5,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -18,8 +19,7 @@ import wily.betterfurnaces.init.BlockEntityTypes;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.init.Registration;
 import wily.betterfurnaces.items.ColorUpgradeItem;
-import wily.factoryapi.FactoryAPIClient;
-import wily.factoryapi.FactoryAPIPlatform;
+import wily.factoryapi.*;
 //? if >=1.21.4 {
 import wily.factoryapi.FactoryAPIPlatform;
 import wily.factoryapi.mixin.base.ItemTintSourcesAccessor;
@@ -89,6 +89,11 @@ public class BetterFurnacesReforgedClient {
             register.accept(BetterFurnacesReforged.createModLocation("colored_forge_on"));
             register.accept(BetterFurnacesReforged.createModLocation("nsweud"));
         });
+        //? if forge || neoforge {
+        FactoryEvent.registerBuiltInPacks(registry->{
+            registry.register("programmer_art", FactoryAPI.createLocation(BetterFurnacesReforged.MOD_ID, "programmer_art"), Component.translatable("builtin.betterfurnacesreforged.programmer_art"), Pack.Position.TOP, false);
+        });
+        //?}
     }
 
     public static int getFurnaceColor(ItemStack stack, int tint) {

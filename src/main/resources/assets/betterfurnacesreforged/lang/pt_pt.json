@@ -64,6 +64,8 @@
   "block.betterfurnacesreforged.netherhot_forge": "Forja do nether",
   "block.betterfurnacesreforged.ultimate_forge": "Forja ultimate",
 
+  "builtin.betterfurnacesreforged.programmer_art": "Expansão da Arte do Programador do BFR",
+
   "description.betterfurnacesreforged.fuel_verifier": "Apenas mostra a quantidade que cada combustível é capaz de derreter(Inútil)",
 
   "gui.betterfurnacesreforged.color.blue": "Azul: ",

@@ -155,15 +155,19 @@ public class ModObjects {
 
     public static final RegisterListing.Holder<DataComponentType<BlockTint>> BLOCK_TINT = DATA_COMPONENTS.add("upgrade_color",()-> DataComponentType.<BlockTint>builder().persistent(BlockTint.CODEC).networkSynchronized(ByteBufCodecs.INT.map(BlockTint::new, BlockTint::toRGB)).build());
 
-    public static RegisterListing.Holder<DataComponentType<int[]>> registerFactoryUpgradeSetting(String id){
-        return DATA_COMPONENTS.add(id,()-> DataComponentType.<int[]>builder().persistent(Codec.INT_STREAM.xmap(IntStream::toArray,IntStream::of)).networkSynchronized(StreamCodec.of(FriendlyByteBuf::writeVarIntArray, FriendlyByteBuf::readVarIntArray)).build());
+    public record UpgradeSetting(int[] values){
+
     }
 
-    public static final RegisterListing.Holder<DataComponentType<int[]>> SIDES_SETTING = registerFactoryUpgradeSetting("sides_setting");
-    public static final RegisterListing.Holder<DataComponentType<int[]>> AUTOIO_SETTING = registerFactoryUpgradeSetting("auto_input_output_setting");
-    public static final RegisterListing.Holder<DataComponentType<int[]>> REDSTONE_SETTING = registerFactoryUpgradeSetting("redstone_setting");
+    public static RegisterListing.Holder<DataComponentType<UpgradeSetting>> registerFactoryUpgradeSetting(String id){
+        return DATA_COMPONENTS.add(id,()-> DataComponentType.<UpgradeSetting>builder().persistent(Codec.INT_STREAM.xmap(i-> new UpgradeSetting(i.toArray()), setting-> IntStream.of(setting.values()))).networkSynchronized(StreamCodec.of((buf, setting)-> buf.writeVarIntArray(setting.values()), buf-> new UpgradeSetting(buf.readVarIntArray()))).build());
+    }
 
-    public static RegisterListing.Holder<DataComponentType<int[]>> getSettingComponent(FactoryUpgradeSettings.Type type){
+    public static final RegisterListing.Holder<DataComponentType<UpgradeSetting>> SIDES_SETTING = registerFactoryUpgradeSetting("sides_setting");
+    public static final RegisterListing.Holder<DataComponentType<UpgradeSetting>> AUTOIO_SETTING = registerFactoryUpgradeSetting("auto_input_output_setting");
+    public static final RegisterListing.Holder<DataComponentType<UpgradeSetting>> REDSTONE_SETTING = registerFactoryUpgradeSetting("redstone_setting");
+
+    public static RegisterListing.Holder<DataComponentType<UpgradeSetting>> getSettingComponent(FactoryUpgradeSettings.Type type){
         return switch (type){
             case SIDES -> SIDES_SETTING;
             case AUTO_IO -> AUTOIO_SETTING;
