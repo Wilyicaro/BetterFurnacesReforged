@@ -21,14 +21,14 @@
       "item": "minecraft:magma_cream"
     },
     "4": {
-      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:ingots/platinum"^//^?} else {^/"c:platinum_ingots"/^?}^/
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:ingots/platinum"^//^?} else {^/"c:ingots/platinum"/^?}^/
     }
     *///?} else {
     "0": "minecraft:tnt",
     "1": "minecraft:diamond",
     "2": "betterfurnacesreforged:netherhot_conductor_block",
     "3": "minecraft:magma_cream",
-    "4": /*? if forge || neoforge && <1.20.5 {*//*"#forge:ingots/platinum"*//*?} else {*/"#c:platinum_ingots"/*?}*/
+    "4": /*? if forge || neoforge && <1.20.5 {*//*"#forge:ingots/platinum"*//*?} else {*/"#c:ingots/platinum"/*?}*/
     //?}
   },
   "result": {

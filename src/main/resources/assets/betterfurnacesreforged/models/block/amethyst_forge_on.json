@@ -1,0 +1,10 @@
+{
+  "parent": "betterfurnacesreforged:block/forge",
+  "textures": {
+    "particle": "betterfurnacesreforged:block/amethyst_top",
+    "front": "betterfurnacesreforged:block/amethyst_forge_front",
+    "side": "betterfurnacesreforged:block/amethyst_forge_side",
+    "overlayfront": "betterfurnacesreforged:block/forge_frontactive",
+    "overlayside": "betterfurnacesreforged:block/forge_sideactive"
+  }
+}

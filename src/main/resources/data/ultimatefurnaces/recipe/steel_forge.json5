@@ -1,0 +1,37 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "151",
+    "232",
+    "141"
+  ],
+  "key": {
+    //? if <1.21.2 {
+    /*"1": {
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:ingots/steel"^//^?} else {^/"c:ingots/steel"/^?}^/
+    },
+    "2": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:steel_furnace"
+    },
+    "4": {
+      "tag": "minecraft:soul_fire_base_blocks"
+    },
+    "5": {
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:storage_blocks/steel"^//^?} else {^/"c:storage_blocks/steel"/^?}^/
+    }
+    *///?} else {
+    "1": /*? if forge || neoforge && <1.20.5 {*//*"#forge:ingots/steel"*//*?} else {*/"#c:ingots/steel"/*?}*/,
+    "2": "betterfurnacesreforged:gold_conductor_block",
+    "3": "betterfurnacesreforged:steel_furnace",
+    "4": "#minecraft:soul_fire_base_blocks",
+    "5": /*? if forge || neoforge && <1.20.5 {*//*"#forge:storage_blocks/steel"*//*?} else {*/"#c:storage_blocks/steel"/*?}*/
+    //?}
+  },
+  "result": {
+    "id": "betterfurnacesreforged:steel_forge"
+  }
+}

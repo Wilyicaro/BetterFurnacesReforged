@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "betterfurnacesreforged:extreme_furnace"
+    },
+    "title": {
+      "translate": "advancements.thebestfurnace.title"
+    },
+    "description": {
+      "translate": "advancements.thebestfurnace.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "thebestfurnace": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "betterfurnacesreforged:extreme_furnace"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "thebestfurnace"
+    ]
+  ],
+  "parent": "betterfurnacesreforged:overcooked"
+}

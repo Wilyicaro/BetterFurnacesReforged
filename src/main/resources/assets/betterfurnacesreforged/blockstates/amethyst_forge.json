@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "betterfurnacesreforged:block/amethyst_forge"
+    },
+    "lit=true": {
+      "model": "betterfurnacesreforged:block/amethyst_forge_on"
+    }
+  }
+}

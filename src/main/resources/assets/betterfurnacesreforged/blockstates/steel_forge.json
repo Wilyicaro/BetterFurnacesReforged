@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "betterfurnacesreforged:block/steel_forge"
+    },
+    "lit=true": {
+      "model": "betterfurnacesreforged:block/steel_forge_on"
+    }
+  }
+}

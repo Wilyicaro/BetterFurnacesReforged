@@ -1,0 +1,29 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "151",
+    "232",
+    "141"
+  ],
+  "key": {  
+    "1": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "2": {
+      "item": "betterfurnacesreforged:gold_conductor_block"
+    },
+    "3": {
+      "item": "betterfurnacesreforged:amethyst_furnace"
+    },
+    "4": {
+      "tag": "minecraft:soul_fire_base_blocks"
+    },
+    "5": {
+      "item": "minecraft:amethyst_block"
+    }
+  },
+  "result": {
+    "item": "betterfurnacesreforged:amethyst_forge"
+  }
+}

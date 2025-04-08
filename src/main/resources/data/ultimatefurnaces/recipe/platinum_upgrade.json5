@@ -9,13 +9,13 @@
   "key": {
     //? if <1.21.2 {
     /*"0": {
-      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:ingots/platinum"^//^?} else {^/"c:platinum_ingots"/^?}^/
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:ingots/platinum"^//^?} else {^/"c:ingots/platinums"/^?}^/
     },
     "4": {
       "item": "minecraft:diamond"
     }
     *///?} else {
-    "0": /*? if forge || neoforge && <1.20.5 {*//*"#forge:ingots/platinum"*//*?} else {*/"#c:platinum_ingots"/*?}*/,
+    "0": /*? if forge || neoforge && <1.20.5 {*//*"#forge:ingots/platinum"*//*?} else {*/"#c:ingots/platinum"/*?}*/,
     "4": "minecraft:diamond"
     //?}
   },

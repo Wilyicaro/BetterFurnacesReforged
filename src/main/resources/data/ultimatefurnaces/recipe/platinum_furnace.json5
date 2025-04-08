@@ -9,13 +9,13 @@
   "key": {
     //? if <1.21.2 {
     /*"0": {
-      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:ingots/platinum"^//^?} else {^/"c:platinum_ingots"/^?}^/
+      "tag": /^? if forge || neoforge && <1.20.5 {^//^"forge:ingots/platinum"^//^?} else {^/"c:ingots/platinum"/^?}^/
     },
     "4": {
       "item": "betterfurnacesreforged:diamond_furnace"
     }
     *///?} else {
-    "0": /*? if forge || neoforge && <1.20.5 {*//*"#forge:ingots/platinum"*//*?} else {*/"#c:platinum_ingots"/*?}*/,
+    "0": /*? if forge || neoforge && <1.20.5 {*//*"#forge:ingots/platinum"*//*?} else {*/"#c:ingots/platinum"/*?}*/,
     "4": "betterfurnacesreforged:diamond_furnace"
     //?}
   },

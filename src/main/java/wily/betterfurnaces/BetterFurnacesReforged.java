@@ -53,7 +53,7 @@ public class BetterFurnacesReforged {
             registry.register(true, SliderColorSyncPayload.ID);
         });
 
-        FactoryEvent.serverStarted(server -> BFRConfig.COMMON_STORAGE.withServerFile(server,"betterfurnacesreforged_common.json").load());
+        FactoryEvent.serverStarted(server -> BFRConfig.COMMON_STORAGE.withServerFile(server,"serverconfig/betterfurnacesreforged.json").load());
         FactoryConfig.registerCommonStorage(createModLocation("common"), BFRConfig.COMMON_STORAGE);
 
         Registration.init();

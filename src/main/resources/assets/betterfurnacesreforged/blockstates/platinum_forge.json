@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "betterfurnacesreforged:block/platinum_forge"
+    },
+    "lit=true": {
+      "model": "betterfurnacesreforged:block/platinum_forge_on"
+    }
+  }
+}
