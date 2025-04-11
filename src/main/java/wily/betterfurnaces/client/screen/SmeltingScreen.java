@@ -176,7 +176,7 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
 
         if (this.getMenu().be.hasXPTank()) {
             FactoryGuiGraphics.of(graphics).blit(WIDGETS, xpTankType().getX(), xpTankType().getY(), 208, 0, 16, 16);
-            xpTankType().drawAsFluidTank(graphics, this.getMenu().be.xpTank.getFluidInstance(), 1,true);
+            xpTankType().drawAsFluidTank(graphics, this.getMenu().be.xpTank.getFluidInstance(), this.getMenu().be.xpTank.getMaxFluid(),true);
         }
         if (this.getMenu().be.hasUpgrade(ModObjects.GENERATOR.get())) {
             ItemStack generatorUp = getMenu().be.getUpgradeSlotItem(ModObjects.GENERATOR.get());

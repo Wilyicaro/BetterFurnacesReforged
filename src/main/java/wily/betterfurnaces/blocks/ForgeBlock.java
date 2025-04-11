@@ -48,7 +48,7 @@ public class ForgeBlock extends SmeltingBlock implements SimpleWaterloggedBlock 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public ForgeBlock(Properties properties, Supplier<Integer> defaultCookTime) {
-        super(properties.noOcclusion(),defaultCookTime);
+        super(properties.noOcclusion(), new SmeltingBlock.Tier(null, defaultCookTime));
         this.registerDefaultState( this.defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
     }
 

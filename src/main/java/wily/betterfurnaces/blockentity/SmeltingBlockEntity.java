@@ -62,6 +62,7 @@ import wily.factoryapi.util.FluidInstance;
 
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if <1.20.2 {*//*RecipeHolder*//*?} else {*/RecipeCraftingHolder/*?}*/, StackedContentsCompatible{
     public final int[] provides = new int[Direction.values().length];
@@ -71,19 +72,6 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
 
     public boolean showOrientation;
     protected int timer;
-
-    public int getEnergyConsume() {
-        return 500;
-    }
-
-    public int getLiquidCapacity() {
-        return 4000;
-    }
-
-    public int getEnergyCapacity() {
-        return 16000;
-    }
-
     private int furnaceBurnTime;
     public int cookTime;
     public int totalCookTime = this.getCookTime();
@@ -128,6 +116,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
         if (hasUpgradeType(ModObjects.STORAGE.get())) inputs = new int[]{1,7};
         return inputs;
     }
+
     public int getHeaterIndex() {return getFuelIndexes()[0];}
 
     public int[] getUpgradeIndexes(){ return new int[]{3,4,5};}
@@ -162,6 +151,18 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
 
     public int[] getAllSlots(){
         return ArrayUtils.addAll(getAllInputs(), getOutputs());
+    }
+
+    public int getEnergyConsume() {
+        return 500;
+    }
+
+    public int getLiquidCapacity() {
+        return 4000;
+    }
+
+    public int getEnergyCapacity() {
+        return 16000;
     }
 
     public int getRecipeCookingTime(AbstractCookingRecipe recipe){
@@ -296,7 +297,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
     }
 
     public int getDefaultCookTime(){
-        return level != null && getBlockState().getBlock() instanceof SmeltingBlock ? ((SmeltingBlock)this.getBlockState().getBlock()).defaultCookTime.get() : 200;
+        return level != null && getBlockState().getBlock() instanceof SmeltingBlock ? ((SmeltingBlock)this.getBlockState().getBlock()).tier.defaultCookTime().get() : 200;
     }
 
     public ItemStack getUpgradeTypeSlotItem(UpgradeItem upg) {
@@ -354,8 +355,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
 
     @Override
     public Component getDefaultName() {
-        String tier = BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock()).getPath().split("_")[0];
-        return getUpdatedType() != 0 ? Component.translatable("tooltip.betterfurnacesreforged." + tier + "_tier", getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? Component.translatable("tooltip.betterfurnacesreforged.generator").getString() : "") : super.getDefaultName();
+        return getUpdatedType() != 0 ? Component.translatable("tooltip.betterfurnacesreforged." + ((SmeltingBlock)this.getBlockState().getBlock()).tier.name() + "_tier", getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? Component.translatable("tooltip.betterfurnacesreforged.generator").getString() : "") : super.getDefaultName();
     }
 
     public /*? if <1.20.2 {*//*AbstractCookingRecipe*//*?} else {*/RecipeHolder<AbstractCookingRecipe>/*?}*/ irecipeSlot(int input){
@@ -923,18 +923,18 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
     }
 
     @Override
-    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
-        slots.add(new SlotInput(this, 0, 54, 18, (s) -> !this.hasUpgrade(ModObjects.GENERATOR.get())));
-        slots.add(new SlotFuel(this, 1, 54, 54));
-        slots.add(new SlotOutput(player, this, 2, 116, 35, (s) -> !this.hasUpgrade(ModObjects.GENERATOR.get())));
+    public void addSlots(Consumer<FactoryItemSlot> slots, @Nullable Player player) {
+        slots.accept(new SlotInput(this, 0, 54, 18, (s) -> !this.hasUpgrade(ModObjects.GENERATOR.get())));
+        slots.accept(new SlotFuel(this, 1, 54, 54));
+        slots.accept(new SlotOutput(player, this, 2, 116, 35, (s) -> !this.hasUpgrade(ModObjects.GENERATOR.get())));
 
-        slots.add(new SlotUpgrade(this, 3, 8, 18));
-        slots.add(new SlotUpgrade(this, 4, 8, 36));
-        slots.add(new SlotUpgrade(this, 5, 8, 54));
+        slots.accept(new SlotUpgrade(this, 3, 8, 18));
+        slots.accept(new SlotUpgrade(this, 4, 8, 36));
+        slots.accept(new SlotUpgrade(this, 5, 8, 54));
 
-        slots.add(new SlotInput(this, 6, 36, 18, s -> hasUpgradeType(ModObjects.STORAGE.get())));
-        slots.add(new SlotFuel(this, 7, 36, 54, s-> hasUpgradeType(ModObjects.STORAGE.get())));
-        slots.add(new SlotOutput(player, this, 8, 138, 35, s -> hasUpgradeType(ModObjects.STORAGE.get())));
+        slots.accept(new SlotInput(this, 6, 36, 18, s -> hasUpgradeType(ModObjects.STORAGE.get())));
+        slots.accept(new SlotFuel(this, 7, 36, 54, s-> hasUpgradeType(ModObjects.STORAGE.get())));
+        slots.accept(new SlotOutput(player, this, 8, 138, 35, s -> hasUpgradeType(ModObjects.STORAGE.get())));
 
     }
 

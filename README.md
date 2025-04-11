@@ -1,8 +1,8 @@
 <img src="https://github.com/Kyubion-Studios/BetterFurnacesReforged-Branding/blob/main/banners/default_v1.png?raw=true" alt="BFR Banner" width="600" >
 <p></p>
 
-[<img src="https://github.com/Kyubion-Studios/BetterFurnacesReforged-Branding/blob/main/media/curseforge_button.png?raw=true" alt="curseforge" width="100">](https://www.curseforge.com/minecraft/mc-mods/betterfurnacesreforged)
-[<img src="https://github.com/Kyubion-Studios/BetterFurnacesReforged-Branding/blob/main/media/modrinth_button.png?raw=true" alt="modrinth" width="100">](https://modrinth.com/mod/betterfurnacesreforged)
+[<img src="https://github.com/Kyubion-Studios/BetterFurnacesReforged-Branding/blob/main/media/curseforge_button.png?raw=true" alt="curseforge" width="100">](https://www.curseforge.com/minecraft/mc-mods/better-furnaces-reforged)
+[<img src="https://github.com/Kyubion-Studios/BetterFurnacesReforged-Branding/blob/main/media/modrinth_button.png?raw=true" alt="modrinth" width="100">](https://modrinth.com/mod/better-furnaces-reforged)
 [<img src="https://github.com/Kyubion-Studios/BetterFurnacesReforged-Branding/blob/main/media/forge_button.png?raw=true" alt="forge" width="100">](https://files.minecraftforge.net/)
 [<img src="https://github.com/Kyubion-Studios/BetterFurnacesReforged-Branding/blob/main/media/fabric_button.png?raw=true" alt="fabric" width="100">](https://fabricmc.net/)
 [<img src="https://github.com/Kyubion-Studios/BetterFurnacesReforged-Branding/blob/main/media/neoforge_button.png?raw=true" alt="neoforge" width="100">](https://neoforged.net/)

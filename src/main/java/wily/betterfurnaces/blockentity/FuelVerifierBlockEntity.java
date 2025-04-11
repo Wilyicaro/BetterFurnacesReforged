@@ -4,14 +4,12 @@ import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.init.BlockEntityTypes;
@@ -19,6 +17,8 @@ import wily.betterfurnaces.inventory.FuelVerifierMenu;
 import wily.betterfurnaces.inventory.SlotFuel;
 import wily.factoryapi.base.*;
 import wily.factoryapi.util.CompoundTagUtil;
+
+import java.util.function.Consumer;
 
 public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
@@ -95,9 +95,7 @@ public class FuelVerifierBlockEntity extends InventoryBlockEntity {
 
 
     @Override
-    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
-        slots.add(new SlotFuel(this, 0, 80, 48));
+    public void addSlots(Consumer<FactoryItemSlot> slots, @Nullable Player player) {
+        slots.accept(new SlotFuel(this, 0, 80, 48));
     }
-
-
 }

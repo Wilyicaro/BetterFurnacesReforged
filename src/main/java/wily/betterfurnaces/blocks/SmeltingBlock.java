@@ -72,13 +72,15 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock {
     // 0 = Furnace, 1 = Blast Furnace, 2 = Smoker
     public static final IntegerProperty TYPE = IntegerProperty.create("type",0,3);
 
-    public boolean shouldDropContent = true;
-    public Supplier<Integer> defaultCookTime;
+    public final Tier tier;
 
-    public SmeltingBlock(Properties properties, Supplier<Integer> defaultCookTime) {
+    public SmeltingBlock(Properties properties, Tier tier) {
         super(properties.destroyTime(3f).lightLevel((b) -> b.getValue(BlockStateProperties.LIT) ? 14 : 0).noOcclusion().emissiveRendering(SmeltingBlock::getOrientation));
         this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.LIT, false).setValue(COLORED,false));
-        this.defaultCookTime = defaultCookTime;
+        this.tier = tier;
+    }
+
+    public record Tier(String name, Supplier<Integer> defaultCookTime){
     }
 
     @Override
@@ -179,7 +181,7 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock {
             else be.getUpgradeTypeSlotItem((UpgradeItem) handItem.getItem()).shrink(1);
         }
         for (int upg : be.getUpgradeIndexes()) {
-            if (be.getSlots(null).get(upg).mayPlace(handItem) && !handItem.isEmpty()) {
+            if (be.getSlots().get(upg).mayPlace(handItem) && !handItem.isEmpty()) {
                 if (!(be.inventory.getItem(upg).isEmpty()) && upg == be.getUpgradeIndexes()[be.getUpgradeIndexes().length - 1]) {
                     if (!player.isCreative()) Containers.dropItemStack(level, pos.getX(), pos.getY() + 1, pos.getZ(), be.inventory.getItem(upg));
                     else be.inventory.getItem(upg).shrink(1);

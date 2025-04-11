@@ -33,7 +33,7 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
     }
 
     public void addInventorySlots(){
-        be.getSlots(player).forEach((this::addSlot));
+        be.addSlots(this::addSlot, player);
     }
 
     @Override

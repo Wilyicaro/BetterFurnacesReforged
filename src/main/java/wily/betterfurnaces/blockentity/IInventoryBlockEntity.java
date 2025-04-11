@@ -9,22 +9,26 @@ import org.jetbrains.annotations.Nullable;
 import wily.factoryapi.base.FactoryItemSlot;
 import wily.factoryapi.base.TransportState;
 
+import java.util.function.Consumer;
+
 public interface IInventoryBlockEntity {
 
     Pair<int[], TransportState> getSlotsTransport(Direction side);
 
     boolean IcanExtractItem(int index, ItemStack stack);
 
-    default NonNullList<FactoryItemSlot> getSlots(@Nullable Player player){
+    NonNullList<FactoryItemSlot> getSlots();
+
+    default NonNullList<FactoryItemSlot> createSlots(@Nullable Player player){
         NonNullList<FactoryItemSlot> list = NonNullList.create();
-        addSlots(list,player);
+        addSlots(list::add,player);
         return list;
     }
-    void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player);
+
+    void addSlots(Consumer<FactoryItemSlot> slots, @Nullable Player player);
 
     default int getInventorySize(){
-        return getSlots(null).size();
+        return getSlots().size();
     }
-
 
 }

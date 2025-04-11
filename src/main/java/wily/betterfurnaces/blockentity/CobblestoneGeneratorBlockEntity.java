@@ -44,6 +44,7 @@ import wily.factoryapi.util.FluidInstance;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
@@ -287,27 +288,27 @@ public class CobblestoneGeneratorBlockEntity extends InventoryBlockEntity {
 
 
     @Override
-    public void addSlots(NonNullList<FactoryItemSlot> slots, @Nullable Player player) {
-        slots.add(new FactoryItemSlot(getInv(), SlotsIdentifier.LAVA,TransportState.INSERT, 0, 53, 27){
+    public void addSlots(Consumer<FactoryItemSlot> slots, @Nullable Player player) {
+        slots.accept(new FactoryItemSlot(getInv(), SlotsIdentifier.LAVA,TransportState.INSERT, 0, 53, 27){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return CobblestoneGeneratorBlockEntity.HAS_LAVA.test(stack);
             }
         });
-        slots.add(new FactoryItemSlot(getInv(), SlotsIdentifier.WATER,TransportState.INSERT, 1, 108, 27){
+        slots.accept(new FactoryItemSlot(getInv(), SlotsIdentifier.WATER,TransportState.INSERT, 1, 108, 27){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return CobblestoneGeneratorBlockEntity.HAS_WATER.test(stack);
             }
         });
-        slots.add(new SlotOutput(player, this, 2, 80, 45));
-        slots.add(new SlotUpgrade(this, 3, 8, 18){
+        slots.accept(new SlotOutput(player, this, 2, 80, 45));
+        slots.accept(new SlotUpgrade(this, 3, 8, 18){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return ( stack.getItem() instanceof FuelEfficiencyUpgradeItem);
             }
         });
-        slots.add(new SlotUpgrade(this, 4, 8, 36){
+        slots.accept(new SlotUpgrade(this, 4, 8, 36){
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return ( stack.getItem() instanceof OreProcessingUpgradeItem);

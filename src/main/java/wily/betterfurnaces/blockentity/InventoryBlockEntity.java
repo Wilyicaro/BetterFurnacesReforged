@@ -29,17 +29,26 @@ import wily.factoryapi.util.CompoundTagUtil;
 
 public abstract class InventoryBlockEntity extends BaseContainerBlockEntity implements IInventoryBlockEntity, MenuProvider, Nameable, IFactoryStorage {
 
-    public FactoryItemHandler inventory;
+    private final NonNullList<FactoryItemSlot> slots = createSlots(null);
+    public final FactoryItemHandler inventory = new FactoryItemHandler(getInventorySize(),this, TransportState.EXTRACT_INSERT){
+        @Override
+        public boolean canTakeItem(Container container, int i, ItemStack itemStack) {
+            return super.canTakeItem(container, i, itemStack) && IcanExtractItem(i,itemStack);
+        }
 
+        @Override
+        public boolean canPlaceItem(int slot, @NotNull ItemStack stack) {
+            return super.canPlaceItem(slot, stack) && InventoryBlockEntity.this.getSlots().get(slot).mayPlace(stack);
+        }
+    };
 
     public InventoryBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
-        inventory = new FactoryItemHandler(getInventorySize(),this, TransportState.EXTRACT_INSERT){
-            @Override
-            public boolean canTakeItem(Container container, int i, ItemStack itemStack) {
-                return super.canTakeItem(container, i, itemStack) && IcanExtractItem(i,itemStack);
-            }
-        };
+    }
+
+    @Override
+    public NonNullList<FactoryItemSlot> getSlots() {
+        return slots;
     }
 
     @Override
@@ -132,6 +141,17 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
         inventory.clearContent();
     }
     *///?}
+
+
+    @Override
+    public boolean canPlaceItem(int i, ItemStack arg) {
+        return inventory.canPlaceItem(i, arg);
+    }
+
+    @Override
+    public boolean canTakeItem(Container arg, int i, ItemStack arg2) {
+        return inventory.canTakeItem(arg, i, arg2);
+    }
 
     @Override
     public int getContainerSize() {

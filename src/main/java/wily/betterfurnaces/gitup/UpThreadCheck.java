@@ -28,7 +28,7 @@ public class UpThreadCheck extends Thread {
             Properties updateProperties = new Properties();
             updateProperties.load(new InputStreamReader(newestURL.openStream()));
 
-            String currentMcVersion = BetterFurnacesReforged.MC_VERSION;
+            String currentMcVersion = BetterFurnacesReforged.MC_VERSION.get();
             String newestVersionProp = updateProperties.getProperty("mod_version");
 
             UpCheck.updateVersionInt =  Integer.parseInt(newestVersionProp.replace(".",""));
@@ -50,7 +50,7 @@ public class UpThreadCheck extends Thread {
         if (!UpCheck.checkFailed) {
             if (UpCheck.needsUpdateNotify) {
                 BetterFurnacesReforged.LOGGER.info("There is an update for the BetterFurnaces mod!");
-                BetterFurnacesReforged.LOGGER.info("Current Version: " + BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION.get() + ", newest Version: " + UpCheck.updateVersionString + "!");
+                BetterFurnacesReforged.LOGGER.info("Current Version: " + BetterFurnacesReforged.MC_VERSION.get() + "-" + BetterFurnacesReforged.VERSION.get() + ", newest Version: " + UpCheck.updateVersionString + "!");
                 BetterFurnacesReforged.LOGGER.info("Download at " + UpCheck.DOWNLOAD_LINK);
             } else {
                 BetterFurnacesReforged.LOGGER.info("Now BetterFurnaces is updated!");

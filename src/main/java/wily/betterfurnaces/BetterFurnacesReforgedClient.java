@@ -77,7 +77,7 @@ public class BetterFurnacesReforgedClient {
                 UpCheck.checkFailed = false;
             } else if (UpCheck.needsUpdateNotify){
                 localPlayer.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.speech")/*? if >=1.20.5 {*/, localPlayer.registryAccess()/*?}*/), false);
-                localPlayer.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION + "-" + BetterFurnacesReforged.VERSION.get(), UpCheck.updateVersionString)/*? if >=1.20.5 {*/, localPlayer.registryAccess()/*?}*/), false);
+                localPlayer.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.version",  BetterFurnacesReforged.MC_VERSION.get() + "-" + BetterFurnacesReforged.VERSION.get(), UpCheck.updateVersionString)/*? if >=1.20.5 {*/, localPlayer.registryAccess()/*?}*/), false);
                 localPlayer.displayClientMessage(Component.Serializer.fromJson(I18n.get(BetterFurnacesReforged.MOD_ID+".update.buttons", UpCheck.DOWNLOAD_LINK)/*? if >=1.20.5 {*/, localPlayer.registryAccess()/*?}*/), false);
                 UpCheck.needsUpdateNotify = false;
             }
