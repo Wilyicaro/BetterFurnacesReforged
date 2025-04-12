@@ -4,6 +4,7 @@ package wily.ultimatefurnaces.init;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -33,8 +34,8 @@ public class ModObjectsUF {
         ITEMS.register();
     }
 
-    private static Item.Properties uniqueStackItemProperties(RegisterListing.Holder<? extends Item> item){
-        return FactoryAPIPlatform.setupItemProperties(new Item.Properties(), item).stacksTo(1);
+    private static Item.Properties uniqueStackItemProperties(ResourceLocation id){
+        return FactoryAPIPlatform.setupItemProperties(new Item.Properties(), id).stacksTo(1);
     }
 
     public static final RegisterListing.Holder<CreativeModeTab> ITEM_GROUP = TABS.add("tab_ultimate_furnaces",()-> CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0).displayItems((itemDisplayParameters, output) -> ITEMS.forEach(s-> output.accept(s.get()))).title(Component.translatable("itemGroup."+ BetterFurnacesReforged.MOD_ID + ".tab_ultimate")).icon(()-> ModObjectsUF.ULTIMATE_FURNACE.get().asItem().getDefaultInstance()).build());
@@ -57,16 +58,16 @@ public class ModObjectsUF {
     public static final RegisterListing.Holder<ForgeBlock> ULTIMATE_FORGE = registerBlockItem(FORGES.add("ultimate_forge", () -> new ForgeBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.NETHERITE_BLOCK).strength(50.0F, 6000.0F), ModObjectsUF.ULTIMATE_FORGE), BFRConfig.ultimateTierSpeed)), ITEMS);
 
 
-    public static final RegisterListing.Holder<TierUpgradeItem> COPPER_UPGRADE = ITEMS.add("copper_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjectsUF.COPPER_UPGRADE), Blocks.FURNACE, COPPER_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> IRON_UPGRADE = ITEMS.add("copper_iron_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjectsUF.IRON_UPGRADE), COPPER_FURNACE.get(), ModObjects.IRON_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> STEEL_UPGRADE = ITEMS.add("steel_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjectsUF.STEEL_UPGRADE), ModObjects.IRON_FURNACE.get(), STEEL_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> GOLD_UPGRADE = ITEMS.add("steel_gold_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjectsUF.GOLD_UPGRADE), STEEL_FURNACE.get(), ModObjects.GOLD_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> AMETHYST_UPGRADE = ITEMS.add("amethyst_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjectsUF.AMETHYST_UPGRADE), ModObjects.GOLD_FURNACE.get(), AMETHYST_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> DIAMOND_UPGRADE = ITEMS.add("amethyst_diamond_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjectsUF.DIAMOND_UPGRADE), AMETHYST_FURNACE.get(), ModObjects.DIAMOND_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> PLATINUM_UPGRADE = ITEMS.add("platinum_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjectsUF.PLATINUM_UPGRADE), ModObjects.DIAMOND_FURNACE.get(), PLATINUM_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> NETHERHOT_UPGRADE = ITEMS.add("platinum_netherhot_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjectsUF.NETHERHOT_UPGRADE), PLATINUM_FURNACE.get(), ModObjects.NETHERHOT_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> ULTIMATE_UPGRADE = ITEMS.add("ultimate_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjectsUF.ULTIMATE_UPGRADE), ModObjects.EXTREME_FURNACE.get(), ULTIMATE_FURNACE.get()));
-    public static final RegisterListing.Holder<OreProcessingUpgradeItem> ULTIMATE_ORE_PROCESSING = ITEMS.add("ultimate_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(ModObjectsUF.ULTIMATE_ORE_PROCESSING),4,true,true));
+    public static final RegisterListing.Holder<TierUpgradeItem> COPPER_UPGRADE = ITEMS.add("copper_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), Blocks.FURNACE, COPPER_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> IRON_UPGRADE = ITEMS.add("copper_iron_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), COPPER_FURNACE.get(), ModObjects.IRON_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> STEEL_UPGRADE = ITEMS.add("steel_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), ModObjects.IRON_FURNACE.get(), STEEL_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> GOLD_UPGRADE = ITEMS.add("steel_gold_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), STEEL_FURNACE.get(), ModObjects.GOLD_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> AMETHYST_UPGRADE = ITEMS.add("amethyst_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), ModObjects.GOLD_FURNACE.get(), AMETHYST_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> DIAMOND_UPGRADE = ITEMS.add("amethyst_diamond_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), AMETHYST_FURNACE.get(), ModObjects.DIAMOND_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> PLATINUM_UPGRADE = ITEMS.add("platinum_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), ModObjects.DIAMOND_FURNACE.get(), PLATINUM_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> NETHERHOT_UPGRADE = ITEMS.add("platinum_netherhot_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), PLATINUM_FURNACE.get(), ModObjects.NETHERHOT_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> ULTIMATE_UPGRADE = ITEMS.add("ultimate_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), ModObjects.EXTREME_FURNACE.get(), ULTIMATE_FURNACE.get()));
+    public static final RegisterListing.Holder<OreProcessingUpgradeItem> ULTIMATE_ORE_PROCESSING = ITEMS.add("ultimate_ore_processing_upgrade", id -> new OreProcessingUpgradeItem(uniqueStackItemProperties(id),4,true,true));
 
 
 }

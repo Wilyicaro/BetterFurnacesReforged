@@ -12,6 +12,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.network.codec.StreamCodec;
 //?}
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -52,8 +53,8 @@ public class ModObjects {
 
     public static final RegisterListing.Holder<CreativeModeTab> ITEM_GROUP = TABS.add("bfr_creative_tab",()-> new CreativeModeTab.Builder(CreativeModeTab.Row.TOP, 0).title(Component.translatable("itemGroup." + MOD_ID + ".tab")).icon(()-> ModObjects.EXTREME_FURNACE.get().asItem().getDefaultInstance()).displayItems(((itemDisplayParameters, output) -> ITEMS.forEach(h-> output.accept(h.get().getDefaultInstance())))).build());
 
-    private static Item.Properties uniqueStackItemProperties(RegisterListing.Holder<? extends Item> item){
-        return FactoryAPIPlatform.setupItemProperties(new Item.Properties(), item).stacksTo(1);
+    private static Item.Properties uniqueStackItemProperties(ResourceLocation id){
+        return FactoryAPIPlatform.setupItemProperties(new Item.Properties(), id).stacksTo(1);
     }
 
     public static final RegisterListing.Holder<RecipeSerializer<CobblestoneGeneratorRecipe>> COB_GENERATION_SERIALIZER = RECIPES_SERIALIZERS.add("rock_generating", () -> CobblestoneGeneratorRecipe.SERIALIZER);
@@ -64,12 +65,12 @@ public class ModObjects {
     public static final RegisterListing.Holder<MenuType<ForgeMenu>> FORGE_CONTAINER = CONTAINERS.add("forge", () -> FactoryExtraMenuSupplier.createMenuType((windowId, inv, data) -> new ForgeMenu(windowId, inv.player.level(), data.get().readBlockPos(), inv)));
     public static final RegisterListing.Holder<MenuType<ColorUpgradeItem.ColorUpgradeMenu>> COLOR_UPGRADE_CONTAINER = CONTAINERS.add("color_upgrade", () -> new MenuType<>(ColorUpgradeItem.ColorUpgradeMenu::new, FeatureFlags.VANILLA_SET));
 
-    public static final RegisterListing.Holder<SmeltingBlock> IRON_FURNACE = registerBlockItem(FURNACES.add("iron_furnace", () -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.IRON_BLOCK), ModObjects.IRON_FURNACE), new SmeltingBlock.Tier("iron", BFRConfig.ironTierSpeed))), ITEMS);
-    public static final RegisterListing.Holder<SmeltingBlock> GOLD_FURNACE = registerBlockItem(FURNACES.add("gold_furnace", () -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.GOLD_BLOCK), ModObjects.GOLD_FURNACE), new SmeltingBlock.Tier("gold", BFRConfig.goldTierSpeed))), ITEMS);
-    public static final RegisterListing.Holder<SmeltingBlock> DIAMOND_FURNACE = registerBlockItem(FURNACES.add("diamond_furnace", () -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.DIAMOND_BLOCK).noOcclusion(), ModObjects.DIAMOND_FURNACE), new SmeltingBlock.Tier("diamond", BFRConfig.diamondTierSpeed))), ITEMS);
-    public static final RegisterListing.Holder<SmeltingBlock> NETHERHOT_FURNACE = registerBlockItem(FURNACES.add("netherhot_furnace", () -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.REDSTONE_BLOCK), ModObjects.NETHERHOT_FURNACE), new SmeltingBlock.Tier("netherhot", BFRConfig.netherhotTierSpeed))), ITEMS);
-    public static final RegisterListing.Holder<SmeltingBlock> EXTREME_FURNACE = registerBlockItem(FURNACES.add("extreme_furnace", () -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.DIAMOND_BLOCK).strength(20.0F, 3000.0F), ModObjects.EXTREME_FURNACE), new SmeltingBlock.Tier("extreme", BFRConfig.extremeTierSpeed))), ITEMS);
-    public static final RegisterListing.Holder<ForgeBlock> EXTREME_FORGE = registerBlockItem(BLOCKS.add("extreme_forge", () -> new ForgeBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.NETHERITE_BLOCK).strength(30.0F, 6000.0F), ModObjects.EXTREME_FORGE), BFRConfig.extremeTierSpeed)), ITEMS);
+    public static final RegisterListing.Holder<SmeltingBlock> IRON_FURNACE = registerBlockItem(FURNACES.add("iron_furnace", id -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.IRON_BLOCK), id), new SmeltingBlock.Tier("iron", BFRConfig.ironTierSpeed))), ITEMS);
+    public static final RegisterListing.Holder<SmeltingBlock> GOLD_FURNACE = registerBlockItem(FURNACES.add("gold_furnace", id -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.GOLD_BLOCK), id), new SmeltingBlock.Tier("gold", BFRConfig.goldTierSpeed))), ITEMS);
+    public static final RegisterListing.Holder<SmeltingBlock> DIAMOND_FURNACE = registerBlockItem(FURNACES.add("diamond_furnace", id -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.DIAMOND_BLOCK).noOcclusion(), id), new SmeltingBlock.Tier("diamond", BFRConfig.diamondTierSpeed))), ITEMS);
+    public static final RegisterListing.Holder<SmeltingBlock> NETHERHOT_FURNACE = registerBlockItem(FURNACES.add("netherhot_furnace", id -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.REDSTONE_BLOCK), id), new SmeltingBlock.Tier("netherhot", BFRConfig.netherhotTierSpeed))), ITEMS);
+    public static final RegisterListing.Holder<SmeltingBlock> EXTREME_FURNACE = registerBlockItem(FURNACES.add("extreme_furnace", id -> new SmeltingBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.DIAMOND_BLOCK).strength(20.0F, 3000.0F), id), new SmeltingBlock.Tier("extreme", BFRConfig.extremeTierSpeed))), ITEMS);
+    public static final RegisterListing.Holder<ForgeBlock> EXTREME_FORGE = registerBlockItem(BLOCKS.add("extreme_forge", id -> new ForgeBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.NETHERITE_BLOCK).strength(30.0F, 6000.0F), id), BFRConfig.extremeTierSpeed)), ITEMS);
 
     public static final RegisterListing.Holder<CobblestoneGeneratorBlock> COBBLESTONE_GENERATOR = registerBlockItem(BLOCKS.add(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> new CobblestoneGeneratorBlock(FactoryAPIPlatform.setupBlockProperties(propertiesOf(Blocks.BLACKSTONE), ModObjects.COBBLESTONE_GENERATOR))), ITEMS);
     public static final RegisterListing.Holder<MenuType<CobblestoneGeneratorMenu>> COB_GENERATOR_CONTAINER = CONTAINERS.add(CobblestoneGeneratorBlock.COBBLESTONE_GENERATOR, () -> FactoryExtraMenuSupplier.createMenuType((windowId, inv, data) -> new CobblestoneGeneratorMenu(windowId, inv.player.level(), data.get().readBlockPos(), inv)));
@@ -86,30 +87,30 @@ public class ModObjects {
         return /*? if >1.20.1 {*/BlockBehaviour.Properties.ofFullCopy/*?} else {*//*BlockBehaviour.Properties.copy*//*?}*/(block);
     }
 
-    public static final RegisterListing.Holder<TierUpgradeItem> IRON_UPGRADE = ITEMS.add("iron_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjects.IRON_UPGRADE), Blocks.FURNACE, IRON_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> GOLD_UPGRADE = ITEMS.add("gold_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjects.GOLD_UPGRADE), IRON_FURNACE.get(), GOLD_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> DIAMOND_UPGRADE = ITEMS.add("diamond_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjects.DIAMOND_UPGRADE), GOLD_FURNACE.get(), DIAMOND_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> NETHERHOT_UPGRADE = ITEMS.add("netherhot_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjects.NETHERHOT_UPGRADE), DIAMOND_FURNACE.get(), NETHERHOT_FURNACE.get()));
-    public static final RegisterListing.Holder<TierUpgradeItem> EXTREME_UPGRADE = ITEMS.add("extreme_upgrade", () -> new TierUpgradeItem(uniqueStackItemProperties(ModObjects.EXTREME_UPGRADE), NETHERHOT_FURNACE.get(), EXTREME_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> IRON_UPGRADE = ITEMS.add("iron_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), Blocks.FURNACE, IRON_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> GOLD_UPGRADE = ITEMS.add("gold_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), IRON_FURNACE.get(), GOLD_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> DIAMOND_UPGRADE = ITEMS.add("diamond_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), GOLD_FURNACE.get(), DIAMOND_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> NETHERHOT_UPGRADE = ITEMS.add("netherhot_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), DIAMOND_FURNACE.get(), NETHERHOT_FURNACE.get()));
+    public static final RegisterListing.Holder<TierUpgradeItem> EXTREME_UPGRADE = ITEMS.add("extreme_upgrade", id -> new TierUpgradeItem(uniqueStackItemProperties(id), NETHERHOT_FURNACE.get(), EXTREME_FURNACE.get()));
 
-    public static final RegisterListing.Holder<FuelEfficiencyUpgradeItem> FUEL = ITEMS.add("fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(uniqueStackItemProperties(ModObjects.FUEL).durability(256),2));
-    public static final RegisterListing.Holder<OreProcessingUpgradeItem> ORE_PROCESSING = ITEMS.add("ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(ModObjects.ORE_PROCESSING).durability(128),2,true,false));
-    public static final RegisterListing.Holder<OreProcessingUpgradeItem> RAW_ORE_PROCESSING = ITEMS.add("raw_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(ModObjects.RAW_ORE_PROCESSING),2,false,true));
-    public static final RegisterListing.Holder<FuelEfficiencyUpgradeItem> ADVANCED_FUEL = ITEMS.add("advanced_fuel_efficiency_upgrade", () -> new FuelEfficiencyUpgradeItem(uniqueStackItemProperties(ModObjects.ADVANCED_FUEL),2));
-    public static final RegisterListing.Holder<OreProcessingUpgradeItem> ADVANCED_ORE_PROCESSING = ITEMS.add("advanced_ore_processing_upgrade", () -> new OreProcessingUpgradeItem(uniqueStackItemProperties(ModObjects.ADVANCED_ORE_PROCESSING),2,true,false));
-    public static final RegisterListing.Holder<FactoryUpgradeItem> FACTORY = ITEMS.add("factory_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(ModObjects.FACTORY), "factory", true,true,true,true));
-    public static final RegisterListing.Holder<FactoryUpgradeItem> PIPING = ITEMS.add("piping_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(ModObjects.PIPING), "piping", false,false,true,false));
-    public static final RegisterListing.Holder<FactoryUpgradeItem> OUTPUT = ITEMS.add("autooutput_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(ModObjects.OUTPUT), "output", true,false,true,false));
-    public static final RegisterListing.Holder<FactoryUpgradeItem> INPUT = ITEMS.add("autoinput_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(ModObjects.INPUT), "input", false,true,true,false));
-    public static final RegisterListing.Holder<FactoryUpgradeItem> REDSTONE = ITEMS.add("redstone_signal_upgrade", () -> new FactoryUpgradeItem(uniqueStackItemProperties(ModObjects.REDSTONE), "redstone", false,false,false,true));
-    public static final RegisterListing.Holder<ColorUpgradeItem> COLOR = ITEMS.add("color_upgrade", () -> new ColorUpgradeItem(uniqueStackItemProperties(ModObjects.COLOR),"color"));
-    public static final RegisterListing.Holder<LiquidFuelUpgradeItem> LIQUID = ITEMS.add("liquid_fuel_upgrade", () -> new LiquidFuelUpgradeItem(uniqueStackItemProperties(ModObjects.LIQUID),"liquid"));
-    public static final RegisterListing.Holder<EnergyFuelUpgradeItem> ENERGY = ITEMS.add("energy_upgrade", () -> new EnergyFuelUpgradeItem(uniqueStackItemProperties(ModObjects.ENERGY), Component.translatable("tooltip." + MOD_ID + ".upgrade.energy", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY)))));
-    public static final RegisterListing.Holder<XpTankUpgradeItem> XP = ITEMS.add("xp_tank_upgrade", () -> new XpTankUpgradeItem(uniqueStackItemProperties(ModObjects.XP),"xp"));
-    public static final RegisterListing.Holder<UpgradeItem> BLAST = ITEMS.add("blasting_upgrade", () -> new UpgradeItem(uniqueStackItemProperties(ModObjects.BLAST), UpgradeItem.Type.MODE, "blasting"));
-    public static final RegisterListing.Holder<UpgradeItem> SMOKE = ITEMS.add("smoking_upgrade", () -> new UpgradeItem(uniqueStackItemProperties(ModObjects.SMOKE), UpgradeItem.Type.MODE ,"smoking"));
-    public static final RegisterListing.Holder<GeneratorUpgradeItem> GENERATOR = ITEMS.add("generator_upgrade", () -> new GeneratorUpgradeItem(uniqueStackItemProperties(ModObjects.GENERATOR)));
-    public static final RegisterListing.Holder<StorageUpgradeItem> STORAGE = ITEMS.add("storage_upgrade", () -> new StorageUpgradeItem(uniqueStackItemProperties(ModObjects.STORAGE)));
+    public static final RegisterListing.Holder<FuelEfficiencyUpgradeItem> FUEL = ITEMS.add("fuel_efficiency_upgrade", id -> new FuelEfficiencyUpgradeItem(uniqueStackItemProperties(id).durability(256),2));
+    public static final RegisterListing.Holder<OreProcessingUpgradeItem> ORE_PROCESSING = ITEMS.add("ore_processing_upgrade", id -> new OreProcessingUpgradeItem(uniqueStackItemProperties(id).durability(128),2,true,false));
+    public static final RegisterListing.Holder<OreProcessingUpgradeItem> RAW_ORE_PROCESSING = ITEMS.add("raw_ore_processing_upgrade", id -> new OreProcessingUpgradeItem(uniqueStackItemProperties(id),2,false,true));
+    public static final RegisterListing.Holder<FuelEfficiencyUpgradeItem> ADVANCED_FUEL = ITEMS.add("advanced_fuel_efficiency_upgrade", id -> new FuelEfficiencyUpgradeItem(uniqueStackItemProperties(id),2));
+    public static final RegisterListing.Holder<OreProcessingUpgradeItem> ADVANCED_ORE_PROCESSING = ITEMS.add("advanced_ore_processing_upgrade", id -> new OreProcessingUpgradeItem(uniqueStackItemProperties(id),2,true,false));
+    public static final RegisterListing.Holder<FactoryUpgradeItem> FACTORY = ITEMS.add("factory_upgrade", id -> new FactoryUpgradeItem(uniqueStackItemProperties(id), "factory", true,true,true,true));
+    public static final RegisterListing.Holder<FactoryUpgradeItem> PIPING = ITEMS.add("piping_upgrade", id -> new FactoryUpgradeItem(uniqueStackItemProperties(id), "piping", false,false,true,false));
+    public static final RegisterListing.Holder<FactoryUpgradeItem> OUTPUT = ITEMS.add("autooutput_upgrade", id -> new FactoryUpgradeItem(uniqueStackItemProperties(id), "output", true,false,true,false));
+    public static final RegisterListing.Holder<FactoryUpgradeItem> INPUT = ITEMS.add("autoinput_upgrade", id -> new FactoryUpgradeItem(uniqueStackItemProperties(id), "input", false,true,true,false));
+    public static final RegisterListing.Holder<FactoryUpgradeItem> REDSTONE = ITEMS.add("redstone_signal_upgrade", id -> new FactoryUpgradeItem(uniqueStackItemProperties(id), "redstone", false,false,false,true));
+    public static final RegisterListing.Holder<ColorUpgradeItem> COLOR = ITEMS.add("color_upgrade", id -> new ColorUpgradeItem(uniqueStackItemProperties(id),"color"));
+    public static final RegisterListing.Holder<LiquidFuelUpgradeItem> LIQUID = ITEMS.add("liquid_fuel_upgrade", id -> new LiquidFuelUpgradeItem(uniqueStackItemProperties(id),"liquid"));
+    public static final RegisterListing.Holder<EnergyFuelUpgradeItem> ENERGY = ITEMS.add("energy_upgrade", id -> new EnergyFuelUpgradeItem(uniqueStackItemProperties(id), Component.translatable("tooltip." + MOD_ID + ".upgrade.energy", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY)))));
+    public static final RegisterListing.Holder<XpTankUpgradeItem> XP = ITEMS.add("xp_tank_upgrade", id -> new XpTankUpgradeItem(uniqueStackItemProperties(id),"xp"));
+    public static final RegisterListing.Holder<UpgradeItem> BLAST = ITEMS.add("blasting_upgrade", id -> new UpgradeItem(uniqueStackItemProperties(id), UpgradeItem.Type.MODE, "blasting"));
+    public static final RegisterListing.Holder<UpgradeItem> SMOKE = ITEMS.add("smoking_upgrade", id -> new UpgradeItem(uniqueStackItemProperties(id), UpgradeItem.Type.MODE ,"smoking"));
+    public static final RegisterListing.Holder<GeneratorUpgradeItem> GENERATOR = ITEMS.add("generator_upgrade", id -> new GeneratorUpgradeItem(uniqueStackItemProperties(id)));
+    public static final RegisterListing.Holder<StorageUpgradeItem> STORAGE = ITEMS.add("storage_upgrade", id -> new StorageUpgradeItem(uniqueStackItemProperties(id)));
 
 
     //? if >=1.20.5 {

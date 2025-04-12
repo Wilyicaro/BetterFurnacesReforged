@@ -44,7 +44,7 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 import wily.betterfurnaces.BFRConfig;
-import wily.betterfurnaces.compat.ProjectMMO;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blocks.SmeltingBlock;
 import wily.betterfurnaces.init.BlockEntityTypes;
 import wily.betterfurnaces.init.ModObjects;
@@ -112,16 +112,20 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
     }
 
     public int[] getFuelIndexes() {
-        int[] inputs = new int[]{1};
-        if (hasUpgradeType(ModObjects.STORAGE.get())) inputs = new int[]{1,7};
-        return inputs;
+        return hasUpgradeType(ModObjects.STORAGE.get()) ? new int[]{1,7} : new int[]{1};
     }
 
-    public int getHeaterIndex() {return getFuelIndexes()[0];}
+    public int getHeaterIndex() {
+        return getFuelIndexes()[0];
+    }
 
-    public int[] getUpgradeIndexes(){ return new int[]{3,4,5};}
+    public int[] getUpgradeIndexes(){
+        return new int[]{3,4,5};
+    }
 
-    public int getFirstInputIndex(){ return getInputs()[0];}
+    public int getFirstInputIndex(){
+        return getInputs()[0];
+    }
 
     public int getLastInput(){
         return getInputs()[getInputs().length - 1];
@@ -131,7 +135,9 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
         return getOutputs()[0];
     }
 
-    public int getLastOutput(){ return getOutputs()[getOutputs().length - 1];}
+    public int getLastOutput(){
+        return getOutputs()[getOutputs().length - 1];
+    }
 
     public int[] getInputs(){
         int[] inputs = new int[]{0};
@@ -354,8 +360,8 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
     }
 
     @Override
-    public Component getDefaultName() {
-        return getUpdatedType() != 0 ? Component.translatable("tooltip.betterfurnacesreforged." + ((SmeltingBlock)this.getBlockState().getBlock()).tier.name() + "_tier", getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? Component.translatable("tooltip.betterfurnacesreforged.generator").getString() : "") : super.getDefaultName();
+    public Component getDisplayName() {
+        return getUpdatedType() != 0 ? Component.translatable("tooltip.betterfurnacesreforged." + ((SmeltingBlock)this.getBlockState().getBlock()).tier.name() + "_tier", getUpdatedType() == 1 ? Blocks.BLAST_FURNACE.getName().getString() : getUpdatedType() == 2 ? Blocks.SMOKER.getName().getString() : getUpdatedType() == 3 ? Component.translatable("tooltip.betterfurnacesreforged.generator").getString() : "") : super.getDisplayName();
     }
 
     public /*? if <1.20.2 {*//*AbstractCookingRecipe*//*?} else {*/RecipeHolder<AbstractCookingRecipe>/*?}*/ irecipeSlot(int input){
@@ -819,10 +825,11 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
                     inventory.setItem(getFuelIndexes()[0],fuel);
                 }
             }
-
-            if (FactoryAPI.isModLoaded("pmmo")) {
-                ProjectMMO.burnEvent(input,level,worldPosition);
+            //? if (<=1.20.1 && forge) || (1.21.1 && neoforge) {
+            /*if (FactoryAPI.isModLoaded("pmmo")) {
+                wily.betterfurnaces.compat.ProjectMMOCompat.burnEvent(input,level,worldPosition);
             }
+            *///?}
             input.shrink(1);
         }
     }
@@ -903,14 +910,14 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
             } else if (this.furnaceSettings.getSides(side.ordinal()) == 3) {
                 return Pair.of(getAllSlots(), TransportState.EXTRACT_INSERT);
             } else if (this.furnaceSettings.getSides(side.ordinal()) == 4) {
-                return Pair.of(new int[]{getFuelIndexes()[0]}, TransportState.EXTRACT_INSERT);
+                return Pair.of(getFuelIndexes(), TransportState.EXTRACT_INSERT);
             }
-        }else {
+        } else {
             if (side == Direction.UP) return Pair.of(getInputs(),TransportState.INSERT);
             else if (side == Direction.DOWN) return Pair.of(getOutputs(),TransportState.EXTRACT);
-            else return Pair.of( new int[]{getFuelIndexes()[0]},TransportState.EXTRACT_INSERT);
+            else return Pair.of(getFuelIndexes(),TransportState.EXTRACT_INSERT);
         }
-        return Pair.of(new int[]{},TransportState.NONE);
+        return Pair.of(new int[0],TransportState.NONE);
     }
 
     @Override

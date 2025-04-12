@@ -123,7 +123,7 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock {
             SmeltingBlockEntity be = (SmeltingBlockEntity) world.getBlockEntity(pos);
             //? if <1.20.5 {
             /*if (FactoryItemUtil.hasCustomName(stack)) {
-                be.setCustomName(stack.getDisplayName());
+                be.setCustomName(stack.getHoverName());
             }
             *///?}
             be.forceUpdateAllStates();
@@ -149,21 +149,19 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock {
     }
 
     //? if >=1.20.5 {
-
     @Override
     protected /*? if >=1.21.2 {*/InteractionResult/*?} else {*//*ItemInteractionResult*//*?}*/ useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         SmeltingBlockEntity be = (SmeltingBlockEntity) level.getBlockEntity(blockPos);
         if (interactItem(be, level, blockPos, player, interactionHand, player.getItemInHand(interactionHand))) return /*? if >=1.21.2 {*/InteractionResult.SUCCESS/*?} else {*//*ItemInteractionResult.sidedSuccess(level.isClientSide())*//*?}*/;
         return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
-
     //?}
 
     protected boolean interactItem(SmeltingBlockEntity be, Level level, BlockPos pos, Player player, InteractionHand handIn, ItemStack handItem){
         if (handItem.getItem() instanceof UpgradeItem upg && upg.isValid(be) && !(player.isCrouching())) {
             this.interactUpgrade(be, level, pos, player, handIn, handItem);
             return true;
-        }if (ItemContainerPlatform.isFluidContainer(handItem) &&  !(player.isCrouching())) {
+        }if (ItemContainerPlatform.isFluidContainer(handItem) && !(player.isCrouching())) {
             Bearer<Integer> fluidAmount = Bearer.of(0);
             if ((be.hasUpgrade(ModObjects.GENERATOR.get()) && ItemContainerPlatform.getFluid(handItem).getFluid().isSame(Fluids.WATER) && ItemContainerPlatform.getFluid(be.getUpgradeSlotItem(ModObjects.GENERATOR.get())).getAmount() <= 3000)){
                 fluidAmount.set(FactoryAPIPlatform.getItemFluidHandler(be.getUpgradeSlotItem(ModObjects.GENERATOR.get())).fill(ItemContainerPlatform.drainItem(1000, player, handIn),false));

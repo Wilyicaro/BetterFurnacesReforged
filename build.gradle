@@ -25,6 +25,19 @@ repositories {
         name = 'Kyubion Mod Resources'
         url "https://raw.githubusercontent.com/Kyubion-Studios/Mod-Resources/main/maven/"
     }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
+
     maven {
         // location of the maven that hosts JEI files since January 2023
         name = "Jared's maven"
@@ -50,6 +63,10 @@ dependencies {
     if (stonecutter.eval(stonecutter.current.version, "<=1.21.1")) {
         modCompileOnlyApi("mezz.jei:jei-${stonecutter.current.version}-${loader}-api:${jei_version}")
         modImplementation("mezz.jei:jei-${stonecutter.current.version}-${loader}:${jei_version}")
+    }
+
+    if (stonecutter.eval(stonecutter.current.version, "<=1.20.1") && loader == "forge" || stonecutter.eval(stonecutter.current.version, "1.21.1") && loader == "neoforge") {
+        modImplementation("maven.modrinth:project-mmo:${pmmo_version}")
     }
 
     if (loader == "fabric") {
@@ -89,8 +106,8 @@ def buildJar = tasks.create("buildJar", Copy.class) {
 }
 
 afterEvaluate {
-    buildJar.dependsOn(remapJar)
-    buildJar.from(remapJar.archiveFile)
+    buildJar.dependsOn(renameJarForPublication)
+    buildJar.from(renameJarForPublication.archiveFile)
     build.finalizedBy(buildJar)
 }
 

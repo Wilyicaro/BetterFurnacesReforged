@@ -69,7 +69,7 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
     }
 
     @Override
-    public Component getDefaultName() {
+    public Component getDisplayName() {
         return getBlockState().getBlock().getName();
     }
 
