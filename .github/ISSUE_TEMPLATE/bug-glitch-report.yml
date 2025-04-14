@@ -10,6 +10,14 @@ body:
   - type: input
     id: mod-version
     attributes:
+      label: "Better Furnaces Reforged API Version"
+      description: "The specific used mod version"
+      placeholder: "Example 1.21.4-1.1"
+    validations:
+      required: true
+  - type: input
+    id: factory-api-version
+    attributes:
       label: "Factory API Version"
       description: "The specific used mod version"
       placeholder: "Example 1.21.4-2.2"
