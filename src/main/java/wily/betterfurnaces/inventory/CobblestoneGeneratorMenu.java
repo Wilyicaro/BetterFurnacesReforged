@@ -26,9 +26,7 @@ public class CobblestoneGeneratorMenu extends AbstractInventoryMenu<CobblestoneG
         return j != 0 && i != 0 ? i * pixels / j : 0;
     }
 
-
     public boolean hasAutoOutput(){
         return data.get(3) == 1;
     }
-
 }

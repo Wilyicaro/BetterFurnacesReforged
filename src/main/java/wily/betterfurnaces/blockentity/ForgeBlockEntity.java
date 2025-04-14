@@ -1,7 +1,6 @@
 package wily.betterfurnaces.blockentity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -44,11 +43,6 @@ public class ForgeBlockEntity extends SmeltingBlockEntity {
     @Override
     public int[] getOutputs(){
         return new int[]{4,5,6};
-    }
-
-    @Override
-    public int getLiquidCapacity() {
-        return 2 * super.getLiquidCapacity();
     }
 
     @Override

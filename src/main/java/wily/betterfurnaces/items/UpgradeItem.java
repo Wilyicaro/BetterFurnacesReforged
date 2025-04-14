@@ -54,7 +54,7 @@ public class UpgradeItem extends Item {
     }
 
     public boolean isValid(SmeltingBlockEntity blockEntity){
-        return isEnabled() && blockEntity.getUpgrades().stream().allMatch(this::isUpgradeCompatibleWith);
+        return isEnabled() && blockEntity.allUpgradesMatch(this::isUpgradeCompatibleWith);
     }
 
     public boolean isUpgradeCompatibleWith(UpgradeItem upg){

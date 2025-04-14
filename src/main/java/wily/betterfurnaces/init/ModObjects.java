@@ -104,7 +104,7 @@ public class ModObjects {
     public static final RegisterListing.Holder<FactoryUpgradeItem> INPUT = ITEMS.add("autoinput_upgrade", id -> new FactoryUpgradeItem(uniqueStackItemProperties(id), "input", false,true,true,false));
     public static final RegisterListing.Holder<FactoryUpgradeItem> REDSTONE = ITEMS.add("redstone_signal_upgrade", id -> new FactoryUpgradeItem(uniqueStackItemProperties(id), "redstone", false,false,false,true));
     public static final RegisterListing.Holder<ColorUpgradeItem> COLOR = ITEMS.add("color_upgrade", id -> new ColorUpgradeItem(uniqueStackItemProperties(id),"color"));
-    public static final RegisterListing.Holder<LiquidFuelUpgradeItem> LIQUID = ITEMS.add("liquid_fuel_upgrade", id -> new LiquidFuelUpgradeItem(uniqueStackItemProperties(id),"liquid"));
+    public static final RegisterListing.Holder<LiquidFuelUpgradeItem> LIQUID = ITEMS.add("liquid_fuel_upgrade", id -> new LiquidFuelUpgradeItem(uniqueStackItemProperties(id),"liquid", 8000));
     public static final RegisterListing.Holder<EnergyFuelUpgradeItem> ENERGY = ITEMS.add("energy_upgrade", id -> new EnergyFuelUpgradeItem(uniqueStackItemProperties(id), Component.translatable("tooltip." + MOD_ID + ".upgrade.energy", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY)))));
     public static final RegisterListing.Holder<XpTankUpgradeItem> XP = ITEMS.add("xp_tank_upgrade", id -> new XpTankUpgradeItem(uniqueStackItemProperties(id),"xp"));
     public static final RegisterListing.Holder<UpgradeItem> BLAST = ITEMS.add("blasting_upgrade", id -> new UpgradeItem(uniqueStackItemProperties(id), UpgradeItem.Type.MODE, "blasting"));

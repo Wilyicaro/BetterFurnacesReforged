@@ -1,20 +1,13 @@
 package wily.betterfurnaces.inventory;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.init.ModObjects;
-import wily.betterfurnaces.network.FluidSyncPayload;
-import wily.factoryapi.base.FactoryStorage;
-import wily.factoryapi.base.network.CommonNetwork;
 
 
 public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
@@ -62,10 +55,6 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
         return this.be.getAutoOutput() == 1;
     }
 
-    public BlockPos getPos() {
-        return this.be.getBlockPos();
-    }
-
     public int getCookScaled(int pixels) {
         int i = this.data.get(2);
         int j = this.data.get(3);
@@ -91,18 +80,5 @@ public class SmeltingMenu extends AbstractInventoryMenu<SmeltingBlockEntity> {
 
     public int getMaxEnergyStored() {
         return this.data.get(6);
-    }
-
-
-    protected void updateChanges() {
-        super.updateChanges();
-        if (player instanceof ServerPlayer sp) {
-            CommonNetwork.sendToPlayer(sp, new FluidSyncPayload(be.getBlockPos(), be.fluidTank.getFluidInstance()));
-        }
-    }
-
-    @Override
-    public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()), player, be.getBlockState().getBlock());
     }
 }

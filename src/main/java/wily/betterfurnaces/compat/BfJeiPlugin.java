@@ -1,4 +1,4 @@
-//? if <1.21.1 {
+//? if <1.21.2 {
 /*package wily.betterfurnaces.compat;
 
 

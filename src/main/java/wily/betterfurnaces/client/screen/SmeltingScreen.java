@@ -14,9 +14,10 @@ import wily.betterfurnaces.blockentity.FactoryUpgradeSettings;
 import wily.betterfurnaces.init.ModObjects;
 import wily.betterfurnaces.inventory.SmeltingMenu;
 import wily.betterfurnaces.items.FactoryUpgradeItem;
-import wily.betterfurnaces.items.GeneratorUpgradeItem;
+import wily.betterfurnaces.items.UpgradeItem;
 import wily.betterfurnaces.network.ShowSettingsSyncPayload;
 import wily.factoryapi.FactoryAPIPlatform;
+import wily.factoryapi.base.IPlatformFluidHandler;
 import wily.factoryapi.base.client.FactoryGuiGraphics;
 import wily.factoryapi.base.client.drawable.DrawableStatic;
 import wily.factoryapi.base.client.drawable.DrawableStaticProgress;
@@ -28,15 +29,12 @@ import wily.factoryapi.util.StorageStringUtil;
 import java.util.List;
 
 import static wily.betterfurnaces.client.screen.BetterFurnacesDrawables.*;
-import static wily.factoryapi.util.StorageStringUtil.getFluidTooltip;
 
 public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<T> {
     public static final ResourceLocation GUI = BetterFurnacesReforged.createModLocation("textures/container/furnace_gui.png");
     Inventory playerInv;
 
     private FactoryDrawableButton showConfigButton;
-
-
 
     public SmeltingScreen(T t, Inventory inv, Component name) {
         super(t, inv, name);
@@ -51,26 +49,26 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         return 3;
     }
 
-    protected DrawableStatic fluidTankType() {
-        return FLUID_TANK.createStatic( leftPos + 73, topPos + 49);
+    protected DrawableStatic fluidTankDraw() {
+        return FLUID_TANK.createStatic(leftPos + 73, topPos + 49);
     }
 
-    protected DrawableStaticProgress energyTankType() {
-        int[] pos =  menu.be.hasUpgrade(ModObjects.GENERATOR.get()) ? new int[]{116,26} : new int[]{menu.be.hasUpgradeType(ModObjects.STORAGE.get()) ? 26 : 31,17};
-        return (menu.be.hasUpgradeType(ModObjects.STORAGE.get()) ? THIN_ENERGY_CELL : ENERGY_CELL).createStatic(  leftPos +pos[0], topPos + pos[1]);
+    protected DrawableStaticProgress energyTankDraw() {
+        int[] pos =  menu.be.hasUpgrade(ModObjects.GENERATOR.get()) ? new int[]{116,26} : new int[]{menu.be.hasUpgradeType(UpgradeItem.Type.STORAGE) ? 26 : 31,17};
+        return (menu.be.hasUpgradeType(UpgradeItem.Type.STORAGE) ? THIN_ENERGY_CELL : ENERGY_CELL).createStatic(  leftPos +pos[0], topPos + pos[1]);
     }
 
-    protected DrawableStatic generatorTankType() {
-        return MINI_FLUID_TANK.createStatic( leftPos + 54, topPos + 18);
+    protected DrawableStatic generatorTankDraw() {
+        return MINI_FLUID_TANK.createStatic(leftPos + 54, topPos + 18);
     }
 
-    protected DrawableStatic xpTankType() {
-        return MINI_FLUID_TANK.createStatic( leftPos + 73, topPos + 49);
+    protected DrawableStatic xpTankDraw() {
+        return MINI_FLUID_TANK.createStatic(leftPos + 116, topPos + 57);
     }
 
     public boolean storedFactoryUpgradeType(int type){
-        if (getMenu().be.hasUpgradeType(ModObjects.FACTORY.get())) {
-            FactoryUpgradeItem stack = ((FactoryUpgradeItem)getMenu().be.getUpgradeTypeSlotItem(ModObjects.FACTORY.get()).getItem());
+        if (getMenu().be.hasUpgradeType(UpgradeItem.Type.FACTORY)) {
+            FactoryUpgradeItem stack = ((FactoryUpgradeItem)getMenu().be.getUpgradeTypeStack(UpgradeItem.Type.FACTORY).getItem());
             return switch (type){
                 case 1 -> stack.canInput;
                 case 2 -> stack.canOutput;
@@ -127,17 +125,20 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
         int actualMouseX = mouseX - leftPos;
         int actualMouseY = mouseY - topPos;
-        if (getMenu().be.isLiquid() && fluidTankType().inMouseLimit(mouseX, mouseY))
-            graphics.renderTooltip(font,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.fluidTank), actualMouseX, actualMouseY);
-        if (getMenu().be.hasUpgrade(ModObjects.GENERATOR.get()) && generatorTankType().inMouseLimit(mouseX, mouseY)){
+        if (getMenu().be.isLiquid() && fluidTankDraw().inMouseLimit(mouseX, mouseY))
+            graphics.renderTooltip(font,getFluidTooltip("tooltip.factory_api.fluid_stored", menu.be.getFuelTank()).withStyle(ChatFormatting.GOLD), actualMouseX, actualMouseY);
+        if (getMenu().be.hasUpgrade(ModObjects.GENERATOR.get()) && generatorTankDraw().inMouseLimit(mouseX, mouseY)){
             ItemStack gen = getMenu().be.getUpgradeSlotItem(ModObjects.GENERATOR.get());
-            graphics.renderTooltip(font, getFluidTooltip("tooltip.factory_api.fluid_stored", FactoryAPIPlatform.getItemFluidHandler(gen)), actualMouseX, actualMouseY);
-        }if ((getMenu().be.hasUpgrade(ModObjects.ENERGY.get()) || getMenu().be.hasUpgrade(ModObjects.GENERATOR.get())) && energyTankType().inMouseLimit(mouseX,mouseY)){
+            graphics.renderTooltip(font, getFluidTooltip("tooltip.factory_api.fluid_stored", FactoryAPIPlatform.getItemFluidHandler(gen)).withStyle(ChatFormatting.BLUE), actualMouseX, actualMouseY);
+        }if ((getMenu().be.hasUpgrade(ModObjects.ENERGY.get()) || getMenu().be.hasUpgrade(ModObjects.GENERATOR.get())) && energyTankDraw().inMouseLimit(mouseX,mouseY)){
             graphics.renderTooltip(font, StorageStringUtil.getEnergyTooltip("tooltip.factory_api.energy_stored", getMenu().be.energyStorage), actualMouseX, actualMouseY);
         }
-        if (getMenu().be.hasXPTank() && xpTankType().inMouseLimit(mouseX, mouseY))
-            graphics.renderTooltip(font,getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.xpTank), actualMouseX, actualMouseY);
+        if (getMenu().be.hasXPTank() && xpTankDraw().inMouseLimit(mouseX, mouseY))
+            graphics.renderTooltip(font, getFluidTooltip("tooltip.factory_api.fluid_stored", getMenu().be.getXpTank()).withStyle(ChatFormatting.GREEN), actualMouseX, actualMouseY);
+    }
 
+    public static MutableComponent getFluidTooltip(String key, IPlatformFluidHandler tank){
+        return StorageStringUtil.getFluidTooltip(key, tank.getFluidInstance(), tank.getMaxFluid(), false);
     }
 
     protected void blitSmeltingSprites(GuiGraphics graphics) {
@@ -166,21 +167,20 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
         FactoryGuiGraphics.of(graphics).blit(getGuiLocation(), leftPos, topPos, 0, 0, imageWidth, imageHeight);
         blitSmeltingSprites(graphics);
         if (getMenu().be.hasUpgrade(ModObjects.ENERGY.get()) || getMenu().be.hasUpgrade(ModObjects.GENERATOR.get())) {
-            boolean storage = menu.be.hasUpgradeType(ModObjects.STORAGE.get());
-            FactoryGuiGraphics.of(graphics).blit(WIDGETS, energyTankType().getX(), energyTankType().getY(), 240 + (storage ? 8 : 0), 34 * (storage ? 2 : 1), 16 - (storage ? 8 : 0), 34);
-            energyTankType().drawProgress(graphics, this.getMenu().getEnergyStored(),this.getMenu().getMaxEnergyStored());
-        }if (getMenu().be.isLiquid()){
-            FactoryGuiGraphics.of(graphics).blit(WIDGETS, fluidTankType().getX(), fluidTankType().getY(), 192, 38, 20, 22);
-            fluidTankType().drawAsFluidTank(graphics, this.getMenu().be.fluidTank.getFluidInstance(), this.getMenu().be.fluidTank.getMaxFluid(),true);
+            boolean storage = menu.be.hasUpgradeType(UpgradeItem.Type.STORAGE);
+            FactoryGuiGraphics.of(graphics).blit(WIDGETS, energyTankDraw().getX(), energyTankDraw().getY(), 240 + (storage ? 8 : 0), 34 * (storage ? 2 : 1), 16 - (storage ? 8 : 0), 34);
+            energyTankDraw().drawProgress(graphics, menu.getEnergyStored(), menu.getMaxEnergyStored());
+        } if (getMenu().be.isLiquid()){
+            FactoryGuiGraphics.of(graphics).blit(WIDGETS, fluidTankDraw().getX(), fluidTankDraw().getY(), 192, 38, 20, 22);
+            fluidTankDraw().drawAsFluidTank(graphics, menu.be.getFuelTank().getFluidInstance(), menu.be.getFuelTank().getMaxFluid(),true);
         }
 
         if (this.getMenu().be.hasXPTank()) {
-            FactoryGuiGraphics.of(graphics).blit(WIDGETS, xpTankType().getX(), xpTankType().getY(), 208, 0, 16, 16);
-            xpTankType().drawAsFluidTank(graphics, this.getMenu().be.xpTank.getFluidInstance(), this.getMenu().be.xpTank.getMaxFluid(),true);
+            FactoryGuiGraphics.of(graphics).blit(WIDGETS, xpTankDraw().getX(), xpTankDraw().getY(), 208, 0, 16, 16);
+            xpTankDraw().drawAsFluidTank(graphics, menu.be.getXpTank().getFluidInstance(), menu.be.getXpTank().getMaxFluid(),true);
         }
         if (this.getMenu().be.hasUpgrade(ModObjects.GENERATOR.get())) {
-            ItemStack generatorUp = getMenu().be.getUpgradeSlotItem(ModObjects.GENERATOR.get());
-            generatorTankType().drawAsFluidTank(graphics, FactoryAPIPlatform.getItemFluidHandler(generatorUp).getFluidInstance(),4000,true);
+            generatorTankDraw().drawAsFluidTank(graphics, menu.be.getGeneratorTank().getFluidInstance(),4000,true);
         }
         if (storedFactoryUpgradeType(3) && showConfigButton.isSelected()) {
             boolean input = false;
@@ -199,7 +199,7 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
 
 
     protected void blitSlotsLayer(GuiGraphics graphics, boolean input, boolean both, boolean fuel, boolean output){
-        boolean storage = menu.be.hasUpgradeType(ModObjects.STORAGE.get());
+        boolean storage = menu.be.hasUpgradeType(UpgradeItem.Type.STORAGE);
         if (!getMenu().be.hasUpgrade(ModObjects.GENERATOR.get())) {
             if (input || both) {
                 if (storage) INPUT_SLOT_OUTLINE.draw(graphics, leftPos + 35, topPos + 17);

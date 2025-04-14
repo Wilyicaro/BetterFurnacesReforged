@@ -102,7 +102,7 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock {
         ItemStack stack = builder.getOptionalParameter(LootContextParams.TOOL);
         SmeltingBlockEntity be = (SmeltingBlockEntity) builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (FactoryItemUtil.getEnchantmentLevel(stack, Enchantments.SILK_TOUCH, builder.getLevel().registryAccess()) > 0 && stack.isCorrectToolForDrops(state)) {
-            ItemStack colorUpgrade = be.getUpgradeTypeSlotItem(ModObjects.COLOR.get());
+            ItemStack colorUpgrade = be.getUpgradeStack(ModObjects.COLOR.get());
             //? if <1.20.5 {
             /*CompoundTag tag = new CompoundTag();
             if (!colorUpgrade.isEmpty()) ColorUpgradeItem.putColor(tag, colorUpgrade.getOrCreateTag().getInt("red"), colorUpgrade.getOrCreateTag().getInt("green"), colorUpgrade.getOrCreateTag().getInt("blue"));
@@ -165,7 +165,7 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock {
             Bearer<Integer> fluidAmount = Bearer.of(0);
             if ((be.hasUpgrade(ModObjects.GENERATOR.get()) && ItemContainerPlatform.getFluid(handItem).getFluid().isSame(Fluids.WATER) && ItemContainerPlatform.getFluid(be.getUpgradeSlotItem(ModObjects.GENERATOR.get())).getAmount() <= 3000)){
                 fluidAmount.set(FactoryAPIPlatform.getItemFluidHandler(be.getUpgradeSlotItem(ModObjects.GENERATOR.get())).fill(ItemContainerPlatform.drainItem(1000, player, handIn),false));
-            }else if (be.hasUpgrade(ModObjects.LIQUID.get()) && LiquidFuelUpgradeItem.supportsFluid(ItemContainerPlatform.getFluid(handItem).getFluid()))
+            } else if (be.hasUpgrade(ModObjects.LIQUID.get()) && LiquidFuelUpgradeItem.supportsFluid(ItemContainerPlatform.getFluid(handItem).getFluid()))
                 be.getStorage(FactoryStorage.FLUID, null).ifPresent(e -> {if (e.getTotalSpace() > 0 && e.getFluidInstance().isFluidEqual(ItemContainerPlatform.getFluid(handItem)) || e.getFluidInstance().isEmpty()) fluidAmount.set(e.fill((ItemContainerPlatform.drainItem(e.getTotalSpace(), player, handIn)), false));});
             return fluidAmount.get() > 0;
         }
@@ -174,9 +174,9 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock {
 
 
     protected void interactUpgrade(SmeltingBlockEntity be, Level level, BlockPos pos, Player player, InteractionHand handIn, ItemStack handItem) {
-        if (be.hasUpgradeType((UpgradeItem) handItem.getItem())) {
-            if (!player.isCreative()) Containers.dropItemStack(level, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeTypeSlotItem((UpgradeItem) handItem.getItem()));
-            else be.getUpgradeTypeSlotItem((UpgradeItem) handItem.getItem()).shrink(1);
+        if (be.hasUpgradeFromSameType((UpgradeItem) handItem.getItem())) {
+            if (!player.isCreative()) Containers.dropItemStack(level, pos.getX(), pos.getY() + 1, pos.getZ(), be.getUpgradeStack((UpgradeItem) handItem.getItem()));
+            else be.getUpgradeStack((UpgradeItem) handItem.getItem()).shrink(1);
         }
         for (int upg : be.getUpgradeIndexes()) {
             if (be.getSlots().get(upg).mayPlace(handItem) && !handItem.isEmpty()) {
@@ -299,7 +299,7 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock {
         SmeltingBlockEntity be = ((SmeltingBlockEntity) level.getBlockEntity(blockPos));
         if (be != null) {
             int mode = be.furnaceSettings.getRedstone(0);
-            int i = !be.hasUpgradeType(ModObjects.FACTORY.get()) || mode == 3 || mode == 4 ? AbstractContainerMenu.getRedstoneSignalFromContainer((be).inventory) : 0;
+            int i = !be.hasUpgradeType(UpgradeItem.Type.FACTORY) || mode == 3 || mode == 4 ? AbstractContainerMenu.getRedstoneSignalFromContainer((be).inventory) : 0;
             if (mode != 4) return i;
             else return Math.max(i - be.furnaceSettings.getRedstone(1), 0);
         }

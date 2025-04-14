@@ -197,7 +197,7 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
     }
 
     @Override
-    public boolean stillValid(Player p_38874_) {
-        return be.inventory.stillValid(p_38874_);
+    public boolean stillValid(Player player) {
+        return be.inventory.stillValid(player);
     }
 }

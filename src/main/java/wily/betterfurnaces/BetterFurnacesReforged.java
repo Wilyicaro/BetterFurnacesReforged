@@ -49,7 +49,6 @@ public class BetterFurnacesReforged {
     public static void init(){
 
         FactoryEvent.registerPayload(registry-> {
-            registry.register(false, FluidSyncPayload.ID);
             registry.register(true, OrientationSyncPayload.ID);
             registry.register(true, ShowSettingsSyncPayload.ID);
             registry.register(true, SettingsSyncPayload.ID);

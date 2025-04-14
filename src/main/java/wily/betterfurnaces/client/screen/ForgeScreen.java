@@ -32,17 +32,17 @@ public class ForgeScreen extends SmeltingScreen<ForgeMenu> {
     }
 
     @Override
-    protected DrawableStatic fluidTankType() {
+    protected DrawableStatic fluidTankDraw() {
         return FLUID_TANK.createStatic( leftPos + 26, topPos + 98);
     }
 
     @Override
-    protected DrawableStaticProgress energyTankType() {
+    protected DrawableStaticProgress energyTankDraw() {
         return ENERGY_CELL.createStatic(  leftPos + 8, topPos + 62);
     }
 
     @Override
-    protected DrawableStatic xpTankType() {
+    protected DrawableStatic xpTankDraw() {
         return MINI_FLUID_TANK.createStatic( leftPos + 126, topPos + 102);
     }
 

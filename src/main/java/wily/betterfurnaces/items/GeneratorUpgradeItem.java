@@ -9,12 +9,12 @@ import wily.betterfurnaces.blockentity.ForgeBlockEntity;
 import wily.betterfurnaces.blockentity.SmeltingBlockEntity;
 import wily.betterfurnaces.init.ModObjects;
 import wily.factoryapi.FactoryAPIPlatform;
+import wily.factoryapi.base.FactoryItemFluidHandler;
 import wily.factoryapi.base.IFluidHandlerItem;
-import wily.factoryapi.base.IPlatformFluidHandler;
 import wily.factoryapi.util.FluidInstance;
 
 
-public class GeneratorUpgradeItem extends UpgradeItem implements IFluidHandlerItem<IPlatformFluidHandler> {
+public class GeneratorUpgradeItem extends UpgradeItem implements IFluidHandlerItem<FactoryItemFluidHandler> {
     public GeneratorUpgradeItem(Properties properties) {
         super(properties, Type.MODE, Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.generator", FactoryAPIPlatform.getPlatformEnergyComponent().getString()).setStyle(Style.EMPTY.applyFormat((ChatFormatting.GRAY))));
     }

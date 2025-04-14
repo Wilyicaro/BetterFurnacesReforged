@@ -2,7 +2,6 @@ package wily.betterfurnaces.inventory;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
@@ -24,7 +23,6 @@ public class FuelVerifierMenu extends AbstractInventoryMenu<FuelVerifierBlockEnt
         super(ModObjects.FUEL_VERIFIER_CONTAINER.get(), windowId, world, pos, playerInventory, fields);
         checkContainerDataCount(this.data, 1);
     }
-
 
     public int getBurnTimeScaled(int pixels) {
         return this.data.get(0) * pixels / maxFuelValue;

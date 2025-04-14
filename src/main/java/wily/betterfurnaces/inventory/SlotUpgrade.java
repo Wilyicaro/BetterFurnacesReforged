@@ -19,7 +19,7 @@ public class SlotUpgrade extends FactoryItemSlot {
     }
 
     public boolean mayPlace(ItemStack stack) {
-        return (be instanceof SmeltingBlockEntity s && stack.getItem() instanceof UpgradeItem upg && !s.hasUpgrade(upg)  && (!s.isForge() || upg.upgradeType != UpgradeItem.Type.ALTERNATIVE_FUEL) && upg.isValid(s) && (!s.hasUpgradeType((UpgradeItem) stack.getItem()) || (be.inventory.getItem(index).getItem() instanceof UpgradeItem upg2 && upg2.isSameType(upg))));
+        return (be instanceof SmeltingBlockEntity s && stack.getItem() instanceof UpgradeItem upg && !s.hasUpgrade(upg)  && (!s.isForge() || upg.upgradeType != UpgradeItem.Type.ALTERNATIVE_FUEL) && upg.isValid(s) && (!s.hasUpgradeFromSameType((UpgradeItem) stack.getItem()) || (be.inventory.getItem(index).getItem() instanceof UpgradeItem upg2 && upg2.isSameType(upg))));
     }
 
     @Override

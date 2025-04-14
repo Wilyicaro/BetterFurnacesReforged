@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class FuelEfficiencyUpgradeItem extends UpgradeItem {
-    public int getMultiplier;
-    public FuelEfficiencyUpgradeItem(Properties properties, int Multiplier) {
+    public final int multiplier;
+    public FuelEfficiencyUpgradeItem(Properties properties, int multiplier) {
         super(properties,Type.FUEL);
-        this.getMultiplier = Multiplier;
+        this.multiplier = multiplier;
     }
 
     @Override
@@ -31,9 +31,9 @@ public class FuelEfficiencyUpgradeItem extends UpgradeItem {
         if (!itemStack.isDamageableItem())
             i = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.infinitely").getString();
         else i = "";
-        if (getMultiplier == 2) s = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.double").getString();
-        else if (getMultiplier == 4) s = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.quadruple").getString();
-        else if (getMultiplier > 4) s = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.multiple").getString();
+        if (multiplier == 2) s = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.double").getString();
+        else if (multiplier == 4) s = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.quadruple").getString();
+        else if (multiplier > 4) s = Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.multiple").getString();
         else s = "";
         consumer.accept(Component.translatable("tooltip." + BetterFurnacesReforged.MOD_ID + ".upgrade.fuel",s,i).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
     }
