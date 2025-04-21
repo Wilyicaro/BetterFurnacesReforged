@@ -138,7 +138,7 @@ public class SmeltingScreen<T extends SmeltingMenu> extends AbstractBasicScreen<
     }
 
     public static MutableComponent getFluidTooltip(String key, IPlatformFluidHandler tank){
-        return StorageStringUtil.getFluidTooltip(key, tank.getFluidInstance(), tank.getMaxFluid(), false);
+        return StorageStringUtil.getFluidTooltip(key, tank.getFluidInstance(), tank.getMaxFluid(), true);
     }
 
     protected void blitSmeltingSprites(GuiGraphics graphics) {
