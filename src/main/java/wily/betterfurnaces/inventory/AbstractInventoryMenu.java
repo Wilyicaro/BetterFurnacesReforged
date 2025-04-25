@@ -8,6 +8,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import wily.betterfurnaces.BetterFurnacesReforged;
 import wily.betterfurnaces.blockentity.InventoryBlockEntity;
 import wily.factoryapi.util.FactoryItemUtil;
 
@@ -21,11 +22,16 @@ public abstract class AbstractInventoryMenu<T extends InventoryBlockEntity> exte
 
     public AbstractInventoryMenu(MenuType<?> containerType, int windowId, Level level, BlockPos pos, Inventory playerInventory, ContainerData fields) {
         super(containerType, windowId);
-        this.be = (T) level.getBlockEntity(pos);
-
         this.player = playerInventory.player;
         this.level = player.level();
         this.data = fields;
+        this.be = (T) level.getBlockEntity(pos);
+
+        if (be == null){
+            BetterFurnacesReforged.LOGGER.warn("Something went wrong... the Inventory Menu Block Entity can't be null!");
+            return;
+        }
+
         this.addInventorySlots();
         layoutPlayerInventorySlots(8, TOP_ROW);
         this.addDataSlots(this.data);

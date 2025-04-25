@@ -593,7 +593,7 @@ public class SmeltingBlockEntity extends InventoryBlockEntity implements /*? if 
                         }
                     }
                     if ((!be.isLiquid() || be.getFuelTank().getFluidInstance().getAmount() < 10) && !be.isEnergy()) {
-                        if (ItemContainerPlatform.isFluidContainer(fuel)){
+                        if (ItemContainerPlatform.isFluidContainer(fuel) && be.isLiquid()){
                             ItemContainerPlatform.ItemFluidContext context = ItemContainerPlatform.drainItem(be.getFuelTank().getTotalSpace(),fuel);
                             be.inventory.setItem(be.getFuelIndexes()[0],context.container());
                         }

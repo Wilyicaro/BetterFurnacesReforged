@@ -165,7 +165,7 @@ public class SmeltingBlock extends BFRBlock implements EntityBlock {
             Bearer<Integer> fluidAmount = Bearer.of(0);
             if ((be.hasUpgrade(ModObjects.GENERATOR.get()) && ItemContainerPlatform.getFluid(handItem).getFluid().isSame(Fluids.WATER) && ItemContainerPlatform.getFluid(be.getUpgradeSlotItem(ModObjects.GENERATOR.get())).getAmount() <= 3000)){
                 fluidAmount.set(FactoryAPIPlatform.getItemFluidHandler(be.getUpgradeSlotItem(ModObjects.GENERATOR.get())).fill(ItemContainerPlatform.drainItem(1000, player, handIn),false));
-            } else if (be.hasUpgrade(ModObjects.LIQUID.get()) && LiquidFuelUpgradeItem.supportsFluid(ItemContainerPlatform.getFluid(handItem).getFluid()))
+            } else if (be.isLiquid() && LiquidFuelUpgradeItem.supportsFluid(ItemContainerPlatform.getFluid(handItem).getFluid()))
                 be.getStorage(FactoryStorage.FLUID, null).ifPresent(e -> {if (e.getTotalSpace() > 0 && e.getFluidInstance().isFluidEqual(ItemContainerPlatform.getFluid(handItem)) || e.getFluidInstance().isEmpty()) fluidAmount.set(e.fill((ItemContainerPlatform.drainItem(e.getTotalSpace(), player, handIn)), false));});
             return fluidAmount.get() > 0;
         }
